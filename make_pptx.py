@@ -709,8 +709,9 @@ def build():
         h = stack(sl, sec, PAD_X, top, SW - 2 * PAD_X, fs if fs != "divider" else 26, 18 / 96) \
             if fs != "divider" else divider(sl, sec, top)
         foot = next((n for n in sec.els() if "foot" in n.cls), None)
-        if foot:
-            text_block(sl, foot, PAD_X, SH - 0.55, SW - 2 * PAD_X, 15)
+        if foot:  # bottom-aligned: measure on a scratch slide, then place so it ends 0.3 in from the edge
+            fh = text_block(Slide(), foot, PAD_X, 0, SW - 2 * PAD_X, 15)
+            text_block(sl, foot, PAD_X, SH - 0.3 - fh, SW - 2 * PAD_X, 15)
         if top + h > SH - 0.3:
             warnings.append(f"slide {k}: content may run to {top + h:.2f} in (slide is {SH} in tall)")
         aside = next((n for n in sec.els() if n.tag == "aside"), None)
