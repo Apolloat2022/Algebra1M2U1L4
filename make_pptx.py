@@ -655,10 +655,38 @@ NOTES_MASTER = (
     '</a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr>'
     '</a:lvl1pPr></p:notesStyle></p:notesMaster>')
 
+def brand_xml(x, y, s=0.3):
+    """Bluebonnet Algebra I mark + wordmark (same drawing as the deck's #brand SVG, 32-unit grid)."""
+    u = s / 32
+    out, sid = [], 100
+
+    def shape(geom, gx, gy, gw, gh, color, adj=None, alpha=None):
+        nonlocal sid
+        sid += 1
+        av = f'<a:avLst><a:gd name="adj" fmla="val {adj}"/></a:avLst>' if adj else "<a:avLst/>"
+        a = f'<a:alpha val="{alpha}"/>' if alpha else ""
+        out.append(f'<p:sp><p:nvSpPr><p:cNvPr id="{sid}" name="Brand {sid}"/><p:cNvSpPr/><p:nvPr userDrawn="1"/></p:nvSpPr>'
+                   f'<p:spPr><a:xfrm><a:off x="{emu(x + gx * u)}" y="{emu(y + gy * u)}"/>'
+                   f'<a:ext cx="{emu(gw * u)}" cy="{emu(gh * u)}"/></a:xfrm><a:prstGeom prst="{geom}">{av}</a:prstGeom>'
+                   f'<a:solidFill><a:srgbClr val="{color}">{a}</a:srgbClr></a:solidFill><a:ln><a:noFill/></a:ln></p:spPr></p:sp>')
+
+    shape("roundRect", 0, 0, 32, 32, "3050B8", adj=25000)
+    for cx, cy, r, al in [(16, 7.5, 2.3, None), (12.8, 11.8, 2.5, 92000), (19.2, 11.8, 2.5, 92000),
+                          (16, 14.6, 2.6, None), (11.8, 17.6, 2.7, 82000), (20.2, 17.6, 2.7, 82000)]:
+        shape("ellipse", cx - r, cy - r, 2 * r, 2 * r, "FFFFFF", alpha=al)
+    shape("roundRect", 15.2, 20.5, 1.6, 6.5, "9FD18B", adj=50000)
+    out.append(sp_xml(sid + 1, x + s + 0.06, y - 0.02, 1.9, s + 0.04,
+                      [["Bluebonnet ", dict(size=15, color=C["ink"])],
+                       ["Algebra I", dict(size=15, b=True, color=C["point"])]],
+                      size=15, anchor="ctr", ins=(0.02, 0)))
+    return "".join(out)
+
+
 MASTER = (
     HDR + f'<p:sldMaster {NS}><p:cSld><p:bg><p:bgPr><a:pattFill prst="lgGrid"><a:fgClr><a:srgbClr '
     f'val="{C["rule"]}"/></a:fgClr><a:bgClr><a:srgbClr val="{C["paper"]}"/></a:bgClr></a:pattFill>'
-    f'<a:effectLst/></p:bgPr></p:bg><p:spTree>{GRP}</p:spTree></p:cSld><p:clrMap {CLRMAP}/>'
+    # Brand sits in the top-right margin, above PAD_TOP where slide content starts.
+    f'<a:effectLst/></p:bgPr></p:bg><p:spTree>{GRP}{brand_xml(SW - PAD_X - 2.05, 0.14)}</p:spTree></p:cSld><p:clrMap {CLRMAP}/>'
     '<p:sldLayoutIdLst><p:sldLayoutId id="2147483649" r:id="rId1"/></p:sldLayoutIdLst></p:sldMaster>')
 
 LAYOUT = (HDR + f'<p:sldLayout {NS} type="blank" preserve="1"><p:cSld name="Blank"><p:spTree>{GRP}'
