@@ -2,3 +2,5 @@
 /graft/
 __pycache__/
 *.pdf
+
+.vercel
