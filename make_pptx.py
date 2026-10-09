@@ -22,10 +22,11 @@ EMU = 914400
 SW, SH = 13.333, 7.5
 PAD_X, PAD_TOP = 72 / 96, 48 / 96
 
-C = dict(ink="16223A", muted="56647D", slope="C9561F", point="1D64C4", ans="0D7A63",
-         ans_bg="E3F4EF", warn_bg="FFF1E6", card="FFFFFF", line="CDD8E6", rule="DFE7F1",
-         paper="F5F8FC", ga="0D7A63", gb="7A4FC4", gc="16223A")
-BODY, MATH = "Calibri", "Cambria"
+# Bluebonnet Algebra I palette, matching the deck's :root tokens.
+C = dict(ink="16171D", muted="5F6272", slope="C9561F", point="3050B8", ans="4F8A3C",
+         ans_bg="EDF5E9", warn_bg="FDF3E7", card="FFFFFF", line="E3E4EC", rule="E6E8F2",
+         paper="F7F7FB", ga="4F8A3C", gb="7A4FC4", gc="16171D")
+BODY, MATH = "Segoe UI", "Cambria"
 
 # ---------------------------------------------------------------- HTML -> tree
 VOID = {"br", "link", "meta", "img", "hr", "input"}
@@ -605,9 +606,9 @@ def rels(items):
 def theme(name):
     def clr(n, v):
         return f'<a:{n}><a:srgbClr val="{v}"/></a:{n}>'
-    colors = (clr("dk1", C["ink"]) + clr("lt1", "FFFFFF") + clr("dk2", "1F2A44") + clr("lt2", C["paper"]) +
+    colors = (clr("dk1", C["ink"]) + clr("lt1", "FFFFFF") + clr("dk2", "233D94") + clr("lt2", C["paper"]) +
               clr("accent1", C["slope"]) + clr("accent2", C["point"]) + clr("accent3", C["ans"]) +
-              clr("accent4", "7A5AC8") + clr("accent5", "C23B6B") + clr("accent6", "5A8F29") +
+              clr("accent4", "7A5AC8") + clr("accent5", "C23B6B") + clr("accent6", "4F8A3C") +
               clr("hlink", C["point"]) + clr("folHlink", "7A5AC8"))
     solid = '<a:solidFill><a:schemeClr val="phClr"/></a:solidFill>'
     ln = f'<a:ln w="9525" cap="flat" cmpd="sng" algn="ctr">{solid}<a:prstDash val="solid"/></a:ln>'

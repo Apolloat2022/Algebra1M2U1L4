@@ -1,21 +1,23 @@
-<title>Point-Slope Form · Lesson 4</title>
+<title>Point-Slope Form · Bluebonnet Algebra I</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Lexend:wght@400;500;600&family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
 <style>
 /* Layout: a fixed 1280×720 "slide" on graph paper, scaled to fit any screen; steps reveal one click at a time. */
 :root{
-  --paper:#f5f8fc; --rule:#dfe7f1; --ink:#16223a; --muted:#56647d; --card:#ffffff; --line:#cdd8e6;
-  --slope:#c9561f; --point:#1d64c4; --ga:#0d7a63; --gb:#7a4fc4; --gc:#16223a; --ans:#0d7a63; --ans-bg:#e3f4ef; --warn-bg:#fff1e6;
-  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
-  --body:"Lexend", "Segoe UI", system-ui, sans-serif;
+  /* Bluebonnet Algebra I palette (ALGEBRA-platform/app/globals.css); orange = slope, blue = point stays. */
+  --paper:#f7f7fb; --rule:#e6e8f2; --ink:#16171d; --muted:#5f6272; --card:#ffffff; --line:#e3e4ec;
+  --slope:#c9561f; --point:#3050b8; --leaf:#4f8a3c; --soft:#eaeefb; --ga:#4f8a3c; --gb:#7a4fc4; --gc:#16171d; --ans:#4f8a3c; --ans-bg:#edf5e9; --warn-bg:#fdf3e7;
+  --display:ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --body:ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --math:"STIX Two Text", "Cambria Math", "Times New Roman", serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --paper:#0f1727; --rule:#1b273d; --ink:#e9eef7; --muted:#9eabc2; --card:#16213a; --line:#2a3a57;
-  --slope:#ff9259; --point:#73adff; --ga:#4fd6b8; --gb:#b79cff; --gc:#e9eef7; --ans:#4fd6b8; --ans-bg:#123a37; --warn-bg:#3a2617; color-scheme:dark}}
+  --paper:#111218; --rule:#1f2129; --ink:#eceef6; --muted:#9ea2b3; --card:#1a1c24; --line:#2c2f3b;
+  --slope:#ff9259; --point:#93a9f5; --leaf:#8cc47a; --soft:#232a45; --ga:#8cc47a; --gb:#b79cff; --gc:#eceef6; --ans:#8cc47a; --ans-bg:#1f2a1b; --warn-bg:#2e2418; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --paper:#0f1727; --rule:#1b273d; --ink:#e9eef7; --muted:#9eabc2; --card:#16213a; --line:#2a3a57;
-  --slope:#ff9259; --point:#73adff; --ga:#4fd6b8; --gb:#b79cff; --gc:#e9eef7; --ans:#4fd6b8; --ans-bg:#123a37; --warn-bg:#3a2617; color-scheme:dark}
+  --paper:#111218; --rule:#1f2129; --ink:#eceef6; --muted:#9ea2b3; --card:#1a1c24; --line:#2c2f3b;
+  --slope:#ff9259; --point:#93a9f5; --leaf:#8cc47a; --soft:#232a45; --ga:#8cc47a; --gb:#b79cff; --gc:#eceef6; --ans:#8cc47a; --ans-bg:#1f2a1b; --warn-bg:#2e2418; color-scheme:dark}
 
 html,body{height:100%}
 body{background:var(--paper);color:var(--ink);font-family:var(--body);overflow:hidden;
@@ -26,8 +28,8 @@ body{background:var(--paper);color:var(--ink);font-family:var(--body);overflow:h
 .slide.on{display:flex;animation:slideIn .35s ease}
 @keyframes slideIn{from{opacity:0}to{opacity:1}}
 
-.eyebrow{font-size:16px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-h1,h2{font-family:var(--display);font-weight:800;line-height:1.05;text-wrap:balance;margin:0}
+.eyebrow{font-size:16px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--point)}
+h1,h2{font-family:var(--display);font-weight:800;line-height:1.08;letter-spacing:-.02em;text-wrap:balance;margin:0}
 h1{font-size:76px}
 h2{font-size:46px}
 h3{font-family:var(--display);font-weight:600;font-size:28px;margin:0}
@@ -94,12 +96,14 @@ table.cmp th{font-family:var(--display);font-size:26px}
 #bar{position:fixed;left:0;right:0;bottom:0;height:44px;padding:0 16px env(safe-area-inset-bottom,0px);display:flex;align-items:center;gap:10px;
   background:var(--card);border-top:1px solid var(--line);font-size:14px;color:var(--muted);z-index:2}
 #bar button{font:inherit;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:6px;padding:5px 12px;cursor:pointer}
-#bar button:hover{background:var(--rule)}
+#bar button:hover{background:var(--soft)}
 #bar button:focus-visible{outline:2px solid var(--point);outline-offset:2px}
 #prog{flex:1;height:4px;background:var(--rule);border-radius:2px;overflow:hidden}
-#prog>div{height:100%;width:0;background:var(--slope);transition:width .3s}
+#prog>div{height:100%;width:0;background:var(--point);transition:width .3s}
 #count{font-variant-numeric:tabular-nums;min-width:64px;text-align:right}
-@media (max-width:560px){#hint{display:none}}
+#brand{display:flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none;font-size:15px;white-space:nowrap}
+#brand strong{color:var(--point)}
+@media (max-width:560px){#hint,#brand span{display:none}}
 .slide aside.notes{display:none}
 #notes{position:fixed;left:0;right:0;bottom:44px;max-height:34vh;overflow:auto;z-index:2;padding:14px 20px;
   background:var(--card);border-top:2px solid var(--point);font-size:17px;line-height:1.5}
@@ -110,7 +114,7 @@ table.cmp th{font-family:var(--display);font-size:26px}
 
 <!-- 1 -->
 <section class="slide">
-  <p class="eyebrow">Algebra I · Module 2 · Topic 1 · Lesson 4</p>
+  <p class="eyebrow">Bluebonnet Algebra I · Module 2 · Topic 1 · Lesson 4</p>
   <h1 style="margin-top:70px">Point-Slope Form<br>of a Line</h1>
   <div class="eq big" style="margin-top:20px"><i>y</i> − <span class="cp"><i>y</i><sub>1</sub></span> = <span class="cm"><i>m</i></span>(<i>x</i> − <span class="cp"><i>x</i><sub>1</sub></span>)</div>
   <p class="muted small">Click, or press → / Space, to reveal each step. ← goes back. F = full screen.</p>
@@ -653,6 +657,7 @@ table.cmp th{font-family:var(--display);font-size:26px}
 </div>
 
 <nav id="bar" aria-label="Slide controls">
+  <span id="brand"><svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#3050b8"/><g fill="#fff"><circle cx="16" cy="7.5" r="2.3"/><circle cx="12.8" cy="11.8" r="2.5" opacity=".92"/><circle cx="19.2" cy="11.8" r="2.5" opacity=".92"/><circle cx="16" cy="14.6" r="2.6"/><circle cx="11.8" cy="17.6" r="2.7" opacity=".82"/><circle cx="20.2" cy="17.6" r="2.7" opacity=".82"/></g><rect x="15.2" y="20.5" width="1.6" height="6.5" rx=".8" fill="#9fd18b"/></svg><span>Bluebonnet <strong>Algebra I</strong></span></span>
   <button id="prev" type="button" aria-label="Previous step">← Back</button>
   <button id="next" type="button" aria-label="Next step">Next →</button>
   <div id="prog"><div></div></div>
