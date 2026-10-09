@@ -1,0 +1,777 @@
+<title>Point-Slope Form · Lesson 4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Lexend:wght@400;500;600&family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<style>
+/* Layout: a fixed 1280×720 "slide" on graph paper, scaled to fit any screen; steps reveal one click at a time. */
+:root{
+  --paper:#f5f8fc; --rule:#dfe7f1; --ink:#16223a; --muted:#56647d; --card:#ffffff; --line:#cdd8e6;
+  --slope:#c9561f; --point:#1d64c4; --ga:#0d7a63; --gb:#7a4fc4; --gc:#16223a; --ans:#0d7a63; --ans-bg:#e3f4ef; --warn-bg:#fff1e6;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Lexend", "Segoe UI", system-ui, sans-serif;
+  --math:"STIX Two Text", "Cambria Math", "Times New Roman", serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0f1727; --rule:#1b273d; --ink:#e9eef7; --muted:#9eabc2; --card:#16213a; --line:#2a3a57;
+  --slope:#ff9259; --point:#73adff; --ga:#4fd6b8; --gb:#b79cff; --gc:#e9eef7; --ans:#4fd6b8; --ans-bg:#123a37; --warn-bg:#3a2617; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0f1727; --rule:#1b273d; --ink:#e9eef7; --muted:#9eabc2; --card:#16213a; --line:#2a3a57;
+  --slope:#ff9259; --point:#73adff; --ga:#4fd6b8; --gb:#b79cff; --gc:#e9eef7; --ans:#4fd6b8; --ans-bg:#123a37; --warn-bg:#3a2617; color-scheme:dark}
+
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);overflow:hidden;
+  background-image:linear-gradient(var(--rule) 1px,transparent 1px),linear-gradient(90deg,var(--rule) 1px,transparent 1px);
+  background-size:32px 32px}
+#stage{position:absolute;left:50%;top:calc(50% - 22px);width:1280px;height:720px;transform-origin:center;cursor:pointer}
+.slide{position:absolute;inset:0;padding:48px 72px 40px;display:none;flex-direction:column;gap:18px;font-size:26px;line-height:1.4}
+.slide.on{display:flex;animation:slideIn .35s ease}
+@keyframes slideIn{from{opacity:0}to{opacity:1}}
+
+.eyebrow{font-size:16px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+h1,h2{font-family:var(--display);font-weight:800;line-height:1.05;text-wrap:balance;margin:0}
+h1{font-size:76px}
+h2{font-size:46px}
+h3{font-family:var(--display);font-weight:600;font-size:28px;margin:0}
+p{margin:0}
+.muted{color:var(--muted)}
+.small{font-size:21px}
+.row{display:flex;gap:36px;align-items:flex-start}
+.col{display:flex;flex-direction:column;gap:14px;flex:1;min-width:0}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 22px;display:flex;flex-direction:column;gap:10px}
+
+/* math */
+.eq,.mt{font-family:var(--math);font-weight:500}
+.eq{font-size:38px;line-height:1.5}
+.eq.big{font-size:60px}
+.eq.sm{font-size:31px}
+.eq i,.mt i{font-style:italic}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.78em;line-height:1.15;margin:0 .1em}
+.fr>span:first-child{border-bottom:.07em solid currentColor;padding:0 .2em}
+.cm{color:var(--slope);font-weight:600}
+.cp{color:var(--point);font-weight:600}
+
+.ans{background:var(--ans-bg);border-radius:8px;padding:8px 18px;align-self:flex-start;display:flex;align-items:center;gap:14px}
+.ans::before{content:"Answer";font-family:var(--body);font-size:15px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ans)}
+.warn{background:var(--warn-bg);border-radius:8px;padding:10px 18px;font-size:22px;align-self:flex-start}
+.think{border:2px dashed var(--point);border-radius:24px;padding:16px 26px;font-size:25px;align-self:flex-start;max-width:760px}
+
+table.tbl{border-collapse:collapse;font-family:var(--math);font-size:30px;text-align:center;font-variant-numeric:tabular-nums}
+table.tbl th,table.tbl td{border:2px solid var(--line);padding:6px 26px;background:var(--card)}
+table.tbl th{font-style:italic;background:var(--rule)}
+table.cmp{border-collapse:collapse;width:100%;font-size:24px}
+table.cmp th,table.cmp td{border-bottom:1px solid var(--line);padding:10px 14px;text-align:left}
+table.cmp th{font-family:var(--display);font-size:26px}
+
+.foot{margin-top:auto;font-size:15px;color:var(--muted)}
+
+/* graphs: drawn from data-g by graphSVG(); make_pptx.py draws the same spec */
+.graph{flex:none}
+.graph svg{display:block;max-width:100%;height:auto}
+.g-bg{fill:var(--card);stroke:var(--line)}
+.g-grid{stroke:var(--rule);stroke-width:1}
+.g-axis{stroke:var(--muted);stroke-width:1.5}
+.g-line{stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+.g-pt{fill:var(--point)}
+.g-line.ga{stroke:var(--ga)} .g-line.gb{stroke:var(--gb)} .g-line.gc{stroke:var(--gc)}
+.ga{color:var(--ga);font-weight:600} .gb{color:var(--gb);font-weight:600} .gc{color:var(--gc);font-weight:600}
+.g-tick{fill:var(--muted);font:13px var(--body)}
+.g-plab{fill:var(--point);font:600 15px var(--body)}
+.g-llab{fill:var(--ink);font:italic 17px var(--math)}
+.divider{justify-content:center}
+.divider h1{font-size:110px}
+
+/* step reveal: space is reserved, like PowerPoint "Appear" */
+.step{opacity:0;visibility:hidden}
+.step.shown{opacity:1;visibility:visible;animation:rise .45s cubic-bezier(.2,.8,.2,1)}
+.step.wipe.shown{animation:wipe .7s ease-out}
+.step.pop.shown{animation:pop .4s cubic-bezier(.3,1.6,.5,1)}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes wipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes pop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.slide.on,.step.shown{animation:none!important}}
+
+/* controls */
+#bar{position:fixed;left:0;right:0;bottom:0;height:44px;padding:0 16px env(safe-area-inset-bottom,0px);display:flex;align-items:center;gap:10px;
+  background:var(--card);border-top:1px solid var(--line);font-size:14px;color:var(--muted);z-index:2}
+#bar button{font:inherit;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:6px;padding:5px 12px;cursor:pointer}
+#bar button:hover{background:var(--rule)}
+#bar button:focus-visible{outline:2px solid var(--point);outline-offset:2px}
+#prog{flex:1;height:4px;background:var(--rule);border-radius:2px;overflow:hidden}
+#prog>div{height:100%;width:0;background:var(--slope);transition:width .3s}
+#count{font-variant-numeric:tabular-nums;min-width:64px;text-align:right}
+@media (max-width:560px){#hint{display:none}}
+.slide aside.notes{display:none}
+#notes{position:fixed;left:0;right:0;bottom:44px;max-height:34vh;overflow:auto;z-index:2;padding:14px 20px;
+  background:var(--card);border-top:2px solid var(--point);font-size:17px;line-height:1.5}
+#notes b{display:block;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--point)}
+</style>
+
+<div id="stage">
+
+<!-- 1 -->
+<section class="slide">
+  <p class="eyebrow">Algebra I · Module 2 · Topic 1 · Lesson 4</p>
+  <h1 style="margin-top:70px">Point-Slope Form<br>of a Line</h1>
+  <div class="eq big" style="margin-top:20px"><i>y</i> − <span class="cp"><i>y</i><sub>1</sub></span> = <span class="cm"><i>m</i></span>(<i>x</i> − <span class="cp"><i>x</i><sub>1</sub></span>)</div>
+  <p class="muted small">Click, or press → / Space, to reveal each step. ← goes back. F = full screen.</p>
+  <p class="foot">Adapted from Texas Bluebonnet Learning, Secondary Mathematics Algebra I (©2024–2025 Texas Education Agency, portions ©2021 Carnegie Learning), CC BY-NC 4.0.</p>
+  <aside class="notes">Welcome. Today's topic is another way to write the equation of a line. Point out the color code: orange always means slope, blue always means a point. The lesson runs two days. Day 1 covers Getting Started and Activities 4.1–4.2. Day 2 covers Activity 4.3 and Talk the Talk.</aside>
+</section>
+
+<!-- 2 -->
+<section class="slide">
+  <p class="eyebrow">Lesson 4</p>
+  <h2>Today you will…</h2>
+  <div class="col" style="gap:26px;margin-top:20px;font-size:30px">
+    <p class="step">1. Use the <b>slope formula</b> to derive the point-slope form of a linear equation.</p>
+    <p class="step">2. Write an equation in <b>point-slope form</b> to model a linear relationship between two quantities.</p>
+    <p class="step">3. Write equations for <b>vertical</b> and <b>horizontal</b> lines.</p>
+  </div>
+  <aside class="notes">Read each objective aloud as it appears. Ask: Which of these words do you already know? (slope formula, slope-intercept form). Tell students that 'derive' means we will build the new form ourselves from something we already know.</aside>
+</section>
+
+<!-- 3 -->
+<section class="slide">
+  <p class="eyebrow">Essential Question</p>
+  <h2>You already know slope-intercept form, <span class="eq" style="font-size:46px"><i>y</i> = <span class="cm"><i>m</i></span><i>x</i> + <i>b</i></span>.</h2>
+  <div class="col" style="gap:30px;margin-top:40px;font-size:36px">
+    <p class="step">Are there <b>other forms</b> of a linear equation that you can use?</p>
+    <p class="step">How do you write equations for <b>horizontal</b> and <b>vertical</b> lines?</p>
+  </div>
+  <aside class="notes">Have students write the Essential Question at the top of their notes. Don't answer it yet; we return to it at the end of each day. Quick check: ask a student what m and b mean in y = mx + b.</aside>
+</section>
+
+<!-- 4 -->
+<section class="slide">
+  <p class="eyebrow">Day 1 · Getting Started · Draining the Pool</p>
+  <h2>Pool A</h2>
+  <p class="small muted">Miguel and Nia drain the community pools. Write each equation in slope-intercept form, <span class="mt"><i>y</i> = <i>mx</i> + <i>b</i></span>.</p>
+  <p style="font-size:30px">Pool A is at a water level of <b>14 feet</b> and drains at a rate of <b>3 feet per hour</b>.</p>
+  <div class="row">
+    <div class="col" style="gap:18px">
+      <p class="step small muted">Let <span class="mt"><i>x</i></span> = hours of draining and <span class="mt"><i>y</i></span> = water level in feet.</p>
+      <p class="step">It starts at 14 feet, so the <i>y</i>-intercept is <span class="eq sm"><i>b</i> = 14</span>.</p>
+      <p class="step">The level goes <b>down</b> 3 feet each hour, so the slope is negative: <span class="eq sm cm"><i>m</i> = −3</span>.</p>
+      <div class="step wipe eq ans"><i>y</i> = <span class="cm">−3</span><i>x</i> + 14</div>
+    </div>
+    <div class="graph step" data-g='{"w":300,"h":330,"x":[0,12],"y":[0,20],"gx":[1,2],"gy":[2,4],"lines":[{"p":[[0,14],[1,11]]}],"pts":[[0,14,"(0, 14)"]],"alt":"Pool A: water level falls from 14 feet by 3 feet per hour"}'></div>
+  </div>
+  <aside class="notes">Getting Started, 10–15 minutes. Have pairs try Pool A before you reveal anything. Common error: writing +3 instead of −3. Ask: Is the water level going up or down? So is the slope positive or negative? Define the variables before writing the equation. The graph appears last (x = hours, y = feet of water): the line starts at 14 on the y-axis and drops 3 feet for every hour. Ask: When is the pool empty? (After 4⅔ hours.)</aside>
+</section>
+
+<!-- 5 -->
+<section class="slide">
+  <p class="eyebrow">Day 1 · Getting Started · Draining the Pool</p>
+  <h2>Pool B</h2>
+  <p style="font-size:30px">Pool B is at a water level of <b>10 feet after draining for 3 hours</b> and drains at a rate of <b>2 feet per hour</b>.</p>
+  <div class="row" style="gap:32px">
+    <div class="col">
+      <p class="step">We know a point: <span class="eq sm cp">(3, 10)</span></p>
+      <p class="step">We know the slope: <span class="eq sm cm"><i>m</i> = −2</span></p>
+      <p class="step">We <b>don't</b> know <span class="mt"><i>b</i></span>. Substitute into <span class="mt"><i>y</i> = <i>mx</i> + <i>b</i></span>:</p>
+    </div>
+    <div class="col">
+      <div class="step wipe eq"><span class="cp">10</span> = <span class="cm">−2</span>(<span class="cp">3</span>) + <i>b</i></div>
+      <div class="step wipe eq">10 = −6 + <i>b</i></div>
+      <div class="step wipe eq"><i>b</i> = 16</div>
+      <div class="step pop eq ans"><i>y</i> = <span class="cm">−2</span><i>x</i> + 16</div>
+    </div>
+    <div class="graph step" data-g='{"w":300,"h":330,"x":[0,12],"y":[0,20],"gx":[1,2],"gy":[2,4],"lines":[{"p":[[3,10],[4,8]]}],"pts":[[0,16,"(0, 16)"],[3,10,"(3, 10)"]],"alt":"Pool B: water level falls from 16 feet, through (3, 10)"}'></div>
+  </div>
+  <aside class="notes">Ask: What's different from Pool A? (We don't know the starting level.) Stress that '10 feet after 3 hours' is the point (3, 10). Reveal the substitution one line at a time; have students do each step on whiteboards before you click. The graph appears last: the point we were given, (3, 10), is on the line, and following it back to the y-axis gives the starting level b = 16. The pool is empty after 8 hours.</aside>
+</section>
+
+<!-- 6 -->
+<section class="slide">
+  <p class="eyebrow">Day 1 · Getting Started · Draining the Pool</p>
+  <h2>Pool C</h2>
+  <p style="font-size:30px">Pool C is at <b>15 feet after 2 hours</b> and at <b>12 feet after 4 hours</b>.</p>
+  <div class="row" style="gap:32px">
+    <div class="col">
+      <p class="step">Two points: <span class="eq sm cp">(2, 15)</span> and <span class="eq sm cp">(4, 12)</span></p>
+      <p class="step">Step 1: find the slope.</p>
+      <div class="step wipe eq"><span class="cm"><i>m</i></span> = {{12 − 15|4 − 2}} = <span class="cm">−{{3|2}}</span></div>
+    </div>
+    <div class="col">
+      <p class="step">Step 2: find <span class="mt"><i>b</i></span> using (2, 15).</p>
+      <div class="step wipe eq">15 = −{{3|2}}(2) + <i>b</i></div>
+      <div class="step wipe eq">15 = −3 + <i>b</i></div>
+      <div class="step wipe eq"><i>b</i> = 18</div>
+      <div class="step pop eq ans"><i>y</i> = <span class="cm">−{{3|2}}</span><i>x</i> + 18</div>
+    </div>
+    <div class="graph step" data-g='{"w":300,"h":330,"x":[0,12],"y":[0,20],"gx":[1,2],"gy":[2,4],"lines":[{"p":[[2,15],[4,12]]}],"pts":[[0,18,"(0, 18)"],[2,15,"(2, 15)"],[4,12,"(4, 12)"]],"alt":"Pool C: water level falls from 18 feet, through (2, 15) and (4, 12)"}'></div>
+  </div>
+  <aside class="notes">Now we know neither the slope nor the intercept, only two points. Ask students to recall the slope formula before you reveal it. Check the answer together: at x = 2, −3/2(2) + 18 = 15. It works. The graph appears last (x = hours, y = feet of water): point out that the line starts at 18 feet on the y-axis, which is b, and that the pool is empty after 12 hours.</aside>
+</section>
+
+<!-- 6b -->
+<section class="slide">
+  <p class="eyebrow">Day 1 · Getting Started · Draining the Pool</p>
+  <h2>All three pools on one graph</h2>
+  <div class="row">
+    <div class="graph" data-g='{"w":520,"h":420,"x":[0,12],"y":[0,20],"gx":[1,1],"gy":[2,2],"lines":[{"p":[[0,14],[1,11]],"c":"a","step":true},{"p":[[0,16],[1,14]],"c":"b","dash":true,"step":true},{"p":[[0,18],[2,15]],"c":"c","step":true}],"alt":"Water level over time for Pools A, B and C"}'></div>
+    <div class="col" style="gap:16px">
+      <p><span class="ga">━━ Pool A</span> <span class="mt"><i>y</i> = −3<i>x</i> + 14</span></p>
+      <p><span class="gb">- - - Pool B</span> <span class="mt"><i>y</i> = −2<i>x</i> + 16</span></p>
+      <p><span class="gc">━━ Pool C</span> <span class="mt"><i>y</i> = −{{3|2}}<i>x</i> + 18</span></p>
+      <p class="step small" style="margin-top:10px"><b>Where each line starts</b> is <i>b</i>, the starting water level. Pool C starts highest (18 ft); Pool A starts lowest (14 ft).</p>
+      <p class="step small"><b>The steepest line</b> has the slope farthest from 0. Pool A drains fastest, 3 feet per hour.</p>
+      <p class="step small"><b>Where each line hits 0</b> is when the pool is empty. Pool A empties first (after 4⅔ hours); Pool C empties last (after 12 hours).</p>
+    </div>
+  </div>
+  <aside class="notes">Use this slide to tie the three equations to one picture before Question 2. x is hours and y is feet of water. Ask: Each click draws one pool's line: A, then B, then C. Ask: Which pool started with the most water? Which drains fastest, and how can you tell from the graph? From the equation? Which pool is empty first? Connect each answer to b, the slope, and where the line crosses the x-axis.</aside>
+</section>
+
+<!-- 7 -->
+<section class="slide">
+  <p class="eyebrow">Day 1 · Getting Started · Draining the Pool</p>
+  <h2>How were the three processes different?</h2>
+  <div class="grid3" style="margin-top:10px">
+    <div class="card step"><h3>Pool A</h3><p class="small">Slope <b>and</b> <i>y</i>-intercept were given.</p><p class="small muted">Just write the equation.</p></div>
+    <div class="card step"><h3>Pool B</h3><p class="small">Slope was given.</p><p class="small muted">Had to calculate <i>b</i>.</p></div>
+    <div class="card step"><h3>Pool C</h3><p class="small">Only two points were given.</p><p class="small muted">Had to calculate <i>m</i> <b>and</b> <i>b</i>.</p></div>
+  </div>
+  <p class="think step" style="margin-top:24px">I wonder whether there is a way to make writing the equation of a line more efficient.</p>
+  <p class="step" style="font-size:32px">There is. You don't always need the <i>y</i>-intercept. Meet <b>point-slope form</b>.</p>
+  <aside class="notes">Question 2. Students should notice the work gets longer for each pool. Read the thought bubble aloud and pause; it is the hook for the new form. Ask: Is there a shortcut when we know a point and a slope?</aside>
+</section>
+
+<!-- 8 -->
+<section class="slide">
+  <p class="eyebrow">Day 1 · Activity 4.1 · Worked Example</p>
+  <h2>Write an equation from a table</h2>
+  <div class="row" style="gap:56px">
+    <table class="tbl"><tr><th>x</th><th>y</th></tr><tr><td class="cp">2</td><td class="cp">6</td></tr><tr><td>4</td><td>5</td></tr><tr><td>6</td><td>4</td></tr></table>
+    <div class="col" style="gap:6px">
+      <p class="step small"><b>First,</b> calculate the slope.</p>
+      <div class="step wipe eq sm"><span class="cm"><i>m</i></span> = {{<i>y</i><sub>2</sub> − <i>y</i><sub>1</sub>|<i>x</i><sub>2</sub> − <i>x</i><sub>1</sub>}} = {{5 − 6|4 − 2}} = <span class="cm">−{{1|2}}</span></div>
+      <p class="step small"><b>Next,</b> choose any point from the table: <span class="eq sm cp">(2, 6)</span></p>
+      <p class="step small"><b>Then,</b> substitute the slope, (2, 6), and an unknown point (<i>x</i>, <i>y</i>) into the slope formula.</p>
+      <div class="step wipe eq sm"><span class="cm">−{{1|2}}</span> = {{<i>y</i> − <span class="cp">6</span>|<i>x</i> − <span class="cp">2</span>}}</div>
+      <p class="step small"><b>Finally,</b> multiply both sides by (<i>x</i> − 2) so no variable is in a denominator.</p>
+      <div class="step pop eq sm ans"><i>y</i> − <span class="cp">6</span> = <span class="cm">−{{1|2}}</span>(<i>x</i> − <span class="cp">2</span>)</div>
+    </div>
+  </div>
+  <aside class="notes">Activity 4.1, 20–25 minutes in total. This Worked Example is explicit instruction: go through each step as a class and have students restate it in their own words. Key idea: (x, y) stands for ANY point on the line, which is why it stays as variables.</aside>
+</section>
+
+<!-- 9 -->
+<section class="slide">
+  <p class="eyebrow">Key Term</p>
+  <h2>Point-slope form</h2>
+  <div class="row" style="gap:40px">
+  <div class="col" style="gap:18px">
+  <div class="eq big step wipe" style="margin-top:6px"><i>y</i> − <span class="cp"><i>y</i><sub>1</sub></span> = <span class="cm"><i>m</i></span>(<i>x</i> − <span class="cp"><i>x</i><sub>1</sub></span>)</div>
+  <p class="step"><span class="cm eq sm"><i>m</i></span> is the <b>slope</b> of the line.</p>
+  <p class="step"><span class="cp eq sm">(<i>x</i><sub>1</sub>, <i>y</i><sub>1</sub>)</span> is <b>any point</b> on the line. It does not have to be the <i>y</i>-intercept.</p>
+  <div class="card step" style="margin-top:10px">
+    <p><b>Example:</b> slope <span class="cm mt">3</span> and point <span class="cp mt">(1, 4)</span></p>
+    <div class="eq"><i>y</i> − <span class="cp">4</span> = <span class="cm">3</span>(<i>x</i> − <span class="cp">1</span>)</div>
+  </div>
+  </div>
+  <div class="graph step" data-g='{"w":360,"h":400,"x":[-2,4],"y":[-4,10],"gx":[1,1],"gy":[1,2],"lines":[{"p":[[1,4],[2,7]]}],"pts":[[1,4,"(1, 4)"]],"alt":"Line through (1, 4) with slope 3"}'></div>
+  </div>
+  <aside class="notes">Have students copy the definition into their notes, using the colors. Stress that (x₁, y₁) can be any point, not only the y-intercept. In the example, ask a student to name m, x₁, and y₁ before you reveal the equation.</aside>
+</section>
+
+<!-- 10 -->
+<section class="slide">
+  <p class="eyebrow">Day 1 · Activity 4.1</p>
+  <h2>Where does point-slope form come from?</h2>
+  <p class="step">Start with the slope formula. Use a known point (<i>x</i><sub>1</sub>, <i>y</i><sub>1</sub>) and any point (<i>x</i>, <i>y</i>) on the line.</p>
+  <div class="step wipe eq"><span class="cm"><i>m</i></span> = {{<i>y</i> − <span class="cp"><i>y</i><sub>1</sub></span>|<i>x</i> − <span class="cp"><i>x</i><sub>1</sub></span>}}</div>
+  <p class="step">Multiply both sides by (<i>x</i> − <i>x</i><sub>1</sub>).</p>
+  <div class="step wipe eq"><span class="cm"><i>m</i></span>(<i>x</i> − <span class="cp"><i>x</i><sub>1</sub></span>) = <i>y</i> − <span class="cp"><i>y</i><sub>1</sub></span></div>
+  <p class="step">Swap the sides.</p>
+  <div class="step pop eq ans"><i>y</i> − <span class="cp"><i>y</i><sub>1</sub></span> = <span class="cm"><i>m</i></span>(<i>x</i> − <span class="cp"><i>x</i><sub>1</sub></span>)</div>
+  <aside class="notes">This meets Objective 1. Point-slope form is not a new formula to memorize; it is the slope formula with the denominator multiplied away. If students forget point-slope form, they can always rebuild it from the slope formula.</aside>
+</section>
+
+<!-- 11 -->
+<section class="slide">
+  <p class="eyebrow">Day 1 · Activity 4.1 · Question 1</p>
+  <h2>Rewrite it in slope-intercept form</h2>
+  <div class="row">
+    <div class="col" style="gap:8px">
+      <p class="small muted">Solve the Worked Example equation for <i>y</i>.</p>
+      <div class="step wipe eq"><i>y</i> − 6 = −{{1|2}}(<i>x</i> − 2)</div>
+      <p class="step small">Distribute −{{1|2}}:</p>
+      <div class="step wipe eq"><i>y</i> − 6 = −{{1|2}}<i>x</i> + 1</div>
+      <p class="step small">Add 6 to both sides:</p>
+      <div class="step pop eq ans"><i>y</i> = −{{1|2}}<i>x</i> + 7</div>
+    </div>
+    <div class="col">
+      <div class="card step"><h3>Point-slope form shows</h3><p class="small">the slope and <b>a point</b>, which may not be the <i>y</i>-intercept.</p></div>
+      <div class="card step"><h3>Slope-intercept form shows</h3><p class="small">the slope and <b>the <i>y</i>-intercept</b>.</p></div>
+      <p class="step small"><b>Same:</b> both show the slope, and both describe the same line.</p>
+    </div>
+  </div>
+  <aside class="notes">Complete Question 1 as a class. Watch the distribution step: −1/2 times −2 is +1, a common sign error. Discussion: both forms describe the same line, so neither is more correct; each one makes different information easy to see.</aside>
+</section>
+
+<!-- 12 -->
+<section class="slide">
+  <p class="eyebrow">Day 1 · Activity 4.1 · Questions 2–3</p>
+  <h2>Your turn: write each in point-slope form</h2>
+  <div class="row" style="gap:56px;margin-top:10px">
+    <div class="col">
+      <h3>2. Slope −8, point (3, 12)</h3>
+      <p class="step small"><span class="cm">m = −8</span>, <span class="cp">x<sub>1</sub> = 3</span>, <span class="cp">y<sub>1</sub> = 12</span></p>
+      <div class="step pop eq ans"><i>y</i> − <span class="cp">12</span> = <span class="cm">−8</span>(<i>x</i> − <span class="cp">3</span>)</div>
+    </div>
+    <div class="col">
+      <h3>3. Slope {{2|3}}, point (−4, 5)</h3>
+      <p class="step small"><span class="cm">m = {{2|3}}</span>, <span class="cp">x<sub>1</sub> = −4</span>, <span class="cp">y<sub>1</sub> = 5</span></p>
+      <div class="step wipe eq"><i>y</i> − <span class="cp">5</span> = <span class="cm">{{2|3}}</span>(<i>x</i> − (<span class="cp">−4</span>))</div>
+      <div class="step pop eq ans"><i>y</i> − <span class="cp">5</span> = <span class="cm">{{2|3}}</span>(<i>x</i> + <span class="cp">4</span>)</div>
+      <p class="step warn">Watch the signs: subtracting a negative becomes <b>+</b>.</p>
+    </div>
+  </div>
+  <aside class="notes">Group students for Questions 2 and 3, then check in. The sign trap in #3 is the most common mistake in this lesson: x − (−4) becomes x + 4. As a check, have students read the point back out of their equation.</aside>
+</section>
+
+<!-- 13 -->
+<section class="slide">
+  <p class="eyebrow">Day 1 · Activity 4.1 · Questions 4–5</p>
+  <h2>Your turn: write each in point-slope form</h2>
+  <div class="row" style="gap:56px;margin-top:6px">
+    <div class="col">
+      <h3>4. Shipping a package</h3>
+      <p class="small">It costs $1.10 per pound plus a basic shipping charge. A 10-pound package costs $14 to mail.</p>
+      <p class="step small">Rate per pound → <span class="cm">slope = 1.10</span></p>
+      <p class="step small">10 pounds costs $14 → <span class="cp">point (10, 14)</span></p>
+      <div class="step pop eq ans"><i>y</i> − <span class="cp">14</span> = <span class="cm">1.1</span>(<i>x</i> − <span class="cp">10</span>)</div>
+    </div>
+    <div class="col">
+      <h3>5. <span class="mt"><i>m</i> = −{{3|8}}</span>, point (50, 7)</h3>
+      <p class="step small"><span class="cm">m = −{{3|8}}</span>, <span class="cp">x<sub>1</sub> = 50</span>, <span class="cp">y<sub>1</sub> = 7</span></p>
+      <div class="step pop eq ans"><i>y</i> − <span class="cp">7</span> = <span class="cm">−{{3|8}}</span>(<i>x</i> − <span class="cp">50</span>)</div>
+    </div>
+  </div>
+  <aside class="notes">Question 4 is a context. Ask which quantity is the rate (the slope) and which numbers form a point. The basic shipping charge is unknown, and that's fine because point-slope form doesn't need it. (If a student asks, the charge is $3.)</aside>
+</section>
+
+<!-- 14 -->
+<section class="slide">
+  <p class="eyebrow">Day 1 · Activity 4.1 · Question 6</p>
+  <h2>A line through (35, 102) and (42, 20)</h2>
+  <p class="small muted">On the graph in your book, the <i>y</i>-intercept is not visible. Point-slope form doesn't need it.</p>
+  <div class="row" style="gap:40px">
+  <div class="col" style="gap:16px">
+  <p class="step">Step 1: calculate the slope.</p>
+  <div class="step wipe eq"><span class="cm"><i>m</i></span> = {{20 − 102|42 − 35}} = <span class="cm">−{{82|7}}</span></div>
+  <p class="step">Step 2: choose either point. Using <span class="cp mt">(42, 20)</span>:</p>
+  <div class="step pop eq ans"><i>y</i> − <span class="cp">20</span> = <span class="cm">−{{82|7}}</span>(<i>x</i> − <span class="cp">42</span>)</div>
+  <p class="step small muted">Using (35, 102) also works: <span class="mt"><i>y</i> − 102 = −{{82|7}}(<i>x</i> − 35)</span>. Both describe the same line.</p>
+  </div>
+  <div class="graph" data-g='{"w":380,"h":390,"x":[0,54],"y":[0,108],"gx":[6,12],"gy":[12,24],"lines":[{"p":[[35,102],[42,20]]}],"pts":[[35,102,"(35, 102)"],[42,20,"(42, 20)"]],"alt":"Line through (35, 102) and (42, 20)"}'></div>
+  </div>
+  <aside class="notes">The graph in the student book doesn't show where the line crosses the y-axis, which is exactly when point-slope form is most useful. Either point gives a correct equation. If time allows, have half the class use each point and compare by converting both to slope-intercept form. For extra practice, assign Skills Practice Set B.</aside>
+</section>
+
+<!-- 15 -->
+<section class="slide">
+  <p class="eyebrow">Day 1 · Activity 4.1 · Questions 7–8</p>
+  <h2>Something strange in this table…</h2>
+  <div class="row" style="gap:56px">
+    <table class="tbl"><tr><th>x</th><th>y</th></tr><tr><td>−5</td><td>−6</td></tr><tr><td class="cp">1</td><td class="cp">−6</td></tr><tr><td>2</td><td>−6</td></tr></table>
+    <div class="col" style="gap:8px">
+      <div class="step wipe eq sm"><span class="cm"><i>m</i></span> = {{−6 − (−6)|1 − (−5)}} = {{0|6}} = <span class="cm">0</span></div>
+      <p class="step small">Point-slope form with (1, −6):</p>
+      <div class="step wipe eq sm"><i>y</i> + 6 = <span class="cm">0</span>(<i>x</i> − 1)</div>
+      <p class="step small">Rewrite in slope-intercept form:</p>
+      <div class="step wipe eq sm"><i>y</i> + 6 = 0</div>
+      <div class="step pop eq ans"><i>y</i> = −6</div>
+      <p class="step small">There is <b>no <i>x</i>-term</b>. <i>y</i> is always −6, whatever <i>x</i> is. This is a <b>constant function</b>.</p>
+    </div>
+    <div class="graph" data-g='{"w":300,"h":320,"x":[-6,4],"y":[-8,2],"gx":[1,2],"gy":[1,2],"ptsStep":true,"lines":[{"p":[[-5,-6],[2,-6]],"label":"y = −6","step":true}],"pts":[[-5,-6,""],[1,-6,""],[2,-6,""]],"alt":"Horizontal line y = −6"}'></div>
+  </div>
+  <aside class="notes">The grid is empty at first; the next three clicks plot the table points one at a time (ask students to call out each point before you click), and the click after that draws the line. Let students calculate the slope themselves first; many will be surprised to get 0. Ask: What happens when you multiply anything by 0? This slide leads straight into Activity 4.2. For extra practice with tables and graphs, assign Skills Practice Set C.</aside>
+</section>
+
+<!-- 16 -->
+<section class="slide">
+  <p class="eyebrow">Day 1 · Activity 4.1 · Question 9</p>
+  <h2>Which form would you use?</h2>
+  <table class="cmp" style="margin-top:10px">
+    <tr><th>You are given…</th><th>Use…</th></tr>
+    <tr class="step"><td>the slope and the <i>y</i>-intercept</td><td><b>Slope-intercept form</b>. Plug in <i>m</i> and <i>b</i>.</td></tr>
+    <tr class="step"><td>two points</td><td>Find the slope first, then use <b>point-slope form</b>.</td></tr>
+    <tr class="step"><td>the slope and a point that is not the <i>y</i>-intercept</td><td><b>Point-slope form</b>. Plug in <i>m</i>, <i>x</i><sub>1</sub>, <i>y</i><sub>1</sub>.</td></tr>
+  </table>
+  <p class="step muted small" style="margin-top:14px">Reasoning may vary. Either form works for any non-vertical line; choose the one that saves you steps.</p>
+  <aside class="notes">Poll the class before you reveal each row. Accept any reasonable reasoning. Summarize Activity 4.1: point-slope form is fastest when you know a point and a slope, or two points.</aside>
+</section>
+
+<!-- 17 -->
+<section class="slide">
+  <p class="eyebrow">Day 1 · Activity 4.2 · Questions 1–2</p>
+  <h2>Horizontal lines</h2>
+  <p class="step">The equation <span class="mt"><i>y</i> = −6</span> has no <i>x</i>. Its slope is <span class="cm mt">0</span>.</p>
+  <p class="step">Its graph is a <b>horizontal line</b> through (0, −6). The <i>y</i>-value never changes, so the line never rises or falls.</p>
+  <div class="row" style="margin-top:6px">
+    <div class="col">
+      <h3>2a.</h3>
+      <table class="tbl"><tr><th>x</th><th>y</th></tr><tr><td>−7</td><td>11</td></tr><tr><td>−2</td><td>11</td></tr><tr><td>0</td><td>11</td></tr></table>
+      <div class="step pop eq sm ans"><i>y</i> = 11</div>
+      <p class="step small">Horizontal · slope 0 · <i>y</i>-intercept (0, 11)</p>
+    </div>
+    <div class="col">
+      <h3>2b. Through (−15, −3.75) and (89, −3.75)</h3>
+      <p class="step small">Both <i>y</i>-values are the same.</p>
+      <div class="step pop eq sm ans"><i>y</i> = −3.75</div>
+      <p class="step small">Horizontal · slope 0 · <i>y</i>-intercept (0, −3.75)</p>
+    </div>
+  </div>
+  <aside class="notes">Activity 4.2, 10–15 minutes. Connect back to y = −6 from the previous slide. Ask: Why does a slope of 0 make sense? (There is no rise, so rise over run is 0.) Have students sketch each line on a quick coordinate grid.</aside>
+</section>
+
+<!-- 18 -->
+<section class="slide">
+  <p class="eyebrow">Day 1 · Activity 4.2 · Question 3</p>
+  <h2>Vertical lines</h2>
+  <div class="row" style="gap:56px">
+    <table class="tbl"><tr><th>x</th><th>y</th></tr><tr><td>−2</td><td>5</td></tr><tr><td>−2</td><td>14</td></tr><tr><td>−2</td><td>29</td></tr></table>
+    <div class="col" style="gap:10px">
+      <p class="step small"><b>Similar:</b> one column repeats. <b>Different:</b> this time it's the <b><i>x</i></b> column.</p>
+      <div class="step pop eq sm ans"><i>x</i> = −2</div>
+      <p class="step small">Graph: a <b>vertical line</b> through (−2, 0).</p>
+      <div class="step wipe eq sm"><span class="cm"><i>m</i></span> = {{14 − 5|−2 − (−2)}} = {{9|0}}</div>
+      <p class="step small">You can't divide by 0, so the slope is <b class="cm">undefined</b>.</p>
+      <p class="step small">There is <b>no <i>y</i>-intercept</b>. The line runs straight up and down and never crosses the <i>y</i>-axis.</p>
+    </div>
+    <div class="graph" data-g='{"w":300,"h":360,"x":[-5,3],"y":[0,32],"gx":[1,1],"gy":[4,8],"ptsStep":true,"lines":[{"p":[[-2,5],[-2,29]],"label":"x = −2","step":true}],"pts":[[-2,5,""],[-2,14,""],[-2,29,""]],"alt":"Vertical line x = −2"}'></div>
+  </div>
+  <aside class="notes">The grid is empty at first; the next three clicks plot the table points one at a time (ask students to call out each point before you click), and the click after that draws the line. Before you reveal anything, ask students to predict the equation. Many will write y = −2; ask them which column repeats. Show the slope calculation: dividing by zero is undefined, which is not the same as 0. Stress the difference between 'zero slope' and 'undefined slope'.</aside>
+</section>
+
+<!-- 19 -->
+<section class="slide">
+  <p class="eyebrow">Day 1 · Activity 4.2 · Question 4</p>
+  <h2>Your turn: vertical lines</h2>
+  <div class="row" style="gap:56px;margin-top:6px">
+    <div class="col">
+      <h3>4a.</h3>
+      <table class="tbl"><tr><th>x</th><th>y</th></tr><tr><td>{{17|2}}</td><td>−18</td></tr><tr><td>{{17|2}}</td><td>23</td></tr><tr><td>{{17|2}}</td><td>267</td></tr></table>
+      <div class="step pop eq sm ans"><i>x</i> = {{17|2}}</div>
+      <p class="step small">Vertical line through ({{17|2}}, 0)</p>
+    </div>
+    <div class="col">
+      <h3>4b. Through (−7, −973) and (−7, 542)</h3>
+      <div class="step pop eq sm ans"><i>x</i> = −7</div>
+      <p class="step small">Vertical line through (−7, 0)</p>
+      <h3 style="margin-top:20px">4c. Make your own</h3>
+      <p class="step small">Pick <b>one</b> <i>x</i>-value and use it for every row, with any <i>y</i>-values. Then the equation is <span class="mt"><i>x</i> = </span> that number.</p>
+    </div>
+  </div>
+  <aside class="notes">17/2 is 8.5, so the line sits just to the right of x = 8. For 4c, have each student make a table and swap with a partner, who writes the equation.</aside>
+</section>
+
+<!-- 20 -->
+<section class="slide">
+  <p class="eyebrow">Day 1 · Activity 4.2 · Summary</p>
+  <h2>Horizontal vs. vertical</h2>
+  <table class="cmp">
+    <tr><th></th><th>Horizontal line</th><th>Vertical line</th></tr>
+    <tr class="step"><td class="muted">What changes?</td><td><i>x</i> changes, <i>y</i> stays the same</td><td><i>y</i> changes, <i>x</i> stays the same</td></tr>
+    <tr class="step"><td class="muted">Slope</td><td><b class="cm">0</b> (zero steepness)</td><td><b class="cm">undefined</b></td></tr>
+    <tr class="step"><td class="muted">Equation</td><td class="eq sm"><i>y</i> = a number</td><td class="eq sm"><i>x</i> = a number</td></tr>
+    <tr class="step"><td class="muted">Example</td><td class="eq sm"><i>y</i> = 11</td><td class="eq sm"><i>x</i> = −2</td></tr>
+    <tr class="step"><td class="muted"><i>y</i>-intercept</td><td>(0, that number)</td><td>none (unless it's <i>x</i> = 0)</td></tr>
+  </table>
+  <p class="step think small">Memory trick: <b>HOY VUX</b>. <b>H</b>orizontal: slope <b>0</b>, <b>y</b> = ___. <b>V</b>ertical: slope <b>U</b>ndefined, <b>x</b> = ___.</p>
+  <aside class="notes">Read the paragraph from the student book: a horizontal line has zero steepness; a vertical line has undefined steepness. Offer HOY VUX as a memory aid. Return to the Essential Question and have students answer it in their notes. End of Day 1.</aside>
+</section>
+
+<!-- 21 -->
+<section class="slide divider">
+  <p class="eyebrow">Lesson 4</p>
+  <h1>Day 2</h1>
+  <p class="step" style="font-size:32px;max-width:900px">Essential Question: Are there other forms of a linear equation that you can use? How do you write equations for horizontal and vertical lines?</p>
+  <aside class="notes">Start Day 2 by rereading the Essential Question. Ask two or three students to summarize Day 1: What is point-slope form? What do the equations of horizontal and vertical lines look like?</aside>
+</section>
+
+<!-- 22 -->
+<section class="slide">
+  <p class="eyebrow">Day 2 · Activity 4.3 · Matching Representations</p>
+  <h2>Cut, sort, and match</h2>
+  <p class="small">Cut out the graphs, tables, contexts, and equations at the end of the lesson. Match each equation with its graph, table, or context, and explain how you matched them.</p>
+  <h3 class="step" style="margin-top:6px">Answer key</h3>
+  <div class="grid3" style="gap:10px 18px">
+    <div class="step eq sm"><b class="mt">A:</b> <i>y</i> − 200 = −5(<i>x</i> − 24)</div>
+    <div class="step eq sm"><b class="mt">B:</b> <i>y</i> = {{1|2}}<i>x</i> + 40</div>
+    <div class="step eq sm"><b class="mt">C:</b> <i>y</i> − <i>x</i> = 2</div>
+    <div class="step eq sm"><b class="mt">D:</b> <i>y</i> = −{{3|4}}<i>x</i> + {{33|2}}</div>
+    <div class="step eq sm"><b class="mt">E:</b> <i>y</i> = 8<i>x</i> + 120</div>
+    <div class="step eq sm"><b class="mt">F:</b> <i>y</i> = 1.2<i>x</i> + 9</div>
+  </div>
+  <aside class="notes">Activity 4.3, about 30 minutes. Students need scissors and the cutout pages at the end of the lesson. Have pairs match first, then reveal the answer key one letter at a time so they can check. Ask which clues they used. Note that C, y − x = 2, is in neither form; have students rewrite it as y = x + 2.</aside>
+</section>
+
+<!-- 23 -->
+<section class="slide">
+  <p class="eyebrow">Day 2 · Activity 4.3 · Question 2</p>
+  <h2>Compare the graphs (A and C)</h2>
+  <div class="col" style="gap:16px;margin-top:6px">
+    <div class="row" style="gap:24px">
+      <div class="card" style="flex:1"><h3>Graph A</h3><div class="row" style="gap:16px">
+        <div class="graph" data-g='{"w":190,"h":150,"x":[0,36],"y":[0,360],"gx":[4,12],"gy":[40,120],"lines":[{"p":[[0,320],[24,200]],"step":true}],"alt":"Graph A: elevation falling over time"}'></div>
+        <div class="col step" style="gap:8px"><div class="eq" style="font-size:28px"><i>y</i> − 200 = <span class="cm">−5</span>(<i>x</i> − 24)</div><p class="small">slope <b class="cm">−5</b>: falls left to right</p></div></div></div>
+      <div class="card" style="flex:1"><h3>Graph C</h3><div class="row" style="gap:16px">
+        <div class="graph" data-g='{"w":190,"h":150,"x":[-4,4],"y":[-2,6],"gx":[1,2],"gy":[1,2],"lines":[{"p":[[0,2],[1,3]],"step":true}],"alt":"Graph C: line y = x + 2"}'></div>
+        <div class="col step" style="gap:8px"><div class="eq" style="font-size:28px"><i>y</i> = <span class="cm">1</span><i>x</i> + 2</div><p class="small">slope <b class="cm">1</b>: rises left to right</p></div></div></div>
+    </div>
+    <p class="step"><b>a.</b> One graph goes <b>down</b> from left to right: <span class="cm">negative slope</span>. The other goes <b>up</b>: <span class="cm">positive slope</span>.</p>
+    <p class="step"><b>b.</b> In slope-intercept form, the number that is <b>added</b> is the <i>y</i>-coordinate of the <i>y</i>-intercept.</p>
+    <p class="step"><b>c.</b> The slope is the <b>coefficient of <i>x</i></b> in slope-intercept form.</p>
+  </div>
+  <aside class="notes">Each click draws one line, then shows its equation: Graph A first, then Graph C. Ask: Which graph goes down from left to right? How can you tell from the equation? For Graph A, have students rewrite it in slope-intercept form: y = −5x + 320, so the y-intercept is (0, 320).</aside>
+</section>
+
+<!-- 24 -->
+<section class="slide">
+  <p class="eyebrow">Day 2 · Activity 4.3 · Question 3</p>
+  <h2>Analyze the tables (D and E)</h2>
+  <p class="small muted">a. Use the slope formula to find the coefficient of <i>x</i>.</p>
+  <div class="row" style="gap:56px">
+    <div class="col">
+      <h3>Table D</h3>
+      <div class="step wipe eq"><span class="cm"><i>m</i></span> = {{9 − 15|10 − 2}} = {{−6|8}} = <span class="cm">−{{3|4}}</span></div>
+    </div>
+    <div class="col">
+      <h3>Table E</h3>
+      <div class="step wipe eq"><span class="cm"><i>m</i></span> = {{264 − 216|18 − 12}} = {{48|6}} = <span class="cm">8</span></div>
+    </div>
+  </div>
+  <p class="small muted" style="margin-top:10px">b. How can you find the number that is added in slope-intercept form?</p>
+  <p class="step">It's the <i>y</i>-value when <span class="mt"><i>x</i> = 0</span>. If (0, <i>y</i>) isn't in the table, use the slope and a point to solve for it.</p>
+  <aside class="notes">Ask: What are the ways to find the rate of change from a table? (The slope formula, or the change in y over the change in x between rows.) For Table D the y-intercept isn't in the table, so students solve for it: 15 = −3/4(2) + b, so b = 16.5, which is 33/2.</aside>
+</section>
+
+<!-- 25 -->
+<section class="slide">
+  <p class="eyebrow">Day 2 · Activity 4.3 · Question 4</p>
+  <h2>What does each term mean? (B and F)</h2>
+  <div class="row" style="gap:36px;margin-top:6px">
+    <div class="card" style="flex:1">
+      <h3>Context B: reading a novel</h3>
+      <div class="eq sm"><i>y</i> = <span class="cm">{{1|2}}<i>x</i></span> + <span class="cp">40</span></div>
+      <p class="step small"><span class="cm">{{1|2}}<i>x</i></span>: reads one page every two minutes (½ page per minute)</p>
+      <p class="step small"><i>x</i>: the number of minutes (independent variable)</p>
+      <p class="step small"><span class="cp">40</span>: pages already read before falling asleep</p>
+    </div>
+    <div class="card" style="flex:1">
+      <h3>Context F: ordering pizza</h3>
+      <div class="eq sm"><i>y</i> = <span class="cm">1.2<i>x</i></span> + <span class="cp">9</span></div>
+      <p class="step small"><span class="cm">1.2<i>x</i></span>: $1.20 for each additional topping</p>
+      <p class="step small"><i>x</i>: the number of additional toppings (independent variable)</p>
+      <p class="step small"><span class="cp">9</span>: the starting cost of a large pizza</p>
+    </div>
+  </div>
+  <aside class="notes">Ask students to explain each term in a full sentence with units. Push on the meaning of x: it's the quantity we count or choose (minutes, toppings). Then summarize Activity 4.3.</aside>
+</section>
+
+<!-- 26 -->
+<section class="slide">
+  <p class="eyebrow">Day 2 · Talk the Talk · Say What?</p>
+  <h2>What can you read from each equation?</h2>
+  <div class="grid3" style="gap:14px 18px">
+    <div class="card"><div class="eq sm">a. <i>y</i> = {{3|5}}<i>x</i> − 4</div><p class="step small">slope <b class="cm">{{3|5}}</b>, <i>y</i>-intercept <b class="cp">(0, −4)</b></p></div>
+    <div class="card"><div class="eq sm">b. <i>y</i> − 6 = 2(<i>x</i> + 1)</div><p class="step small">slope <b class="cm">2</b>, point <b class="cp">(−1, 6)</b></p></div>
+    <div class="card"><div class="eq sm">c. <i>y</i> + 4 = 2(<i>x</i> − 0)</div><p class="step small">slope <b class="cm">2</b>, point <b class="cp">(0, −4)</b></p></div>
+    <div class="card"><div class="eq sm">d. <i>y</i> = −{{2|7}}<i>x</i></div><p class="step small">slope <b class="cm">−{{2|7}}</b>, <i>y</i>-intercept <b class="cp">(0, 0)</b></p></div>
+    <div class="card"><div class="eq sm">e. <i>y</i> + 5 = −(<i>x</i> − 4)</div><p class="step small">slope <b class="cm">−1</b>, point <b class="cp">(4, −5)</b></p></div>
+    <div class="card"><div class="eq sm">f. <i>y</i> = 19</div><p class="step small">slope <b class="cm">0</b>, <i>y</i>-intercept <b class="cp">(0, 19)</b>: a horizontal line</p></div>
+  </div>
+  <p class="step warn">Signs flip: <span class="mt"><i>x</i> + 1</span> means <span class="mt"><i>x</i><sub>1</sub> = −1</span>, and <span class="mt"><i>y</i> + 5</span> means <span class="mt"><i>y</i><sub>1</sub> = −5</span>.</p>
+  <aside class="notes">Talk the Talk, 10–15 minutes. Have students write their answers on whiteboards, then reveal them one at a time. Part c is in point-slope form, but its point happens to be the y-intercept. In part e, −(x − 4) means the slope is −1.</aside>
+</section>
+
+<!-- 27 -->
+<section class="slide">
+  <p class="eyebrow">Day 2 · Talk the Talk · Question 2</p>
+  <h2>Create a context through (2, 56) with a positive slope</h2>
+  <p class="step card" style="font-size:25px"><b>Sample:</b> Omar earns 4 credits for each game he plays. After playing 2 games today, he has 56 credits.</p>
+  <p class="step"><span class="cm">4 credits per game → slope 4</span>. <span class="cp">2 games, 56 credits → point (2, 56)</span></p>
+  <p class="step small">Point-slope form:</p>
+  <div class="step wipe eq"><i>y</i> − <span class="cp">56</span> = <span class="cm">4</span>(<i>x</i> − <span class="cp">2</span>)</div>
+  <p class="step small">Slope-intercept form:</p>
+  <div class="step wipe eq"><i>y</i> − 56 = 4<i>x</i> − 8  →  <i>y</i> = 4<i>x</i> + 48</div>
+  <p class="step small muted">Make up your own! Any situation with a positive rate that passes through (2, 56) works.</p>
+  <aside class="notes">Have students write their own context first, then share two or three. Check each one: does it pass through (2, 56), and is the rate positive? Omar's example is the sample answer from the teacher guide.</aside>
+</section>
+
+<!-- 28 -->
+<section class="slide">
+  <p class="eyebrow">Essential Question · Answered</p>
+  <h2>What did we learn?</h2>
+  <div class="col" style="gap:20px;margin-top:6px">
+    <p class="step"><b>Yes, there's another form.</b> Point-slope form uses the slope and any point on the line:</p>
+    <div class="step wipe eq big" style="font-size:50px"><i>y</i> − <span class="cp"><i>y</i><sub>1</sub></span> = <span class="cm"><i>m</i></span>(<i>x</i> − <span class="cp"><i>x</i><sub>1</sub></span>)</div>
+    <p class="step"><b>Horizontal lines</b> have slope 0 and equations like <span class="mt"><i>y</i> = 11</span>.</p>
+    <p class="step"><b>Vertical lines</b> have an undefined slope and equations like <span class="mt"><i>x</i> = −2</span>.</p>
+  </div>
+  <aside class="notes">Students answer the Essential Question on the lesson opener page. Ask them to mention both forms and both special lines in their answer.</aside>
+</section>
+
+<!-- 29 -->
+<section class="slide">
+  <p class="eyebrow">Exit Ticket</p>
+  <h2>Show what you know</h2>
+  <div class="col" style="gap:12px;margin-top:6px">
+    <p>1. Write the equation in point-slope form: slope 5, through (−2, 3).</p>
+    <div class="step pop eq sm ans"><i>y</i> − 3 = 5(<i>x</i> + 2)</div>
+    <p>2. Rewrite your answer to #1 in slope-intercept form.</p>
+    <div class="step pop eq sm ans"><i>y</i> = 5<i>x</i> + 13</div>
+    <p>3. Write the equation of the line through (4, 1) and (4, −7). Is it horizontal or vertical?</p>
+    <div class="step pop eq sm ans"><i>x</i> = 4 <span style="font-family:var(--body);font-size:22px"> · vertical, slope undefined</span></div>
+  </div>
+  <aside class="notes">Added for this deck; not from the textbook. Give 3–4 minutes, collect the answers, and use them to decide who needs Skills Practice Sets A–C. For #3, both points have the same x-value, so the line is vertical.</aside>
+</section>
+
+<!-- 30 -->
+<section class="slide">
+  <p class="eyebrow">Prepare for Lesson 5</p>
+  <h2>Solve each equation for <i>y</i></h2>
+  <div class="row" style="gap:56px;margin-top:6px">
+    <div class="col">
+      <div class="eq sm">1. −2<i>y</i> = −<i>x</i> + 7</div>
+      <div class="step pop eq sm ans"><i>y</i> = {{1|2}}<i>x</i> − {{7|2}}</div>
+      <div class="eq sm" style="margin-top:14px">2. {{3|4}}<i>y</i> = <i>x</i> − 6</div>
+      <div class="step pop eq sm ans"><i>y</i> = {{4|3}}<i>x</i> − 8</div>
+    </div>
+    <div class="col">
+      <div class="eq sm">3. 2<i>x</i> + 3<i>y</i> = 6</div>
+      <div class="step pop eq sm ans"><i>y</i> = −{{2|3}}<i>x</i> + 2</div>
+      <div class="eq sm" style="margin-top:14px">4. {{1|2}}<i>x</i> − 4<i>y</i> = 8</div>
+      <div class="step pop eq sm ans"><i>y</i> = {{1|8}}<i>x</i> − 2</div>
+    </div>
+  </div>
+  <aside class="notes">Prepares students for Lesson 5, which works with rewriting equations. Assign it as homework or use it as tomorrow's warm-up. If you go over it in class, the answers appear one at a time.</aside>
+</section>
+
+</div>
+
+<nav id="bar" aria-label="Slide controls">
+  <button id="prev" type="button" aria-label="Previous step">← Back</button>
+  <button id="next" type="button" aria-label="Next step">Next →</button>
+  <div id="prog"><div></div></div>
+  <span id="hint">→ / Space next · ← back · N notes · F full screen</span>
+  <span id="count"></span>
+  <button id="nb" type="button" aria-pressed="false">Notes</button>
+  <button id="fs" type="button">Full screen</button>
+</nav>
+<div id="notes" hidden><b>Speaker notes</b><p id="notesText"></p></div>
+
+<script>
+const stage = document.getElementById('stage');
+// {{a|b}} → stacked fraction
+stage.innerHTML = stage.innerHTML.replace(/\{\{(.+?)\|(.+?)\}\}/g, '<span class="fr"><span>$1</span><span>$2</span></span>');
+
+// Graph spec (data-g): w,h px; x,y = [min,max]; gx,gy = [grid step, label step];
+// lines: [{p:[[x,y],[x,y]], label, c:'a'|'b'|'c' (pool color), dash, step (appears on its own click)}] extended to the window; pts: [[x,y,label]].
+// ptsStep: each point appears on its own click, in order, before the lines.
+// Keep in step with draw_graph() in make_pptx.py.
+const GM = {L: 34, R: 12, T: 12, B: 26};
+function clipLine([[ax, ay], [bx, by]], [x0, x1], [y0, y1]) {
+  const dx = bx - ax, dy = by - ay; let lo = -Infinity, hi = Infinity;
+  for (const [p, q] of [[-dx, ax - x0], [dx, x1 - ax], [-dy, ay - y0], [dy, y1 - ay]]) {
+    if (p === 0) { if (q < 0) return null; continue; }
+    const r = q / p; if (p < 0) lo = Math.max(lo, r); else hi = Math.min(hi, r);
+  }
+  return lo > hi ? null : [[ax + lo * dx, ay + lo * dy], [ax + hi * dx, ay + hi * dy]];
+}
+function graphSVG(g) {
+  const {w: W, h: H} = g, [x0, x1] = g.x, [y0, y1] = g.y;
+  const X = v => (GM.L + (v - x0) / (x1 - x0) * (W - GM.L - GM.R)).toFixed(1);
+  const Y = v => (GM.T + (y1 - v) / (y1 - y0) * (H - GM.T - GM.B)).toFixed(1);
+  const ticks = (a, b, t) => { const o = []; for (let v = Math.ceil(a / t - 1e-9) * t; v <= b + 1e-9; v += t) o.push(+v.toFixed(6)); return o; };
+  const num = v => String(v).replace('-', '−');
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${g.alt || 'graph'}">`;
+  s += `<rect class="g-bg" x=".5" y=".5" width="${W - 1}" height="${H - 1}" rx="8"/>`;
+  for (const v of ticks(x0, x1, g.gx[0])) s += `<line class="g-grid" x1="${X(v)}" y1="${GM.T}" x2="${X(v)}" y2="${H - GM.B}"/>`;
+  for (const v of ticks(y0, y1, g.gy[0])) s += `<line class="g-grid" x1="${GM.L}" y1="${Y(v)}" x2="${W - GM.R}" y2="${Y(v)}"/>`;
+  const ax = x0 <= 0 && 0 <= x1 ? 0 : x0, ay = y0 <= 0 && 0 <= y1 ? 0 : y0;
+  s += `<line class="g-axis" x1="${X(ax)}" y1="${GM.T}" x2="${X(ax)}" y2="${H - GM.B}"/>`;
+  s += `<line class="g-axis" x1="${GM.L}" y1="${Y(ay)}" x2="${W - GM.R}" y2="${Y(ay)}"/>`;
+  for (const v of ticks(x0, x1, g.gx[1])) s += `<text class="g-tick" x="${X(v)}" y="${H - GM.B + 17}" text-anchor="middle">${num(v)}</text>`;
+  for (const v of ticks(y0, y1, g.gy[1])) s += `<text class="g-tick" x="${GM.L - 6}" y="${+Y(v) + 4}" text-anchor="end">${num(v)}</text>`;
+  const ptsSVG = () => (g.pts || []).map(([px, py, lab]) => (g.ptsStep ? '<g class="step">' : '') +
+    `<circle class="g-pt" cx="${X(px)}" cy="${Y(py)}" r="5.5"/>` +
+    (lab ? `<text class="g-plab" x="${+X(px) + 9}" y="${+Y(py) - 8}">${lab}</text>` : '') +
+    (g.ptsStep ? '</g>' : '')).join('');
+  if (g.ptsStep) s += ptsSVG();
+  for (const ln of g.lines || []) {
+    const c = clipLine(ln.p, g.x, g.y); if (!c) continue;
+    if (ln.step) s += '<g class="step">';
+    s += `<line class="g-line${ln.c ? ' g' + ln.c : ''}"${ln.dash ? ' stroke-dasharray="10 7"' : ''} x1="${X(c[0][0])}" y1="${Y(c[0][1])}" x2="${X(c[1][0])}" y2="${Y(c[1][1])}"/>`;
+    if (ln.label) { const e = c[0][1] > c[1][1] ? c[0] : c[1];
+      const right = +X(e[0]) > W / 2;
+      s += `<text class="g-llab" x="${+X(e[0]) + (right ? -12 : 8)}" y="${+Y(e[1]) + 16}" text-anchor="${right ? 'end' : 'start'}">${ln.label}</text>`; }
+    if (ln.step) s += '</g>';
+  }
+  if (!g.ptsStep) s += ptsSVG();
+  return s + '</svg>';
+}
+stage.querySelectorAll('.graph').forEach(el => { el.innerHTML = graphSVG(JSON.parse(el.dataset.g)); });
+
+const slides = [...stage.querySelectorAll('.slide')];
+const steps = slides.map(s => [...s.querySelectorAll('.step')]);
+let i = 0, k = 0;
+
+function readHash(){ const m = /^#s(\d+)$/.exec(location.hash); return m ? Math.min(Math.max(+m[1] - 1, 0), slides.length - 1) : 0; }
+
+function show(n, revealAll){
+  slides[i].classList.remove('on');
+  i = n;
+  k = revealAll ? steps[i].length : 0;
+  steps[i].forEach((el, j) => el.classList.toggle('shown', j < k));
+  slides[i].classList.add('on');
+  update();
+}
+function next(){
+  if (k < steps[i].length) { steps[i][k++].classList.add('shown'); update(); }
+  else if (i < slides.length - 1) show(i + 1, false);
+}
+function prev(){
+  if (k > 0) { steps[i][--k].classList.remove('shown'); update(); }
+  else if (i > 0) show(i - 1, true);
+}
+function update(){
+  document.getElementById('count').textContent = (i + 1) + ' / ' + slides.length;
+  document.querySelector('#prog>div').style.width = ((i + 1) / slides.length * 100) + '%';
+  history.replaceState(null, '', '#s' + (i + 1));
+  const a = slides[i].querySelector('aside.notes');
+  document.getElementById('notesText').textContent = a ? a.textContent : '';
+}
+function fit(){
+  const s = Math.min(innerWidth / 1280, (innerHeight - 44) / 720);
+  stage.style.transform = `translate(-50%,-50%) scale(${s})`;
+}
+function fullscreen(){
+  try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen().catch(() => {}); } catch (e) {}
+}
+
+stage.addEventListener('click', next);
+document.getElementById('next').addEventListener('click', next);
+document.getElementById('prev').addEventListener('click', prev);
+document.getElementById('fs').addEventListener('click', fullscreen);
+function toggleNotes(){
+  const n = document.getElementById('notes'); n.hidden = !n.hidden;
+  document.getElementById('nb').setAttribute('aria-pressed', String(!n.hidden));
+}
+document.getElementById('nb').addEventListener('click', toggleNotes);
+addEventListener('keydown', e => {
+  if (e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
+  if (['ArrowRight','ArrowDown',' ','PageDown','Enter'].includes(e.key)) { e.preventDefault(); next(); }
+  else if (['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
+  else if (e.key === 'Home') show(0, false);
+  else if (e.key === 'End') show(slides.length - 1, true);
+  else if (e.key === 'f' || e.key === 'F') fullscreen();
+  else if (e.key === 'n' || e.key === 'N') toggleNotes();
+});
+addEventListener('resize', fit);
+fit();
+slides[0].classList.add('on');
+show(readHash(), false);
+</script>
