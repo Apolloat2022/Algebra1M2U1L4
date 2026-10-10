@@ -1,3 +1,5 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Point-Slope Form · Bluebonnet Algebra I</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,7 +25,7 @@ html,body{height:100%}
 body{background:var(--paper);color:var(--ink);font-family:var(--body);overflow:hidden;
   background-image:linear-gradient(var(--rule) 1px,transparent 1px),linear-gradient(90deg,var(--rule) 1px,transparent 1px);
   background-size:32px 32px}
-#stage{position:absolute;left:50%;top:calc(50% - 22px);width:1280px;height:720px;transform-origin:center;cursor:pointer}
+#stage{position:absolute;left:50%;top:calc(50% - 22px);width:1280px;height:720px;transform-origin:center;cursor:pointer;touch-action:manipulation}
 .slide{position:absolute;inset:0;padding:48px 72px 40px;display:none;flex-direction:column;gap:18px;font-size:26px;line-height:1.4}
 .slide.on{display:flex;animation:slideIn .35s ease}
 @keyframes slideIn{from{opacity:0}to{opacity:1}}
@@ -104,7 +106,17 @@ table.cmp th{font-family:var(--display);font-size:26px}
 #count{font-variant-numeric:tabular-nums;min-width:64px;text-align:right}
 #brand{display:flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none;font-size:15px;white-space:nowrap}
 #brand strong{color:var(--point)}
-@media (max-width:560px){#hint,#brand span{display:none}}
+@media (max-width:900px){#hint{display:none}}
+@media (max-width:560px){#brand,#fs{display:none} #bar{gap:8px;padding:0 10px} #count{min-width:0}}
+#bar button{touch-action:manipulation}
+/* Portrait (phones, iPad upright): a 760px-wide slide whose height fit() matches to the screen; columns stack. */
+@media (orientation:portrait){
+  #stage{width:760px}
+  .slide{padding:40px 36px 32px;overflow-y:auto}
+  .row{flex-direction:column;gap:20px}
+  .grid3{grid-template-columns:1fr}
+  h1{font-size:60px} .divider h1{font-size:84px} .eq.big{font-size:48px}
+}
 .slide aside.notes{display:none}
 #notes{position:fixed;left:0;right:0;bottom:44px;max-height:34vh;overflow:auto;z-index:2;padding:14px 20px;
   background:var(--card);border-top:2px solid var(--point);font-size:17px;line-height:1.5}
@@ -752,7 +764,9 @@ function update(){
   document.getElementById('notesText').textContent = a ? a.textContent : '';
 }
 function fit(){
-  const s = Math.min(innerWidth / 1280, (innerHeight - 44) / 720);
+  const W = innerWidth, H = innerHeight - 44, portrait = matchMedia('(orientation:portrait)').matches;
+  const s = portrait ? W / 760 : Math.min(W / 1280, H / 720);
+  stage.style.height = portrait ? H / s + 'px' : '';
   stage.style.transform = `translate(-50%,-50%) scale(${s})`;
 }
 function fullscreen(){
@@ -760,6 +774,13 @@ function fullscreen(){
 }
 
 stage.addEventListener('click', next);
+// Swipe left = next, swipe right = back (taps still advance via click).
+let tx = 0, ty = 0;
+stage.addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, {passive: true});
+stage.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) dx < 0 ? next() : prev();
+}, {passive: true});
 document.getElementById('next').addEventListener('click', next);
 document.getElementById('prev').addEventListener('click', prev);
 document.getElementById('fs').addEventListener('click', fullscreen);
