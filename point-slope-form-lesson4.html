@@ -765,9 +765,12 @@ function update(){
   document.getElementById('notesText').textContent = a ? a.textContent : '';
 }
 function fit(){
-  const W = innerWidth, H = innerHeight - 44, portrait = matchMedia('(orientation:portrait)').matches;
+  // Bar height varies (iPhone safe-area padding), so center the slide in whatever space is left above it.
+  const bar = document.getElementById('bar').offsetHeight, W = innerWidth, H = innerHeight - bar, portrait = matchMedia('(orientation:portrait)').matches;
   const s = portrait ? W / 760 : Math.min(W / 1280, H / 720);
   stage.style.height = portrait ? H / s + 'px' : '';
+  stage.style.top = H / 2 + 'px';
+  document.getElementById('notes').style.bottom = bar + 'px';
   stage.style.transform = `translate(-50%,-50%) scale(${s})`;
 }
 function fullscreen(){
