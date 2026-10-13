@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 4 Homework · Point-Slope Form</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<link rel="stylesheet" href="mc.css">
+<div class="wrap">
+  <p class="eyebrow">Module 2 · Topic 1 · Lesson 4 · Homework</p>
+  <h1>Point-Slope Form Practice</h1>
+  <p class="muted">Pick an answer for each question. You'll see right away whether it's correct, and why. The page numbers point to your Student Edition if you want to look back.</p>
+  <ol id="questions"></ol>
+  <div class="bar">
+    <p id="result" class="card" hidden></p>
+    <button id="reset" class="ghost">Start over</button>
+  </div>
+</div>
+<script>
+window.MC = { mode: "homework", questions: [
+  { se: 215, q: "Which equation in point-slope form has slope [[m = 2]] and passes through [[(5, 6)]]?",
+    choices: ["[[y − 6 = 2(x − 5)]]", "[[y + 6 = 2(x + 5)]]", "[[y − 5 = 2(x − 6)]]", "[[y − 6 = 5(x − 2)]]"],
+    why: "Point-slope form is [[y − y₁ = m(x − x₁)]]. Substitute [[m = 2]], [[x₁ = 5]] and [[y₁ = 6]]." },
+  { se: 215, q: "Which equation in point-slope form has slope [[m = −9.2]] and passes through [[(−17, 10)]]?",
+    choices: ["[[y − 10 = −9.2(x + 17)]]", "[[y − 10 = −9.2(x − 17)]]", "[[y + 10 = −9.2(x + 17)]]", "[[y − 17 = −9.2(x + 10)]]"],
+    why: "[[x₁ = −17]], so [[x − x₁ = x − (−17) = x + 17]]. With [[y₁ = 10]], the left side is [[y − 10]]." },
+  { se: 215, q: "Which equation in point-slope form passes through [[(−2, −3)]] and [[(8, −8)]]?",
+    choices: ["[[y + 3 = −½(x + 2)]]", "[[y − 3 = −½(x − 2)]]", "[[y + 3 = −2(x + 2)]]", "[[y + 3 = ½(x + 2)]]"],
+    why: "Slope [[= (−8 − (−3)) ÷ (8 − (−2)) = −5 ÷ 10 = −½]]. Using the point [[(−2, −3)]]: [[y − (−3) = −½(x − (−2))]], which is [[y + 3 = −½(x + 2)]]." },
+  { se: 215, q: "A photography studio charges $50 for a sitting fee and 6 prints. Luigi increased his order to 11 prints and paid $65. Let [[x]] be the number of prints and [[y]] the total cost. Which equation models this?",
+    choices: ["[[y − 50 = 3(x − 6)]]", "[[y − 6 = 3(x − 50)]]", "[[y − 50 = 15(x − 6)]]", "[[y − 50 = 5(x − 6)]]"],
+    why: "The points are [[(6, 50)]] and [[(11, 65)]]. Slope [[= (65 − 50) ÷ (11 − 6) = 15 ÷ 5 = 3]], so each extra print costs $3. Then use the point [[(6, 50)]]." },
+  { se: 215, q: "A newspaper charges a flat fee plus a charge per day to place a classified ad. Which equation gives the total charge [[y]] for [[x]] days?",
+    extra: '<table class="data"><tr><th>Number of Days</th><th>Total Charge ($)</th></tr><tr><td>2</td><td>8.00</td></tr><tr><td>4</td><td>13.00</td></tr><tr><td>6</td><td>18.00</td></tr></table>',
+    choices: ["[[y = 2.5x + 3]]", "[[y = 2.5x + 8]]", "[[y = 5x − 2]]", "[[y = 4x]]"],
+    why: "Every 2 more days add $5, so the slope is [[5 ÷ 2 = 2.5]] dollars per day. Then [[8 = 2.5(2) + b]] gives [[b = 3]], the flat fee." },
+  { se: 203, q: "Rewrite [[y − 4 = 3(x + 2)]] in slope-intercept form.",
+    choices: ["[[y = 3x + 10]]", "[[y = 3x + 6]]", "[[y = 3x + 2]]", "[[y = 3x − 2]]"],
+    why: "Distribute: [[y − 4 = 3x + 6]]. Add 4 to both sides: [[y = 3x + 10]]." },
+  { se: 203, q: "What are the slope and a point on the line [[y + 5 = −2(x − 4)]]?",
+    choices: ["slope [[−2]], point [[(4, −5)]]", "slope [[−2]], point [[(−4, 5)]]", "slope [[2]], point [[(4, −5)]]", "slope [[−2]], point [[(4, 5)]]"],
+    why: "Write it as [[y − (−5) = −2(x − 4)]]. So [[m = −2]], [[x₁ = 4]] and [[y₁ = −5]]. The signs in the parentheses are the opposite of the point's coordinates." },
+  { se: 206, q: "Which equation is the horizontal line through [[(3, −6)]]?",
+    choices: ["[[y = −6]]", "[[x = 3]]", "[[y = 3]]", "[[x = −6]]"],
+    why: "Every point on a horizontal line has the same [[y]]-value. Here it's [[−6]], so the line is [[y = −6]]." },
+  { se: 207, q: "Which equation is the vertical line through [[(−2, 7)]]?",
+    choices: ["[[x = −2]]", "[[y = 7]]", "[[x = 7]]", "[[y = −2]]"],
+    why: "Every point on a vertical line has the same [[x]]-value. Here it's [[−2]], so the line is [[x = −2]]." },
+  { se: 207, q: "What is the slope of the line [[x = 5]]?",
+    choices: ["undefined", "[[0]]", "[[5]]", "[[1]]"],
+    why: "[[x = 5]] is a vertical line. The [[x]]-values never change, so the run is 0, and you can't divide by 0. Remember HOY VUX: Vertical, Undefined slope, [[x =]] a number." },
+] };
+</script>
+<script src="mc.js"></script>

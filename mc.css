@@ -1,0 +1,57 @@
+/* Shared look for the Lesson 4 homework and quiz pages; tokens match the slide deck. */
+:root{
+  --paper:#f7f7fb; --rule:#e6e8f2; --ink:#16171d; --muted:#5f6272; --card:#ffffff; --line:#e3e4ec;
+  --point:#3050b8; --soft:#eaeefb; --ans:#4f8a3c; --ans-bg:#edf5e9; --bad:#b4372b; --bad-bg:#fbecea;
+  --body:ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --math:"STIX Two Text", "Cambria Math", "Times New Roman", serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#111218; --rule:#1f2129; --ink:#eceef6; --muted:#9ea2b3; --card:#1a1c24; --line:#2c2f3b;
+  --point:#93a9f5; --soft:#232a45; --ans:#8cc47a; --ans-bg:#1f2a1b; --bad:#ff8a7a; --bad-bg:#2e1c1a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#111218; --rule:#1f2129; --ink:#eceef6; --muted:#9ea2b3; --card:#1a1c24; --line:#2c2f3b;
+  --point:#93a9f5; --soft:#232a45; --ans:#8cc47a; --ans-bg:#1f2a1b; --bad:#ff8a7a; --bad-bg:#2e1c1a; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.5;
+  background-image:linear-gradient(var(--rule) 1px,transparent 1px),linear-gradient(90deg,var(--rule) 1px,transparent 1px);
+  background-size:32px 32px}
+.wrap{max-width:760px;margin:0 auto;padding:32px 16px 64px}
+.eyebrow{font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--point);margin:0}
+h1{font-size:clamp(28px,6vw,40px);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:6px 0 10px}
+p{margin:0}
+.muted{color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.mt{font-family:var(--math);font-size:1.12em;white-space:nowrap}
+
+ol#questions{list-style:none;padding:0;margin:24px 0;display:flex;flex-direction:column;gap:16px;counter-reset:q}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+legend{padding:0;margin-bottom:12px;counter-increment:q}
+legend::before{content:counter(q) ". ";font-weight:700}
+.se{color:var(--muted);font-size:.85em;white-space:nowrap}
+table.data{border-collapse:collapse;margin:10px 0 4px;font-family:var(--math)}
+table.data th,table.data td{border:1px solid var(--line);padding:4px 14px;text-align:center}
+table.data th{font-family:var(--body);font-size:.85em;font-weight:600}
+
+.choice{display:flex;align-items:center;gap:12px;padding:10px 12px;margin-top:8px;border:1px solid var(--line);border-radius:8px;cursor:pointer}
+.choice:hover{background:var(--soft)}
+.choice input{margin:0;width:18px;height:18px;accent-color:var(--point);flex:none}
+.letter{font-weight:700;color:var(--muted);width:1.2em;flex:none}
+.choice.right{border-color:var(--ans);background:var(--ans-bg)}
+.choice.wrong{border-color:var(--bad);background:var(--bad-bg)}
+fieldset:disabled .choice{cursor:default}
+fieldset:disabled .choice:hover{background:none}
+fieldset:disabled .choice.right:hover{background:var(--ans-bg)}
+fieldset:disabled .choice.wrong:hover{background:var(--bad-bg)}
+.why{margin-top:12px;padding:10px 14px;border-radius:8px;background:var(--soft)}
+.why b.ok{color:var(--ans)} .why b.no{color:var(--bad)}
+
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+button{font:inherit;font-weight:600;padding:10px 20px;border-radius:8px;border:1px solid var(--point);background:var(--point);color:#fff;cursor:pointer}
+button.ghost{background:none;color:var(--point)}
+button:disabled{opacity:.45;cursor:not-allowed}
+label.name{display:flex;flex-direction:column;gap:4px;font-weight:600;margin-top:16px;max-width:360px}
+label.name input{font:inherit;font-weight:400;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
+#result{font-size:20px}
+#result[hidden],.why[hidden]{display:none}
+.why .mt{white-space:normal}
