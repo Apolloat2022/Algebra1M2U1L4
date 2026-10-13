@@ -1,5 +1,5 @@
-// Multiple-choice engine shared by the homework and quiz pages.
-// Each page sets window.MC = {mode: "homework" | "quiz", questions: [{q, choices, why, se, extra?}]};
+// Multiple-choice engine shared by the bell work, homework and quiz pages.
+// Each page sets window.MC = {mode: "homework" | "quiz", questions: [{q, choices, why, se?, extra?}]};
 // `extra` is optional HTML (such as a data table) shown under the question.
 // The first choice is always the correct one; choices are shuffled on screen.
 // Math goes inside [[ ]] and gets the math font, with x, y, m italic.
@@ -16,7 +16,7 @@
     list.innerHTML = questions.map((item, n) => {
       const order = shuffle(item.choices.map((_, i) => i));
       return `<li class="card"><fieldset>
-        <legend>${math(item.q)} <span class="se">(SE p. ${item.se})</span></legend>${item.extra || ""}
+        <legend>${math(item.q)}${item.se ? ` <span class="se">(SE p. ${item.se})</span>` : ""}</legend>${item.extra || ""}
         ${order.map((c, k) => `<label class="choice" data-c="${c}"><input type="radio" name="q${n}" value="${c}">
           <span class="letter">${"ABCD"[k]}</span><span>${math(item.choices[c])}</span></label>`).join("")}
         <p class="why" hidden></p></fieldset></li>`;
@@ -33,7 +33,7 @@
     fs.querySelector('[data-c="0"]').classList.add("right");
     if (picked && !ok) picked.parentElement.classList.add("wrong");
     const why = fs.querySelector(".why");
-    why.innerHTML = (ok ? '<b class="ok">Correct.</b> ' : `<b class="no">Not quite.</b> The answer is ${math(questions[n].choices[0])}. `) + math(questions[n].why);
+    why.innerHTML = (ok ? '<b class="ok">Correct.</b> ' : `<b class="no">Incorrect.</b> The answer is ${math(questions[n].choices[0])}. `) + math(questions[n].why);
     why.hidden = false;
     fs.disabled = true;
     return ok;

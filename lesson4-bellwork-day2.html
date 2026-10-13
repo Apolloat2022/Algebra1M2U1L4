@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 4 Day 2 Bell Work · Point-Slope Form</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<link rel="stylesheet" href="mc.css">
+<div class="wrap">
+  <p class="eyebrow">Module 2 · Topic 1 · Lesson 4 · Day 2 Bell Work</p>
+  <h1>Bell Work: Review of Day 1</h1>
+  <p class="muted">Warm up while attendance is taken. Answer all 4 questions, then submit to see which ones you got right.</p>
+  <label class="name">Your name <input id="name" autocomplete="name"></label>
+  <ol id="questions"></ol>
+  <div class="bar">
+    <button id="submit" disabled>Submit</button>
+    <button id="reset" class="ghost">Start over</button>
+  </div>
+  <p id="result" class="card" style="margin-top:16px" hidden></p>
+</div>
+<script>
+window.MC = { mode: "quiz", questions: [
+  { se: 204, q: "Which equation in point-slope form has slope [[−4]] and passes through [[(3, −1)]]?",
+    choices: ["[[y + 1 = −4(x − 3)]]", "[[y − 1 = −4(x + 3)]]", "[[y + 3 = −4(x − 1)]]", "[[y + 1 = 4(x − 3)]]"],
+    why: "[[y − (−1) = −4(x − 3)]] becomes [[y + 1 = −4(x − 3)]]. The signs inside are the opposite of the point's." },
+  { se: 204, q: "Which equation in point-slope form passes through [[(2, 5)]] and [[(4, 11)]]?",
+    choices: ["[[y − 5 = 3(x − 2)]]", "[[y − 5 = ⅓(x − 2)]]", "[[y − 2 = 3(x − 5)]]", "[[y − 11 = 3(x − 2)]]"],
+    why: "Slope [[= (11 − 5) ÷ (4 − 2) = 6 ÷ 2 = 3]]. Using [[(2, 5)]]: [[y − 5 = 3(x − 2)]]." },
+  { se: 203, q: "Rewrite [[y − 5 = 3(x − 2)]] in slope-intercept form.",
+    choices: ["[[y = 3x − 1]]", "[[y = 3x + 11]]", "[[y = 3x − 11]]", "[[y = 3x + 3]]"],
+    why: "Distribute: [[y − 5 = 3x − 6]]. Add 5 to both sides: [[y = 3x − 1]]." },
+  { se: 206, q: "Which are the horizontal and vertical lines through [[(−3, 8)]]?",
+    choices: ["horizontal [[y = 8]], vertical [[x = −3]]", "horizontal [[x = −3]], vertical [[y = 8]]", "horizontal [[y = −3]], vertical [[x = 8]]", "horizontal [[x = 8]], vertical [[y = −3]]"],
+    why: "A horizontal line keeps the [[y]]-value ([[y = 8]]); a vertical line keeps the [[x]]-value ([[x = −3]]). HOY VUX." },
+] };
+</script>
+<script src="mc.js"></script>
