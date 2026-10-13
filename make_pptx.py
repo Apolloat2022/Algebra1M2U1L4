@@ -9,6 +9,7 @@ import json
 import math
 import re
 import sys
+import urllib.parse
 import zipfile
 from html.parser import HTMLParser
 from pathlib import Path
@@ -16,6 +17,8 @@ from pathlib import Path
 HERE = Path(__file__).parent
 SRC = HERE / "point-slope-form-lesson4.html"
 OUT = HERE / "point-slope-form-lesson4.pptx"
+SITE = "https://algebra1m2u1l4.vercel.app/"  # base for the deck's relative links
+LINKS = {}  # url -> rId for the slide being built; reset per slide
 
 # Slide is 13.333 x 7.5 in; the HTML stage is 1280 x 720 px, so 96 px = 1 in.
 EMU = 914400
@@ -97,6 +100,8 @@ def runs_of(node, st):
             s["i"] = True
         if k.tag == "sub":
             s["sub"] = True
+        if k.tag == "a" and k.attrs.get("href"):
+            s.update(href=k.attrs["href"], color=C["point"])
         if k.tag == "br":
             out.append(["\n", st])
             continue
@@ -170,8 +175,12 @@ def rpr(s, base_size):
     a += f' spc="{s["spc"]}"' if s.get("spc") else ""
     a += ' cap="all"' if s.get("caps") else ""
     font = s.get("font", BODY)
+    link = ""
+    if s.get("href"):  # relative links point at the deployed site; rIds 1–2 are the layout and notes
+        url = urllib.parse.urljoin(SITE, s["href"])
+        link = f'<a:hlinkClick r:id="{LINKS.setdefault(url, f"rId{len(LINKS) + 3}")}"/>'
     return (f'<a:rPr {a}><a:solidFill><a:srgbClr val="{s.get("color", C["ink"])}"/></a:solidFill>'
-            f'<a:latin typeface="{font}"/><a:cs typeface="{font}"/></a:rPr>')
+            f'<a:latin typeface="{font}"/><a:cs typeface="{font}"/>{link}</a:rPr>')
 
 
 def para_xml(runs, size, align):
@@ -598,8 +607,10 @@ CLRMAP = ('bg1="lt1" tx1="dk1" bg2="lt2" tx2="dk2" accent1="accent1" accent2="ac
           'accent4="accent4" accent5="accent5" accent6="accent6" hlink="hlink" folHlink="folHlink"')
 
 
-def rels(items):
+def rels(items, links=None):
     body = "".join(f'<Relationship Id="{i}" Type="{REL}{t}" Target="{tg}"/>' for i, t, tg in items)
+    body += "".join(f'<Relationship Id="{i}" Type="{REL}hyperlink" Target="{esc(u)}" TargetMode="External"/>'
+                    for u, i in (links or {}).items())
     return HDR + f'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">{body}</Relationships>'
 
 
@@ -703,6 +714,7 @@ def build():
 
     slides, warnings = [], []
     for k, sec in enumerate(sections, 1):
+        LINKS.clear()
         sl = Slide()
         top = 2.3 if "divider" in sec.cls else PAD_TOP
         fs = "divider" if "divider" in sec.cls else 26
@@ -720,7 +732,7 @@ def build():
         xml = (HDR + f'<p:sld {NS}><p:cSld><p:spTree>{GRP}{body}</p:spTree></p:cSld>'
                '<p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr>'
                '<p:transition spd="med"><p:fade/></p:transition>' + timing_xml(sl.steps) + '</p:sld>')
-        slides.append((xml, notes, len([s for s in sl.steps if s[1]])))
+        slides.append((xml, notes, len([s for s in sl.steps if s[1]]), dict(LINKS)))
 
     n = len(slides)
     ct = ('<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
@@ -779,18 +791,18 @@ def build():
             ("rId1", "slideMaster", "../slideMasters/slideMaster1.xml")]))
         z.writestr("ppt/notesMasters/notesMaster1.xml", NOTES_MASTER)
         z.writestr("ppt/notesMasters/_rels/notesMaster1.xml.rels", rels([("rId1", "theme", "../theme/theme2.xml")]))
-        for i, (xml, notes, _) in enumerate(slides, 1):
+        for i, (xml, notes, _, links) in enumerate(slides, 1):
             z.writestr(f"ppt/slides/slide{i}.xml", xml)
             z.writestr(f"ppt/slides/_rels/slide{i}.xml.rels", rels([
                 ("rId1", "slideLayout", "../slideLayouts/slideLayout1.xml"),
-                ("rId2", "notesSlide", f"../notesSlides/notesSlide{i}.xml")]))
+                ("rId2", "notesSlide", f"../notesSlides/notesSlide{i}.xml")], links))
             z.writestr(f"ppt/notesSlides/notesSlide{i}.xml", notes_xml(notes))
             z.writestr(f"ppt/notesSlides/_rels/notesSlide{i}.xml.rels", rels([
                 ("rId1", "notesMaster", "../notesMasters/notesMaster1.xml"),
                 ("rId2", "slide", f"../slides/slide{i}.xml")]))
 
-    print(f"wrote {OUT.name}: {n} slides, {sum(c for *_, c in slides)} click animations, "
-          f"{sum(1 for _, nt, _ in slides if nt)} with notes")
+    print(f"wrote {OUT.name}: {n} slides, {sum(c for _, _, c, _ in slides)} click animations, "
+          f"{sum(1 for _, nt, *_ in slides if nt)} with notes")
     for w in warnings:
         print("WARNING", w)
     return not warnings
