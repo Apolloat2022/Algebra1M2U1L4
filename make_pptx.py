@@ -1,8 +1,8 @@
-"""Build a .pptx next to an HTML deck (default: point-slope-form-lesson4.html).
+"""Build a .pptx next to an HTML deck (default: lesson4/point-slope-form-lesson4.html).
 
 The HTML deck is the single source: every element with class "step" becomes an
 appear-on-click animation, <aside class="notes"> becomes the speaker notes.
-Standard library only.  Run:  python make_pptx.py [deck.html]
+Standard library only.  Run:  python make_pptx.py [lessonN/deck.html]
 """
 import html
 import json
@@ -15,9 +15,9 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 HERE = Path(__file__).parent
-SRC = HERE / (sys.argv[1] if len(sys.argv) > 1 else "point-slope-form-lesson4.html")
+SRC = (HERE / (sys.argv[1] if len(sys.argv) > 1 else "lesson4/point-slope-form-lesson4.html")).resolve()
 OUT = SRC.with_suffix(".pptx")
-SITE = "https://algebra1m2u1l4.vercel.app/"  # base for the deck's relative links
+SITE = "https://algebra1m2u1l4.vercel.app/" + SRC.parent.relative_to(HERE.resolve()).as_posix() + "/"  # base for the deck's relative links
 LINKS = {}  # url -> rId for the slide being built; reset per slide
 
 # Slide is 13.333 x 7.5 in; the HTML stage is 1280 x 720 px, so 96 px = 1 in.

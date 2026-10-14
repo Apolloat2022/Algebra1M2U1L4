@@ -1,4 +1,4 @@
-/* Shared look for the Lesson 4 homework and quiz pages; tokens match the slide deck. */
+/* Shared look for every practice page and the index; tokens match the slide decks. */
 :root{
   --paper:#f7f7fb; --rule:#e6e8f2; --ink:#16171d; --muted:#5f6272; --card:#ffffff; --line:#e3e4ec;
   --point:#3050b8; --soft:#eaeefb; --ans:#4f8a3c; --ans-bg:#edf5e9; --bad:#b4372b; --bad-bg:#fbecea;

@@ -1,7 +1,11 @@
-{ "rewrites": [
-  { "source": "/", "destination": "/point-slope-form-lesson4.html" },
-  { "source": "/homework", "destination": "/lesson4-homework.html" },
-  { "source": "/quiz", "destination": "/lesson4-quiz.html" },
-  { "source": "/lesson5", "destination": "/using-linear-equations-lesson5.html" },
-  { "source": "/lesson6", "destination": "/making-sense-of-representations-lesson6.html" }
+{ "redirects": [
+  { "source": "/lesson(4|5|6)-(.*)", "destination": "/lesson$1/lesson$1-$2", "permanent": false },
+  { "source": "/point-slope-form-lesson4.:ext", "destination": "/lesson4/point-slope-form-lesson4.:ext", "permanent": false },
+  { "source": "/using-linear-equations-lesson5.:ext", "destination": "/lesson5/using-linear-equations-lesson5.:ext", "permanent": false },
+  { "source": "/making-sense-of-representations-lesson6.:ext", "destination": "/lesson6/making-sense-of-representations-lesson6.:ext", "permanent": false },
+  { "source": "/homework", "destination": "/lesson4/lesson4-homework.html", "permanent": false },
+  { "source": "/quiz", "destination": "/lesson4/lesson4-quiz.html", "permanent": false },
+  { "source": "/lesson4", "destination": "/lesson4/point-slope-form-lesson4.html", "permanent": false },
+  { "source": "/lesson5", "destination": "/lesson5/using-linear-equations-lesson5.html", "permanent": false },
+  { "source": "/lesson6", "destination": "/lesson6/making-sense-of-representations-lesson6.html", "permanent": false }
 ] }
