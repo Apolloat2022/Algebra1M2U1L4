@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 5 Day 3 Bell Work · Using Linear Equations</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<link rel="stylesheet" href="mc.css">
+<div class="wrap">
+  <p class="eyebrow">Module 2 · Topic 1 · Lesson 5 · Day 3 Bell Work</p>
+  <h1>Bell Work: Review of Day 2</h1>
+  <p class="muted">Warm up while attendance is taken. Answer all 4 questions, then submit to see which ones you got right.</p>
+  <label class="name">Your name <input id="name" autocomplete="name"></label>
+  <ol id="questions"></ol>
+  <div class="bar">
+    <button id="submit" disabled>Submit</button>
+    <button id="reset" class="ghost">Start over</button>
+  </div>
+  <p id="result" class="card" style="margin-top:16px" hidden></p>
+</div>
+<script>
+window.MC = { mode: "quiz", questions: [
+  {"se": 227, "q": "What are the [[x]]- and [[y]]-intercepts of [[2x + 5y = 20]]?", "choices": ["[[(10, 0)]] and [[(0, 4)]]", "[[(4, 0)]] and [[(0, 10)]]", "[[(2, 0)]] and [[(0, 5)]]", "[[(20, 0)]] and [[(0, 20)]]"], "why": "Let [[y = 0]]: [[2x = 20]], so [[x = 10]]. Let [[x = 0]]: [[5y = 20]], so [[y = 4]]."},
+  {"se": 228, "q": "What is the slope of [[3x − 4y = 12]]?", "choices": ["[[¾]]", "[[−¾]]", "[[3]]", "[[4/3]]"], "why": "In standard form the slope is [[−A/B = −3/(−4) = ¾]]. Don't drop the sign of [[B]]."},
+  {"se": 230, "q": "Which is [[y = ⅔x − 1]] written in standard form?", "choices": ["[[2x − 3y = 3]]", "[[2x + 3y = 3]]", "[[3x − 2y = 1]]", "[[⅔x − y = 1]]"], "why": "Multiply by 3: [[3y = 2x − 3]]. Move the [[x]]-term: [[−2x + 3y = −3]], which is the same as [[2x − 3y = 3]]. In standard form [[A]], [[B]] and [[C]] must be integers, so [[⅔x − y = 1]] doesn't count."},
+  {"se": 230, "q": "Which equation in standard form passes through [[(0, 6)]] and [[(3, 0)]]?", "choices": ["[[2x + y = 6]]", "[[x + 2y = 6]]", "[[2x − y = 6]]", "[[6x + 3y = 3]]"], "why": "Slope [[= (0 − 6) ÷ (3 − 0) = −2]], so [[y = −2x + 6]]. Add [[2x]] to both sides: [[2x + y = 6]]."},
+] };
+</script>
+<script src="mc.js"></script>
