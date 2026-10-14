@@ -2,14 +2,14 @@
 // Each page sets window.MC = {mode: "homework" | "quiz", questions: [{q, choices, why, se?, extra?}]};
 // `extra` is optional HTML (such as a data table) shown under the question.
 // The first choice is always the correct one; choices are shuffled on screen.
-// Math goes inside [[ ]] and gets the math font, with x, y, m italic.
+// Math goes inside [[ ]] and gets the math font, with every letter (always a variable) italic.
 (function () {
   const { mode, questions } = window.MC;
   const list = document.getElementById("questions");
   const result = document.getElementById("result");
   const submit = document.getElementById("submit");
   const math = s => s.replace(/\[\[(.+?)\]\]/g, (_, m) =>
-    `<span class="mt">${m.replace(/\b([xym])\b/g, "<i>$1</i>")}</span>`);
+    `<span class="mt">${m.replace(/[A-Za-z]/g, "<i>$&</i>")}</span>`);
   const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 
   function render() {

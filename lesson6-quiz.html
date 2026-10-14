@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 6 Quiz · Making Sense of Representations</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<link rel="stylesheet" href="mc.css">
+<div class="wrap">
+  <p class="eyebrow">Module 2 · Topic 1 · Lesson 6 · Quiz</p>
+  <h1>Making Sense of Representations Quiz</h1>
+  <p class="muted">Answer all 10 questions, then submit. You'll see your score and the correct answers after you submit.</p>
+  <label class="name">Your name <input id="name" autocomplete="name"></label>
+  <ol id="questions"></ol>
+  <div class="bar">
+    <button id="submit" disabled>Submit quiz</button>
+    <button id="reset" class="ghost">Start over</button>
+  </div>
+  <p id="result" class="card" style="margin-top:16px" hidden></p>
+</div>
+<script>
+window.MC = { mode: "quiz", questions: [
+  {"se": 240, "q": "Which of these represents a nonlinear function?", "choices": ["[[y = 2ˣ + 1]]", "[[y = 14 − 9x]]", "[[y = ¼(x + 7) − 1]]", "A tree grows 3.5 inches each year."], "why": "In [[y = 2ˣ + 1]] the variable is in the exponent, so the rate of change isn't constant. The others change by the same amount each step."},
+  {"se": 241, "q": "A table has the points [[(2, 9)]], [[(5, 15)]] and [[(11, 27)]]. Which function does it represent?", "choices": ["[[y = 2x + 5]]", "[[y = 6x − 3]]", "[[y = 2x + 9]]", "It is not linear"], "why": "[[(15 − 9) ÷ (5 − 2) = 2]] and [[(27 − 15) ÷ (11 − 5) = 2]], so the slope is 2. Then [[9 = 2(2) + b]], so [[b = 5]]."},
+  {"se": 241, "q": "Selling 4 bracelets earns $10, 10 earn $25, and 16 earn $40. Which is true?", "choices": ["[[y = 2.5x]]; the money is directly proportional to bracelets sold", "[[y = 2.5x + 10]]; not directly proportional", "[[y = 6x]]; directly proportional", "It isn't linear, because the inputs aren't consecutive"], "why": "Every ratio is [[10 ÷ 4 = 25 ÷ 10 = 40 ÷ 16 = 2.5]], so [[y = 2.5x]], which passes through [[(0, 0)]]."},
+  {"se": 242, "q": "A fair charges a $5 entrance fee and $1.50 per ride. With $20, how many rides can you go on?", "choices": ["10", "13", "15", "11"], "why": "[[1.5x + 5 = 20]], so [[1.5x = 15]] and [[x = 10]]. 13 forgets the entrance fee."},
+  {"se": 244, "q": "Gracie earns [[E(t) = 15t]] dollars for [[t]] T-shirts. What does [[E(6) = 90]] mean?", "choices": ["Selling 6 T-shirts earns $90", "Selling 90 T-shirts earns $6", "She earns $15 for 6 T-shirts", "She needs 6 more shirts to earn $90"], "why": "The input [[t]] is T-shirts and the output [[E(t)]] is dollars, so [[(6, 90)]] means 6 shirts earn $90."},
+  {"se": 244, "q": "Gracie earns $15 per T-shirt. How many T-shirts must she sell to earn at least $200?", "choices": ["14", "13", "15", "185"], "why": "[[15t = 200]] gives [[t ≈ 13.3]]. She can't sell part of a shirt, and 13 shirts earn only $195, so she needs 14."},
+  {"se": 248, "q": "Which is [[G(t) = 15(t − 3)]] in general form, and what is its [[y]]-intercept?", "choices": ["[[G(t) = 15t − 45]]; [[(0, −45)]]", "[[G(t) = 15t − 3]]; [[(0, −3)]]", "[[G(t) = 15t − 45]]; [[(3, 0)]]", "[[G(t) = 15t + 45]]; [[(0, 45)]]"], "why": "Distribute: [[15t − 45]]. In general form [[f(x) = ax + b]], [[b]] is the [[y]]-intercept. [[(3, 0)]] is the [[x]]-intercept."},
+  {"se": 248, "q": "What are the degree and leading coefficient of [[P(x) = −4x² + 7x − 1]]?", "choices": ["degree 2, leading coefficient −4", "degree 2, leading coefficient 7", "degree 1, leading coefficient −4", "degree 3, leading coefficient −1"], "why": "The greatest exponent is 2, and the coefficient on [[x²]] is [[−4]]. Keep the negative sign."},
+  {"se": 249, "q": "What is the zero of [[f(x) = 6(x − 2.5)]]?", "choices": ["[[2.5]]", "[[−2.5]]", "[[6]]", "[[−15]]"], "why": "[[x − 2.5 = 0]] when [[x = 2.5]]. In factored form [[f(x) = a(x − c)]], [[c]] is the zero. ([[−15]] is the [[y]]-intercept.)"},
+  {"se": 251, "q": "Which is [[F(t) = 15t − 80]] written in factored form?", "choices": ["[[F(t) = 15(t − 16/3)]]", "[[F(t) = 15(t − 80)]]", "[[F(t) = 15(t + 16/3)]]", "[[F(t) = 80(t − 15)]]"], "why": "Factor out the leading coefficient 15: [[80 ÷ 15 = 16/3]]. Check: [[15 · 16/3 = 80]]."},
+] };
+</script>
+<script src="mc.js"></script>
