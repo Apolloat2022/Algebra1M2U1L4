@@ -304,7 +304,7 @@ def draw_graph(sl, g, ox, oy):
     if g.get("ptsStep"):  # each point appears on its own click, before the lines
         draw_points(own_steps=True)
     for ln in g.get("lines", []):
-        c = clip_line(ln["p"], g["x"], g["y"])
+        c = ln["p"] if ln.get("seg") else clip_line(ln["p"], g["x"], g["y"])  # seg: just this segment
         if not c:
             continue
         own_step = ln.get("step") and not sl.dry
