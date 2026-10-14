@@ -1,8 +1,8 @@
-"""Build point-slope-form-lesson4.pptx from point-slope-form-lesson4.html.
+"""Build a .pptx next to an HTML deck (default: point-slope-form-lesson4.html).
 
 The HTML deck is the single source: every element with class "step" becomes an
 appear-on-click animation, <aside class="notes"> becomes the speaker notes.
-Standard library only.  Run:  python make_pptx.py
+Standard library only.  Run:  python make_pptx.py [deck.html]
 """
 import html
 import json
@@ -15,8 +15,8 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 HERE = Path(__file__).parent
-SRC = HERE / "point-slope-form-lesson4.html"
-OUT = HERE / "point-slope-form-lesson4.pptx"
+SRC = HERE / (sys.argv[1] if len(sys.argv) > 1 else "point-slope-form-lesson4.html")
+OUT = SRC.with_suffix(".pptx")
 SITE = "https://algebra1m2u1l4.vercel.app/"  # base for the deck's relative links
 LINKS = {}  # url -> rId for the slide being built; reset per slide
 
@@ -422,9 +422,19 @@ def gap_of(n, default):
     return (default / 96, default / 96)
 
 
+def tbl_size(n):
+    return pxv(n.style.get("font-size")) or 30
+
+
+def tbl_cols(n):  # each column fits its longest cell, at least 1.25 in
+    rows = [r.els() for r in find_all(n, lambda k: k.tag == "tr")]
+    per = tbl_size(n) * 0.75 * 0.52 / 72
+    return [max([1.25] + [len(r[c].text().strip()) * per + 0.6 for r in rows if c < len(r)])
+            for c in range(len(rows[0]))] if rows else [2.5]
+
+
 def table_width(n):
-    rows = [r for r in find_all(n, lambda k: k.tag == "tr")]
-    return len(rows[0].els()) * 1.25 if rows else 2.5
+    return sum(tbl_cols(n))
 
 
 def lay_table(sl, n, x, y, w, fs):
@@ -432,8 +442,8 @@ def lay_table(sl, n, x, y, w, fs):
     ncol = len(rows[0].els())
     small = "tbl" in n.cls
     if small:
-        w = table_width(n)
-        widths = [w / ncol] * ncol
+        widths = tbl_cols(n)
+        w = sum(widths)
     else:
         frac = [0.2, 0.4, 0.4] if ncol == 3 else [0.45, 0.55]
         widths = [w * f for f in frac]
@@ -443,12 +453,12 @@ def lay_table(sl, n, x, y, w, fs):
         if step:
             sl.steps.append(("rise", [])); sl.open.append(len(sl.steps) - 1)
         cells = r.els()
-        size = 30 if small else (26 if cells[0].tag == "th" else 24)
+        size = tbl_size(n) if small else (26 if cells[0].tag == "th" else 24)
         hs = []
         for c, cw in zip(cells, widths):
             st = {"size": size, "font": MATH if small or "eq" in c.cls else BODY}
             if c.tag == "th":
-                st.update(b=not small, i=small)
+                st.update(b=not small, i=small and c.style.get("font-style") != "normal")
             if "muted" in c.cls:
                 st["color"] = C["muted"]
             runs = clean_runs(runs_of(c, st))
@@ -459,9 +469,17 @@ def lay_table(sl, n, x, y, w, fs):
         for (runs, st, _), cw, c in zip(hs, widths, cells):
             fill = (C["rule"] if c.tag == "th" else C["card"]) if small else None
             ln = C["line"] if small else None
+            cstep = "step" in c.cls and not sl.dry  # a single cell's text can appear on its own click
+            if cstep:  # draw the empty cell now so the table has no hole
+                sl.add(lambda sid, cx=cx, cw=cw, fill=fill, ln=ln, size=size: sp_xml(
+                    sid, cx, y, cw, rh, None, size, "ctr", fill, ln))
+                fill = ln = None
+                sl.steps.append(("rise", [])); sl.open.append(len(sl.steps) - 1)
             sl.add(lambda sid, cx=cx, cw=cw, runs=runs, fill=fill, ln=ln, size=size: sp_xml(
                 sid, cx, y, cw, rh, runs, size, "ctr" if small else "l", fill, ln, ins=(0.12, 0.05),
                 anchor="ctr"))
+            if cstep:
+                sl.open.pop()
             cx += cw
         if not small:
             sl.add(lambda sid, yy=y + rh: line_xml(sid, x, yy, w))
@@ -708,6 +726,7 @@ def build():
     src = SRC.read_text(encoding="utf-8")
     # same fraction shorthand the HTML page expands at load
     src = re.sub(r"\{\{(.+?)\|(.+?)\}\}", r'<span class="fr"><span>\1</span><span>\2</span></span>', src)
+    title = re.search(r"<title>(.*?)</title>", src).group(1).split(" · ")[0]
     t = Tree()
     t.feed(src)
     sections = find_all(t.root, lambda n: n.tag == "section" and "slide" in n.cls)
@@ -774,14 +793,14 @@ def build():
             ("rId3", "extended-properties", "docProps/app.xml")]).replace(
             REL + "../package/2006/relationships/metadata/core-properties",
             "http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties"))
-        z.writestr("docProps/core.xml", HDR + '<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:title>Point-Slope Form of a Line</dc:title><dc:subject>Algebra I Module 2 Topic 1 Lesson 4</dc:subject></cp:coreProperties>')
+        z.writestr("docProps/core.xml", HDR + f'<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:title>{esc(title)}</dc:title><dc:subject>Bluebonnet Algebra I</dc:subject></cp:coreProperties>')
         z.writestr("docProps/app.xml", HDR + f'<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties"><Application>Microsoft Office PowerPoint</Application><Slides>{n}</Slides><Notes>{n}</Notes></Properties>')
         z.writestr("ppt/presentation.xml", pres)
         z.writestr("ppt/_rels/presentation.xml.rels", rels(pres_rels))
         z.writestr("ppt/presProps.xml", HDR + f"<p:presentationPr {NS}/>")
         z.writestr("ppt/viewProps.xml", HDR + f'<p:viewPr {NS}><p:gridSpacing cx="76200" cy="76200"/></p:viewPr>')
         z.writestr("ppt/tableStyles.xml", HDR + '<a:tblStyleLst xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" def="{5C22544A-7EE6-4342-B048-85BDC9FD1C3A}"/>')
-        z.writestr("ppt/theme/theme1.xml", theme("Point-Slope"))
+        z.writestr("ppt/theme/theme1.xml", theme(title))
         z.writestr("ppt/theme/theme2.xml", theme("Notes"))
         z.writestr("ppt/slideMasters/slideMaster1.xml", MASTER)
         z.writestr("ppt/slideMasters/_rels/slideMaster1.xml.rels", rels([

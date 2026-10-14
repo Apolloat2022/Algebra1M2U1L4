@@ -1,5 +1,6 @@
 { "rewrites": [
   { "source": "/", "destination": "/point-slope-form-lesson4.html" },
   { "source": "/homework", "destination": "/lesson4-homework.html" },
-  { "source": "/quiz", "destination": "/lesson4-quiz.html" }
+  { "source": "/quiz", "destination": "/lesson4-quiz.html" },
+  { "source": "/lesson5", "destination": "/using-linear-equations-lesson5.html" }
 ] }
