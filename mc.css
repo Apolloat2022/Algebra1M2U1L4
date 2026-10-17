@@ -55,3 +55,7 @@ label.name input{font:inherit;font-weight:400;padding:8px 10px;border:1px solid 
 #result{font-size:20px}
 #result[hidden],.why[hidden]{display:none}
 .why .mt{white-space:normal}
+/* IEP / 504 pages: larger text, a reference card, a read-aloud button per question */
+.big{font-size:21px} .big .choice{padding:14px 14px}
+.ref{margin-top:16px;border-left:6px solid var(--point)} .ref p+p{margin-top:6px}
+button.say{margin-top:12px;padding:6px 14px;font-size:15px}

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 6 Day 3 Bell Work · Making Sense of Representations · Section 504</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<link rel="stylesheet" href="../mc.css">
+<div class="wrap big">
+  <p class="eyebrow">Module 2 · Topic 1 · Lesson 6 · Day 3 Bell Work · Section 504 Version</p>
+  <h1>Bell Work: Review of Day 2</h1>
+  <p class="muted">Warm up while attendance is taken. Answer all 4 questions, then submit to see which ones you got right.</p>
+  <div class="card ref"><p>Use the reminders below, and press <b>Read aloud</b> to hear a question. Take the time you need.</p><p><b>Is it linear?</b> Find (change in <i>y</i>) ÷ (change in <i>x</i>) for every pair. Always the same → linear.</p><p><b>General form:</b> <i>f</i>(<i>x</i>) = <i>ax</i> + <i>b</i>. <b>Factored form:</b> <i>f</i>(<i>x</i>) = <i>a</i>(<i>x</i> − <i>c</i>). Distribute to switch.</p><p><b>How much?</b> Put the number in for <i>x</i>. <b>How many?</b> Set <i>f</i>(<i>x</i>) equal to the amount and solve.</p><p><b>Round up</b> when you need at least that much (you can't sell part of a shirt).</p></div>
+  <label class="name">Your name <input id="name" autocomplete="name"></label>
+  <ol id="questions"></ol>
+  <div class="bar">
+    <button id="submit" disabled>Submit</button>
+    <button id="reset" class="ghost">Start over</button>
+  </div>
+  <p id="result" class="card" style="margin-top:16px" hidden></p>
+</div>
+<script>
+window.MC = { mode: "quiz", questions: [
+  {"se": 248, "q": "Which is [[f(x) = 4(x − 5)]] written in general form?", "choices": ["[[f(x) = 4x − 20]]", "[[f(x) = 4x − 5]]", "[[f(x) = 4x + 20]]", "[[f(x) = x − 20]]"], "why": "Distribute the 4 to both terms: [[4 · x − 4 · 5 = 4x − 20]]."},
+  {"se": 249, "q": "What is the zero of [[f(x) = 3(x − 7)]]?", "choices": ["[[7]]", "[[−7]]", "[[3]]", "[[−21]]"], "why": "The zero makes [[f(x) = 0]]: [[x − 7 = 0]] when [[x = 7]]. The zero is a number, 7; the [[x]]-intercept is the point [[(7, 0)]]."},
+  {"se": 248, "q": "What are the degree and leading coefficient of [[P(x) = 5x³ − 2x + 1]]?", "choices": ["degree 3, leading coefficient 5", "degree 5, leading coefficient 3", "degree 3, leading coefficient 1", "degree 1, leading coefficient −2"], "why": "The degree is the greatest exponent, 3. The leading coefficient is the number on that term, 5."},
+  {"se": 244, "q": "[[E(t) = 15t]] gives Gracie's earnings for [[t]] T-shirts. What is [[E(4)]], and what does it mean?", "choices": ["[[60]]: selling 4 T-shirts earns $60", "[[19]]: selling 4 T-shirts earns $19", "[[60]]: she sells 60 T-shirts", "[[4/15]]: she earns $4 for 15 T-shirts"], "why": "[[E(4) = 15(4) = 60]]. The input is T-shirts and the output is dollars."},
+] };
+window.MC.accom = {"readAloud": true};
+</script>
+<script src="../mc.js"></script>

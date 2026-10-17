@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 6 Homework · Making Sense of Representations · Section 504</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<link rel="stylesheet" href="../mc.css">
+<div class="wrap big">
+  <p class="eyebrow">Module 2 · Topic 1 · Lesson 6 · Homework · Section 504 Version</p>
+  <h1>Making Sense of Representations Practice</h1>
+  <p class="muted">Pick an answer for each question. You'll see right away whether it's correct, and why. The page numbers point to your Student Edition if you want to look back.</p>
+  <div class="card ref"><p>Use the reminders below, and press <b>Read aloud</b> to hear a question. Take the time you need.</p><p><b>Is it linear?</b> Find (change in <i>y</i>) ÷ (change in <i>x</i>) for every pair. Always the same → linear.</p><p><b>General form:</b> <i>f</i>(<i>x</i>) = <i>ax</i> + <i>b</i>. <b>Factored form:</b> <i>f</i>(<i>x</i>) = <i>a</i>(<i>x</i> − <i>c</i>). Distribute to switch.</p><p><b>How much?</b> Put the number in for <i>x</i>. <b>How many?</b> Set <i>f</i>(<i>x</i>) equal to the amount and solve.</p><p><b>Round up</b> when you need at least that much (you can't sell part of a shirt).</p></div>
+  <ol id="questions"></ol>
+  <div class="bar">
+    <p id="result" class="card" hidden></p>
+    <button id="reset" class="ghost">Start over</button>
+  </div>
+</div>
+<script>
+window.MC = { mode: "homework", questions: [
+  {"se": 255, "q": "A table has [[x]]-values [[−2]], 0, 2, 4 and [[y]]-values [[5⅔]], 5, [[4⅓]], [[3⅔]]. Is it linear? If so, which function?", "choices": ["Yes: [[y = −⅓x + 5]]", "Yes: [[y = ⅓x + 5]]", "Yes: [[y = −⅔x + 5]]", "No, it is not linear"], "why": "Each time [[x]] goes up 2, [[y]] goes down [[⅔]]. Slope [[= −⅔ ÷ 2 = −⅓]], and [[(0, 5)]] is the [[y]]-intercept."},
+  {"se": 255, "q": "A table has [[x]]-values [[−5]], 0, 5, 10 and [[y]]-values [[−27]], [[−2]], 20, 48. Is it linear?", "choices": ["No: the slopes are 5, 4.4 and 5.6", "Yes: [[y = 5x − 2]]", "Yes: [[y = 4.4x − 2]]", "Yes: [[y = 5x − 27]]"], "why": "[[(−2 − (−27)) ÷ 5 = 5]], [[(20 − (−2)) ÷ 5 = 4.4]], [[(48 − 20) ÷ 5 = 5.6]]. The rate isn't constant, so it isn't linear."},
+  {"se": 255, "q": "Omar sells T-shirts for $14.99 each, and 5 each month are misprinted and can't be sold. Which functions give his earnings for [[x]] shirts printed?", "choices": ["[[f(x) = 14.99(x − 5)]] and [[f(x) = 14.99x − 74.95]]", "[[f(x) = 14.99(x + 5)]] and [[f(x) = 14.99x + 74.95]]", "[[f(x) = 14.99(x − 5)]] and [[f(x) = 14.99x − 5]]", "[[f(x) = 5(x − 14.99)]] and [[f(x) = 5x − 74.95]]"], "why": "5 fewer shirts earn money, so [[14.99(x − 5)]]. Distribute: [[14.99 · 5 = 74.95]], so the general form is [[14.99x − 74.95]]."},
+  {"se": 255, "q": "How much will Omar earn when he prints 22 T-shirts?", "choices": ["$254.83", "$329.78", "$257.83", "$74.95"], "why": "[[f(22) = 14.99(22 − 5) = 14.99(17) = 254.83]]. $329.78 forgets the 5 misprinted shirts."},
+  {"se": 255, "q": "How many T-shirts does Omar need to print to earn $200?", "choices": ["19", "14", "18", "13"], "why": "[[14.99x − 74.95 = 200]], so [[14.99x = 274.95]] and [[x ≈ 18.3]]. 18 shirts aren't enough, so he needs 19."},
+  {"se": 256, "q": "Juliana sells vases for $35 each and breaks 3 in the kiln each month: [[f(x) = 35(x − 3)]]. How much does she earn if she makes 17 vases?", "choices": ["$490", "$595", "$560", "$105"], "why": "[[f(17) = 35(17 − 3) = 35(14) = 490]]."},
+  {"se": 256, "q": "How many vases does Juliana need to make to earn $600?", "choices": ["21", "18", "20", "17"], "why": "[[35x − 105 = 600]], so [[35x = 705]] and [[x ≈ 20.1]]. 20 isn't enough, so she needs 21."},
+  {"se": 256, "q": "Antonio sells toys for $12 each and pays $50 for his booth. Which functions give his earnings for [[x]] toys sold?", "choices": ["[[f(x) = 12x − 50]] and [[f(x) = 12(x − 25/6)]]", "[[f(x) = 12x − 50]] and [[f(x) = 12(x − 50)]]", "[[f(x) = 12x + 50]] and [[f(x) = 12(x + 25/6)]]", "[[f(x) = 50x − 12]] and [[f(x) = 50(x − 6/25)]]"], "why": "$12 per toy minus the $50 fee: [[12x − 50]]. Factor out 12: [[50 ÷ 12 = 25/6]], so [[12(x − 25/6)]]."},
+  {"se": 256, "q": "How much will Antonio earn if he sells 35 toys?", "choices": ["$370", "$420", "$470", "$350"], "why": "[[f(35) = 12(35) − 50 = 420 − 50 = 370]]. $420 forgets the booth fee."},
+  {"se": 256, "q": "How many toys does Antonio need to sell to earn $250?", "choices": ["25", "21", "26", "17"], "why": "[[12x − 50 = 250]], so [[12x = 300]] and [[x = 25]]."},
+] };
+window.MC.accom = {"readAloud": true};
+</script>
+<script src="../mc.js"></script>

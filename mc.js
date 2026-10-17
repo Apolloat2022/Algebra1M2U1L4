@@ -3,8 +3,12 @@
 // `extra` is optional HTML (such as a data table) shown under the question.
 // The first choice is always the correct one; choices are shuffled on screen.
 // Math goes inside [[ ]] and gets the math font, with every letter (always a variable) italic.
+// Optional `accom` (IEP / 504 pages): {keep: [question indices], choices: n (drop trailing distractors),
+// readAloud: true (a speech button on each question)}.
 (function () {
-  const { mode, questions } = window.MC;
+  const { mode, accom = {} } = window.MC;
+  const questions = (accom.keep ? accom.keep.map(i => window.MC.questions[i]) : window.MC.questions)
+    .map(item => accom.choices ? { ...item, choices: item.choices.slice(0, accom.choices) } : item);
   const list = document.getElementById("questions");
   const result = document.getElementById("result");
   const submit = document.getElementById("submit");
@@ -19,7 +23,7 @@
         <legend>${math(item.q)}${item.se ? ` <span class="se">(SE p. ${item.se})</span>` : ""}</legend>${item.extra || ""}
         ${order.map((c, k) => `<label class="choice" data-c="${c}"><input type="radio" name="q${n}" value="${c}">
           <span class="letter">${"ABCD"[k]}</span><span>${math(item.choices[c])}</span></label>`).join("")}
-        <p class="why" hidden></p></fieldset></li>`;
+        <p class="why" hidden></p></fieldset>${accom.readAloud ? '<button type="button" class="ghost say">Read aloud</button>' : ""}</li>`;
     }).join("");
     result.hidden = true;
     if (submit) submit.disabled = true;
@@ -58,6 +62,15 @@
   list.addEventListener("change", e => {
     if (mode === "homework") grade(e.target.closest("fieldset"), +e.target.name.slice(1));
     update();
+  });
+
+  list.addEventListener("click", e => {  // read the question and its choices in on-screen order
+    if (!e.target.classList.contains("say") || !window.speechSynthesis) return;
+    const li = e.target.closest("li");
+    const text = li.querySelector("legend").textContent + ". " +
+      [...li.querySelectorAll(".choice")].map(c => c.textContent.trim().replace(/\s+/, ". ")).join(". ");
+    speechSynthesis.cancel();
+    speechSynthesis.speak(new SpeechSynthesisUtterance(text.replace(/−/g, " minus ")));
   });
 
   if (submit) submit.addEventListener("click", () => {

@@ -5,6 +5,7 @@ a "today's plan" checklist after each bell work, and a "notes to keep" copy at t
 IEP = a shorter, modified deck: vocabulary, a steps anchor chart, I do / we do / you do with
 sentence frames, fewer practice items, and a short exit ticket.
 Both reuse the original deck's head and script, so they work as web decks too.
+Also writes IEP and 504 copies of the bell work and homework pages (see practice_pages).
 Standard library only.  Run:  python make_accom_lessons.py
 """
 import json
@@ -331,6 +332,49 @@ def iep6():
 IEP = {4: iep4, 5: iep5, 6: iep6}
 
 
+# ---------------------------------------------------------------- bell work and homework pages
+# Same questions as lessonN/; mc.js applies `accom`. IEP: 3 choices, 6 of the 10 homework items.
+REF = {
+ 4: ["<b>Point-slope form:</b> <i>y</i> − <i>y</i><sub>1</sub> = <i>m</i>(<i>x</i> − <i>x</i><sub>1</sub>). The signs flip: <i>x</i> − (−2) = <i>x</i> + 2.",
+     "<b>Slope:</b> <i>m</i> = (change in <i>y</i>) ÷ (change in <i>x</i>).",
+     "<b>To get <i>y</i> = <i>mx</i> + <i>b</i>:</b> distribute, then add or subtract to get <i>y</i> alone.",
+     "<b>Horizontal:</b> <i>y</i> = a number, slope 0. <b>Vertical:</b> <i>x</i> = a number, slope undefined."],
+ 5: ["<b>Graph <i>y</i> = <i>mx</i> + <i>b</i>:</b> plot (0, <i>b</i>), then count rise over run.",
+     "<b>Point-slope form:</b> start at (<i>x</i><sub>1</sub>, <i>y</i><sub>1</sub>). The signs flip.",
+     "<b>Intercepts of <i>Ax</i> + <i>By</i> = <i>C</i>:</b> put <i>y</i> = 0 to find the <i>x</i>-intercept; put <i>x</i> = 0 to find the <i>y</i>-intercept.",
+     "<b>Slope of <i>Ax</i> + <i>By</i> = <i>C</i>:</b> −<i>A</i> ÷ <i>B</i>."],
+ 6: ["<b>Is it linear?</b> Find (change in <i>y</i>) ÷ (change in <i>x</i>) for every pair. Always the same → linear.",
+     "<b>General form:</b> <i>f</i>(<i>x</i>) = <i>ax</i> + <i>b</i>. <b>Factored form:</b> <i>f</i>(<i>x</i>) = <i>a</i>(<i>x</i> − <i>c</i>). Distribute to switch.",
+     "<b>How much?</b> Put the number in for <i>x</i>. <b>How many?</b> Set <i>f</i>(<i>x</i>) equal to the amount and solve.",
+     "<b>Round up</b> when you need at least that much (you can't sell part of a shirt)."]}
+KEEP = {4: [0, 2, 5, 6, 7, 8], 5: [0, 1, 2, 3, 4, 5], 6: [0, 1, 5, 7, 8, 9]}
+HELP = {"IEP": "Each question has 3 choices. Use the reminders below, and press <b>Read aloud</b> to hear a question.",
+        "504": "Use the reminders below, and press <b>Read aloud</b> to hear a question. Take the time you need."}
+
+
+def practice_pages(n, kind, folder):
+    label = "Section 504" if kind == "504" else "IEP"
+    card = (f'<div class="card ref"><p>{HELP[kind]}</p>' + "".join(f"<p>{r}</p>" for r in REF[n]) + "</div>")
+    for f in sorted((HERE / f"lesson{n}").glob(f"lesson{n}-bellwork-day*.html")) + [HERE / f"lesson{n}/lesson{n}-homework.html"]:
+        accom = {"readAloud": True}
+        if kind == "IEP":
+            accom["choices"] = 3
+            if "homework" in f.name:
+                accom["keep"] = KEEP[n]
+        s = f.read_text(encoding="utf-8")
+        s = s.replace("</title>", f" · {label}</title>", 1).replace('<div class="wrap">', '<div class="wrap big">', 1)
+        s = re.sub(r'(<p class="eyebrow">.*?)</p>', lambda m: f"{m.group(1)} · {label} Version</p>", s, count=1)
+        s = re.sub(r'(<p class="muted">.*?</p>)', lambda m: m.group(1) + "\n  " + card, s, count=1)
+        s = s.replace('</script>\n<script src="../mc.js">', f'window.MC.accom = {json.dumps(accom)};\n</script>\n<script src="../mc.js">')
+        assert "window.MC.accom" in s, f
+        (HERE / folder / f"{f.stem}-{kind}.html").write_text(s, encoding="utf-8")
+
+
+def deck_link(n, kind, m):  # accommodated bell work / homework sit next to the deck; the quiz is the general one
+    name = m.group(1)
+    return f'href="{name[:-5]}-{kind}.html"' if "bellwork" in name or "homework" in name else f'href="../lesson{n}/{name}"'
+
+
 def main():
     for n, path in LESSONS.items():
         src = (HERE / path).read_text(encoding="utf-8")
@@ -342,7 +386,8 @@ def main():
             html = head.replace("</title>", f" · {label}</title>", 1) + '<div id="stage">\n' + "".join(secs) + "\n</div>\n" + tail
             if kind == "504":
                 html = html.replace("Prepared by <b>Mr. Pandey</b>", "Prepared by <b>Mr. Pandey</b> · <b>Section 504 Version</b>")
-            html = re.sub(r'href="(lesson\d-[^"]+\.html)"', rf'href="../lesson{n}/\1"', html)  # practice pages live in lessonN/
+            html = re.sub(r'href="(lesson\d-[^"]+\.html)"', lambda m: deck_link(n, kind, m), html)
+            practice_pages(n, kind, folder)
             out = HERE / folder / f"{OUT[n]}-{kind}.html"
             out.write_text(html, encoding="utf-8")
             subprocess.run([sys.executable, str(HERE / "make_pptx.py"), out.relative_to(HERE).as_posix()], check=False)
