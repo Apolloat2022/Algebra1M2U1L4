@@ -1,0 +1,867 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Making Sense of Different Representations of a Linear Function · Bluebonnet Algebra I · Section 504</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<style>
+/* Layout: a fixed 1280×720 "slide" on graph paper, scaled to fit any screen; steps reveal one click at a time. */
+:root{
+  /* Bluebonnet Algebra I palette (ALGEBRA-platform/app/globals.css); orange = slope, blue = point stays. */
+  --paper:#f7f7fb; --rule:#e6e8f2; --ink:#16171d; --muted:#5f6272; --card:#ffffff; --line:#e3e4ec;
+  --slope:#c9561f; --point:#3050b8; --leaf:#4f8a3c; --soft:#eaeefb; --ga:#4f8a3c; --gb:#7a4fc4; --gc:#16171d; --ans:#4f8a3c; --ans-bg:#edf5e9; --warn-bg:#fdf3e7;
+  --display:ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --body:ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --math:"STIX Two Text", "Cambria Math", "Times New Roman", serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#111218; --rule:#1f2129; --ink:#eceef6; --muted:#9ea2b3; --card:#1a1c24; --line:#2c2f3b;
+  --slope:#ff9259; --point:#93a9f5; --leaf:#8cc47a; --soft:#232a45; --ga:#8cc47a; --gb:#b79cff; --gc:#eceef6; --ans:#8cc47a; --ans-bg:#1f2a1b; --warn-bg:#2e2418; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#111218; --rule:#1f2129; --ink:#eceef6; --muted:#9ea2b3; --card:#1a1c24; --line:#2c2f3b;
+  --slope:#ff9259; --point:#93a9f5; --leaf:#8cc47a; --soft:#232a45; --ga:#8cc47a; --gb:#b79cff; --gc:#eceef6; --ans:#8cc47a; --ans-bg:#1f2a1b; --warn-bg:#2e2418; color-scheme:dark}
+
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);overflow:hidden;
+  background-image:linear-gradient(var(--rule) 1px,transparent 1px),linear-gradient(90deg,var(--rule) 1px,transparent 1px);
+  background-size:32px 32px}
+#stage{position:absolute;left:50%;top:calc(50% - 22px);width:1280px;height:720px;transform-origin:center;cursor:pointer;touch-action:manipulation}
+.slide{position:absolute;inset:0;padding:48px 72px 40px;display:none;flex-direction:column;gap:18px;font-size:26px;line-height:1.4}
+.slide.on{display:flex;animation:slideIn .35s ease}
+@keyframes slideIn{from{opacity:0}to{opacity:1}}
+
+.eyebrow{font-size:16px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--point)}
+h1,h2{font-family:var(--display);font-weight:800;line-height:1.08;letter-spacing:-.02em;text-wrap:balance;margin:0}
+h1{font-size:76px}
+h2{font-size:46px}
+h3{font-family:var(--display);font-weight:600;font-size:28px;margin:0}
+p{margin:0}
+.muted{color:var(--muted)}
+.small{font-size:21px}
+.row{display:flex;gap:36px;align-items:flex-start}
+.col{display:flex;flex-direction:column;gap:14px;flex:1;min-width:0}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 22px;display:flex;flex-direction:column;gap:10px}
+
+/* math */
+.eq,.mt{font-family:var(--math);font-weight:500}
+.eq{font-size:38px;line-height:1.5}
+.eq.big{font-size:60px}
+.eq.sm{font-size:31px}
+.eq i,.mt i{font-style:italic}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.78em;line-height:1.15;margin:0 .1em}
+.fr>span:first-child{border-bottom:.07em solid currentColor;padding:0 .2em}
+.cm{color:var(--slope);font-weight:600}
+.cp{color:var(--point);font-weight:600}
+
+.ans{background:var(--ans-bg);border-radius:8px;padding:8px 18px;align-self:flex-start}
+.ans::before{content:"Answer";margin-right:14px;vertical-align:.25em;font-family:var(--body);font-size:15px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ans)}
+.warn{background:var(--warn-bg);border-radius:8px;padding:10px 18px;font-size:22px;align-self:flex-start}
+.think{border:2px dashed var(--point);border-radius:24px;padding:16px 26px;font-size:25px;align-self:flex-start;max-width:760px}
+
+table.tbl{border-collapse:collapse;font-family:var(--math);font-size:30px;text-align:center;font-variant-numeric:tabular-nums}
+table.tbl th,table.tbl td{border:2px solid var(--line);padding:6px 26px;background:var(--card)}
+table.tbl th{font-style:italic;background:var(--rule)}
+table.cmp{border-collapse:collapse;width:100%;font-size:24px}
+table.cmp th,table.cmp td{border-bottom:1px solid var(--line);padding:10px 14px;text-align:left}
+table.cmp th{font-family:var(--display);font-size:26px}
+
+.foot{margin-top:auto;font-size:15px;line-height:1.5;color:var(--muted)}
+.foot strong{color:var(--point)} .foot a{color:var(--point)}
+a.go{color:var(--point);text-decoration:none} a.go:hover{text-decoration:underline}
+
+/* graphs: drawn from data-g by graphSVG(); make_pptx.py draws the same spec */
+.graph{flex:none}
+.graph svg{display:block;max-width:100%;height:auto}
+.g-bg{fill:var(--card);stroke:var(--line)}
+.g-grid{stroke:var(--rule);stroke-width:1}
+.g-axis{stroke:var(--muted);stroke-width:1.5}
+.g-line{stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+.g-pt{fill:var(--point)}
+.g-line.ga{stroke:var(--ga)} .g-line.gb{stroke:var(--gb)} .g-line.gc{stroke:var(--gc)}
+.ga{color:var(--ga);font-weight:600} .gb{color:var(--gb);font-weight:600} .gc{color:var(--gc);font-weight:600}
+.g-tick{fill:var(--muted);font:13px var(--body)}
+.g-plab{fill:var(--point);font:600 15px var(--body)}
+.g-llab{fill:var(--ink);font:italic 17px var(--math)}
+.divider{justify-content:center}
+.divider h1{font-size:110px}
+
+/* step reveal: space is reserved, like PowerPoint "Appear" */
+.step{opacity:0;visibility:hidden}
+.step.shown{opacity:1;visibility:visible;animation:rise .45s cubic-bezier(.2,.8,.2,1)}
+.step.wipe.shown{animation:wipe .7s ease-out}
+.step.pop.shown{animation:pop .4s cubic-bezier(.3,1.6,.5,1)}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes wipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes pop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.slide.on,.step.shown{animation:none!important}}
+
+/* controls */
+#bar{position:fixed;left:0;right:0;bottom:0;height:44px;padding:0 16px env(safe-area-inset-bottom,0px);display:flex;align-items:center;gap:10px;
+  background:var(--card);border-top:1px solid var(--line);font-size:14px;color:var(--muted);z-index:2}
+#bar button{font:inherit;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:6px;padding:5px 12px;cursor:pointer}
+#bar button:hover{background:var(--soft)}
+#bar button:focus-visible{outline:2px solid var(--point);outline-offset:2px}
+#prog{flex:1;height:4px;background:var(--rule);border-radius:2px;overflow:hidden}
+#prog>div{height:100%;width:0;background:var(--point);transition:width .3s}
+#count{font-variant-numeric:tabular-nums;min-width:64px;text-align:right}
+#brand{display:flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none;font-size:15px;white-space:nowrap}
+#brand strong{color:var(--point)}
+@media (max-width:900px){#hint{display:none}}
+@media (max-width:560px){#brand,#fs{display:none} #bar{gap:8px;padding:0 10px} #count{min-width:0}}
+#bar button{touch-action:manipulation}
+/* Portrait (phones, iPad upright): a 760px-wide slide whose height fit() matches to the screen; columns stack. */
+@media (orientation:portrait){
+  #stage{width:760px}
+  .slide{padding:40px 36px 32px;overflow-y:auto}
+  .row{flex-direction:column;gap:20px}
+  .grid3{grid-template-columns:1fr}
+  h1{font-size:60px} .divider h1{font-size:84px} .eq.big{font-size:48px}
+}
+.slide aside.notes{display:none}
+#notes{position:fixed;left:0;right:0;bottom:44px;max-height:34vh;overflow:auto;z-index:2;padding:14px 20px;
+  background:var(--card);border-top:2px solid var(--point);font-size:17px;line-height:1.5}
+#notes b{display:block;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--point)}
+/* table cells revealed one at a time keep their border; only the text is hidden */
+table td.step{opacity:1;visibility:visible}
+table td.step:not(.shown){color:transparent}
+</style>
+
+<div id="stage">
+<section class="slide">
+  <p class="eyebrow">Bluebonnet Algebra I · Module 2 · Topic 1 · Lesson 6 · Student Edition pp. 239–256</p>
+  <h1 style="margin-top:6px;font-size:56px">Making Sense of Different Representations of a Linear Function</h1>
+  <div class="eq" style="margin-top:8px;font-size:40px"><i>f</i>(<i>x</i>) = <span class="cm"><i>a</i></span><i>x</i> + <span class="cp"><i>b</i></span> &nbsp;·&nbsp; <i>f</i>(<i>x</i>) = <span class="cm"><i>a</i></span>(<i>x</i> − <span class="cp"><i>c</i></span>)</div>
+  <p style="font-size:24px;margin-top:6px">Prepared by <b>Mr. Pandey</b> · <b>Section 504 Version</b></p>
+  <p style="font-size:24px;margin-top:6px">Bell work: <b><a class="go" href="../lesson6/lesson6-bellwork-day1.html" target="_blank" onclick="event.stopPropagation()">Day 1 →</a></b> · <b><a class="go" href="../lesson6/lesson6-bellwork-day2.html" target="_blank" onclick="event.stopPropagation()">Day 2 →</a></b> · <b><a class="go" href="../lesson6/lesson6-bellwork-day3.html" target="_blank" onclick="event.stopPropagation()">Day 3 →</a></b> &nbsp;|&nbsp; Practice: <b><a class="go" href="../lesson6/lesson6-homework.html" target="_blank" onclick="event.stopPropagation()">Homework →</a></b> · <b><a class="go" href="../lesson6/lesson6-quiz.html" target="_blank" onclick="event.stopPropagation()">Quiz →</a></b></p>
+  <p class="muted small">Click, or press → / Space, to reveal each step. ← goes back. F = full screen.</p>
+  <!-- Same wording as ALGEBRA-platform's footer (lessons.json attribution); required by the CC BY-NC 4.0 terms. -->
+  <p class="foot"><strong>Bluebonnet Algebra I</strong> · a companion to Bluebonnet Learning Secondary Mathematics, Algebra I, Edition 1<br>This work is based on original works of the Texas Education Agency and Carnegie Learning, Inc. This work is made available under a Creative Commons Attribution-Non-Commercial-4.0 International License. This does not in any way imply endorsement by those authors of this work.<br>©2024–2025 Texas Education Agency, portions ©2021 Carnegie Learning, Inc.<br>Licensed <a href="https://creativecommons.org/licenses/by-nc/4.0/" rel="license" target="_blank" onclick="event.stopPropagation()">CC BY-NC 4.0</a>.<br><strong>This is a private site for Algebra I teachers and is not publicly available.</strong></p>
+  <aside class="notes">Welcome. This is the last lesson of Topic 1. Students decide whether a table, graph, equation, or scenario is linear, write functions from tables, and read meaning from two forms of a linear function: general form f(x) = ax + b and factored form f(x) = a(x − c). Same color code as Lessons 4 and 5: orange means slope (the a-value), blue means a point or intercept. The lesson runs three days, and each day opens with bell work while you take attendance (slide 2 for Day 1, slide 14 for Day 2, slide 26 for Day 3). Day 1 covers Getting Started and Activity 6.1. Day 2 covers Activities 6.2 and 6.3. Day 3 covers Activity 6.4 and Talk the Talk. Materials: the Problem-Solving Model and the Graphic Organizer (SE p. 254). The links under your name open the multiple-choice bell work for each day, the homework, and the quiz (also on the last slide).</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 1 · Bell Work · Review</p>
+  <h2>Warm up: work these on your own</h2>
+  <div class="row" style="gap:56px;margin-top:6px">
+    <div class="col">
+      <p>1. Slope between <span class="mt">(2, 7)</span> and <span class="mt">(6, 15)</span>?</p>
+      <div class="step pop eq sm ans"><i>m</i> = 2</div>
+      <p style="margin-top:14px">2. <span class="mt"><i>f</i>(<i>x</i>) = 4<i>x</i> − 3</span>. Find <span class="mt"><i>f</i>(5)</span>.</p>
+      <div class="step pop eq sm ans"><i>f</i>(5) = 17</div>
+    </div>
+    <div class="col">
+      <p>3. Solve <span class="mt">3<i>x</i> − 6 = 12</span>.</p>
+      <div class="step pop eq sm ans"><i>x</i> = 6</div>
+      <p style="margin-top:14px">4. Which is a direct variation: <span class="mt"><i>y</i> = 3<i>x</i></span> or <span class="mt"><i>y</i> = 3<i>x</i> + 2</span>?</p>
+      <div class="step pop eq sm ans"><i>y</i> = 3<i>x</i></div>
+    </div>
+  </div>
+  <aside class="notes">Added for this deck; not from the textbook. Have this up as students walk in; they work silently while you take attendance (about 5 minutes). These review what today builds on: slope between two points (the Lesson 5 Prepare page), evaluating a function, solving a two-step equation, and direct variation. Reveal the answers one at a time. Answer key: 1. (15 − 7)/(6 − 2) = 8/4 = 2. 2. f(5) = 4(5) − 3 = 17. 3. 3x = 18, so x = 6. 4. y = 3x is a direct variation: it passes through (0, 0), so y is always 3 times x. y = 3x + 2 starts at (0, 2), so it is not.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 1 · Today's Plan</p>
+  <h2>Today's plan</h2>
+  <p>☐ &nbsp;Bell work (5 min)</p><p>☐ &nbsp;Getting Started: linear or nonlinear?</p><p>☐ &nbsp;Activity 6.1: tables whose inputs skip</p><p class="warn">One part at a time. Ask for help or a break whenever you need it.</p>
+  <aside class="notes">Section 504 support: chunked directions. Check off each part as the class finishes it.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Lesson 6 · SE p. 239</p>
+  <h2>Today you will…</h2>
+  <div class="col" style="gap:10px;margin-top:4px;font-size:26px">
+    <p class="step">1. Determine whether a scenario, equation, table, or graph represents a <b>linear</b> relationship.</p>
+    <p class="step">2. Calculate the <b>average rate of change</b> from a table.</p>
+    <p class="step">3. <b>Write functions</b> given a table of values.</p>
+    <p class="step">4. <b>Interpret expressions</b> that represent different quantities in terms of a context and a graph.</p>
+    <p class="step">5. <b>Compare</b> different equation representations of linear functions.</p>
+  </div>
+  <p class="step small muted">New key terms: <b>polynomial</b> · <b>degree</b> · <b>leading coefficient</b> · <b>zero of a function</b></p>
+  <aside class="notes">Read each objective aloud as it appears. Have students write the four new key terms in their notes; they are defined in Activity 6.3 (Day 2). Teacher-guide tip for emergent bilingual students: review the term average rate of change and connect it to the slope of a line. Ask a student to explain the slope formula with an example.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Lesson 6 · Key Vocabulary</p>
+  <h2>Key vocabulary</h2>
+  <div class="grid3"><div class="card"><h3>Linear function</h3><p class="small">Its rate of change is always the same, so its graph is a straight line.</p><div class="eq sm"><i>f</i>(<i>x</i>) = 2<i>x</i> + 5</div></div><div class="card"><h3>Rate of change</h3><p class="small">Change in <i>y</i> ÷ change in <i>x</i>. For a line, this is the slope.</p><div class="eq sm">{{8|2}} = 4</div></div><div class="card"><h3>Direct variation</h3><p class="small">A line through (0, 0): <i>y</i> = <i>kx</i>.</p><div class="eq sm"><i>y</i> = 2.5<i>x</i></div></div><div class="card"><h3>General form</h3><p class="small"><i>f</i>(<i>x</i>) = <i>ax</i> + <i>b</i>. <i>a</i> is the slope, <i>b</i> is the <i>y</i>-intercept.</p><div class="eq sm"><i>G</i>(<i>t</i>) = 15<i>t</i> − 45</div></div><div class="card"><h3>Factored form</h3><p class="small"><i>f</i>(<i>x</i>) = <i>a</i>(<i>x</i> − <i>c</i>). <i>a</i> is the slope, <i>c</i> is the zero.</p><div class="eq sm"><i>G</i>(<i>t</i>) = 15(<i>t</i> − 3)</div></div><div class="card"><h3>Zero</h3><p class="small">The <i>x</i>-value that makes <i>f</i>(<i>x</i>) = 0. The graph crosses the <i>x</i>-axis there.</p><div class="eq sm">15(3 − 3) = 0 → zero is 3</div></div></div>
+  <aside class="notes">Section 504 support: preview the key terms before the lesson. Leave this slide up or print it as a reference card.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Essential Question · SE p. 239</p>
+  <h2>You know how to tell whether a relationship is a linear function, and how to write its equation.</h2>
+  <div class="col" style="gap:30px;margin-top:40px;font-size:36px">
+    <p class="step">How can you use the <b>structure of the equation</b> to identify characteristics of the function?</p>
+  </div>
+  <aside class="notes">Have students write the Essential Question at the top of their notes. Don't answer it yet; we return to it at the end of each day and answer it on slide 32.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 1 · Getting Started · Well, Are Ya or Aren't Ya? · SE p. 240</p>
+  <h2>Linear or nonlinear? Explain your reasoning.</h2>
+  <div class="grid3" style="gap:14px 18px">
+    <div class="card"><h3>Scenario A</h3><p class="small">A tree grows 3.5 inches each year.</p><p class="step small"><b class="ga">Linear.</b> Same change, 3.5 in, every year.</p></div>
+    <div class="card"><h3>Scenario B</h3><p class="small">The strength of a medication decreases by 50% each hour it is in the patient's system.</p><p class="step small"><b class="gb">Nonlinear.</b> Half of a smaller amount each hour, so the drop shrinks.</p></div>
+    <div class="card"><h3>Scenario C</h3><p class="small">The area of a square depends on its side length.</p><p class="step small"><b class="gb">Nonlinear.</b> <span class="mt"><i>A</i> = <i>s</i><sup>2</sup></span>: side 1, 2, 3 gives area 1, 4, 9.</p></div>
+    <div class="card"><h3>Equation A</h3><div class="eq sm"><i>y</i> = 14 − 9<i>x</i></div><p class="step small"><b class="ga">Linear.</b> <span class="mt"><i>x</i></span> has exponent 1; slope −9.</p></div>
+    <div class="card"><h3>Equation B</h3><div class="eq sm"><i>y</i> = 2<sup><i>x</i></sup> + 1</div><p class="step small"><b class="gb">Nonlinear.</b> The variable is in the exponent.</p></div>
+    <div class="card"><h3>Equation C</h3><div class="eq sm"><i>y</i> = {{1|4}}(<i>x</i> + 7) − 1</div><p class="step small"><b class="ga">Linear.</b> Point-slope structure; slope {{1|4}}.</p></div>
+  </div>
+  <aside class="notes">Getting Started, 10–15 minutes. Have pairs complete Question 1 before you reveal anything, then share as a class. Teacher-guide misconception: students may think that because they know a formula for a relationship, like Scenario C, the relationship must be linear. Have them use the formula to make a table (side 1, 2, 3 → area 1, 4, 9; the differences are 3 and 5, not constant). Ask: What is another way to describe "decreases by 50% each hour"? (Multiplied by one-half each hour.) Which feature identifies whether an equation is a linear function? (The variable's exponent is 1 and it isn't in an exponent.)</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 1 · Getting Started · Tables · SE p. 240</p>
+  <h2>Linear or nonlinear? Explain your reasoning.</h2>
+  <div class="row" style="gap:40px">
+    <div class="col" style="align-items:center">
+      <h3>Table A</h3>
+      <table class="tbl"><tr><th>x</th><th>y</th></tr><tr><td>1</td><td>3</td></tr><tr><td>1</td><td>4</td></tr><tr><td>1</td><td>5</td></tr></table>
+      <p class="step small"><b>Not a function.</b> The input 1 has three different outputs.</p>
+    </div>
+    <div class="col" style="align-items:center">
+      <h3>Table B</h3>
+      <table class="tbl"><tr><th>x</th><th>y</th></tr><tr><td>3</td><td>1</td></tr><tr><td>4</td><td>1</td></tr><tr><td>5</td><td>1</td></tr></table>
+      <p class="step small"><b class="ga">Linear.</b> The output never changes: a horizontal line, slope 0.</p>
+    </div>
+    <div class="col" style="align-items:center">
+      <h3>Table C</h3>
+      <table class="tbl"><tr><th>x</th><th>y</th></tr><tr><td>−9</td><td>45</td></tr><tr><td>−8</td><td>30</td></tr><tr><td>−7</td><td>15</td></tr></table>
+      <p class="step small"><b class="ga">Linear.</b> <span class="mt"><i>x</i></span> goes up by 1 and <span class="mt"><i>y</i></span> goes down by 15 each time.</p>
+    </div>
+  </div>
+  <aside class="notes">Ask: Describe why Table B is a linear function and Table A is not. (Table B is y = 1, a constant function whose graph is a horizontal line. Table A has the same input with three outputs, so it isn't a function at all; it would be part of the vertical line x = 1.) What strategy can you use for Table C? (The inputs are consecutive, so check the first differences: −15 each time.) This idea of a constant rate of change is exactly what Activity 6.1 extends to tables whose inputs are NOT consecutive.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 1 · Getting Started · Graphs · SE p. 240</p>
+  <h2>Linear or nonlinear? Explain your reasoning.</h2>
+  <div class="row" style="gap:40px">
+    <div class="col" style="align-items:center">
+      <h3>Graph A</h3>
+      <div class="graph" data-g='{"w":300,"h":260,"x":[-5,5],"y":[-5,5],"gx":[1,5],"gy":[1,5],"lines":[{"p":[[-5,0.32],[-4,0.42]],"seg":true},{"p":[[-4,0.42],[-3,0.55]],"seg":true},{"p":[[-3,0.55],[-2,0.71]],"seg":true},{"p":[[-2,0.71],[-1,0.92]],"seg":true},{"p":[[-1,0.92],[0,1.2]],"seg":true},{"p":[[0,1.2],[1,1.56]],"seg":true},{"p":[[1,1.56],[2,2.03]],"seg":true},{"p":[[2,2.03],[3,2.64]],"seg":true},{"p":[[3,2.64],[4,3.43]],"seg":true},{"p":[[4,3.43],[5,4.46]],"seg":true}],"alt":"Graph A: a curve that rises more and more steeply"}'></div>
+      <p class="step small"><b class="gb">Nonlinear.</b> It's a curve; the rate of change grows.</p>
+    </div>
+    <div class="col" style="align-items:center">
+      <h3>Graph B</h3>
+      <div class="graph" data-g='{"w":300,"h":260,"x":[-5,5],"y":[-5,5],"gx":[1,5],"gy":[1,5],"lines":[{"p":[[0,4.5],[1.5,-4.5]],"seg":true}],"alt":"Graph B: a steep line falling from left to right"}'></div>
+      <p class="step small"><b class="ga">Linear.</b> A straight line with a constant (negative) slope.</p>
+    </div>
+    <div class="col" style="align-items:center">
+      <h3>Graph C</h3>
+      <div class="graph" data-g='{"w":300,"h":260,"x":[-5,5],"y":[-5,5],"gx":[1,5],"gy":[1,5],"lines":[{"p":[[-2,-5],[-2,5]]}],"alt":"Graph C: a vertical line"}'></div>
+      <p class="step small"><b>Not a function.</b> A vertical line: one input, every output.</p>
+    </div>
+  </div>
+  <aside class="notes">Ask: What table does Graph C model? (Something like Table A: the same x-value paired with many y-values.) Why isn't this line a linear function? (It fails the vertical line test; its slope is undefined.) Summary, from the teacher guide: methods exist to determine whether a context, equation, table, or graph represents a linear function. Teacher-guide tip: students who are stuck can convert a representation into the one they're most comfortable with, often a table.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 1 · Activity 6.1 · Interpreting Linear Functions · SE p. 241</p>
+  <h2>Inputs not consecutive? Check the slope between every pair.</h2>
+  <div class="row" style="gap:44px">
+    <div class="col" style="gap:10px">
+      <div class="row" style="gap:20px;align-items:center">
+        <p><b>a.</b></p>
+        <table class="tbl" style="font-size:24px"><tr><th>x</th><th>y</th></tr><tr><td>−2</td><td>5.5</td></tr><tr><td>1</td><td>4.75</td></tr><tr><td>4</td><td>4</td></tr><tr><td>7</td><td>3.25</td></tr></table>
+      </div>
+      <p class="step small">Each step: <span class="mt">{{−0.75|3}} = <span class="cm">−0.25</span></span>. Constant, so <b>linear</b>.</p>
+      <p class="step small">Back up from (1, 4.75) to <span class="mt"><i>x</i> = 0</span>: <span class="cp mt">(0, 5)</span>.</p>
+      <div class="step pop eq sm ans"><i>f</i>(<i>x</i>) = <span class="cm">−0.25</span><i>x</i> + <span class="cp">5</span></div>
+    </div>
+    <div class="col" style="gap:10px">
+      <div class="row" style="gap:20px;align-items:center">
+        <p><b>b.</b></p>
+        <table class="tbl" style="font-size:24px"><tr><th>x</th><th>y</th></tr><tr><td>0</td><td>5</td></tr><tr><td>2</td><td>13</td></tr><tr><td>4</td><td>21</td></tr><tr><td>8</td><td>29</td></tr></table>
+      </div>
+      <p class="step small">0 → 2: <span class="mt">{{8|2}} = 4</span>. 2 → 4: <span class="mt">{{8|2}} = 4</span>. 4 → 8: <span class="mt">{{8|4}} = 2</span>.</p>
+      <div class="step pop eq sm ans">Not linear</div>
+      <p class="step warn small">The <i>y</i>-values go up by 8 each time, but the <i>x</i>-steps aren't equal.</p>
+    </div>
+  </div>
+  <aside class="notes">Activity 6.1, 25–30 minutes. Read the introduction together, then have pairs complete Questions 1–4 and share. Teacher-guide misconception: students try first differences even though the inputs aren't consecutive. In part (b) the y-values go up by 8 every time, which looks linear, but the last x-step is 4, not 2, so the rate drops to 2. Ask: Why can't you use first differences here? How did you find the y-intercept in part (a)? (Go back 1 from x = 1: y goes up 0.25 to 5.) The teacher guide writes the answer as f(x) = −0.25x + 5.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 1 · Activity 6.1 · Question 2 · SE p. 241</p>
+  <h2>Nakota's pretzels</h2>
+  <div class="row" style="gap:44px">
+    <table class="tbl" style="font-size:26px"><tr><th style="font-style:normal">Pretzels Sold</th><th style="font-style:normal">Money Earned ($)</th></tr><tr><td>15</td><td>37.5</td></tr><tr><td>42</td><td>105</td></tr><tr><td>58</td><td>145</td></tr><tr><td>29</td><td>72.5</td></tr></table>
+    <div class="col" style="gap:8px">
+      <p class="small"><b>a.</b> What does the table tell you about his sales?</p>
+      <p class="step small">Every row gives <span class="mt">{{37.5|15}} = {{105|42}} = … = <span class="cm">2.5</span></span>: <b>$2.50 per pretzel</b>.</p>
+      <p class="small"><b>b.</b> Is the money directly proportional to pretzels sold?</p>
+      <p class="step small"><b>Yes.</b> The ratio is constant, and 0 pretzels earns $0.</p>
+      <p class="small"><b>c.</b> Write an equation.</p>
+      <div class="step pop eq sm ans"><i>y</i> = <span class="cm">2.5</span><i>x</i></div>
+      <p class="small"><b>d.</b> How much does he earn for 75 pretzels?</p>
+      <p class="step small"><span class="mt">2.5(75) = 187.5</span>, so <b>$187.50</b>.</p>
+    </div>
+  </div>
+  <aside class="notes">The inputs are in random order, which is the point of this question. Ask: How can the column titles help you relate the slope to the context? (Dollars over pretzels = dollars per pretzel.) The Remember box on SE p. 241: when the dependent variable is directly proportional to the independent variable, the relationship is a direct variation; "varies directly" means the same thing. Look for students who are confused when the question doesn't say which quantity is x and which is y.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 1 · Activity 6.1 · Question 3 · SE p. 242</p>
+  <h2>Alejandra's trip to the fair</h2>
+  <p class="small">They paid an entrance fee, then bought 1 ticket for each ride.</p>
+  <div class="row" style="gap:44px">
+    <table class="tbl" style="font-size:26px"><tr><th style="font-style:normal">Ride Tickets</th><th style="font-style:normal">Money Spent ($)</th></tr><tr><td>2</td><td>7.5</td></tr><tr><td>4</td><td>9</td></tr><tr><td>6</td><td>10.5</td></tr><tr><td>11</td><td>14.25</td></tr></table>
+    <div class="col" style="gap:8px">
+      <p class="small"><b>a.</b> What does the table tell you about the costs?</p>
+      <p class="step small">Slope <span class="mt">{{9 − 7.5|4 − 2}} = <span class="cm">0.75</span></span>: tickets cost <b>$0.75</b>. Back up 2 tickets: <span class="mt">7.5 − 1.5 = <span class="cp">6</span></span>, a <b>$6</b> entrance fee.</p>
+      <p class="small"><b>b.</b> Does the money vary directly with the tickets? <b>c.</b> Write an equation.</p>
+      <p class="step small"><b>No.</b> Because of the entrance fee, 0 tickets still costs $6.</p>
+      <div class="step pop eq sm ans"><i>y</i> = <span class="cm">0.75</span><i>x</i> + <span class="cp">6</span></div>
+      <p class="small"><b>d.</b> Lauren has $20. How many ride tickets can she buy?</p>
+      <p class="step small"><span class="mt">0.75<i>x</i> + 6 = 20</span>, <span class="mt"><i>x</i> ≈ 18.7</span>, so <b>18 tickets</b>.</p>
+    </div>
+  </div>
+  <aside class="notes">Ask: How do you know whether the slope is the price of a ticket or the entrance fee? (The slope is the rate, dollars per ticket; the y-intercept is the one-time fee.) From the teacher guide: "Why doesn't tripling the table results for 6 result in $20?" (Tripling would triple the entrance fee too.) For part (d), round down: she can't buy part of a ticket, and 19 tickets would cost $20.25. Check the last row: (14.25 − 10.5)/(11 − 6) = 0.75, so the table is linear. Question 3 is a good check of today's content; for more practice with direct variation, assign Skills Practice Set A.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 1 · Activity 6.1 · Question 4 · SE p. 242</p>
+  <h2>Draining the fish tank</h2>
+  <div class="row" style="gap:44px">
+    <table class="tbl" style="font-size:26px"><tr><th style="font-style:normal">Time (hours)</th><th style="font-style:normal">Water Left (gal)</th></tr><tr><td>{{1|4}}</td><td>169</td></tr><tr><td>{{1|2}}</td><td>163</td></tr><tr><td>{{3|4}}</td><td>157</td></tr><tr><td>1</td><td>151</td></tr></table>
+    <div class="col" style="gap:8px">
+      <p class="small"><b>a.</b> Is the water left directly proportional to the time?</p>
+      <p class="step small">Rate: <span class="mt">{{−6|1/4}} = <span class="cm">−24</span></span> gallons per hour. <b>No:</b> at 0 hours the tank isn't empty.</p>
+      <p class="small"><b>b.</b> How many gallons did the tank hold?</p>
+      <p class="step small">Back up {{1|4}} hour: <span class="mt">169 + 6 = <span class="cp">175</span></span> gallons.</p>
+      <p class="small"><b>c.</b> Write an equation.</p>
+      <div class="step pop eq sm ans"><i>y</i> = <span class="cp">175</span> − <span class="cm">24</span><i>x</i></div>
+      <p class="small"><b>d.</b> When will the tank be empty?</p>
+      <p class="step small"><span class="mt">0 = 175 − 24<i>x</i></span>, <span class="mt"><i>x</i> ≈ 7.29</span> hours, about <b>7 hours 17.5 minutes</b>.</p>
+    </div>
+  </div>
+  <aside class="notes">Ask: Did you use the table or the equation to find the tank's capacity? How can you represent the empty tank mathematically? (y = 0.) How did you calculate when the tank will be empty? (175/24 ≈ 7.29 hours; 0.29 hours × 60 ≈ 17.5 minutes.) The slope is negative because the water goes down. The x-values here are fractions, so dividing by 1/4 is the same as multiplying by 4.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 1 · Activity 6.1 · Summary</p>
+  <h2>Is the table linear?</h2>
+  <div class="col" style="gap:22px;margin-top:10px">
+    <p class="step">1. Check the inputs. If they're <b>not consecutive</b> (or not in order), first differences won't work.</p>
+    <p class="step">2. Calculate the slope, <span class="mt">{{change in <i>y</i>|change in <i>x</i>}}</span>, between <b>every pair</b> of points.</p>
+    <p class="step">3. If the slope is always the same, the table is linear. Use the slope and a point to find <span class="cp mt"><i>b</i></span>.</p>
+    <p class="step">4. It's a <b>direct variation</b> only if it passes through <span class="cp mt">(0, 0)</span>: <span class="mt"><i>y</i> = <i>kx</i></span>.</p>
+  </div>
+  <aside class="notes">Stamp the learning, from the teacher guide: "If a table represents a linear function, the slope, or average rate of change, is constant between all given points." To close Day 1, have students reread the Essential Question and read the activity summaries to the class. End of Day 1.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 1 · Notes to Keep</p>
+  <h2>Notes to keep: Day 1</h2>
+  <div class="grid3"><div class="card"><h3>Is the table linear?</h3><p class="small">1. Find {{change in <i>y</i>|change in <i>x</i>}} between every pair.<br>2. Always the same → linear.</p></div><div class="card"><h3>Write the function</h3><p class="small">Use the slope and a point to find <i>b</i>, the value when <i>x</i> = 0.</p></div><div class="card"><h3>Direct variation</h3><p class="small">Only if the line passes through (0, 0): <i>y</i> = <i>kx</i>.</p></div></div><p class="small muted">Copy these into your notes, or ask your teacher for a printed copy.</p>
+  <aside class="notes">Section 504 support: a copy of the day's notes. Hand out a printed copy if the student's plan lists copies of notes.</aside>
+</section>
+<section class="slide divider">
+  <p class="eyebrow">Lesson 6</p>
+  <h1>Day 2</h1>
+  <p class="step" style="font-size:32px;max-width:900px">Essential Question: How can you use the structure of the equation to identify characteristics of the function?</p>
+  <aside class="notes">Show this, then go to the bell work while you take attendance. Afterward, have a student read the Essential Question aloud, and ask two or three students to summarize Day 1: How can you tell whether a table is linear when the inputs aren't consecutive?</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 2 · Bell Work · Review of Day 1</p>
+  <h2>Warm up: work these on your own</h2>
+  <div class="row" style="gap:56px;margin-top:6px">
+    <div class="col">
+      <p>1. Do <span class="mt">(0, 3), (2, 7), (6, 15)</span> lie on one line? If so, write the equation. <span class="muted" style="font-size:21px">(SE p. 241)</span></p>
+      <div class="step pop eq sm ans">Yes: <i>y</i> = 2<i>x</i> + 3</div>
+      <p style="margin-top:14px">2. Do <span class="mt">(0, 1), (2, 5), (4, 13)</span> lie on one line? <span class="muted" style="font-size:21px">(SE p. 241)</span></p>
+      <div class="step pop eq sm ans">No</div>
+    </div>
+    <div class="col">
+      <p>3. Pretzels cost $3 each. Write the equation. Is it a direct variation? <span class="muted" style="font-size:21px">(SE p. 241)</span></p>
+      <div class="step pop eq sm ans"><i>y</i> = 3<i>x</i>; yes</div>
+      <p style="margin-top:14px">4. Solve <span class="mt">0.75<i>x</i> + 6 = 15</span>. <span class="muted" style="font-size:21px">(SE p. 242)</span></p>
+      <div class="step pop eq sm ans"><i>x</i> = 12</div>
+    </div>
+  </div>
+  <aside class="notes">Added for this deck; not from the textbook. Have this up as students walk in; they work silently while you take attendance (about 5 minutes). It reviews Day 1. Watch #1: the inputs jump from 2 to 6, so students must divide by 4, not 2. Answer key: 1. (7 − 3)/(2 − 0) = 2 and (15 − 7)/(6 − 2) = 2. Same slope, so linear, and (0, 3) is the y-intercept: y = 2x + 3. 2. (5 − 1)/2 = 2 but (13 − 5)/2 = 4. Different slopes, so not one line. 3. y = 3x; yes, it passes through (0, 0), since 0 pretzels cost $0. 4. 0.75x = 9, so x = 12.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 2 · Today's Plan</p>
+  <h2>Today's plan</h2>
+  <p>☐ &nbsp;Bell work (5 min)</p><p>☐ &nbsp;Activity 6.2: read a graph (Gracie's T-shirts)</p><p>☐ &nbsp;Activity 6.3: general form and factored form</p><p class="warn">One part at a time. Ask for help or a break whenever you need it.</p>
+  <aside class="notes">Section 504 support: chunked directions. Check off each part as the class finishes it.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 2 · Activity 6.2 · Interpreting Graphs of Linear Functions · SE p. 243</p>
+  <h2>Gracie's T-shirt sales</h2>
+  <div class="row" style="gap:40px">
+    <div class="col" style="gap:12px">
+      <p class="small">Gracie sells T-shirts for her mom at festivals and returns what she earns. The graph shows her potential earnings.</p>
+      <p class="small"><b>1.</b> List as many facts as you can.</p>
+      <p class="step small">The line passes through <span class="cp">(0, 0)</span>: no shirts, no money.</p>
+      <p class="step small">Up 15 for every 1 shirt: <span class="cm">$15 per T-shirt</span>. Selling 4 shirts earns $60.</p>
+      <p class="step small">Domain of the situation: <b>whole numbers</b> of shirts, 0 or more. Range: 0, 15, 30, 45, …</p>
+    </div>
+    <div class="graph" data-g='{"w":440,"h":420,"x":[-6,16],"y":[-110,110],"gx":[1,5],"gy":[10,50],"lines":[{"p":[[0,0],[1,15]]}],"pts":[[4,60,"(4, 60)"]],"alt":"Graph of potential earnings: a line through (0, 0) rising 15 dollars per T-shirt"}'></div>
+  </div>
+  <aside class="notes">Activity 6.2, 20–25 minutes. To begin Day 2, have a student read the Essential Question aloud. Have pairs complete Questions 1–5, then share. Axes: x = Number of T-Shirts, y = Potential Earnings (dollars). The Ask Yourself: What do the slope, intercepts, domain, and range mean in this situation? Teacher-guide look-for: students give the domain and range of the function (all real numbers) rather than of the scenario (whole numbers of shirts, multiples of $15). Ask: Did you use one or two points to calculate the earnings per T-shirt?</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 2 · Activity 6.2 · Questions 2–5 · SE p. 244</p>
+  <h2>Write and evaluate <span class="eq" style="font-size:46px"><i>E</i>(<i>t</i>)</span></h2>
+  <div class="col" style="gap:8px">
+    <div class="row" style="gap:40px">
+      <div class="col" style="gap:8px">
+        <p class="small"><b>2.</b> Interpret the <i>x</i>- and <i>y</i>-intercepts.</p>
+        <p class="step small">Both are <span class="cp mt">(0, 0)</span>: selling 0 shirts earns $0.</p>
+        <p class="small"><b>3.</b> Write a function for her earnings.</p>
+        <div class="step pop eq sm ans"><i>E</i>(<i>t</i>) = <span class="cm">15</span><i>t</i></div>
+      </div>
+      <div class="col" style="gap:8px">
+        <p class="small"><b>4.</b> What does <span class="mt">(<i>t</i>, <i>E</i>(<i>t</i>))</span> represent?</p>
+        <p class="step small">Each point on the line: <span class="mt"><i>t</i></span> shirts sold and the dollars earned for them.</p>
+      </div>
+    </div>
+    <p class="small" style="margin-top:6px"><b>5.</b> Evaluate and interpret.</p>
+    <div class="row" style="gap:18px">
+      <div class="card step" style="flex:1"><div class="eq sm"><i>E</i>(2) = 30</div><p class="small">(2, 30): 2 shirts earn $30.</p></div>
+      <div class="card step" style="flex:1"><div class="eq sm"><i>E</i>(5) = 75</div><p class="small">(5, 75): 5 shirts earn $75.</p></div>
+      <div class="card step" style="flex:1"><div class="eq sm"><i>E</i>(2.75) = 41.25</div><p class="small">Doesn't make sense: she can't sell 2.75 shirts.</p></div>
+    </div>
+  </div>
+  <aside class="notes">Ask Yourself: Does E(t) represent a direct variation? (Yes: it passes through the origin and has the form y = kx.) Teacher-guide support: relate function notation back to x and y: (t, E(t)) is the same as (x, f(x)), which is the same as (x, y). Ask: Why doesn't the equation have a constant term? (She starts with $0.) E(2.75) is a point on the line, but it isn't a solution in the context.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 2 · Activity 6.2 · Worked Example · SE p. 244</p>
+  <h2>How many shirts to earn $100? Use the equation.</h2>
+  <div class="row" style="gap:56px">
+    <div class="col" style="gap:6px;flex:none">
+      <div class="eq sm"><i>E</i>(<i>t</i>) = 15<i>t</i></div>
+      <div class="eq sm step"><span class="cp">100</span> = 15<i>t</i></div>
+      <div class="eq sm step">{{100|15}} = <i>t</i></div>
+      <div class="eq sm step">6.67 ≈ <i>t</i></div>
+    </div>
+    <div class="col" style="gap:14px">
+      <p><b>6a.</b> What does <span class="mt"><i>t</i> ≈ 6.67</span> mean?</p>
+      <p class="step small">6.67 shirts earns exactly $100. She can't sell part of a shirt: 6 shirts earn only $90, so she must sell <b>7 T-shirts</b>.</p>
+      <p><b>6b.</b> Why can you substitute 100 for <span class="mt"><i>E</i>(<i>t</i>)</span>?</p>
+      <p class="step small"><span class="mt"><i>E</i>(<i>t</i>)</span> is the dollars earned. $100 is the dollars she wants to earn.</p>
+    </div>
+  </div>
+  <aside class="notes">Read the Worked Examples and complete Questions 6 and 7 as a class. The Worked Example is explicit instruction: have students restate each step in their own words. Ask: How do you know whether to substitute the given value for t or for E(t)? (It's dollars, so it's the output.) How did you decide 7 instead of 6? How much does she earn with 6 shirts? 7? ($90 and $105.)</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 2 · Activity 6.2 · Worked Example · SE p. 245</p>
+  <h2>How many shirts to earn $100? Use the graph.</h2>
+  <div class="row" style="gap:40px">
+    <div class="col" style="gap:12px">
+      <p class="small">Graph each side of <span class="mt">100 = 15<i>t</i></span> as its own function: <span class="mt"><i>y</i> = 100</span> and <span class="mt"><i>y</i> = 15<i>x</i></span>. The solution is where they <b>intersect</b>.</p>
+      <p class="small step">Intersection: <span class="cp mt">(6.67, 100)</span>. On the graph, 6.67 shirts; in context, <b>7 shirts</b>.</p>
+      <p class="small"><b>7.</b> Limitations of each method?</p>
+      <p class="small step"><b>Equation:</b> the answer may not make sense in context, so you must round up or down.</p>
+      <p class="small step"><b>Graph:</b> it can be hard to read an exact answer.</p>
+    </div>
+    <div class="graph" data-g='{"w":440,"h":420,"x":[-6,16],"y":[-110,110],"gx":[1,5],"gy":[10,50],"lines":[{"p":[[0,100],[1,100]],"dash":true,"label":"y = 100"},{"p":[[0,0],[1,15]],"label":"y = 15x"}],"pts":[[6.67,100,"(6.67, 100)"]],"alt":"Graphs of y = 100 and y = 15x intersecting at (6.67, 100)"}'></div>
+  </div>
+  <aside class="notes">Remember box: the graph of an equation represents the set of all its solutions. Ask: Why does it make sense to rely on technology when using a graph? (Reading 6.67 by eye is hard.) How could you solve this using a table on a calculator? Stamp the learning, from the teacher guide: "An equation or a graph can be used to determine the value of an independent variable. Sometimes a graph can only give an approximate answer; however, using an equation always results in an exact answer." For more practice, assign Skills Practice Set B.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 2 · Activity 6.3 · Interpreting Changes to the Graph · SE p. 246</p>
+  <h2>Gracie gives away 3 T-shirts in a raffle</h2>
+  <div class="row" style="gap:40px">
+    <div class="col" style="gap:8px">
+      <p class="small">Still $15 per shirt. The new relationship is <span class="gb mt"><i>G</i>(<i>t</i>)</span>.</p>
+      <p class="small"><b>1a.</b> How do the graphs show the price is the same?</p>
+      <p class="step small">The lines are <b>parallel</b>: same slope, <span class="cm">15</span>.</p>
+      <p class="small"><b>1b.</b> Interpret <span class="mt"><i>y</i> = <i>G</i>(0)</span>.</p>
+      <p class="step small"><span class="cp mt">(0, −45)</span>: with 0 shirts sold, earnings are −$45. That doesn't make sense in this situation.</p>
+      <p class="small"><b>1c.</b> Interpret <span class="mt"><i>G</i>(<i>t</i>) = 0</span>.</p>
+      <p class="step small"><span class="cp mt">(3, 0)</span>: after the 3 free shirts, she has $0 to return.</p>
+    </div>
+    <div class="graph" data-g='{"w":440,"h":420,"x":[-6,16],"y":[-110,110],"gx":[1,5],"gy":[10,50],"ptsStep":true,"lines":[{"p":[[0,0],[1,15]],"label":"E(t) = 15t"},{"p":[[3,0],[4,15]],"c":"b","label":"G(t)"}],"pts":[[0,-45,"(0, −45)"],[3,0,"(3, 0)"]],"alt":"Graphs of E(t) = 15t and the parallel line G(t) through (0, −45) and (3, 0)"}'></div>
+  </div>
+  <aside class="notes">Activity 6.3, 20–25 minutes. Have pairs complete Questions 1–4, then share. The last two clicks label the points on the graph. Ask Yourself: Does G(t) vary directly with t? (No: it doesn't pass through the origin.) Ask: How do the parallel lines relate to the context? (Same price per shirt.) Does this notation represent the x-intercept or the y-intercept? (G(0) is the y-intercept; G(t) = 0 gives the x-intercept.) Look for the statements students use to interpret y = G(0) and G(t) = 0.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 2 · Activity 6.3 · Questions 2–3 · SE p. 247</p>
+  <h2>Two equations for <span class="eq gb" style="font-size:46px"><i>G</i>(<i>t</i>)</span></h2>
+  <div class="row" style="gap:28px">
+    <div class="card" style="flex:1"><h3>Brianna</h3><p class="small">Gracie gives away 3 T-shirts, so she has 3 fewer shirts to sell.</p><div class="eq sm"><i>G</i>(<i>t</i>) = 15(<i>t</i> − 3)</div></div>
+    <div class="card" style="flex:1"><h3>Hailey</h3><p class="small">The cost of giving away three shirts is $45.</p><div class="eq sm"><i>G</i>(<i>t</i>) = 15<i>t</i> − 45</div></div>
+  </div>
+  <div class="row" style="gap:40px;align-items:center">
+    <p class="small"><b>2.</b> Verify they are equivalent.</p>
+    <p class="step small">Distribute: <span class="mt">15(<i>t</i> − 3) = 15<i>t</i> − 45</span>. ✓</p>
+  </div>
+  <p class="small"><b>3.</b> How many shirts to earn $100?</p>
+  <div class="row" style="gap:40px;align-items:center">
+    <div class="eq sm step">100 = 15<i>t</i> − 45 → 145 = 15<i>t</i> → <i>t</i> ≈ 9.67</div>
+    <div class="step pop eq sm ans">10 T-shirts</div>
+  </div>
+  <aside class="notes">Ask: Which property did you apply to show the equations are equivalent? (The Distributive Property.) Explain how Brianna's and Hailey's perspectives are different: Brianna thinks in shirts (3 fewer to sell), Hailey thinks in dollars ($45 lost). Compare Question 3 with the Worked Example in Activity 6.2: on the graph, the line G(t) crosses y = 100 at about (9.67, 100), and in context she needs 10 shirts.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 2 · Activity 6.3 · Question 4 · SE p. 247</p>
+  <h2>What does each part mean?</h2>
+  <table class="cmp" style="font-size:21px">
+    <tr><th>Expression (unit)</th><th>Contextual meaning</th><th>Mathematical meaning</th></tr>
+    <tr class="step"><td><span class="mt"><i>t</i></span> (T-shirts)</td><td>Number of T-shirts sold</td><td>Input</td></tr>
+    <tr class="step"><td><span class="mt"><i>G</i>(<i>t</i>)</span> (dollars)</td><td>Potential earnings for selling <i>t</i> T-shirts</td><td>Output</td></tr>
+    <tr class="step"><td><span class="mt cm">15</span> (dollars per T-shirt)</td><td>Selling price of a T-shirt</td><td>Average rate of change (slope)</td></tr>
+    <tr class="step"><td><span class="mt">(<i>t</i> − 3)</span> (T-shirts)</td><td>Shirts that earn money, not counting the 3 free ones</td><td>The input minus a constant</td></tr>
+    <tr class="step"><td><span class="mt">15<i>t</i></span> (dollars)</td><td>Earnings for <i>t</i> T-shirts</td><td>The rate times the input</td></tr>
+    <tr class="step"><td><span class="mt cp">−45</span> (dollars)</td><td>Money not earned because 3 shirts were given away</td><td>The <i>y</i>-intercept</td></tr>
+  </table>
+  <aside class="notes">Have students fill in their own table first: the unit, then the contextual meaning, then the mathematical meaning. Reveal the teacher-guide answers one row at a time. Teacher-guide support: provide a word bank for the mathematical meanings (input, output, rate of change, y-intercept, constant). Ask: How does the unit of each expression guide your thinking? (Dollars per T-shirt must be a rate; plain dollars is an amount.)</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 2 · Activity 6.3 · Worked Example · SE p. 248</p>
+  <h2>Polynomials</h2>
+  <div class="row" style="gap:40px">
+    <div class="col" style="gap:12px">
+      <p class="small step">A <b>polynomial</b> is a sum of powers of a variable multiplied by coefficients. A linear function is a polynomial function.</p>
+      <p class="small step">The <b>degree</b> is the greatest exponent of the variable.</p>
+      <p class="small step">The <b>leading coefficient</b> is the number multiplying the term with the greatest power.</p>
+      <p class="small step think">When you graph a polynomial, the degree tells you the maximum number of times the graph can cross the <i>x</i>-axis.</p>
+    </div>
+    <table class="tbl" style="font-size:26px">
+      <tr><th style="font-style:normal">Name</th><th style="font-style:normal">Example</th><th style="font-style:normal">Degree</th></tr>
+      <tr><td style="font-family:var(--body)">Constant</td><td><i>P</i>(<i>x</i>) = 7</td><td>0</td></tr>
+      <tr><td style="font-family:var(--body)">Linear</td><td><i>P</i>(<i>x</i>) = 2<i>x</i> − 5</td><td>1</td></tr>
+      <tr><td style="font-family:var(--body)">Quadratic</td><td><i>P</i>(<i>x</i>) = 3<i>x</i><sup>2</sup> − 2<i>x</i> + 4</td><td>2</td></tr>
+      <tr><td style="font-family:var(--body)">Cubic</td><td><i>P</i>(<i>x</i>) = 4<i>x</i><sup>3</sup> − 2</td><td>3</td></tr>
+    </table>
+  </div>
+  <aside class="notes">Ask a student to read the definitions aloud. "Polynomial" comes from poly- (many) and -nomial (term): many terms. Teacher-guide questions: Rewrite the constant 7 with a variable and an exponent (7x⁰). What is the exponent of the variable in a linear function? (1.) What is an example of a linear function with a leading coefficient of 1? (P(x) = x + 4.) Write an example of a cubic function with four terms (x³ + 2x² − x + 5). The leading coefficient of 3x² − 2x + 4 is 3. Students learn more about polynomials in later courses.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 2 · Activity 6.3 · Question 5 · SE pp. 248–249</p>
+  <h2>General form: <span class="eq" style="font-size:46px"><i>f</i>(<i>x</i>) = <span class="cm"><i>a</i></span><i>x</i> + <span class="cp"><i>b</i></span></span></h2>
+  <div class="row" style="gap:40px">
+    <div class="col" style="gap:12px">
+      <p class="small"><span class="mt"><i>a</i></span> and <span class="mt"><i>b</i></span> are real numbers and <span class="mt"><i>a</i> ≠ 0</span>. It has the same structure as <span class="mt"><i>y</i> = <i>mx</i> + <i>b</i></span>.</p>
+      <p class="small step"><span class="cm mt"><i>a</i></span> is the <b>leading coefficient</b>: the steepness and direction of the line (the slope).</p>
+      <p class="small step"><span class="cp mt"><i>b</i></span> is the <b><i>y</i>-intercept</b>.</p>
+      <p class="small"><b>5.</b> For <span class="mt"><i>G</i>(<i>t</i>) = 15<i>t</i> − 45</span>, label <span class="mt"><i>a</i></span> and <span class="mt"><i>b</i></span> on the graph.</p>
+      <p class="small step"><span class="cm mt"><i>a</i> = 15</span>: a slope triangle, right 2 and up 30.</p>
+      <p class="small step"><span class="cp mt"><i>b</i> = −45</span>: the <i>y</i>-intercept, <span class="mt">(0, −45)</span>.</p>
+    </div>
+    <div class="graph" data-g='{"w":440,"h":420,"x":[-6,16],"y":[-110,110],"gx":[1,5],"gy":[10,50],"ptsStep":true,"lines":[{"p":[[3,0],[4,15]],"c":"b","label":"G(t)"},{"p":[[5,30],[7,30]],"seg":true,"dash":true},{"p":[[7,30],[7,60]],"seg":true,"dash":true}],"pts":[[0,-45,"b: (0, −45)"]],"alt":"Graph of G(t) = 15t − 45 with a slope triangle and the y-intercept (0, −45)"}'></div>
+  </div>
+  <aside class="notes">Read the information about general form aloud, then complete Question 5 as a class. The degree of a linear polynomial is 1, so its graph crosses the x-axis at most once. Teacher-guide sidebar: the letters used are irrelevant; think about the position of each number, as the leading coefficient or as the constant, and its effect on the function. The dashed slope triangle on the graph goes from (5, 30), right 2 and up 30 to (7, 60): 30/2 = 15. The last click marks b. Ask: Explain how your label for a makes sense. Where is another possible location for a? (Any slope triangle on the line.)</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 2 · Activity 6.3 · Questions 6–7 · SE p. 249</p>
+  <h2>Factored form: <span class="eq" style="font-size:46px"><i>f</i>(<i>x</i>) = <span class="cm"><i>a</i></span>(<i>x</i> − <span class="cp"><i>c</i></span>)</span></h2>
+  <div class="row" style="gap:40px">
+    <div class="col" style="gap:12px">
+      <p class="small"><span class="cm mt"><i>a</i></span> is the slope. The value of <span class="mt"><i>x</i></span> that makes <span class="mt">(<i>x</i> − <i>c</i>) = 0</span> is the <b><i>x</i>-intercept</b>.</p>
+      <p class="small step">A <b>zero of a function</b> is a real number that makes <span class="mt"><i>f</i>(<i>x</i>) = 0</span>.</p>
+      <p class="small"><b>6.</b> For <span class="mt"><i>G</i>(<i>t</i>) = 15(<i>t</i> − 3)</span>, label <span class="mt"><i>a</i></span> and <span class="mt"><i>c</i></span>.</p>
+      <p class="small step"><span class="cm mt"><i>a</i> = 15</span>: the slope triangle. <span class="cp mt"><i>c</i> = 3</span>: the <i>x</i>-intercept, <span class="mt">(3, 0)</span>.</p>
+      <p class="small"><b>7.</b> What is the zero of <span class="mt"><i>G</i>(<i>t</i>)</span>?</p>
+      <div class="step pop eq sm ans">3, because 15(3 − 3) = 0</div>
+      <p class="step warn small">A zero is a <b>number</b> (3). An intercept is a <b>point</b> (3, 0).</p>
+    </div>
+    <div class="graph" data-g='{"w":440,"h":420,"x":[-6,16],"y":[-110,110],"gx":[1,5],"gy":[10,50],"ptsStep":true,"lines":[{"p":[[3,0],[4,15]],"c":"b","label":"G(t)"},{"p":[[5,30],[7,30]],"seg":true,"dash":true},{"p":[[7,30],[7,60]],"seg":true,"dash":true}],"pts":[[3,0,"c: (3, 0)"]],"alt":"Graph of G(t) = 15(t − 3) with a slope triangle and the x-intercept (3, 0)"}'></div>
+  </div>
+  <aside class="notes">Read the definition of zero of a function aloud, then have pairs complete Questions 6 and 7. Teacher-guide misconception: students mix up whether to give an x-intercept or a zero as one number or an ordered pair. Intercepts are locations, written as ordered pairs like (3, 0). Zeros are the values where f(x) = 0, written as numbers like 3. Ask: What information do general form and factored form both give? (The slope, a.) What does each give that the other doesn't? (General: the y-intercept. Factored: the zero.) Stamp the learning: the general form and the factored form each have a structure that identifies characteristics of the graph. For more practice, assign Skills Practice Set C. To close Day 2, have students reread the Essential Question and read the activity summaries. End of Day 2.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 2 · Notes to Keep</p>
+  <h2>Notes to keep: Day 2</h2>
+  <div class="grid3"><div class="card"><h3>Solve with the equation</h3><div class="eq sm">100 = 15<i>t</i> → <i>t</i> ≈ 6.67</div><p class="small">Then decide what makes sense: 7 shirts.</p></div><div class="card"><h3>General form</h3><div class="eq sm"><i>f</i>(<i>x</i>) = <span class="cm"><i>a</i></span><i>x</i> + <span class="cp"><i>b</i></span></div><p class="small"><i>a</i> = slope, <i>b</i> = <i>y</i>-intercept</p></div><div class="card"><h3>Factored form</h3><div class="eq sm"><i>f</i>(<i>x</i>) = <span class="cm"><i>a</i></span>(<i>x</i> − <span class="cp"><i>c</i></span>)</div><p class="small"><i>a</i> = slope, <i>c</i> = zero, (<i>c</i>, 0) = <i>x</i>-intercept</p></div></div><p class="small muted">Copy these into your notes, or ask your teacher for a printed copy.</p>
+  <aside class="notes">Section 504 support: a copy of the day's notes. Hand out a printed copy if the student's plan lists copies of notes.</aside>
+</section>
+<section class="slide divider">
+  <p class="eyebrow">Lesson 6</p>
+  <h1>Day 3</h1>
+  <p class="step" style="font-size:32px;max-width:900px">Essential Question: How can you use the structure of the equation to identify characteristics of the function?</p>
+  <aside class="notes">Show this, then go to the bell work while you take attendance. Afterward, have a student read the Essential Question aloud and summarize Day 2: What does general form show? What does factored form show?</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 3 · Bell Work · Review of Day 2</p>
+  <h2>Warm up: work these on your own</h2>
+  <div class="row" style="gap:56px;margin-top:6px">
+    <div class="col">
+      <p>1. Write <span class="mt"><i>f</i>(<i>x</i>) = 4(<i>x</i> − 5)</span> in general form. <span class="muted" style="font-size:21px">(SE p. 248)</span></p>
+      <div class="step pop eq sm ans"><i>f</i>(<i>x</i>) = 4<i>x</i> − 20</div>
+      <p style="margin-top:14px">2. What is the zero of <span class="mt"><i>f</i>(<i>x</i>) = 3(<i>x</i> − 7)</span>? <span class="muted" style="font-size:21px">(SE p. 249)</span></p>
+      <div class="step pop eq sm ans">7</div>
+    </div>
+    <div class="col">
+      <p>3. Degree and leading coefficient of <span class="mt"><i>P</i>(<i>x</i>) = 5<i>x</i><sup>3</sup> − 2<i>x</i> + 1</span>? <span class="muted" style="font-size:21px">(SE p. 248)</span></p>
+      <div class="step pop eq sm ans">degree 3, leading coefficient 5</div>
+      <p style="margin-top:14px">4. <span class="mt"><i>E</i>(<i>t</i>) = 15<i>t</i></span>. Find <span class="mt"><i>E</i>(4)</span>. <span class="muted" style="font-size:21px">(SE p. 244)</span></p>
+      <div class="step pop eq sm ans"><i>E</i>(4) = 60</div>
+    </div>
+  </div>
+  <aside class="notes">Added for this deck; not from the textbook. Have this up as students walk in; they work silently while you take attendance (about 5 minutes). It reviews Day 2. Watch #2: the zero is the number 7, not the point (7, 0) and not −7. Answer key: 1. Distribute: 4x − 20. 2. x − 7 = 0 when x = 7. 3. The greatest exponent is 3, and the number in front of x³ is 5. 4. E(4) = 15(4) = 60: selling 4 T-shirts earns $60.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 3 · Today's Plan</p>
+  <h2>Today's plan</h2>
+  <p>☐ &nbsp;Bell work (5 min)</p><p>☐ &nbsp;Activity 6.4: a booth fee changes the graph</p><p>☐ &nbsp;Talk the Talk</p><p>☐ &nbsp;Exit ticket</p><p class="warn">One part at a time. Ask for help or a break whenever you need it.</p>
+  <aside class="notes">Section 504 support: chunked directions. Check off each part as the class finishes it.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 3 · Activity 6.4 · Interpreting More Changes to the Graph · SE pp. 250–251</p>
+  <h2>A $35 booth fee</h2>
+  <div class="row" style="gap:40px">
+    <div class="col" style="gap:7px">
+      <p class="small">Still $15 per shirt and 3 free shirts, plus a <b>$35</b> fee. The new relationship is <span class="ga mt"><i>F</i>(<i>t</i>)</span>, the green line.</p>
+      <p class="small"><b>1a.</b> How do the graphs show the price is the same?</p>
+      <p class="step small">Parallel lines: same slope, <span class="cm">15</span>.</p>
+      <p class="small"><b>1b.</b> How did the $35 fee change the graph?</p>
+      <p class="step small">The <i>y</i>-intercept moved down 35, from <span class="cp mt">(0, −45)</span> to <span class="cp mt">(0, −80)</span>.</p>
+      <p class="small"><b>1c.</b> How many shirts before she has any money to return?</p>
+      <p class="step small"><b>6 shirts.</b> <span class="mt"><i>F</i>(5) = −5</span> but <span class="mt"><i>F</i>(6) = 10</span>.</p>
+      <p class="small"><b>1d.</b> How many shirts to earn $100?</p>
+      <p class="step small"><span class="mt">15<i>t</i> − 80 = 100</span>, so <b>12 shirts</b>.</p>
+    </div>
+    <div class="graph" data-g='{"w":440,"h":420,"x":[-6,16],"y":[-110,110],"gx":[1,5],"gy":[10,50],"ptsStep":true,"lines":[{"p":[[3,0],[4,15]],"c":"b","label":"G(t)"},{"p":[[0,-80],[1,-65]],"c":"a"}],"pts":[[0,-80,"(0, −80)"],[12,100,"(12, 100)"]],"alt":"Graphs of G(t) = 15(t − 3) and the parallel line F(t) through (0, −80) and (12, 100)"}'></div>
+  </div>
+  <aside class="notes">Activity 6.4, 15–20 minutes. To begin Day 3, have a student read the Essential Question aloud. Hand out the Problem-Solving Model and have pairs complete Questions 1 and 2, then share. Ask Yourself: Is F(t) directly proportional to t? (No.) Ask: Explain what the new y-intercept means in this context. (Before selling anything she is $80 behind: $45 in free shirts plus the $35 fee.) How did the fee affect how many shirts she needs to earn $100? (12 instead of 10.) Note: the teacher guide's answer to 1d says she "needs to sell an additional 6 T-shirts to earn $100"; that doesn't match its own numbers. 12 is 2 more than the 10 shirts from Activity 6.3, and 5 more than the 7 from Activity 6.2. The last two clicks label (0, −80) and (12, 100).</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 3 · Activity 6.4 · Question 2 · SE p. 251</p>
+  <h2>Three ways to write <span class="eq ga" style="font-size:46px"><i>F</i>(<i>t</i>)</span></h2>
+  <div class="col" style="gap:16px">
+    <p class="small"><b>a.</b> Write <span class="mt"><i>F</i>(<i>t</i>)</span> in terms of <span class="mt"><i>G</i>(<i>t</i>)</span>.</p>
+    <div class="step pop eq sm ans"><i>F</i>(<i>t</i>) = <i>G</i>(<i>t</i>) − 35</div>
+    <p class="small"><b>b.</b> General form. What do <span class="mt"><i>a</i></span> and <span class="mt"><i>b</i></span> show?</p>
+    <div class="row" style="gap:24px;align-items:center"><div class="step pop eq sm ans"><i>F</i>(<i>t</i>) = <span class="cm">15</span><i>t</i> − <span class="cp">80</span></div><p class="step small"><span class="cm mt"><i>a</i> = 15</span>: slope triangle. <span class="cp mt"><i>b</i> = −80</span>: <i>y</i>-intercept <span class="mt">(0, −80)</span>.</p></div>
+    <p class="small"><b>c.</b> Factored form, with <span class="mt"><i>c</i></span> as a fraction. What do <span class="mt"><i>a</i></span> and <span class="mt"><i>c</i></span> show?</p>
+    <div class="row" style="gap:24px;align-items:center"><div class="step pop eq sm ans"><i>F</i>(<i>t</i>) = <span class="cm">15</span>(<i>t</i> − <span class="cp">{{16|3}}</span>)</div><p class="step small"><span class="cm mt"><i>a</i> = 15</span>: slope triangle. <span class="cp mt"><i>c</i> = {{16|3}}</span>: <i>x</i>-intercept <span class="mt">(5{{1|3}}, 0)</span>.</p></div>
+  </div>
+  <aside class="notes">Work: G(t) − 35 = 15t − 45 − 35 = 15t − 80. To factor, divide 80 by 15: 15t − 80 = 15(t − 80/15) = 15(t − 16/3). Check: 15 × 16/3 = 80. Ask: How can you rewrite general form to get factored form? (Factor out the leading coefficient.) How can you use what you know about factored form to find the factor (t − 16/3)? (Set F(t) = 0 and solve.) The zero 16/3 ≈ 5.33 matches 1c: she needs 6 shirts before she has any money. Stamp the learning: in general form f(x) = ax + b, a is the slope and b is the y-intercept; in factored form f(x) = a(x − c), a is the slope and c is the x-intercept, or zero.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 3 · Talk the Talk · Reading Between the Lines · SE p. 252</p>
+  <h2>Always, sometimes, or never?</h2>
+  <p class="small">1. You are given a dependent value and need an independent value of a linear function.</p>
+  <table class="cmp">
+    <tr><th>I can ___ use a…</th><th>…to determine an approximate value.</th><th>…to calculate an exact value.</th></tr>
+    <tr><td><b>table</b></td><td class="step">a. <b>always</b></td><td class="step">b. <b>sometimes</b></td></tr>
+    <tr><td><b>graph</b></td><td class="step">c. <b>always</b></td><td class="step">d. <b>sometimes</b></td></tr>
+    <tr><td><b>equation</b></td><td class="step">e. <b>always</b></td><td class="step">f. <b>always</b></td></tr>
+  </table>
+  <aside class="notes">Talk the Talk, 20–25 minutes. Have pairs complete Questions 1–3, then share. Students complete each sentence, a–f, with always, sometimes, or never; the cells reveal in order a–f. Have students commit to an answer for each before you reveal it. A table or a graph gives an exact value only when the value you need happens to be listed or lands on a gridline; an equation always gives the exact value, which you can round. Stamp the learning, from the teacher guide: "The equation always provides exact answers, while the graph and table sometimes may only be able to provide approximate values."</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 3 · Talk the Talk · Question 2 · SE pp. 252–253</p>
+  <h2>Write the function, then evaluate</h2>
+  <div class="row" style="gap:44px">
+    <div class="col" style="gap:10px">
+      <table class="tbl" style="font-size:24px"><tr><th>x</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td></tr><tr><th>f(x)</th><td>−20</td><td>5</td><td>30</td><td>55</td><td>80</td></tr></table>
+      <div class="step pop eq sm ans"><i>f</i>(<i>x</i>) = 25<i>x</i> − 45</div>
+      <div class="step eq sm"><i>f</i>(12) = 25(12) − 45 = 255</div>
+      <div class="step eq sm"><i>f</i>(<i>x</i>) = −145 → 25<i>x</i> = −100 → <i>x</i> = −4</div>
+    </div>
+    <div class="col" style="gap:10px">
+      <table class="tbl" style="font-size:24px"><tr><th>x</th><td>1</td><td>3</td><td>5</td><td>7</td><td>9</td></tr><tr><th>g(x)</th><td>18</td><td>6</td><td>−6</td><td>−18</td><td>−30</td></tr></table>
+      <div class="step pop eq sm ans"><i>g</i>(<i>x</i>) = −6<i>x</i> + 24</div>
+      <div class="step eq sm"><i>g</i>(−9) = −6(−9) + 24 = 78</div>
+      <div class="step eq sm"><i>g</i>(<i>x</i>) = −54 → −6<i>x</i> = −78 → <i>x</i> = 13</div>
+    </div>
+  </div>
+  <aside class="notes">Teacher-guide look-fors: students who use only the first two columns to write the equation (check it against every column), and students who don't notice that the inputs in table (b) go up by 2, not 1. In (b), g goes down 12 for every 2, so the slope is −6, not −12. To find b: g(1) = 18 = −6 + b, so b = 24. Ask: Explain how to determine the value of x for a given f(x). (Set the function equal to the value and solve.)</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 3 · Talk the Talk · Question 3 · Graphic Organizer · SE pp. 253–254</p>
+  <h2>Four views of <span class="eq" style="font-size:46px"><i>f</i>(<i>x</i>) = 2<i>x</i> − 8</span></h2>
+  <div class="row" style="gap:28px">
+    <div class="col" style="gap:12px">
+      <div class="card step"><h3>General form</h3><div class="eq sm"><i>f</i>(<i>x</i>) = <span class="cm">2</span><i>x</i> − <span class="cp">8</span></div><p class="small">slope 2, <i>y</i>-intercept <span class="mt">(0, −8)</span></p></div>
+      <div class="card step"><h3>Factored form</h3><div class="eq sm"><i>f</i>(<i>x</i>) = <span class="cm">2</span>(<i>x</i> − <span class="cp">4</span>)</div><p class="small">slope 2, zero 4</p></div>
+      <p class="step small think">It crosses the <i>x</i>-axis only once: factored form has one factor, <span class="mt">(<i>x</i> − 4)</span>, which is 0 only when <span class="mt"><i>x</i> = 4</span>.</p>
+    </div>
+    <div class="col" style="gap:8px;align-items:center;flex:none">
+      <h3>Table</h3>
+      <table class="tbl" style="font-size:24px"><tr><th>x</th><th>y</th></tr><tr><td class="step">0</td><td class="step">−8</td></tr><tr><td class="step">2</td><td class="step">−4</td></tr><tr><td class="step">4</td><td class="step">0</td></tr><tr><td class="step">6</td><td class="step">4</td></tr></table>
+    </div>
+    <div class="col" style="gap:8px;align-items:center;flex:none">
+      <h3>Graph</h3>
+      <div class="graph" data-g='{"w":320,"h":340,"x":[-6,8],"y":[-10,8],"gx":[1,2],"gy":[1,2],"ptsStep":true,"lines":[{"p":[[0,-8],[4,0]],"step":true}],"pts":[[0,-8,"(0, −8)"],[4,0,"(4, 0)"]],"alt":"Graph of f(x) = 2x − 8 through (0, −8) and (4, 0)"}'></div>
+    </div>
+  </div>
+  <aside class="notes">Students complete the Graphic Organizer on SE p. 254 for f(x) = 2x − 8. Reveal one representation at a time. Any table of values on the line is correct; the teacher guide's samples are (−1, −10), (0, −8), (1, −6), (2, −4), and (0, −8), (2, −4), (4, 0), (6, 4). Ask: How did you know each function is linear? How did you calculate the slope and the y-intercept? For Question 3c: the degree is 1, and the zero x = 4 is the only value that makes f(x) = 0. Stamp the learning: both forms relate to the graph and table of the function they model.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 3 · Notes to Keep</p>
+  <h2>Notes to keep: Day 3</h2>
+  <div class="grid3"><div class="card"><h3>Same slope</h3><p class="small">Parallel lines have the same slope: the price per shirt did not change.</p></div><div class="card"><h3>Subtracting a fee</h3><p class="small">Subtracting $35 moves the whole line <b>down</b> 35.</p></div><div class="card"><h3>Three ways to write it</h3><div class="eq sm"><i>F</i>(<i>t</i>) = 15<i>t</i> − 80 = 15(<i>t</i> − {{16|3}})</div></div></div><p class="small muted">Copy these into your notes, or ask your teacher for a printed copy.</p>
+  <aside class="notes">Section 504 support: a copy of the day's notes. Hand out a printed copy if the student's plan lists copies of notes.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Essential Question · Answered</p>
+  <h2>How can the structure of the equation tell you about the function?</h2>
+  <div class="col" style="gap:20px;margin-top:6px">
+    <p class="step"><b>General form</b> <span class="mt"><i>f</i>(<i>x</i>) = <span class="cm"><i>a</i></span><i>x</i> + <span class="cp"><i>b</i></span></span>: <span class="cm mt"><i>a</i></span> is the leading coefficient, the steepness and direction; <span class="cp mt"><i>b</i></span> is the <i>y</i>-intercept.</p>
+    <p class="step"><b>Factored form</b> <span class="mt"><i>f</i>(<i>x</i>) = <span class="cm"><i>a</i></span>(<i>x</i> − <span class="cp"><i>c</i></span>)</span>: <span class="cm mt"><i>a</i></span> is the slope; <span class="cp mt"><i>c</i></span> is the zero, and <span class="mt">(<i>c</i>, 0)</span> is the <i>x</i>-intercept.</p>
+    <p class="step">A linear function is a polynomial of <b>degree 1</b>, so its graph crosses the <i>x</i>-axis at most once.</p>
+  </div>
+  <aside class="notes">Have students answer the Essential Question on the lesson opener page. This is the teacher guide's sample answer: "The general form of a linear function is f(x) = ax + b, where a and b are real numbers and a ≠ 0. In this form, the a-value is the leading coefficient that describes the steepness and direction of the line. The b-value describes the y-intercept. The factored form of a linear function is f(x) = a(x − c), where a and c are real numbers and a ≠ 0. In this form, the a-value is the slope and the value of x that makes the factor (x − c) equal to zero is the x-intercept."</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Exit Ticket</p>
+  <h2>Show what you know</h2>
+  <div class="col" style="gap:12px;margin-top:6px">
+    <p>1. Do <span class="mt">(1, 4), (3, 10), (7, 22)</span> represent a linear function? If so, write it. <span class="muted" style="font-size:21px">(SE p. 241)</span></p>
+    <div class="step pop eq sm ans">Yes: <i>f</i>(<i>x</i>) = 3<i>x</i> + 1</div>
+    <p>2. Write <span class="mt"><i>f</i>(<i>x</i>) = 5<i>x</i> − 20</span> in factored form. What is its zero? <span class="muted" style="font-size:21px">(SE p. 249)</span></p>
+    <div class="step pop eq sm ans"><i>f</i>(<i>x</i>) = 5(<i>x</i> − 4); zero 4</div>
+    <p>3. Bracelets sell for $10 each, and the booth costs $30. How many must you sell to earn $100? <span class="muted" style="font-size:21px">(SE p. 251)</span></p>
+    <div class="step pop eq sm ans">13 bracelets</div>
+  </div>
+  <aside class="notes">Added for this deck; not from the textbook. Give 3–4 minutes, collect the answers, and use them to decide who needs Skills Practice Sets A–C. Work: 1. (10 − 4)/(3 − 1) = 3 and (22 − 10)/(7 − 3) = 3, so linear; 4 = 3(1) + b gives b = 1. 2. Factor out 5: 5(x − 4); the zero is 4. 3. 10x − 30 = 100, so 10x = 130 and x = 13.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Prepare · SE p. 256</p>
+  <h2>Given <span class="eq" style="font-size:46px"><i>h</i>(<i>x</i>) = −2<i>x</i> − 5</span>, determine each value</h2>
+  <div class="row" style="gap:56px;margin-top:10px">
+    <div class="col">
+      <div class="eq sm">1. <i>h</i>(3)</div><div class="step pop eq sm ans">−11</div>
+      <div class="eq sm" style="margin-top:14px">3. −1 · <i>h</i>(1) + 5</div><div class="step pop eq sm ans">12</div>
+    </div>
+    <div class="col">
+      <div class="eq sm">2. 2 · <i>h</i>(−2)</div><div class="step pop eq sm ans">−2</div>
+      <div class="eq sm" style="margin-top:14px">4. 5 · <i>h</i>(0) + 5</div><div class="step pop eq sm ans">−20</div>
+    </div>
+  </div>
+  <aside class="notes">From the Lesson 6 Assignment. Assign it as homework or use it as a warm-up. Work: 1. −2(3) − 5 = −11. 2. h(−2) = 4 − 5 = −1, and 2 · (−1) = −2. 3. h(1) = −7, and −1 · (−7) + 5 = 12. 4. h(0) = −5, and 5 · (−5) + 5 = −20. The Lesson 6 Assignment (SE pp. 255–256) is the practice for this lesson. Its answers: 1. Yes, y = −⅓x + 5. 2. Not linear. 3. f(x) = 14.99(x − 5) = 14.99x − 74.95; 22 shirts printed earns $254.83; 19 shirts to earn $200. 4. f(x) = 35(x − 3) = 35x − 105; 17 vases earns $490; 21 vases to earn $600. 5. f(x) = 12x − 50 = 12(x − 25/6); 35 toys earns $370; 25 toys to earn $250.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Practice Online</p>
+  <h2>Bell Work, Homework and Quiz</h2>
+  <div class="row" style="margin-top:20px">
+    <div class="col"><div class="card"><h3>Bell work</h3><p class="small"><b><a class="go" href="../lesson6/lesson6-bellwork-day1.html" target="_blank" onclick="event.stopPropagation()">Day 1 →</a></b> · <b><a class="go" href="../lesson6/lesson6-bellwork-day2.html" target="_blank" onclick="event.stopPropagation()">Day 2 →</a></b> · <b><a class="go" href="../lesson6/lesson6-bellwork-day3.html" target="_blank" onclick="event.stopPropagation()">Day 3 →</a></b></p><p class="small">4 questions each, the same as the bell work slides. Scored when students submit.</p></div></div>
+    <div class="col"><div class="card"><h3><a class="go" href="../lesson6/lesson6-homework.html" target="_blank" onclick="event.stopPropagation()">Homework →</a></h3><p class="small">10 practice questions. Each answer is checked right away, with an explanation.</p></div></div>
+    <div class="col"><div class="card"><h3><a class="go" href="../lesson6/lesson6-quiz.html" target="_blank" onclick="event.stopPropagation()">Quiz →</a></h3><p class="small">10 questions, scored when students submit. Correct answers are shown after submitting.</p></div></div>
+  </div>
+  <p class="small muted" style="margin-top:6px">All are multiple choice. The homework follows the Lesson 6 Assignment (SE pp. 255–256); the quiz covers SE pp. 240–251.</p>
+  <aside class="notes">Added for this deck; not from the textbook. Click a title to open it in a new tab. Put the day's bell work link up as students walk in. Assign the homework after Day 2 or Day 3; give the quiz after the Exit Ticket. Students can't open the links until you share them: share the claude.ai artifacts, or turn off Vercel protection for the site.</aside>
+</section>
+
+</div>
+
+<nav id="bar" aria-label="Slide controls">
+  <span id="brand"><svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#3050b8"/><g fill="#fff"><circle cx="16" cy="7.5" r="2.3"/><circle cx="12.8" cy="11.8" r="2.5" opacity=".92"/><circle cx="19.2" cy="11.8" r="2.5" opacity=".92"/><circle cx="16" cy="14.6" r="2.6"/><circle cx="11.8" cy="17.6" r="2.7" opacity=".82"/><circle cx="20.2" cy="17.6" r="2.7" opacity=".82"/></g><rect x="15.2" y="20.5" width="1.6" height="6.5" rx=".8" fill="#9fd18b"/></svg><span>Bluebonnet <strong>Algebra I</strong></span></span>
+  <button id="prev" type="button" aria-label="Previous step">← Back</button>
+  <button id="next" type="button" aria-label="Next step">Next →</button>
+  <div id="prog"><div></div></div>
+  <span id="hint">→ / Space next · ← back · N notes · F full screen</span>
+  <span id="count"></span>
+  <button id="nb" type="button" aria-pressed="false">Notes</button>
+  <button id="fs" type="button">Full screen</button>
+</nav>
+<div id="notes" hidden><b>Speaker notes</b><p id="notesText"></p></div>
+
+<script>
+const stage = document.getElementById('stage');
+// {{a|b}} → stacked fraction
+stage.innerHTML = stage.innerHTML.replace(/\{\{(.+?)\|(.+?)\}\}/g, '<span class="fr"><span>$1</span><span>$2</span></span>');
+
+// Graph spec (data-g): w,h px; x,y = [min,max]; gx,gy = [grid step, label step];
+// lines: [{p:[[x,y],[x,y]], label, c:'a'|'b'|'c' (pool color), dash, step (appears on its own click), seg (just this segment)}] extended to the window; pts: [[x,y,label]].
+// ptsStep: each point appears on its own click, in order, before the lines.
+// Keep in step with draw_graph() in make_pptx.py.
+const GM = {L: 34, R: 12, T: 12, B: 26};
+function clipLine([[ax, ay], [bx, by]], [x0, x1], [y0, y1]) {
+  const dx = bx - ax, dy = by - ay; let lo = -Infinity, hi = Infinity;
+  for (const [p, q] of [[-dx, ax - x0], [dx, x1 - ax], [-dy, ay - y0], [dy, y1 - ay]]) {
+    if (p === 0) { if (q < 0) return null; continue; }
+    const r = q / p; if (p < 0) lo = Math.max(lo, r); else hi = Math.min(hi, r);
+  }
+  return lo > hi ? null : [[ax + lo * dx, ay + lo * dy], [ax + hi * dx, ay + hi * dy]];
+}
+function graphSVG(g) {
+  const {w: W, h: H} = g, [x0, x1] = g.x, [y0, y1] = g.y;
+  const X = v => (GM.L + (v - x0) / (x1 - x0) * (W - GM.L - GM.R)).toFixed(1);
+  const Y = v => (GM.T + (y1 - v) / (y1 - y0) * (H - GM.T - GM.B)).toFixed(1);
+  const ticks = (a, b, t) => { const o = []; for (let v = Math.ceil(a / t - 1e-9) * t; v <= b + 1e-9; v += t) o.push(+v.toFixed(6)); return o; };
+  const num = v => String(v).replace('-', '−');
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${g.alt || 'graph'}">`;
+  s += `<rect class="g-bg" x=".5" y=".5" width="${W - 1}" height="${H - 1}" rx="8"/>`;
+  for (const v of ticks(x0, x1, g.gx[0])) s += `<line class="g-grid" x1="${X(v)}" y1="${GM.T}" x2="${X(v)}" y2="${H - GM.B}"/>`;
+  for (const v of ticks(y0, y1, g.gy[0])) s += `<line class="g-grid" x1="${GM.L}" y1="${Y(v)}" x2="${W - GM.R}" y2="${Y(v)}"/>`;
+  const ax = x0 <= 0 && 0 <= x1 ? 0 : x0, ay = y0 <= 0 && 0 <= y1 ? 0 : y0;
+  s += `<line class="g-axis" x1="${X(ax)}" y1="${GM.T}" x2="${X(ax)}" y2="${H - GM.B}"/>`;
+  s += `<line class="g-axis" x1="${GM.L}" y1="${Y(ay)}" x2="${W - GM.R}" y2="${Y(ay)}"/>`;
+  for (const v of ticks(x0, x1, g.gx[1])) s += `<text class="g-tick" x="${X(v)}" y="${H - GM.B + 17}" text-anchor="middle">${num(v)}</text>`;
+  for (const v of ticks(y0, y1, g.gy[1])) s += `<text class="g-tick" x="${GM.L - 6}" y="${+Y(v) + 4}" text-anchor="end">${num(v)}</text>`;
+  const ptsSVG = () => (g.pts || []).map(([px, py, lab]) => (g.ptsStep ? '<g class="step">' : '') +
+    `<circle class="g-pt" cx="${X(px)}" cy="${Y(py)}" r="5.5"/>` +
+    (lab ? `<text class="g-plab" x="${+X(px) + 9}" y="${+Y(py) - 8}">${lab}</text>` : '') +
+    (g.ptsStep ? '</g>' : '')).join('');
+  if (g.ptsStep) s += ptsSVG();
+  for (const ln of g.lines || []) {
+    const c = ln.seg ? ln.p : clipLine(ln.p, g.x, g.y); if (!c) continue;
+    if (ln.step) s += '<g class="step">';
+    s += `<line class="g-line${ln.c ? ' g' + ln.c : ''}"${ln.dash ? ' stroke-dasharray="10 7"' : ''} x1="${X(c[0][0])}" y1="${Y(c[0][1])}" x2="${X(c[1][0])}" y2="${Y(c[1][1])}"/>`;
+    if (ln.label) { const e = c[0][1] > c[1][1] ? c[0] : c[1];
+      const right = +X(e[0]) > W / 2;
+      s += `<text class="g-llab" x="${+X(e[0]) + (right ? -12 : 8)}" y="${+Y(e[1]) + 16}" text-anchor="${right ? 'end' : 'start'}">${ln.label}</text>`; }
+    if (ln.step) s += '</g>';
+  }
+  if (!g.ptsStep) s += ptsSVG();
+  return s + '</svg>';
+}
+stage.querySelectorAll('.graph').forEach(el => { el.innerHTML = graphSVG(JSON.parse(el.dataset.g)); });
+
+const slides = [...stage.querySelectorAll('.slide')];
+const steps = slides.map(s => [...s.querySelectorAll('.step')]);
+let i = 0, k = 0;
+
+function readHash(){ const m = /^#s(\d+)$/.exec(location.hash); return m ? Math.min(Math.max(+m[1] - 1, 0), slides.length - 1) : 0; }
+
+function show(n, revealAll){
+  slides[i].classList.remove('on');
+  i = n;
+  k = revealAll ? steps[i].length : 0;
+  steps[i].forEach((el, j) => el.classList.toggle('shown', j < k));
+  slides[i].classList.add('on');
+  update();
+}
+function next(){
+  if (k < steps[i].length) { steps[i][k++].classList.add('shown'); update(); }
+  else if (i < slides.length - 1) show(i + 1, false);
+}
+function prev(){
+  if (k > 0) { steps[i][--k].classList.remove('shown'); update(); }
+  else if (i > 0) show(i - 1, true);
+}
+function update(){
+  document.getElementById('count').textContent = (i + 1) + ' / ' + slides.length;
+  document.querySelector('#prog>div').style.width = ((i + 1) / slides.length * 100) + '%';
+  history.replaceState(null, '', '#s' + (i + 1));
+  const a = slides[i].querySelector('aside.notes');
+  document.getElementById('notesText').textContent = a ? a.textContent : '';
+}
+function fit(){
+  // Bar height varies (iPhone safe-area padding), so center the slide in whatever space is left above it.
+  const bar = document.getElementById('bar').offsetHeight, W = innerWidth, H = innerHeight - bar, portrait = matchMedia('(orientation:portrait)').matches;
+  const s = portrait ? W / 760 : Math.min(W / 1280, H / 720);
+  stage.style.height = portrait ? H / s + 'px' : '';
+  stage.style.top = H / 2 + 'px';
+  document.getElementById('notes').style.bottom = bar + 'px';
+  stage.style.transform = `translate(-50%,-50%) scale(${s})`;
+}
+function fullscreen(){
+  try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen().catch(() => {}); } catch (e) {}
+}
+
+stage.addEventListener('click', next);
+// Swipe left = next, swipe right = back (taps still advance via click).
+let tx = 0, ty = 0;
+stage.addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, {passive: true});
+stage.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) dx < 0 ? next() : prev();
+}, {passive: true});
+document.getElementById('next').addEventListener('click', next);
+document.getElementById('prev').addEventListener('click', prev);
+document.getElementById('fs').addEventListener('click', fullscreen);
+function toggleNotes(){
+  const n = document.getElementById('notes'); n.hidden = !n.hidden;
+  document.getElementById('nb').setAttribute('aria-pressed', String(!n.hidden));
+}
+document.getElementById('nb').addEventListener('click', toggleNotes);
+addEventListener('keydown', e => {
+  if (e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
+  if (['ArrowRight','ArrowDown',' ','PageDown','Enter'].includes(e.key)) { e.preventDefault(); next(); }
+  else if (['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
+  else if (e.key === 'Home') show(0, false);
+  else if (e.key === 'End') show(slides.length - 1, true);
+  else if (e.key === 'f' || e.key === 'F') fullscreen();
+  else if (e.key === 'n' || e.key === 'N') toggleNotes();
+});
+addEventListener('resize', fit);
+fit();
+slides[0].classList.add('on');
+show(readHash(), false);
+</script>

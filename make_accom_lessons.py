@@ -1,0 +1,352 @@
+"""Build the IEP and Section 504 versions of the Lesson 4–6 decks, then their .pptx copies.
+
+504 = the original deck (same content and rigor) plus access supports: a key-vocabulary slide,
+a "today's plan" checklist after each bell work, and a "notes to keep" copy at the end of each day.
+IEP = a shorter, modified deck: vocabulary, a steps anchor chart, I do / we do / you do with
+sentence frames, fewer practice items, and a short exit ticket.
+Both reuse the original deck's head and script, so they work as web decks too.
+Standard library only.  Run:  python make_accom_lessons.py
+"""
+import json
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+HERE = Path(__file__).parent
+LESSONS = {4: "lesson4/point-slope-form-lesson4.html", 5: "lesson5/using-linear-equations-lesson5.html",
+           6: "lesson6/making-sense-of-representations-lesson6.html"}
+OUT = {4: "lesson4-point-slope-form", 5: "lesson5-using-linear-equations", 6: "lesson6-representations"}
+
+
+# ---------------------------------------------------------------- helpers
+def sec(eyebrow, title, body, notes=""):
+    return (f'<section class="slide">\n  <p class="eyebrow">{eyebrow}</p>\n  <h2>{title}</h2>\n  {body}\n'
+            + (f'  <aside class="notes">{notes}</aside>\n' if notes else "") + "</section>\n")
+
+
+def ans(x, sm=True):
+    return f'<div class="step pop eq{" sm" if sm else ""} ans">{x}</div>'
+
+
+def card(h, body, step=False):
+    return f'<div class="card{" step" if step else ""}"><h3>{h}</h3>{body}</div>'
+
+
+def graph(w, h, x, y, gx, gy, lines=(), pts=(), alt="", pts_step=False):
+    g = dict(w=w, h=h, x=x, y=y, gx=gx, gy=gy, lines=list(lines), pts=list(pts), alt=alt)
+    if pts_step:
+        g["ptsStep"] = True
+    return "<div class=\"graph\" data-g='" + json.dumps(g, ensure_ascii=False) + "'></div>"
+
+
+def row(*cols, gap=40):
+    return f'<div class="row" style="gap:{gap}px">' + "".join(f'<div class="col">{c}</div>' for c in cols) + "</div>"
+
+
+def vocab(*terms):  # (term, plain definition, example)
+    return '<div class="grid3">' + "".join(
+        card(t, f'<p class="small">{d}</p>' + (f'<div class="eq sm">{e}</div>' if e else "")) for t, d, e in terms) + "</div>"
+
+
+def checklist(*items):
+    return "".join(f'<p>☐ &nbsp;{it}</p>' for it in items) + \
+        '<p class="warn">One part at a time. Ask for help or a break whenever you need it.</p>'
+
+
+def notes_cards(*cards):
+    return '<div class="grid3">' + "".join(card(h, b) for h, b in cards) + "</div>" + \
+        '<p class="small muted">Copy these into your notes, or ask your teacher for a printed copy.</p>'
+
+
+def links(n, days):
+    bw = " · ".join(f'<b><a class="go" href="lesson{n}-bellwork-day{d}.html" target="_blank" onclick="event.stopPropagation()">Day {d} →</a></b>'
+                    for d in range(1, days + 1))
+    return (f'<p style="font-size:24px;margin-top:6px">Bell work: {bw} &nbsp;|&nbsp; Practice: '
+            f'<b><a class="go" href="lesson{n}-homework.html" target="_blank" onclick="event.stopPropagation()">Homework →</a></b> · '
+            f'<b><a class="go" href="lesson{n}-quiz.html" target="_blank" onclick="event.stopPropagation()">Quiz →</a></b></p>')
+
+
+Y1 = '<i>y</i><sub>1</sub>'
+X1 = '<i>x</i><sub>1</sub>'
+PSF = f'<i>y</i> − <span class="cp">{Y1}</span> = <span class="cm"><i>m</i></span>(<i>x</i> − <span class="cp">{X1}</span>)'
+
+
+# ---------------------------------------------------------------- Section 504 additions
+S504 = {
+ 4: dict(
+  vocab=vocab(
+   ("Slope (<i>m</i>)", "How steep a line is: the change in <i>y</i> divided by the change in <i>x</i>.", "<i>m</i> = {{rise|run}}"),
+   ("<i>y</i>-intercept", "Where the line crosses the <i>y</i>-axis. The point is (0, <i>b</i>).", "<i>y</i> = 2<i>x</i> <b class=\"cp\">+ 5</b> → (0, 5)"),
+   ("Point-slope form", "An equation that uses the slope and <b>any</b> point on the line.", PSF),
+   ("Horizontal line", "A flat line. Slope is 0. The equation is <i>y</i> = a number.", "<i>y</i> = 11"),
+   ("Vertical line", "A straight up-and-down line. Slope is undefined. The equation is <i>x</i> = a number.", "<i>x</i> = −2"),
+   ("Constant function", "The output (<i>y</i>) is always the same number.", "<i>y</i> = −6")),
+  plans={1: ["Bell work (5 min)", "Getting Started: Draining the Pool", "Activity 4.1: point-slope form", "Activity 4.2: horizontal and vertical lines"],
+         2: ["Bell work (5 min)", "Activity 4.3: match equations, graphs, tables and contexts", "Talk the Talk: what each equation tells you", "Exit ticket"]},
+  notes={1: [("Point-slope form", f'<div class="eq sm">{PSF}</div><p class="small">Use it when you know the slope and a point.</p>'),
+             ("Change to <i>y</i> = <i>mx</i> + <i>b</i>", '<p class="small">1. Distribute the slope.<br>2. Add <i>y</i><sub>1</sub> to both sides (or subtract).</p><div class="eq sm"><i>y</i> − 6 = −{{1|2}}(<i>x</i> − 2) → <i>y</i> = −{{1|2}}<i>x</i> + 7</div>'),
+             ("Horizontal vs. vertical", '<p class="small"><b>Horizontal:</b> <i>y</i> = a number, slope 0.<br><b>Vertical:</b> <i>x</i> = a number, slope undefined.<br>Memory trick: HOY VUX.</p>')],
+         2: [("Read slope-intercept form", '<div class="eq sm"><i>y</i> = <span class="cm">{{3|5}}</span><i>x</i> <span class="cp">− 4</span></div><p class="small">slope {{3|5}}, <i>y</i>-intercept (0, −4)</p>'),
+             ("Read point-slope form", '<div class="eq sm"><i>y</i> − 6 = <span class="cm">2</span>(<i>x</i> + 1)</div><p class="small">slope 2, point (−1, 6). The signs <b>flip</b>.</p>'),
+             ("In a story", '<p class="small"><b>Slope</b> = the rate (per hour, per pound, per game).<br><b><i>y</i>-intercept</b> = the starting amount.</p>')]}),
+ 5: dict(
+  vocab=vocab(
+   ("Slope as rise over run", "Rise = up (+) or down (−). Run = right (+) or left (−).", "−2 = {{−2|1}} = {{2|−1}}"),
+   ("<i>y</i>-intercept", "Where the line crosses the <i>y</i>-axis: (0, <i>b</i>). Plot it first.", "<i>y</i> = −2<i>x</i> + 10 → (0, 10)"),
+   ("<i>x</i>-intercept", "Where the line crosses the <i>x</i>-axis: (<i>x</i>, 0). Find it by putting 0 in for <i>y</i>.", "5<i>x</i> = 1600 → (320, 0)"),
+   ("Standard form", "<i>Ax</i> + <i>By</i> = <i>C</i>, where <i>A</i>, <i>B</i> and <i>C</i> are integers.", "5<i>x</i> + 8<i>y</i> = 1600"),
+   ("Point-slope form", "Uses the slope and a point on the line.", PSF),
+   ("Slope-intercept form", "Uses the slope and the <i>y</i>-intercept.", "<i>y</i> = <span class=\"cm\"><i>m</i></span><i>x</i> + <span class=\"cp\"><i>b</i></span>")),
+  plans={1: ["Bell work (5 min)", "Getting Started: Jump In the Line", "Activity 5.1: graph from slope-intercept form"],
+         2: ["Bell work (5 min)", "Activity 5.2: graph from point-slope form", "Activity 5.3: standard form and intercepts"],
+         3: ["Bell work (5 min)", "Activity 5.4: find the slope and <i>y</i>-intercept", "Talk the Talk: choose the best form", "Exit ticket"]},
+  notes={1: [("Graph <i>y</i> = <i>mx</i> + <i>b</i>", '<p class="small">1. Plot (0, <i>b</i>).<br>2. Write <i>m</i> as {{rise|run}}.<br>3. Count to the next point.<br>4. Plot 3 points and connect.</p>'),
+             ("Watch the scale", '<p class="small">Count <b>units</b>, not grid squares. If the axis counts by 10, up 10 is one square.</p>'),
+             ("Check the direction", '<p class="small">Positive slope: rises left to right.<br>Negative slope: falls left to right.</p>')],
+         2: [("Graph point-slope form", f'<p class="small">1. Plot the point ({X1}, {Y1}).<br>2. Count the slope from there.</p><div class="eq sm"><i>y</i> + 8 = {{{{1|2}}}}(<i>x</i> + 6) → (−6, −8)</div>'),
+             ("Graph standard form", '<p class="small">Put <i>y</i> = 0 to find the <i>x</i>-intercept.<br>Put <i>x</i> = 0 to find the <i>y</i>-intercept.<br>Plot both and connect.</p>'),
+             ("Shortcuts", '<p class="small"><i>x</i>-intercept ({{<i>C</i>|<i>A</i>}}, 0)<br><i>y</i>-intercept (0, {{<i>C</i>|<i>B</i>}})<br>slope −{{<i>A</i>|<i>B</i>}}</p>')],
+         3: [("Slope-intercept", '<p class="small">Best when you know a starting amount and a rate.</p>'),
+             ("Point-slope", '<p class="small">Best when you know a rate and one point that is not the start.</p>'),
+             ("Standard", '<p class="small">Best when two kinds of things add up to one total.</p>')]}),
+ 6: dict(
+  vocab=vocab(
+   ("Linear function", "Its rate of change is always the same, so its graph is a straight line.", "<i>f</i>(<i>x</i>) = 2<i>x</i> + 5"),
+   ("Rate of change", "Change in <i>y</i> ÷ change in <i>x</i>. For a line, this is the slope.", "{{8|2}} = 4"),
+   ("Direct variation", "A line through (0, 0): <i>y</i> = <i>kx</i>.", "<i>y</i> = 2.5<i>x</i>"),
+   ("General form", "<i>f</i>(<i>x</i>) = <i>ax</i> + <i>b</i>. <i>a</i> is the slope, <i>b</i> is the <i>y</i>-intercept.", "<i>G</i>(<i>t</i>) = 15<i>t</i> − 45"),
+   ("Factored form", "<i>f</i>(<i>x</i>) = <i>a</i>(<i>x</i> − <i>c</i>). <i>a</i> is the slope, <i>c</i> is the zero.", "<i>G</i>(<i>t</i>) = 15(<i>t</i> − 3)"),
+   ("Zero", "The <i>x</i>-value that makes <i>f</i>(<i>x</i>) = 0. The graph crosses the <i>x</i>-axis there.", "15(3 − 3) = 0 → zero is 3")),
+  plans={1: ["Bell work (5 min)", "Getting Started: linear or nonlinear?", "Activity 6.1: tables whose inputs skip"],
+         2: ["Bell work (5 min)", "Activity 6.2: read a graph (Gracie's T-shirts)", "Activity 6.3: general form and factored form"],
+         3: ["Bell work (5 min)", "Activity 6.4: a booth fee changes the graph", "Talk the Talk", "Exit ticket"]},
+  notes={1: [("Is the table linear?", '<p class="small">1. Find {{change in <i>y</i>|change in <i>x</i>}} between every pair.<br>2. Always the same → linear.</p>'),
+             ("Write the function", '<p class="small">Use the slope and a point to find <i>b</i>, the value when <i>x</i> = 0.</p>'),
+             ("Direct variation", '<p class="small">Only if the line passes through (0, 0): <i>y</i> = <i>kx</i>.</p>')],
+         2: [("Solve with the equation", '<div class="eq sm">100 = 15<i>t</i> → <i>t</i> ≈ 6.67</div><p class="small">Then decide what makes sense: 7 shirts.</p>'),
+             ("General form", '<div class="eq sm"><i>f</i>(<i>x</i>) = <span class="cm"><i>a</i></span><i>x</i> + <span class="cp"><i>b</i></span></div><p class="small"><i>a</i> = slope, <i>b</i> = <i>y</i>-intercept</p>'),
+             ("Factored form", '<div class="eq sm"><i>f</i>(<i>x</i>) = <span class="cm"><i>a</i></span>(<i>x</i> − <span class="cp"><i>c</i></span>)</div><p class="small"><i>a</i> = slope, <i>c</i> = zero, (<i>c</i>, 0) = <i>x</i>-intercept</p>')],
+         3: [("Same slope", '<p class="small">Parallel lines have the same slope: the price per shirt did not change.</p>'),
+             ("Subtracting a fee", '<p class="small">Subtracting $35 moves the whole line <b>down</b> 35.</p>'),
+             ("Three ways to write it", '<div class="eq sm"><i>F</i>(<i>t</i>) = 15<i>t</i> − 80 = 15(<i>t</i> − {{16|3}})</div>')]}),
+}
+
+
+def build_504(n, sections):
+    a = S504[n]
+    out, day = [], 0
+    for s in sections:
+        if 'class="slide divider"' in s or "Essential Question · Answered" in s:  # end of a day
+            day += 1
+            out.append(sec(f"Day {day} · Notes to Keep", f"Notes to keep: Day {day}", notes_cards(*a["notes"][day]),
+                           "Section 504 support: a copy of the day's notes. Hand out a printed copy if the student's plan lists copies of notes."))
+        out.append(s)
+        if "Today you will" in s:
+            out.append(sec(f"Lesson {n} · Key Vocabulary", "Key vocabulary", a["vocab"],
+                           "Section 504 support: preview the key terms before the lesson. Leave this slide up or print it as a reference card."))
+        m = re.search(r"Day (\d) · Bell Work", s)
+        if m:
+            d = int(m.group(1))
+            out.append(sec(f"Day {d} · Today's Plan", "Today's plan", checklist(*a["plans"][d]),
+                           "Section 504 support: chunked directions. Check off each part as the class finishes it."))
+    return out
+
+
+# ---------------------------------------------------------------- IEP decks
+def iep_title(n, title, eq, cans, days):
+    return (f'<section class="slide">\n  <p class="eyebrow">Bluebonnet Algebra I · Module 2 · Topic 1 · Lesson {n} · IEP Version</p>\n'
+            f'  <h1 style="margin-top:10px;font-size:60px">{title}</h1>\n  <div class="eq" style="margin-top:4px">{eq}</div>\n'
+            '  <h3 style="margin-top:8px">I can…</h3>' + "".join(f'<p>✓ &nbsp;{c}</p>' for c in cans) + "\n" + links(n, days) +
+            '\n  <p class="foot">Based on Bluebonnet Learning Secondary Mathematics, Algebra I (©2024–2025 Texas Education Agency, portions ©2021 Carnegie Learning, Inc.), licensed CC BY-NC 4.0. A private site for Algebra I teachers.</p>\n'
+            f'  <aside class="notes">IEP version of Lesson {n}: a modified lesson that keeps the core skills and cuts the number of items. Each skill follows I do (teacher models), We do (together, with sentence frames), You do (student tries, then reveal). Click to reveal each answer. Apply each student\'s IEP accommodations too: extended time, read-aloud, breaks, calculator, small group.</aside>\n</section>\n')
+
+
+def steps(*items):
+    return "".join(f'<p><b>{k}.</b> {t}</p>' for k, t in enumerate(items, 1))
+
+
+def exit_and_practice(n, qs):
+    body = "".join(f'<div class="card"><p>{q}</p>{ans(a)}</div>' for q, a in qs)
+    return [sec("Exit Ticket", "Show what you know", f'<div class="col">{body}</div>',
+                "Give students time to try all items before revealing. Students may use the steps slide and their notes."),
+            sec("Practice Online", "Bell work, homework and quiz",
+                links(n, 2 if n == 4 else 3) + '<p class="small">Bell work, homework and the quiz are the same pages as the general lesson. '
+                'Assign fewer items, allow notes and a calculator, and give extended time as the IEP lists.</p>')]
+
+
+def iep4():
+    s = [iep_title(4, "Point-Slope Form", PSF, [
+        "write an equation when I know the slope and one point.",
+        "change point-slope form into <i>y</i> = <i>mx</i> + <i>b</i>.",
+        "write equations for horizontal and vertical lines."], 2)]
+    s.append(sec("Lesson 4 · Vocabulary", "Words we need", vocab(
+        ("Slope (<i>m</i>)", "How steep the line is.", "<i>m</i> = {{change in <i>y</i>|change in <i>x</i>}}"),
+        ("A point", "A place on the line, written (<i>x</i>, <i>y</i>).", "(<span class=\"cp\">1</span>, <span class=\"cp\">4</span>)"),
+        ("Point-slope form", "An equation made from the slope and one point.", PSF)),
+        "Read each word aloud. Students copy them onto their vocabulary card."))
+    s.append(sec("Lesson 4 · Steps", "How to write point-slope form", steps(
+        "Find the slope, <b class=\"cm\"><i>m</i></b>.",
+        f"Find a point, (<span class=\"cp\">{X1}</span>, <span class=\"cp\">{Y1}</span>).",
+        f"Put them into {PSF}.",
+        "Check the signs: <i>x</i> − (−4) becomes <i>x</i> + 4."), "Leave this slide up, or give students a printed copy, while they work."))
+    s.append(sec("I do · Watch me", "Slope 3, point (1, 4)", row(
+        '<p>Step 1: <span class="cm"><i>m</i> = 3</span></p><p>Step 2: <span class="cp"><i>x</i><sub>1</sub> = 1, <i>y</i><sub>1</sub> = 4</span></p><p>Step 3: put them in.</p>'
+        + ans('<i>y</i> − <span class="cp">4</span> = <span class="cm">3</span>(<i>x</i> − <span class="cp">1</span>)', False),
+        graph(340, 360, [-2, 4], [-4, 10], [1, 1], [1, 2], [dict(p=[[1, 4], [2, 7]], step=True)], [[1, 4, "(1, 4)"]], "Line through (1, 4) with slope 3")),
+        "Think aloud: orange is the slope, blue is the point. The point goes in with a minus sign."))
+    s.append(sec("We do · Together", "Slope −8, point (3, 12)",
+                 '<p><i>m</i> = ____ &nbsp; <i>x</i><sub>1</sub> = ____ &nbsp; <i>y</i><sub>1</sub> = ____</p>' + ans('<i>m</i> = −8, &nbsp;<i>x</i><sub>1</sub> = 3, &nbsp;<i>y</i><sub>1</sub> = 12')
+                 + '<p><i>y</i> − ____ = ____(<i>x</i> − ____)</p>' + ans('<i>y</i> − 12 = −8(<i>x</i> − 3)'),
+                 "Students fill in the blanks on their paper first, then reveal."))
+    s.append(sec("You do · Try it", "Write each in point-slope form", row(
+        '<div class="card"><p>1. Slope 5, point (2, −1)</p><p class="small">Tip: <i>y</i> − (−1) = <i>y</i> + 1</p>' + ans('<i>y</i> + 1 = 5(<i>x</i> − 2)') + '</div>',
+        '<div class="card"><p>2. Slope {{2|3}}, point (−4, 5)</p><p class="small">Tip: <i>x</i> − (−4) = <i>x</i> + 4</p>' + ans('<i>y</i> − 5 = {{2|3}}(<i>x</i> + 4)') + '</div>')))
+    s.append(sec("We do · Two points", "A line through (2, 5) and (4, 11)",
+                 '<p>Step 1: slope. &nbsp;<i>m</i> = {{11 − 5|4 − 2}} = ____</p>' + ans('<i>m</i> = {{6|2}} = 3')
+                 + '<p>Step 2: use the point (2, 5).</p><p><i>y</i> − ____ = ____(<i>x</i> − ____)</p>' + ans('<i>y</i> − 5 = 3(<i>x</i> − 2)'),
+                 "When there is no slope given, find it first with the slope formula."))
+    s.append(sec("I do · Change the form", "Rewrite as <i>y</i> = <i>mx</i> + <i>b</i>",
+                 '<div class="eq"><i>y</i> − 5 = 3(<i>x</i> − 2)</div><p>Step 1: distribute the 3.</p>' + ans('<i>y</i> − 5 = 3<i>x</i> − 6')
+                 + '<p>Step 2: add 5 to both sides.</p>' + ans('<i>y</i> = 3<i>x</i> − 1'),
+                 "Same line, two forms. Slope-intercept form shows where it crosses the y-axis: (0, −1)."))
+    s.append(sec("You do · Try it", "Rewrite as <i>y</i> = <i>mx</i> + <i>b</i>",
+                 '<div class="eq"><i>y</i> − 3 = 5(<i>x</i> + 2)</div><p>Step 1: distribute. &nbsp;<i>y</i> − 3 = ____</p>' + ans('<i>y</i> − 3 = 5<i>x</i> + 10')
+                 + '<p>Step 2: add 3. &nbsp;<i>y</i> = ____</p>' + ans('<i>y</i> = 5<i>x</i> + 13')))
+    s.append(sec("Lesson 4 · Horizontal and Vertical", "Flat lines and straight-up lines", row(
+        card("Horizontal", '<p class="small"><i>y</i> stays the same. Slope = <b>0</b>.</p><div class="eq sm"><i>y</i> = 3</div>')
+        + graph(300, 230, [-4, 4], [-1, 5], [1, 1], [1, 1], [dict(p=[[-4, 3], [4, 3]], label="y = 3")]),
+        card("Vertical", '<p class="small"><i>x</i> stays the same. Slope is <b>undefined</b>.</p><div class="eq sm"><i>x</i> = −2</div>')
+        + graph(300, 230, [-4, 4], [-3, 3], [1, 1], [1, 1], [dict(p=[[-2, -3], [-2, 3]], label="x = −2")])),
+        "Memory trick from the lesson: HOY VUX. Horizontal, zerO slope, y = a number. Vertical, Undefined slope, x = a number."))
+    s.append(sec("You do · Try it", "Horizontal and vertical lines", row(
+        '<div class="card"><p>1. The <i>y</i>-values are all 11.</p><table class="tbl" style="font-size:24px"><tr><th>x</th><th>y</th></tr><tr><td>−7</td><td>11</td></tr><tr><td>−2</td><td>11</td></tr><tr><td>0</td><td>11</td></tr></table>' + ans('<i>y</i> = 11') + '</div>',
+        '<div class="card"><p>2. Through (−3, 8)</p><p class="small">Horizontal: <i>y</i> = ____</p>' + ans('<i>y</i> = 8') + '<p class="small">Vertical: <i>x</i> = ____</p>' + ans('<i>x</i> = −3') + '</div>')))
+    s += exit_and_practice(4, [("1. Slope 4, point (1, 6). Write point-slope form.", "<i>y</i> − 6 = 4(<i>x</i> − 1)"),
+                               ("2. Rewrite #1 as <i>y</i> = <i>mx</i> + <i>b</i>.", "<i>y</i> = 4<i>x</i> + 2"),
+                               ("3. A line through (4, 1) and (4, −7). Horizontal or vertical? Write its equation.", "<i>x</i> = 4 · vertical")])
+    return s
+
+
+def iep5():
+    s = [iep_title(5, "Graphing Linear Equations", "<i>y</i> = <i>mx</i> + <i>b</i> · " + PSF + " · <i>Ax</i> + <i>By</i> = <i>C</i>", [
+        "graph a line from <i>y</i> = <i>mx</i> + <i>b</i> using the <i>y</i>-intercept and the slope.",
+        "graph a line from point-slope form.",
+        "find the intercepts of <i>Ax</i> + <i>By</i> = <i>C</i> and graph the line."], 3)]
+    s.append(sec("Lesson 5 · Vocabulary", "Words we need", vocab(
+        ("<i>y</i>-intercept", "Where the line crosses the <i>y</i>-axis: (0, <i>b</i>).", "<i>y</i> = 2<i>x</i> <span class=\"cp\">+ 5</span> → (0, 5)"),
+        ("Rise over run", "Rise: up (+) or down (−). Run: right.", "<i>m</i> = {{3|2}}: up 3, right 2"),
+        ("<i>x</i>-intercept", "Where the line crosses the <i>x</i>-axis: (<i>x</i>, 0).", "Put 0 in for <i>y</i>."),
+        ("Standard form", "<i>Ax</i> + <i>By</i> = <i>C</i>", "3<i>x</i> + 2<i>y</i> = 12"),
+        ("Slope-intercept form", "<i>m</i> is the slope, <i>b</i> is the <i>y</i>-intercept.", "<i>y</i> = <span class=\"cm\"><i>m</i></span><i>x</i> + <span class=\"cp\"><i>b</i></span>"),
+        ("Point-slope form", "Slope and one point.", PSF))))
+    s.append(sec("Lesson 5 · Steps", "How to graph <i>y</i> = <i>mx</i> + <i>b</i>", steps(
+        "Plot the <i>y</i>-intercept, (0, <i>b</i>).",
+        "Write the slope as {{rise|run}}.",
+        "From the point, count the rise (up or down), then the run (right). Plot a point.",
+        "Do it again, so you have 3 points. Connect them with a ruler."), "Leave this slide up, or give students a printed copy, while they work."))
+    s.append(sec("I do · Watch me", "Graph <i>y</i> = −2<i>x</i> + 10", row(
+        '<p>Step 1: <i>b</i> = 10. Plot (0, 10).</p><p>Step 2: <i>m</i> = {{−2|1}}: down 2, right 1.</p>' + ans('(1, 8) and (2, 6)') + '<p>Step 3: connect with a ruler.</p>',
+        graph(340, 380, [-1, 6], [0, 12], [1, 1], [1, 2], [dict(p=[[0, 10], [2, 6]], step=True)], [[0, 10, "(0, 10)"], [1, 8, "(1, 8)"], [2, 6, "(2, 6)"]], "y = −2x + 10", True)),
+        "Point to each point as it appears. Negative slope: the line falls left to right."))
+    s.append(sec("We do · Together", "Graph <i>y</i> = {{3|2}}<i>x</i> − 1", row(
+        '<p>Plot (0, ____).</p>' + ans('(0, −1)') + '<p>Rise ____, run ____.</p>' + ans('up 3, right 2') + '<p>Next points:</p>' + ans('(2, 2) and (4, 5)'),
+        graph(340, 380, [-2, 6], [-3, 7], [1, 1], [1, 1], [dict(p=[[0, -1], [4, 5]], step=True)], [[0, -1, "(0, −1)"], [2, 2, "(2, 2)"], [4, 5, "(4, 5)"]], "y = 3/2 x − 1", True))))
+    s.append(sec("You do · Try it", "Graph <i>y</i> = −{{1|3}}<i>x</i> + 4", row(
+        '<p>Start at (0, ____).</p>' + ans('(0, 4)') + '<p>Down ____, right ____.</p>' + ans('down 1, right 3') + '<p>Two more points:</p>' + ans('(3, 3) and (6, 2)'),
+        graph(340, 340, [-1, 7], [0, 6], [1, 1], [1, 1], [dict(p=[[0, 4], [6, 2]], step=True)], [[0, 4, "(0, 4)"], [3, 3, "(3, 3)"], [6, 2, "(6, 2)"]], "y = −1/3 x + 4", True))))
+    s.append(sec("I do · Point-slope form", "Graph <i>y</i> + 8 = {{1|2}}(<i>x</i> + 6)", row(
+        '<p>Step 1: find the point. The signs <b>flip</b>.</p>' + ans('(−6, −8)') + '<p>Step 2: <i>m</i> = {{1|2}}: up 1, right 2.</p>' + ans('(−4, −7) and (−2, −6)'),
+        graph(340, 340, [-8, 0], [-10, -4], [1, 1], [1, 1], [dict(p=[[-6, -8], [-2, -6]], step=True)], [[-6, -8, "(−6, −8)"], [-4, -7, ""], [-2, -6, ""]], "Line through (−6, −8) with slope 1/2", True)),
+        "Start at the point instead of the y-intercept; everything else is the same."))
+    s.append(sec("I do · Standard form", "Graph 3<i>x</i> + 2<i>y</i> = 12", row(
+        '<p><i>x</i>-intercept: put <i>y</i> = 0.<br>3<i>x</i> = 12, so <i>x</i> = 4.</p>' + ans('(4, 0)')
+        + '<p><i>y</i>-intercept: put <i>x</i> = 0.<br>2<i>y</i> = 12, so <i>y</i> = 6.</p>' + ans('(0, 6)') + '<p>Connect the two points.</p>',
+        graph(320, 340, [-1, 6], [-1, 8], [1, 1], [1, 1], [dict(p=[[4, 0], [0, 6]], step=True)], [[4, 0, "(4, 0)"], [0, 6, "(0, 6)"]], "3x + 2y = 12", True)),
+        "Cover the x-term to find the y-intercept, and cover the y-term to find the x-intercept."))
+    s.append(sec("You do · Try it", "Find the intercepts of 2<i>x</i> + 5<i>y</i> = 20",
+                 '<p><i>y</i> = 0: &nbsp;2<i>x</i> = 20, so <i>x</i> = ____</p>' + ans('(10, 0)')
+                 + '<p><i>x</i> = 0: &nbsp;5<i>y</i> = 20, so <i>y</i> = ____</p>' + ans('(0, 4)')))
+    s.append(sec("Lesson 5 · Which form?", "Where do I start?", '<div class="grid3">'
+                 + card("<i>y</i> = <i>mx</i> + <i>b</i>", '<p class="small">Start at (0, <i>b</i>). Count the slope.</p>')
+                 + card("Point-slope", f'<p class="small">Start at ({X1}, {Y1}). Count the slope.</p>')
+                 + card("<i>Ax</i> + <i>By</i> = <i>C</i>", '<p class="small">Find both intercepts. Connect them.</p>') + "</div>"))
+    s += exit_and_practice(5, [("1. <i>y</i> = −{{3|4}}<i>x</i> + 2. Name the <i>y</i>-intercept and one more point.", "(0, 2), then down 3, right 4: (4, −1)"),
+                               ("2. Find the intercepts of <i>x</i> + 2<i>y</i> = 8.", "(8, 0) and (0, 4)"),
+                               ("3. Name the point and slope of <i>y</i> − 1 = 2(<i>x</i> + 3).", "point (−3, 1), slope 2")])
+    return s
+
+
+def iep6():
+    s = [iep_title(6, "Making Sense of Linear Functions", "<i>f</i>(<i>x</i>) = <i>ax</i> + <i>b</i> · <i>f</i>(<i>x</i>) = <i>a</i>(<i>x</i> − <i>c</i>)", [
+        "tell whether a table is linear.",
+        "write a linear function from a table.",
+        "explain what the slope and the intercepts mean in a story.",
+        "find the zero from factored form."], 3)]
+    s.append(sec("Lesson 6 · Vocabulary", "Words we need", vocab(
+        ("Linear function", "The rate of change is always the same. The graph is a straight line.", ""),
+        ("Rate of change", "Change in <i>y</i> ÷ change in <i>x</i>. It is the slope.", "{{8|2}} = 4"),
+        ("General form", "<i>a</i> = slope, <i>b</i> = <i>y</i>-intercept", "<i>f</i>(<i>x</i>) = <span class=\"cm\"><i>a</i></span><i>x</i> + <span class=\"cp\"><i>b</i></span>"),
+        ("Factored form", "<i>a</i> = slope, <i>c</i> = zero", "<i>f</i>(<i>x</i>) = <span class=\"cm\"><i>a</i></span>(<i>x</i> − <span class=\"cp\"><i>c</i></span>)"),
+        ("Zero", "The <i>x</i> that makes <i>f</i>(<i>x</i>) = 0. The line crosses the <i>x</i>-axis there.", ""),
+        ("Direct variation", "A line through (0, 0).", "<i>y</i> = <i>kx</i>"))))
+    s.append(sec("Lesson 6 · Steps", "Is the table linear?", steps(
+        "Find the change in <i>y</i> and the change in <i>x</i> between each pair of rows.",
+        "Divide: {{change in <i>y</i>|change in <i>x</i>}}.",
+        "Always the same number → <b>linear</b>. Different → <b>not linear</b>.",
+        "If linear, find <i>b</i> (the <i>y</i>-value when <i>x</i> = 0) and write <i>f</i>(<i>x</i>) = <i>ax</i> + <i>b</i>."),
+        "Leave this slide up, or give students a printed copy, while they work."))
+    tb = lambda xs, ys: '<table class="tbl" style="font-size:26px"><tr><th>x</th><th>y</th></tr>' + "".join(f"<tr><td>{a}</td><td>{b}</td></tr>" for a, b in zip(xs, ys)) + "</table>"
+    s.append(sec("I do · Watch me", "Is this table linear?", row(
+        tb([0, 2, 4, 6], [5, 9, 13, 17]),
+        '<p>Each row: <i>x</i> goes up 2, <i>y</i> goes up 4.</p><p>{{4|2}} = 2 every time.</p>' + ans('Linear, slope 2') + '<p>At <i>x</i> = 0, <i>y</i> = 5.</p>' + ans('<i>f</i>(<i>x</i>) = 2<i>x</i> + 5')),
+        "Model the division for every pair, not just the first one."))
+    s.append(sec("We do · Together", "Is this table linear?", row(
+        tb([1, 2, 3, 4], [3, 6, 12, 24]),
+        '<p>Change in <i>y</i>: 3, ____, ____</p>' + ans('3, 6, 12') + '<p>Is it the same every time?</p>' + ans('No, so it is not linear.'))))
+    s.append(sec("You do · Try it", "Nakota sells pretzels", row(
+        '<table class="tbl" style="font-size:26px"><tr><th style="font-style:normal">Pretzels</th><th style="font-style:normal">Money ($)</th></tr><tr><td>0</td><td>0</td></tr><tr><td>2</td><td>5</td></tr><tr><td>4</td><td>10</td></tr><tr><td>6</td><td>15</td></tr></table>',
+        '<p>1. Rate: {{5|2}} = ____ dollars per pretzel</p>' + ans('2.5') + '<p>2. Write the function: <i>y</i> = ____<i>x</i></p>' + ans('<i>y</i> = 2.5<i>x</i>')
+        + '<p>3. Money for 10 pretzels: ____</p>' + ans('$25'))))
+    s.append(sec("I do · Meaning in a story", "Gracie sells T-shirts for $15 each",
+                 '<div class="eq"><i>E</i>(<i>t</i>) = 15<i>t</i></div>'
+                 + '<p><b class="cm">15</b> means: she earns $15 for each shirt (the slope).</p>'
+                 + '<p>How many shirts to earn $100? &nbsp;100 = 15<i>t</i></p>' + ans('<i>t</i> = {{100|15}} ≈ 6.67')
+                 + '<p>She can\'t sell part of a shirt, so she must sell ____ shirts.</p>' + ans('7 shirts'),
+                 "Round up: 6 shirts only earns $90."))
+    s.append(sec("We do · Two forms", "Gracie gives away 3 shirts", row(
+        card("General form", '<div class="eq sm"><i>G</i>(<i>t</i>) = <span class="cm">15</span><i>t</i> <span class="cp">− 45</span></div><p class="small">slope: ____ &nbsp; <i>y</i>-intercept: ____</p>' + ans('15 and (0, −45)'))
+        + card("Factored form", '<div class="eq sm"><i>G</i>(<i>t</i>) = <span class="cm">15</span>(<i>t</i> <span class="cp">− 3</span>)</div><p class="small">slope: ____ &nbsp; zero: ____</p>' + ans('15 and 3')),
+        graph(340, 380, [-1, 8], [-60, 60], [1, 1], [10, 20], [dict(p=[[0, -45], [6, 45]], step=True)], [[0, -45, "(0, −45)"], [3, 0, "(3, 0)"]], "G(t) = 15t − 45")),
+        "Check that both forms are the same: distribute 15(t − 3) = 15t − 45. The zero, 3, means she must sell 3 shirts just to break even."))
+    s.append(sec("You do · Try it", "Find the slope and the zero", row(
+        '<div class="card"><div class="eq sm"><i>f</i>(<i>x</i>) = 2(<i>x</i> − 4)</div><p>slope ____ &nbsp; zero ____</p>' + ans('slope 2, zero 4') + '</div>',
+        '<div class="card"><div class="eq sm"><i>f</i>(<i>x</i>) = 3(<i>x</i> − 7)</div><p>slope ____ &nbsp; zero ____</p>' + ans('slope 3, zero 7') + '<p class="small">General form: 3<i>x</i> − ____</p>' + ans('3<i>x</i> − 21') + '</div>')))
+    s += exit_and_practice(6, [("1. Is the table linear? <i>x</i>: 1, 3, 7 &nbsp; <i>y</i>: 4, 10, 22. If yes, write the function.", "Yes, slope 3: <i>f</i>(<i>x</i>) = 3<i>x</i> + 1"),
+                               ("2. What is the zero of <i>f</i>(<i>x</i>) = 4(<i>x</i> − 5)?", "5"),
+                               ("3. Bracelets sell for $10 each. The booth costs $30: <i>f</i>(<i>x</i>) = 10<i>x</i> − 30. What does the 10 mean?", "$10 earned for each bracelet (the slope)")])
+    return s
+
+
+IEP = {4: iep4, 5: iep5, 6: iep6}
+
+
+def main():
+    for n, path in LESSONS.items():
+        src = (HERE / path).read_text(encoding="utf-8")
+        head, rest = src.split('<div id="stage">', 1)
+        body, tail = rest.split("\n</div>\n", 1)
+        sections = re.findall(r"<section class=\"slide[^\"]*\">.*?</section>\n", body, re.S)
+        for kind, folder, label in (("504", "Section 504", "Section 504"), ("IEP", "IEP", "IEP")):
+            secs = build_504(n, sections) if kind == "504" else IEP[n]()
+            html = head.replace("</title>", f" · {label}</title>", 1) + '<div id="stage">\n' + "".join(secs) + "\n</div>\n" + tail
+            if kind == "504":
+                html = html.replace("Prepared by <b>Mr. Pandey</b>", "Prepared by <b>Mr. Pandey</b> · <b>Section 504 Version</b>")
+            html = re.sub(r'href="(lesson\d-[^"]+\.html)"', rf'href="../lesson{n}/\1"', html)  # practice pages live in lessonN/
+            out = HERE / folder / f"{OUT[n]}-{kind}.html"
+            out.write_text(html, encoding="utf-8")
+            subprocess.run([sys.executable, str(HERE / "make_pptx.py"), out.relative_to(HERE).as_posix()], check=False)
+
+
+if __name__ == "__main__":
+    main()
