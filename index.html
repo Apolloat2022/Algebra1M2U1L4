@@ -6,42 +6,65 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="mc.css">
 <style>
-  .lessons{display:flex;flex-direction:column;gap:16px;margin-top:24px}
-  .card h2{margin:2px 0 10px;font-size:22px}
-  .card p+p{margin-top:6px}
+  .lessons{display:flex;flex-direction:column;gap:16px;margin-top:20px}
+  .card h2{margin:2px 0 12px;font-size:22px}
   a{color:var(--point);font-weight:600;text-decoration:none} a:hover{text-decoration:underline}
+  /* version switch: only the chosen version's links show */
+  .seg{display:inline-flex;gap:4px;margin-top:18px;padding:4px;border:1px solid var(--line);border-radius:999px;background:var(--card)}
+  .seg label{padding:6px 16px;border-radius:999px;cursor:pointer;font-weight:600;color:var(--muted)}
+  .seg input{position:absolute;opacity:0;pointer-events:none}
+  .seg label:has(input:checked){background:var(--point);color:#fff}
+  .seg label:has(input:focus-visible){outline:2px solid var(--point);outline-offset:2px}
+  .links{display:none;flex-wrap:wrap;align-items:center;gap:8px}
+  .links a{padding:5px 12px;border:1px solid var(--line);border-radius:8px}
+  .links a:hover{background:var(--soft);text-decoration:none}
+  .grp{display:inline-flex;align-items:center;gap:6px;color:var(--muted);margin:0 4px}
+  .grp a{padding:5px 10px}
+  body:has(#v-gen:checked) .v-gen, body:has(#v-iep:checked) .v-iep, body:has(#v-504:checked) .v-504{display:flex}
+  body:has(#v-gen:checked) .acc{display:none}
 </style>
 <div class="wrap">
   <p class="eyebrow">Bluebonnet Algebra I · Module 2 · Topic 1</p>
   <h1>Linear Functions: Lessons 4–6</h1>
-  <p class="muted">Each lesson has a click-through slide deck (with speaker notes), a PowerPoint copy, daily bell work, homework and a quiz.</p>
+  <p class="muted">Each lesson has slides, a PowerPoint copy, daily bell work, homework and a quiz. Choose a version:</p>
+  <div class="seg" role="radiogroup" aria-label="Version">
+    <label><input type="radio" name="v" id="v-gen" checked>General</label>
+    <label><input type="radio" name="v" id="v-iep">IEP</label>
+    <label><input type="radio" name="v" id="v-504">Section 504</label>
+  </div>
   <div class="lessons">
     <section class="card">
       <p class="eyebrow">Lesson 4 · SE pp. 201–216</p>
       <h2>Point-Slope Form of a Line</h2>
-      <p><a href="lesson4/point-slope-form-lesson4.html">Slides →</a> · <a href="lesson4/point-slope-form-lesson4.pptx">PowerPoint</a></p>
-      <p>Bell work: <a href="lesson4/lesson4-bellwork-day1.html">Day 1</a> · <a href="lesson4/lesson4-bellwork-day2.html">Day 2</a> | <a href="lesson4/lesson4-homework.html">Homework</a> · <a href="lesson4/lesson4-quiz.html">Quiz</a></p>
-      <p>IEP: <a href="IEP/lesson4-point-slope-form-IEP.html">Slides</a> · <a href="IEP/lesson4-point-slope-form-IEP.pptx">PowerPoint</a> · Bell work <a href="IEP/lesson4-bellwork-day1-IEP.html">Day 1</a> · <a href="IEP/lesson4-bellwork-day2-IEP.html">Day 2</a> · <a href="IEP/lesson4-homework-IEP.html">Homework</a> | Section 504: <a href="Section%20504/lesson4-point-slope-form-504.html">Slides</a> · <a href="Section%20504/lesson4-point-slope-form-504.pptx">PowerPoint</a> · Bell work <a href="Section%20504/lesson4-bellwork-day1-504.html">Day 1</a> · <a href="Section%20504/lesson4-bellwork-day2-504.html">Day 2</a> · <a href="Section%20504/lesson4-homework-504.html">Homework</a></p>
+      <div class="links v-gen"><a href="lesson4/point-slope-form-lesson4.html">Slides</a><a href="lesson4/point-slope-form-lesson4.pptx">PowerPoint</a><span class="grp">Bell work <a href="lesson4/lesson4-bellwork-day1.html">1</a> <a href="lesson4/lesson4-bellwork-day2.html">2</a></span><a href="lesson4/lesson4-homework.html">Homework</a><a href="lesson4/lesson4-quiz.html">Quiz</a></div>
+      <div class="links v-iep"><a href="IEP/lesson4-point-slope-form-IEP.html">Slides</a><a href="IEP/lesson4-point-slope-form-IEP.pptx">PowerPoint</a><span class="grp">Bell work <a href="IEP/lesson4-bellwork-day1-IEP.html">1</a> <a href="IEP/lesson4-bellwork-day2-IEP.html">2</a></span><a href="IEP/lesson4-homework-IEP.html">Homework</a><a href="IEP/lesson4-quiz-IEP.html">Quiz</a></div>
+      <div class="links v-504"><a href="Section%20504/lesson4-point-slope-form-504.html">Slides</a><a href="Section%20504/lesson4-point-slope-form-504.pptx">PowerPoint</a><span class="grp">Bell work <a href="Section%20504/lesson4-bellwork-day1-504.html">1</a> <a href="Section%20504/lesson4-bellwork-day2-504.html">2</a></span><a href="Section%20504/lesson4-homework-504.html">Homework</a><a href="Section%20504/lesson4-quiz-504.html">Quiz</a></div>
     </section>
     <section class="card">
       <p class="eyebrow">Lesson 5 · SE pp. 217–237</p>
       <h2>Using Linear Equations</h2>
-      <p><a href="lesson5/using-linear-equations-lesson5.html">Slides →</a> · <a href="lesson5/using-linear-equations-lesson5.pptx">PowerPoint</a></p>
-      <p>Bell work: <a href="lesson5/lesson5-bellwork-day1.html">Day 1</a> · <a href="lesson5/lesson5-bellwork-day2.html">Day 2</a> · <a href="lesson5/lesson5-bellwork-day3.html">Day 3</a> | <a href="lesson5/lesson5-homework.html">Homework</a> · <a href="lesson5/lesson5-quiz.html">Quiz</a></p>
-      <p>IEP: <a href="IEP/lesson5-using-linear-equations-IEP.html">Slides</a> · <a href="IEP/lesson5-using-linear-equations-IEP.pptx">PowerPoint</a> · Bell work <a href="IEP/lesson5-bellwork-day1-IEP.html">Day 1</a> · <a href="IEP/lesson5-bellwork-day2-IEP.html">Day 2</a> · <a href="IEP/lesson5-bellwork-day3-IEP.html">Day 3</a> · <a href="IEP/lesson5-homework-IEP.html">Homework</a> | Section 504: <a href="Section%20504/lesson5-using-linear-equations-504.html">Slides</a> · <a href="Section%20504/lesson5-using-linear-equations-504.pptx">PowerPoint</a> · Bell work <a href="Section%20504/lesson5-bellwork-day1-504.html">Day 1</a> · <a href="Section%20504/lesson5-bellwork-day2-504.html">Day 2</a> · <a href="Section%20504/lesson5-bellwork-day3-504.html">Day 3</a> · <a href="Section%20504/lesson5-homework-504.html">Homework</a></p>
+      <div class="links v-gen"><a href="lesson5/using-linear-equations-lesson5.html">Slides</a><a href="lesson5/using-linear-equations-lesson5.pptx">PowerPoint</a><span class="grp">Bell work <a href="lesson5/lesson5-bellwork-day1.html">1</a> <a href="lesson5/lesson5-bellwork-day2.html">2</a> <a href="lesson5/lesson5-bellwork-day3.html">3</a></span><a href="lesson5/lesson5-homework.html">Homework</a><a href="lesson5/lesson5-quiz.html">Quiz</a></div>
+      <div class="links v-iep"><a href="IEP/lesson5-using-linear-equations-IEP.html">Slides</a><a href="IEP/lesson5-using-linear-equations-IEP.pptx">PowerPoint</a><span class="grp">Bell work <a href="IEP/lesson5-bellwork-day1-IEP.html">1</a> <a href="IEP/lesson5-bellwork-day2-IEP.html">2</a> <a href="IEP/lesson5-bellwork-day3-IEP.html">3</a></span><a href="IEP/lesson5-homework-IEP.html">Homework</a><a href="IEP/lesson5-quiz-IEP.html">Quiz</a></div>
+      <div class="links v-504"><a href="Section%20504/lesson5-using-linear-equations-504.html">Slides</a><a href="Section%20504/lesson5-using-linear-equations-504.pptx">PowerPoint</a><span class="grp">Bell work <a href="Section%20504/lesson5-bellwork-day1-504.html">1</a> <a href="Section%20504/lesson5-bellwork-day2-504.html">2</a> <a href="Section%20504/lesson5-bellwork-day3-504.html">3</a></span><a href="Section%20504/lesson5-homework-504.html">Homework</a><a href="Section%20504/lesson5-quiz-504.html">Quiz</a></div>
     </section>
     <section class="card">
       <p class="eyebrow">Lesson 6 · SE pp. 239–256</p>
       <h2>Making Sense of Different Representations of a Linear Function</h2>
-      <p><a href="lesson6/making-sense-of-representations-lesson6.html">Slides →</a> · <a href="lesson6/making-sense-of-representations-lesson6.pptx">PowerPoint</a></p>
-      <p>Bell work: <a href="lesson6/lesson6-bellwork-day1.html">Day 1</a> · <a href="lesson6/lesson6-bellwork-day2.html">Day 2</a> · <a href="lesson6/lesson6-bellwork-day3.html">Day 3</a> | <a href="lesson6/lesson6-homework.html">Homework</a> · <a href="lesson6/lesson6-quiz.html">Quiz</a></p>
-      <p>IEP: <a href="IEP/lesson6-representations-IEP.html">Slides</a> · <a href="IEP/lesson6-representations-IEP.pptx">PowerPoint</a> · Bell work <a href="IEP/lesson6-bellwork-day1-IEP.html">Day 1</a> · <a href="IEP/lesson6-bellwork-day2-IEP.html">Day 2</a> · <a href="IEP/lesson6-bellwork-day3-IEP.html">Day 3</a> · <a href="IEP/lesson6-homework-IEP.html">Homework</a> | Section 504: <a href="Section%20504/lesson6-representations-504.html">Slides</a> · <a href="Section%20504/lesson6-representations-504.pptx">PowerPoint</a> · Bell work <a href="Section%20504/lesson6-bellwork-day1-504.html">Day 1</a> · <a href="Section%20504/lesson6-bellwork-day2-504.html">Day 2</a> · <a href="Section%20504/lesson6-bellwork-day3-504.html">Day 3</a> · <a href="Section%20504/lesson6-homework-504.html">Homework</a></p>
+      <div class="links v-gen"><a href="lesson6/making-sense-of-representations-lesson6.html">Slides</a><a href="lesson6/making-sense-of-representations-lesson6.pptx">PowerPoint</a><span class="grp">Bell work <a href="lesson6/lesson6-bellwork-day1.html">1</a> <a href="lesson6/lesson6-bellwork-day2.html">2</a> <a href="lesson6/lesson6-bellwork-day3.html">3</a></span><a href="lesson6/lesson6-homework.html">Homework</a><a href="lesson6/lesson6-quiz.html">Quiz</a></div>
+      <div class="links v-iep"><a href="IEP/lesson6-representations-IEP.html">Slides</a><a href="IEP/lesson6-representations-IEP.pptx">PowerPoint</a><span class="grp">Bell work <a href="IEP/lesson6-bellwork-day1-IEP.html">1</a> <a href="IEP/lesson6-bellwork-day2-IEP.html">2</a> <a href="IEP/lesson6-bellwork-day3-IEP.html">3</a></span><a href="IEP/lesson6-homework-IEP.html">Homework</a><a href="IEP/lesson6-quiz-IEP.html">Quiz</a></div>
+      <div class="links v-504"><a href="Section%20504/lesson6-representations-504.html">Slides</a><a href="Section%20504/lesson6-representations-504.pptx">PowerPoint</a><span class="grp">Bell work <a href="Section%20504/lesson6-bellwork-day1-504.html">1</a> <a href="Section%20504/lesson6-bellwork-day2-504.html">2</a> <a href="Section%20504/lesson6-bellwork-day3-504.html">3</a></span><a href="Section%20504/lesson6-homework-504.html">Homework</a><a href="Section%20504/lesson6-quiz-504.html">Quiz</a></div>
     </section>
-    <section class="card">
+    <section class="card acc">
       <p class="eyebrow">End of Topic Assessment · Lessons 1–6</p>
-      <h2>Topic 1 Assessment: Accommodated Versions</h2>
-      <p>PowerPoint: <a href="IEP/Topic1-Assessment-IEP.pptx">IEP version</a> · <a href="Section%20504/Topic1-Assessment-504.pptx">Section 504 version</a></p>
+      <h2>Topic 1 Assessment</h2>
+      <div class="links v-iep"><a href="IEP/Topic1-Assessment-IEP.pptx">PowerPoint</a></div>
+      <div class="links v-504"><a href="Section%20504/Topic1-Assessment-504.pptx">PowerPoint</a></div>
     </section>
   </div>
   <p class="muted" style="margin-top:24px;font-size:14px">Based on Bluebonnet Learning Secondary Mathematics, Algebra I (©2024–2025 Texas Education Agency, portions ©2021 Carnegie Learning, Inc.), licensed <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a>. A private site for Algebra I teachers.</p>
 </div>
+<script>
+  // remember the chosen version for this browser
+  try { const pick = document.getElementById(localStorage.getItem("version")); if (pick) pick.checked = true; } catch {}
+  document.querySelectorAll(".seg input").forEach(i => i.addEventListener("change", () => { try { localStorage.setItem("version", i.id); } catch {} }));
+</script>

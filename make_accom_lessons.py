@@ -5,7 +5,7 @@ a "today's plan" checklist after each bell work, and a "notes to keep" copy at t
 IEP = a shorter, modified deck: vocabulary, a steps anchor chart, I do / we do / you do with
 sentence frames, fewer practice items, and a short exit ticket.
 Both reuse the original deck's head and script, so they work as web decks too.
-Also writes IEP and 504 copies of the bell work and homework pages (see practice_pages).
+Also writes IEP and 504 copies of the bell work, homework and quiz pages (see practice_pages).
 Standard library only.  Run:  python make_accom_lessons.py
 """
 import json
@@ -172,8 +172,8 @@ def exit_and_practice(n, qs):
     return [sec("Exit Ticket", "Show what you know", f'<div class="col">{body}</div>',
                 "Give students time to try all items before revealing. Students may use the steps slide and their notes."),
             sec("Practice Online", "Bell work, homework and quiz",
-                links(n, 2 if n == 4 else 3) + '<p class="small">Bell work, homework and the quiz are the same pages as the general lesson. '
-                'Assign fewer items, allow notes and a calculator, and give extended time as the IEP lists.</p>')]
+                links(n, 2 if n == 4 else 3) + '<p class="small">The IEP pages have 3 answer choices, 6 homework and quiz questions, a reminder card and read-aloud. '
+                'Allow notes and a calculator, and give extended time as the IEP lists.</p>')]
 
 
 def iep4():
@@ -333,7 +333,7 @@ IEP = {4: iep4, 5: iep5, 6: iep6}
 
 
 # ---------------------------------------------------------------- bell work and homework pages
-# Same questions as lessonN/; mc.js applies `accom`. IEP: 3 choices, 6 of the 10 homework items.
+# Same questions as lessonN/; mc.js applies `accom`. IEP: 3 choices, 6 of the 10 homework and quiz items.
 REF = {
  4: ["<b>Point-slope form:</b> <i>y</i> − <i>y</i><sub>1</sub> = <i>m</i>(<i>x</i> − <i>x</i><sub>1</sub>). The signs flip: <i>x</i> − (−2) = <i>x</i> + 2.",
      "<b>Slope:</b> <i>m</i> = (change in <i>y</i>) ÷ (change in <i>x</i>).",
@@ -347,7 +347,8 @@ REF = {
      "<b>General form:</b> <i>f</i>(<i>x</i>) = <i>ax</i> + <i>b</i>. <b>Factored form:</b> <i>f</i>(<i>x</i>) = <i>a</i>(<i>x</i> − <i>c</i>). Distribute to switch.",
      "<b>How much?</b> Put the number in for <i>x</i>. <b>How many?</b> Set <i>f</i>(<i>x</i>) equal to the amount and solve.",
      "<b>Round up</b> when you need at least that much (you can't sell part of a shirt)."]}
-KEEP = {4: [0, 2, 5, 6, 7, 8], 5: [0, 1, 2, 3, 4, 5], 6: [0, 1, 5, 7, 8, 9]}
+KEEP = {"homework": {4: [0, 2, 5, 6, 7, 8], 5: [0, 1, 2, 3, 4, 5], 6: [0, 1, 5, 7, 8, 9]},
+        "quiz": {4: [0, 1, 3, 6, 7, 8], 5: [0, 1, 4, 5, 6, 9], 6: [0, 1, 4, 5, 6, 8]}}
 HELP = {"IEP": "Each question has 3 choices. Use the reminders below, and press <b>Read aloud</b> to hear a question.",
         "504": "Use the reminders below, and press <b>Read aloud</b> to hear a question. Take the time you need."}
 
@@ -355,13 +356,17 @@ HELP = {"IEP": "Each question has 3 choices. Use the reminders below, and press 
 def practice_pages(n, kind, folder):
     label = "Section 504" if kind == "504" else "IEP"
     card = (f'<div class="card ref"><p>{HELP[kind]}</p>' + "".join(f"<p>{r}</p>" for r in REF[n]) + "</div>")
-    for f in sorted((HERE / f"lesson{n}").glob(f"lesson{n}-bellwork-day*.html")) + [HERE / f"lesson{n}/lesson{n}-homework.html"]:
+    pages = sorted((HERE / f"lesson{n}").glob(f"lesson{n}-bellwork-day*.html")) + \
+        [HERE / f"lesson{n}/lesson{n}-{p}.html" for p in ("homework", "quiz")]
+    for f in pages:
         accom = {"readAloud": True}
+        s = f.read_text(encoding="utf-8")
         if kind == "IEP":
             accom["choices"] = 3
-            if "homework" in f.name:
-                accom["keep"] = KEEP[n]
-        s = f.read_text(encoding="utf-8")
+            page = f.stem.split("-")[1]
+            if page in KEEP:
+                accom["keep"] = KEEP[page][n]
+                s = s.replace("Answer all 10 questions", f"Answer all {len(accom['keep'])} questions")
         s = s.replace("</title>", f" · {label}</title>", 1).replace('<div class="wrap">', '<div class="wrap big">', 1)
         s = re.sub(r'(<p class="eyebrow">.*?)</p>', lambda m: f"{m.group(1)} · {label} Version</p>", s, count=1)
         s = re.sub(r'(<p class="muted">.*?</p>)', lambda m: m.group(1) + "\n  " + card, s, count=1)
@@ -370,9 +375,8 @@ def practice_pages(n, kind, folder):
         (HERE / folder / f"{f.stem}-{kind}.html").write_text(s, encoding="utf-8")
 
 
-def deck_link(n, kind, m):  # accommodated bell work / homework sit next to the deck; the quiz is the general one
-    name = m.group(1)
-    return f'href="{name[:-5]}-{kind}.html"' if "bellwork" in name or "homework" in name else f'href="../lesson{n}/{name}"'
+def deck_link(kind, m):  # the accommodated bell work, homework and quiz sit next to the deck
+    return f'href="{m.group(1)[:-5]}-{kind}.html"'
 
 
 def main():
@@ -386,7 +390,7 @@ def main():
             html = head.replace("</title>", f" · {label}</title>", 1) + '<div id="stage">\n' + "".join(secs) + "\n</div>\n" + tail
             if kind == "504":
                 html = html.replace("Prepared by <b>Mr. Pandey</b>", "Prepared by <b>Mr. Pandey</b> · <b>Section 504 Version</b>")
-            html = re.sub(r'href="(lesson\d-[^"]+\.html)"', lambda m: deck_link(n, kind, m), html)
+            html = re.sub(r'href="(lesson\d-[^"]+\.html)"', lambda m: deck_link(kind, m), html)
             practice_pages(n, kind, folder)
             out = HERE / folder / f"{OUT[n]}-{kind}.html"
             out.write_text(html, encoding="utf-8")
