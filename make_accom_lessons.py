@@ -6,7 +6,7 @@ IEP = a shorter, modified deck: vocabulary, a steps anchor chart, I do / we do /
 sentence frames, fewer practice items, and a short exit ticket.
 Both reuse the original deck's head and script, so they work as web decks too.
 Also writes IEP and 504 copies of the bell work, homework and quiz pages (see practice_pages),
-and a teacher answer key .pptx for each IEP / 504 quiz (quiz_key; needs node to read the quiz data).
+and a teacher answer key .pptx for each IEP / 504 quiz and homework (answer_key; needs node to read the page data).
 Standard library only.  Run:  python make_accom_lessons.py
 """
 import html as html_mod
@@ -377,30 +377,32 @@ def practice_pages(n, kind, folder):
         (HERE / folder / f"{f.stem}-{kind}.html").write_text(s, encoding="utf-8")
 
 
-def quiz_key(n, kind, folder):
-    """Teacher answer-key .pptx for the IEP / 504 quiz. Choices are shuffled on screen, so it gives answer text, not letters."""
-    page = (HERE / f"lesson{n}/lesson{n}-quiz.html").read_text(encoding="utf-8")
+def answer_key(n, kind, folder, name):
+    """Teacher answer-key .pptx for an IEP / 504 quiz or homework. Choices are shuffled on screen, so it gives answer text, not letters."""
+    title = name.capitalize()
+    page = (HERE / f"lesson{n}/lesson{n}-{name}.html").read_text(encoding="utf-8")
     js = re.search(r"window\.MC = (\{.*?\});\n</script>", page, re.S).group(1)
     data = json.loads(subprocess.run(  # the page data is a JS literal (unquoted keys in Lesson 4), so let node read it
         ["node", "-e", "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>console.log(JSON.stringify(eval('('+s+')'))))"],
         input=js, capture_output=True, text=True, encoding="utf-8", check=True).stdout)["questions"]
-    keep = KEEP["quiz"][n] if kind == "IEP" else range(len(data))
+    keep = KEEP[name][n] if kind == "IEP" else range(len(data))
     plain = lambda t: html_mod.escape(re.sub(r"\[\[(.+?)\]\]", r"\1", t))
     label = "Section 504" if kind == "504" else "IEP"
     rows = [f'<tr><td><b>{k}</b>' + (f' (was {i + 1})' if kind == "IEP" else "") + f' · SE p. {data[i]["se"]}</td>'
-            f'<td>{plain(data[i]["q"])}</td><td><b>{plain(data[i]["choices"][0])}</b><br>{plain(data[i]["why"])}</td></tr>'
+            f'<td>{plain(data[i]["q"])}{" (uses the table on the page)" if data[i].get("extra") else ""}</td><td><b>{plain(data[i]["choices"][0])}</b><br>{plain(data[i]["why"])}</td></tr>'
             for k, i in enumerate(keep, 1)]
-    foot = f'<p class="foot">Lesson {n} Quiz · {label} Version · Answer Key (teacher copy)</p>'
-    slides = [f'<section class="slide"><h1>Answer Key</h1><h3>Lesson {n} Quiz · {label} Version</h3>'
+    foot = f'<p class="foot">Lesson {n} {title} · {label} Version · Answer Key (teacher copy)</p>'
+    slides = [f'<section class="slide"><h1>Answer Key</h1><h3>Lesson {n} {title} · {label} Version</h3>'
               f'<p>{len(rows)} questions, 1 point each. The answer choices are shuffled for each student, so match the answer text, not the letter.</p>'
-              + ('<p>Each IEP question has 3 choices; "was" gives the question number on the general quiz.</p>' if kind == "IEP" else
-                 '<p>Same 10 questions and choices as the general quiz.</p>')
+              + (f'<p>Each IEP question has 3 choices; "was" gives the question number on the general {name}.</p>' if kind == "IEP" else
+                 f'<p>Same {len(data)} questions and choices as the general {name}.</p>')
               + f'<p class="warn">Teacher copy. Do not share with students.</p>{foot}</section>']
-    for k in range(0, len(rows), 3):
-        slides.append(f'<section class="slide"><h2>{f"Questions {k + 1}–{min(k + 3, len(rows))}" if k + 1 < len(rows) else f"Question {k + 1}"}</h2><table style="font-size:19px">'
-                      f'<tr><th>#</th><th>Question</th><th>Answer and why</th></tr>{"".join(rows[k:k + 3])}</table>{foot}</section>')
-    src = HERE / folder / f"lesson{n}-quiz-{kind}-ANSWER-KEY.html"
-    src.write_text(f'<!doctype html><meta charset="utf-8"><title>Lesson {n} Quiz Answer Key · {label}</title><body>{"".join(slides)}</body>', encoding="utf-8")
+    per = 2 if name == "homework" else 3  # homework explanations run longer
+    for k in range(0, len(rows), per):
+        slides.append(f'<section class="slide"><h2>{f"Questions {k + 1}–{min(k + per, len(rows))}" if k + 1 < len(rows) else f"Question {k + 1}"}</h2><table style="font-size:19px">'
+                      f'<tr><th>#</th><th>Question</th><th>Answer and why</th></tr>{"".join(rows[k:k + per])}</table>{foot}</section>')
+    src = HERE / folder / f"lesson{n}-{name}-{kind}-ANSWER-KEY.html"
+    src.write_text(f'<!doctype html><meta charset="utf-8"><title>Lesson {n} {title} Answer Key · {label}</title><body>{"".join(slides)}</body>', encoding="utf-8")
     subprocess.run([sys.executable, str(HERE / "make_pptx.py"), src.relative_to(HERE).as_posix()], check=False)
     src.unlink()
 
@@ -422,7 +424,8 @@ def main():
                 html = html.replace("Prepared by <b>Mr. Pandey</b>", "Prepared by <b>Mr. Pandey</b> · <b>Section 504 Version</b>")
             html = re.sub(r'href="(lesson\d-[^"]+\.html)"', lambda m: deck_link(kind, m), html)
             practice_pages(n, kind, folder)
-            quiz_key(n, kind, folder)
+            for name in KEEP:
+                answer_key(n, kind, folder, name)
             out = HERE / folder / f"{OUT[n]}-{kind}.html"
             out.write_text(html, encoding="utf-8")
             subprocess.run([sys.executable, str(HERE / "make_pptx.py"), out.relative_to(HERE).as_posix()], check=False)
