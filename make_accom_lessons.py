@@ -162,7 +162,7 @@ def iep_title(n, title, eq, cans, days):
             f'  <h1 style="margin-top:10px;font-size:60px">{title}</h1>\n  <div class="eq" style="margin-top:4px">{eq}</div>\n'
             '  <h3 style="margin-top:8px">I can…</h3>' + "".join(f'<p>✓ &nbsp;{c}</p>' for c in cans) + "\n" + links(n, days) +
             '\n  <p class="foot">Based on Bluebonnet Learning Secondary Mathematics, Algebra I (©2024–2025 Texas Education Agency, portions ©2021 Carnegie Learning, Inc.), licensed CC BY-NC 4.0. A private site for Algebra I teachers.</p>\n'
-            f'  <aside class="notes">IEP version of Lesson {n}: a modified lesson that keeps the core skills and cuts the number of items. Each skill follows I do (teacher models), We do (together, with sentence frames), You do (student tries, then reveal). Click to reveal each answer. Apply each student\'s IEP accommodations too: extended time, read-aloud, breaks, calculator, small group.</aside>\n</section>\n')
+            f'  <aside class="notes">IEP version of Lesson {n}: a modified lesson that keeps the core skills and cuts the number of items. Each skill follows I do (teacher models), We do (together, with sentence frames), You do (student tries, then reveal). Click to reveal each answer. The bell work for every day follows this slide (the same questions as the online bell work); skip to the current day. Apply each student\'s IEP accommodations too: extended time, read-aloud, breaks, calculator, small group.</aside>\n</section>\n')
 
 
 def steps(*items):
@@ -466,7 +466,11 @@ def main():
         body, tail = rest.split("\n</div>\n", 1)
         sections = re.findall(r"<section class=\"slide[^\"]*\">.*?</section>\n", body, re.S)
         for kind, folder, label in (("504", "Section 504", "Section 504"), ("IEP", "IEP", "IEP")):
-            secs = build_504(n, sections) if kind == "504" else IEP[n]()
+            if kind == "504":
+                secs = build_504(n, sections)
+            else:  # the general deck's bell work slides go right after the title, one per day
+                secs = IEP[n]()
+                secs[1:1] = [s for s in sections if re.search(r"Day \d · Bell Work", s)]
             html = head.replace("</title>", f" · {label}</title>", 1) + '<div id="stage">\n' + "".join(secs) + "\n</div>\n" + tail
             if kind == "504":
                 html = html.replace("Prepared by <b>Mr. Pandey</b>", "Prepared by <b>Mr. Pandey</b> · <b>Section 504 Version</b>")
