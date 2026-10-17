@@ -1,15 +1,19 @@
-"""Lesson 4 publisher slides with answers, in the style of
+"""Publisher lesson slides with answers, in the style of
 materials/BLMathematics_Geom_M1_T4_L2_LessonSlides_ENG_2026_with_answers.pptx:
 each slide is the publisher slide, and red answer boxes appear on click.
 
-Slides come from the publisher PDF, rendered by pdf.js in headless Chrome (needs Chrome and
-internet for cdnjs). Answers are from the Teacher Edition (Module 2, pp. 201-216), each one
-re-checked; where the TE was wrong or incomplete the slide notes say "TE correction" and the
-last slide lists every change.  Standard library only.  Run:  python make_lesson_key.py
+Lesson 4 exists only as a PDF, so its slides are rendered by pdf.js in headless Chrome (needs
+Chrome and internet for cdnjs) and the answers sit over the pictures. Lessons 5-6 are editable
+.pptx files, so the answers are added to the original slides. Answers come from the Teacher
+Edition, each one re-checked; where the TE was wrong or incomplete the slide notes say "TE
+correction" and an added slide lists every change.  Standard library only.
+Run:  python make_lesson_key.py [4 5 6]     (no arguments: every lesson)
 """
 import http.server
+import re
 import shutil
 import subprocess
+import sys
 import tempfile
 import threading
 import urllib.request
@@ -28,7 +32,7 @@ PX = 6350  # EMU per px: answer boxes are placed on a 1920 x 1080 grid over the 
 RED = "FF0000"
 
 # page -> [(x, y, w, h, size_pt, text)], placed in the slide's empty space
-ANS = {
+ANS4 = {
     4: [(137, 780, 1700, 260, 22,
          "Yes. Point-slope form: y − y1 = m(x − x1), where m is the slope and (x1, y1) is a point on the "
          "line. A horizontal line is y = c (slope 0). A vertical line is x = c (slope undefined).")],
@@ -133,7 +137,7 @@ ANS = {
          (1080, 820, 760, 80, 26, "y = (1/8)x − 2")],
 }
 
-NOTES = {
+NOTES4 = {
     4: "TE correction: the TE sample answer names the slopes of horizontal and vertical lines but not their "
        "equations; y = c and x = c added.",
     18: "Added: the same line written through the other point, (35, 102).",
@@ -152,7 +156,7 @@ NOTES = {
     54: "Answers from the Lesson 4 Assignment Prepare section, TE p. 216 (checked).",
 }
 
-CORRECTIONS = [
+CORRECTIONS4 = [
     ("Teacher Edition corrections in this deck", None),
     ("Activity 4.2 Q1b: the TE does not explain why a slope of 0 makes sense. Added: y never changes, so the "
      "rise is 0.", None),
@@ -219,12 +223,14 @@ def render(pdf, out):
     return sorted(out.glob("p*.jpg"))
 
 
-def text_box(sid, x, y, w, h, size, text, color=RED, bold=False):
+def text_box(sid, x, y, w, h, size, text, color=RED, bold=False, font="Arial"):
     b = ' b="1"' if bold else ""
+    face = f'<a:latin typeface="{font}"/><a:cs typeface="{font}"/>' if font else ""  # None: the deck's theme font
     paras = "".join(
-        f'<a:p><a:pPr><a:spcAft><a:spcPts val="300"/></a:spcAft></a:pPr><a:r><a:rPr lang="en-US" sz="{size * 100}"'
+        f'<a:p><a:pPr marL="0" indent="0" algn="l"><a:spcBef><a:spcPts val="0"/></a:spcBef><a:spcAft><a:spcPts val="300"/>'
+        f'</a:spcAft><a:buNone/></a:pPr><a:r><a:rPr lang="en-US" sz="{size * 100}"'
         f'{b} dirty="0"><a:solidFill><a:srgbClr val="{color}"/></a:solidFill>'
-        f'<a:latin typeface="Arial"/><a:cs typeface="Arial"/></a:rPr><a:t>{mp.esc(t)}</a:t></a:r></a:p>'
+        f'{face}</a:rPr><a:t>{mp.esc(t)}</a:t></a:r></a:p>'
         for t in text.split("\n"))
     return (f'<p:sp><p:nvSpPr><p:cNvPr id="{sid}" name="Answer {sid}"/><p:cNvSpPr txBox="1"/><p:nvPr/></p:nvSpPr>'
             f'<p:spPr><a:xfrm><a:off x="{x * PX}" y="{y * PX}"/><a:ext cx="{w * PX}" cy="{h * PX}"/></a:xfrm>'
@@ -247,21 +253,26 @@ MASTER = (mp.HDR + f'<p:sldMaster {mp.NS}><p:cSld><p:bg><p:bgPr><a:solidFill><a:
           '<p:sldLayoutIdLst><p:sldLayoutId id="2147483649" r:id="rId1"/></p:sldLayoutIdLst></p:sldMaster>')
 
 
+def corrections_shapes(corrections, sid, font="Arial"):
+    """First entry is the heading; a second element of None means red text."""
+    y, h, shapes = 90, 980 // len(corrections), ""
+    for j, (t, color) in enumerate(corrections):
+        first = j == 0
+        shapes += text_box(sid + j, 137, y, 1700, h, 34 if first else 21, ("" if first else "• ") + t,
+                           color or ("2E7D4F" if first else RED), bold=first, font=font)
+        y += h
+    return shapes
+
+
 def build(images):
     slides = []  # (xml, notes, image or None)
     for k, img in enumerate(images, 1):
-        boxes = ANS.get(k, [])
+        boxes = ANS4.get(k, [])
         shapes = PIC + "".join(text_box(10 + j, *b) for j, b in enumerate(boxes))
-        slides.append((slide_xml(shapes, [("fade", [10 + j]) for j in range(len(boxes))]), NOTES.get(k, ""), img))
+        slides.append((slide_xml(shapes, [("fade", [10 + j]) for j in range(len(boxes))]), NOTES4.get(k, ""), img))
         if k == 54:  # corrections summary goes before the acknowledgment pages
-            y, shapes = 90, ""
-            for j, (t, color) in enumerate(CORRECTIONS):
-                first = j == 0
-                h = 110 if first else 105
-                shapes += text_box(10 + j, 137, y, 1700, h, 34 if first else 21, ("" if first else "• ") + t,
-                                   color or ("2E7D4F" if first else RED), bold=first)
-                y += h
-            slides.append((slide_xml(shapes, []), "Summary of every change from the Teacher Edition answers.", None))
+            slides.append((slide_xml(corrections_shapes(CORRECTIONS4, 10), []),
+                           "Summary of every change from the Teacher Edition answers.", None))
 
     n = len(slides)
     ct = ('<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
@@ -310,11 +321,448 @@ def build(images):
             z.writestr(f"ppt/notesSlides/notesSlide{i}.xml", mp.notes_xml(notes))
             z.writestr(f"ppt/notesSlides/_rels/notesSlide{i}.xml.rels", mp.rels([
                 ("rId1", "notesMaster", "../notesMasters/notesMaster1.xml"), ("rId2", "slide", f"../slides/slide{i}.xml")]))
-    print(f"wrote {OUT.relative_to(HERE)}: {n} slides, {sum(map(len, ANS.values()))} answers")
+    print(f"wrote {OUT.relative_to(HERE)}: {n} slides, {sum(map(len, ANS4.values()))} answers")
+
+
+# ---------------------------------------------------------------- Lessons 5-6: annotate the publisher .pptx
+# The publisher decks are editable, so the answers go into the original slides (as in the Geometry deck)
+# instead of over pictures of them.
+
+ANS5 = {
+    4: [(137, 790, 1700, 285, 19,
+         "Yes. Use the form of the equation instead of a table of values.\n"
+         "Slope-intercept: plot the y-intercept, then count the slope (rise over run) to plot more points.\n"
+         "Point-slope: plot the point (x1, y1), then count the slope.\n"
+         "Standard form: calculate and plot the x- and y-intercepts, then connect them.")],
+    7: [(137, 595, 800, 130, 18, "Slope 2/3; y-intercept (0, 7). Plot (0, 7), go up 2 and right 3 to (3, 9), "
+                                 "then draw the line."),
+        (975, 595, 850, 130, 18, "A vertical line through (−4, 0); the slope is undefined. Draw the vertical "
+                                 "line where every x-value is −4."),
+        (137, 825, 800, 200, 18, "Slope 5; point (−1, 3). Plot (−1, 3), go up 5 and right 1 to (0, 8), then "
+                                 "draw the line."),
+        (975, 825, 850, 200, 18, "The slope and intercept are not shown. Find points: (2, 2) and (10, 5) are "
+                                 "on the line (slope 3/8, y-intercept (0, 5/4)). Plot them and connect.")],
+    8: [(137, 400, 1650, 200, 22,
+         "Summary: Characteristics of linear relationships can be identified when their equations are written in "
+         "different forms, such as slope-intercept form, point-slope form, and standard form.")],
+    14: [(1300, 520, 580, 420, 22,
+          "Plot the y-intercept (0, −1).\nSlope 3/2: up 3, right 2 → (2, 2), (4, 5).\nDown 3, left 2 → (−2, −4).\n"
+          "Draw the line through the points.")],
+    15: [(920, 420, 900, 380, 24,
+          "Plot the y-intercept (0, 3).\nSlope −5/2: down 5, right 2 → (2, −2).\nUp 5, left 2 → (−2, 8).\n"
+          "Draw the line through the points.")],
+    16: [(905, 420, 490, 560, 21,
+          "Plot the y-intercept (0, 25).\nSlope 10/1: up 10, right 1 → (1, 35), (2, 45).\nDown 10, left 1 → "
+          "(−1, 15), (−2, 5).\nDraw the line.")],
+    17: [(130, 600, 490, 460, 21,
+          "y = 15x + 30\nx = number of lawns mowed, y = total savings ($).\nStart at (0, 30); go up 15 for each "
+          "lawn: (2, 60), (4, 90), (6, 120).")],
+    18: [(1330, 430, 560, 600, 22,
+          "y = 20x − 130\nx = time (minutes), y = depth (feet).\nStart at (0, −130) and rise 20 each minute: "
+          "(1, −110), (5, −30).\nThe diver reaches the surface (y = 0) at 6.5 minutes, so the graph ends at "
+          "(6.5, 0).")],
+    19: [(137, 400, 1650, 200, 22,
+          "Summary: An equation in slope-intercept form can be graphed by plotting the y-intercept and then using "
+          "the slope to locate two more points by counting from that point."),
+         (137, 985, 1650, 90, 20, "Yes: use the y-intercept and the slope from the equation instead of a table.")],
+    25: [(137, 530, 1500, 90, 30, "y − 50 = 5(x − 3)")],
+    26: [(1338, 950, 575, 125, 17,
+          "Point (3, 50); slope 5/1 (or −5/−1).\nMore points: (2, 45), (4, 55), (6, 65).")],
+    27: [(511, 620, 780, 420, 22,
+          "Slope −3/4; point (14, 5).\nFrom (14, 5): up 3, left 4 → (10, 8), (6, 11), (2, 14).\n"
+          "The line crosses the y-axis at (0, 15.5).")],
+    28: [(980, 420, 880, 420, 24,
+          "Slope 1/2; point (−6, −8).\nFrom (−6, −8): up 1, right 2 → (−4, −7), (−2, −6), (0, −5), (2, −4).")],
+    29: [(1209, 845, 690, 230, 17,
+          "x = time (seconds), y = depth (meters)\ny + 25.8 = −0.3(x − 90)\nPlot (90, −25.8), then (190, −55.8).")],
+    30: [(137, 400, 1650, 200, 22,
+          "Summary: An equation in point-slope form can be graphed by plotting the known point and then using "
+          "the slope to locate two more points by counting from that point.")],
+    34: [(209, 510, 700, 170, 20, "The money from student tickets: $5 times the number of student tickets sold."),
+         (960, 510, 800, 170, 20, "The money from adult tickets: $8 times the number of adult tickets sold."),
+         (209, 770, 1400, 100, 20, "The total money collected in ticket sales, $1600.")],
+    35: [(137, 430, 1600, 400, 22,
+          "Either variable could be independent. The number of student tickets needed to reach $1600 depends on "
+          "the number of adult tickets sold, or vice versa.")],
+    37: [(137, 430, 1650, 420, 22,
+          "x-intercept: 5x + 8(0) = 1600 → x = 320 → (320, 0). If 320 student tickets are sold, no adult tickets "
+          "are needed to collect $1600.\n"
+          "y-intercept: 5(0) + 8y = 1600 → y = 200 → (0, 200). If 200 adult tickets are sold, no student tickets "
+          "are needed to collect $1600.")],
+    38: [(1330, 450, 560, 400, 22,
+          "Plot (320, 0) and (0, 200) and connect them. Only the segment between the intercepts makes sense: "
+          "ticket counts cannot be negative.")],
+    39: [(137, 430, 1600, 300, 24,
+          "m = (0 − 200)/(320 − 0) = −5/8\nThe number of adult tickets decreases by 5 for every 8 more student "
+          "tickets sold.")],
+    40: [(550, 500, 260, 60, 22, "(6/5, 0)"), (820, 500, 260, 60, 22, "(0, 3)"), (1092, 500, 260, 60, 22, "m = −5/2"),
+         (232, 610, 310, 60, 22, "3x + 4y = 7"), (820, 610, 260, 60, 22, "(0, 7/4)"),
+         (232, 722, 310, 60, 22, "2x − 3y = 9"), (550, 722, 260, 60, 22, "(9/2, 0)"),
+         (550, 823, 260, 60, 22, "(−11/5, 0)"), (820, 823, 260, 60, 22, "(0, 11/7)"), (1092, 823, 260, 60, 22, "m = 5/7"),
+         (1380, 420, 500, 420, 18, "Check each row: x-intercept (C/A, 0), y-intercept (0, C/B), slope −A/B.\n"
+                                   "Row 2: the given x-intercept 7/3 and slope −3/4 give 3x + 4y = 7.")],
+    41: [(720, 420, 1100, 70, 24, "(C/A, 0)"), (720, 510, 1100, 70, 24, "(0, C/B)"),
+         (720, 600, 1100, 70, 24, "m = −A/B"),
+         (137, 720, 1600, 200, 20, "Example: 5x + 2y = 6 has x-intercept (6/5, 0), y-intercept (0, 6/2) = (0, 3), "
+                                   "and slope −5/2.")],
+    42: [(470, 475, 260, 60, 24, "Line 3"), (470, 640, 260, 60, 24, "Line 1"), (470, 800, 260, 60, 24, "Line 2"),
+         (124, 930, 1700, 140, 18,
+          "All three lines have y-intercept (0, 5), so match by slope: 3x − 12y = −60 has m = 1/4, 6x − 2y = −10 "
+          "has m = 3, 9x − 9y = −45 has m = 1. The steepest line (Line 1) has the greatest slope.")],
+    43: [(146, 975, 1100, 100, 17,
+          "x = 5-minute periods of jumping rope, y = 5-minute periods of running: 20x + 50y = 500. "
+          "Intercepts (25, 0) and (0, 10).")],
+    44: [(1250, 520, 620, 460, 22,
+          "x = student tickets, y = adult tickets\n5x + 6y = 270\nIntercepts (54, 0) and (0, 45); connect them.")],
+    46: [(560, 560, 1250, 330, 24,
+          "a. m = 3: −3x + y = −4  (or 3x − y = 4)\nb. m = −4: 4x + y = −1\nc. m = 1/2: x − 2y = −8")],
+    47: [(137, 400, 1650, 200, 22,
+          "Summary: The standard form of a linear equation is Ax + By = C, where A, B, and C are integers and A and "
+          "B are not both zero. It can be graphed by calculating and plotting the intercepts."),
+         (137, 985, 1650, 90, 20, "Yes: in standard form, the two intercepts give two points to graph.")],
+    52: [(137, 570, 700, 130, 22, "Slope 11; y-intercept (0, −9)"),
+         (974, 570, 800, 130, 22, "Slope −2/3; y-intercept (0, 45)"),
+         (137, 840, 700, 130, 22, "Slope 10; y-intercept (0, −45)"),
+         (974, 840, 800, 130, 22, "Slope −3/4; y-intercept (0, 3)")],
+    53: [(137, 340, 780, 110, 22, "Slope 6; y-intercept (0, −27)"),
+         (960, 340, 860, 110, 22, "Slope 0; y-intercept (0, 9)"),
+         (137, 600, 780, 110, 22, "Slope 1/3; y-intercept (0, −4)"),
+         (960, 600, 860, 110, 22, "Slope undefined; no y-intercept (vertical line)"),
+         (137, 890, 780, 110, 22, "Slope 3; y-intercept (0, 7)"),
+         (960, 890, 860, 110, 22, "Slope −1/2; y-intercept (0, 9)")],
+    54: [(137, 400, 1650, 300, 22,
+          "Summary: The slope can be read directly from slope-intercept or point-slope form, or calculated as "
+          "−A/B from standard form Ax + By = C. The y-intercept can be found in any form by substituting x = 0.")],
+    59: [(370, 268, 560, 70, 26, "2x + 3y = 36"),
+         (960, 340, 900, 180, 20, "Standard form: points per question times the number of questions gives the "
+                                  "total, so the equation comes straight from the context."),
+         (960, 620, 900, 300, 20, "I plotted the intercepts (18, 0) and (0, 12) and connected them. Only "
+                                  "whole-number scores make sense, so the solutions are the whole-number points "
+                                  "on that segment.")],
+    60: [(400, 465, 540, 70, 26, "y = 5x + 20"),
+         (960, 530, 900, 180, 20, "Slope-intercept form: the starting amount ($20) and the rate ($10 every 2 weeks, "
+                                  "or $5 per week) are given."),
+         (960, 790, 900, 260, 20, "I plotted the y-intercept (0, 20) and used the slope 5/1 to plot (2, 30), "
+                                  "(4, 40), and (10, 70).")],
+    61: [(760, 400, 1130, 230, 18,
+          "+ Shows the slope and y-intercept; easy to write from a starting value and a rate, and easy to graph.\n"
+          "− Less helpful when the y-intercept is not known or not meaningful."),
+         (760, 670, 1130, 230, 18,
+          "+ Written from any point and the slope; graph by starting at that point.\n− The y-intercept is not shown."),
+         (760, 935, 1130, 140, 18,
+          "+ Fits 'total' contexts; both intercepts are easy to find and graph.\n− The slope must be calculated "
+          "(m = −A/B).")],
+    62: [(137, 400, 1650, 200, 22,
+          "Summary: Different forms of equations, such as standard form, slope-intercept form, and point-slope form, "
+          "can be used to represent linear relationships."),
+         (137, 985, 1650, 90, 20, "Yes: choose the form that fits the information given, then graph from it.")],
+    65: [(780, 395, 1000, 80, 26, "m = (12 − 10)/(3 − 0) = 2/3"),
+         (780, 615, 1000, 80, 26, "m = (−4.5 − 4.5)/(1 − (−1)) = −9/2"),
+         (780, 845, 1000, 80, 26, "m = (12 − 0)/(0 − 21) = −4/7")],
+}
+
+NOTES5 = {
+    4: "TE correction: the TE's sample answer is copied from Lesson 4 (point-slope form, slopes of horizontal and "
+       "vertical lines). It does not answer this lesson's question about graphing from an equation.",
+    17: "The TE writes y = 30 + 15x; same line. Only whole lawns make sense, so the solutions are whole-number points.",
+    29: "TE correction: the TE defines x as time in minutes; the rate (0.3 m per second) and the 90 seconds make "
+        "x seconds. Also note the y-intercept (0, 1.2): the ROV starts 1.2 m above the water, on the boat. "
+        "The problem says 'submarine' but means the ROV.",
+    40: "TE correction: the TE gives the y-intercept of 3x + 4y = 7 as (0, 4/3). It is (0, 7/4): 4y = 7, y = 7/4.",
+    57: "TE correction: the last bullet ('Match each transformed graph to the equation in the table, written in "
+        "terms of f(x)') belongs to a different lesson. There are no transformed graphs or table here; skip it.",
+    59: "Ask students why the graph could be drawn as points: only whole numbers of questions make sense.",
+}
+
+CORRECTIONS5 = [
+    ("Teacher Edition corrections in this deck", None),
+    ("Essential Question: the TE's sample answer is copied from Lesson 4. Replaced with how to graph from each "
+     "form.", None),
+    ("Activity 5.2 Q3 (ROV): the TE defines x in minutes; it is seconds. The equation is y + 25.8 = −0.3(x − 90).",
+     None),
+    ("Activity 5.3 Q6 table: the TE gives the y-intercept of 3x + 4y = 7 as (0, 4/3). Corrected to (0, 7/4).", None),
+    ("Talk the Talk: the bullet about matching transformed graphs to f(x) belongs to another lesson.", None),
+    ("Lesson 5 Assignment Q4d: the TE calls the buyer 'Eugenie'; the problem says Brianna.", None),
+    ("Every other TE answer was re-solved and is correct, including the Assignment and Prepare (pp. 235-237).",
+     "16171D"),
+]
+
+
+def clicks(groups, start):
+    """One Appear-on-click per group of shape ids, numbered from start (the Geometry deck uses the same effect)."""
+    out, ids = "", iter(range(start, 100000))
+    for group in groups:
+        effects = ""
+        for j, sid in enumerate(group):
+            node = "clickEffect" if j == 0 else "withEffect"
+            effects += (f'<p:par><p:cTn id="{next(ids)}" presetID="1" presetClass="entr" presetSubtype="0" fill="hold" '
+                        f'nodeType="{node}"><p:stCondLst><p:cond delay="0"/></p:stCondLst><p:childTnLst><p:set><p:cBhvr>'
+                        f'<p:cTn id="{next(ids)}" dur="1" fill="hold"><p:stCondLst><p:cond delay="0"/></p:stCondLst>'
+                        f'</p:cTn><p:tgtEl><p:spTgt spid="{sid}"/></p:tgtEl><p:attrNameLst><p:attrName>style.visibility'
+                        '</p:attrName></p:attrNameLst></p:cBhvr><p:to><p:strVal val="visible"/></p:to></p:set>'
+                        '</p:childTnLst></p:cTn></p:par>')
+        out += (f'<p:par><p:cTn id="{next(ids)}" fill="hold"><p:stCondLst><p:cond delay="indefinite"/></p:stCondLst>'
+                f'<p:childTnLst><p:par><p:cTn id="{next(ids)}" fill="hold"><p:stCondLst><p:cond delay="0"/></p:stCondLst>'
+                f'<p:childTnLst>{effects}</p:childTnLst></p:cTn></p:par></p:childTnLst></p:cTn></p:par>')
+    return out
+
+
+def add_clicks(x, ids):
+    """Append click reveals to the slide's main animation sequence, creating the timing tree if needed."""
+    if "<p:timing>" not in x:
+        timing = ('<p:timing><p:tnLst><p:par><p:cTn id="1" dur="indefinite" restart="never" nodeType="tmRoot">'
+                  '<p:childTnLst><p:seq concurrent="1" nextAc="seek"><p:cTn id="2" dur="indefinite" nodeType="mainSeq">'
+                  f'<p:childTnLst>{clicks(ids, 3)}</p:childTnLst></p:cTn><p:prevCondLst><p:cond evt="onPrev" delay="0">'
+                  '<p:tgtEl><p:sldTgt/></p:tgtEl></p:cond></p:prevCondLst><p:nextCondLst><p:cond evt="onNext" '
+                  'delay="0"><p:tgtEl><p:sldTgt/></p:tgtEl></p:cond></p:nextCondLst></p:seq></p:childTnLst></p:cTn>'
+                  '</p:par></p:tnLst></p:timing>')
+        at = x.find("<p:extLst>", x.find("</p:clrMapOvr>"))  # timing sits before the slide's trailing extLst
+        at = at if at != -1 else x.rfind("</p:sld>")
+        return x[:at] + timing + x[at:]
+    seq = x.find('nodeType="mainSeq"')
+    end = x.find("</p:childTnLst></p:cTn><p:prevCondLst>", seq)
+    if seq == -1 or end == -1:
+        raise SystemExit("slide has animations but no main sequence; add its answers by hand")
+    start = max(map(int, re.findall(r'<p:cTn id="(\d+)"', x))) + 1
+    return x[:end] + clicks(ids, start) + x[end:]
+
+
+def annotate(src, out, ans, notes, corrections, after):
+    files = {}
+    with zipfile.ZipFile(src) as z:
+        for n in z.namelist():
+            files[n] = z.read(n)
+    text = lambda n: files[n].decode("utf-8")
+    rel_map = lambda n: {re.search(r'Id="(\w+)"', r).group(1): re.search(r'Target="([^"]+)"', r).group(1)
+                         for r in re.findall(r"<Relationship [^>]*>", text(n))}
+    pres, prels = text("ppt/presentation.xml"), rel_map("ppt/_rels/presentation.xml.rels")
+    ids = re.findall(r'<p:sldId [^>]*r:id="(rId\d+)"', pres)
+    order = ["ppt/" + prels[r] for r in ids]
+    assert len(order) >= max(ans), f"{src.name} has {len(order)} slides; answers expect {max(ans)}"
+
+    for k, path in enumerate(order, 1):
+        x, boxes = text(path), ans.get(k, [])
+        if boxes:
+            base = max(map(int, re.findall(r'<p:cNvPr id="(\d+)"', x))) + 1
+            shapes = "".join(text_box(base + j, *b[:6], font=None) for j, b in enumerate(boxes))
+            x = x.replace("</p:spTree>", shapes + "</p:spTree>", 1)
+            groups = []  # a 7th field of WITH shows the box on the same click as the one before it
+            for j, b in enumerate(boxes):
+                if b[6:] == (WITH,) and groups:
+                    groups[-1].append(base + j)
+                else:
+                    groups.append([base + j])
+            files[path] = add_clicks(x, groups).encode("utf-8")
+        if k in notes:
+            srels = rel_map(path.replace("slides/", "slides/_rels/") + ".rels")
+            target = next((t for t in srels.values() if "notesSlide" in t), None)
+            if target is None:
+                print(f"WARNING slide {k}: no notes page for: {notes[k]}")
+                continue
+            npath = "ppt/notesSlides/" + target.rsplit("/", 1)[1]
+            nx = text(npath)
+            body = nx.find('type="body"')
+            close = nx.find("</p:txBody>", body)
+            para = f'<a:p><a:r><a:rPr lang="en-US" b="1" dirty="0"/><a:t>{mp.esc(notes[k])}</a:t></a:r></a:p>'
+            files[npath] = (nx[:close] + para + nx[close:]).encode("utf-8")
+
+    # corrections slide, on the layout of the slide it follows
+    n = max(int(m) for m in re.findall(r"ppt/slides/slide(\d+)\.xml", " ".join(files))) + 1
+    ref = order[after - 1]
+    layout = next(t for t in rel_map(ref.replace("slides/", "slides/_rels/") + ".rels").values() if "slideLayout" in t)
+    files[f"ppt/slides/slide{n}.xml"] = (mp.HDR + f'<p:sld {mp.NS}><p:cSld><p:spTree>{mp.GRP}'
+                                         f'{corrections_shapes(corrections, 2, font=None)}</p:spTree></p:cSld>'
+                                         '<p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>').encode("utf-8")
+    files[f"ppt/slides/_rels/slide{n}.xml.rels"] = mp.rels([("rId1", "slideLayout", layout)]).encode("utf-8")
+    ct = text("[Content_Types].xml")
+    files["[Content_Types].xml"] = ct.replace(
+        "</Types>", f'<Override PartName="/ppt/slides/slide{n}.xml" ContentType="{mp.CT}slide+xml"/></Types>').encode()
+    rid = f"rId{max(int(r[3:]) for r in prels) + 1}"
+    pr = text("ppt/_rels/presentation.xml.rels")
+    files["ppt/_rels/presentation.xml.rels"] = pr.replace("</Relationships>", (
+        f'<Relationship Id="{rid}" Type="{mp.REL}slide" Target="slides/slide{n}.xml"/></Relationships>')).encode()
+    sid = max(map(int, re.findall(r'<p:sldId id="(\d+)"', pres))) + 1
+    anchor = re.search(rf'<p:sldId [^>]*r:id="{ids[after - 1]}"/>', pres).group(0)
+    files["ppt/presentation.xml"] = pres.replace(anchor, anchor + f'<p:sldId id="{sid}" r:id="{rid}"/>').encode()
+
+    with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+        for name, data in files.items():
+            z.writestr(name, data)
+    print(f"wrote {out.relative_to(HERE)}: {len(order) + 1} slides, {sum(map(len, ans.values()))} answers")
+
+
+WITH = "with"
+EQ6 = ("General form f(x) = ax + b: a (the leading coefficient) is the slope, its steepness and direction; "
+       "b gives the y-intercept (0, b).\nFactored form f(x) = a(x − c): a is the slope; c is the zero, the "
+       "x-intercept (c, 0).")
+
+
+def row(y, *cells):  # one table row, revealed on one click: cells are (x, w, text)
+    return [(x, y, w, 89, 14, t, *(() if i == 0 else (WITH,))) for i, (x, w, t) in enumerate(cells)]
+
+
+ANS6 = {
+    7: [(115, 830, 1690, 245, 18, EQ6)],
+    10: [(205, 900, 340, 140, 18, "Scenario: linear\nEquation: linear"),
+         (561, 900, 700, 140, 18, "Scenario: nonlinear (halves each hour)\nEquation: nonlinear (x is an exponent)"),
+         (1314, 900, 520, 140, 18, "Scenario: nonlinear (A = s²)\nEquation: linear")],
+    11: [(210, 660, 400, 140, 20, "Not a function: x = 1 has three outputs"),
+         (770, 660, 400, 140, 20, "Linear: the constant function y = 1"),
+         (1331, 660, 450, 140, 20, "Linear: y = −15x − 90")],
+    12: [(210, 840, 440, 100, 20, "Nonlinear function (a curve)"),
+         (707, 840, 440, 100, 20, "Linear function"),
+         (1262, 840, 520, 100, 20, "Not a function (vertical line)")],
+    13: [(137, 400, 1650, 200, 22,
+          "Summary: Methods exist to determine whether a context, equation, table, or graph represents a "
+          "linear function.")],
+    17: [(282, 820, 540, 120, 22, "f(x) = −0.25x + 5"),
+         (845, 820, 550, 160, 20, "Not linear: the rate of change is 4, then 4, then 2.")],
+    18: [(122, 715, 1280, 130, 21, "He earns $2.50 per pretzel (every amount ÷ pretzels = 2.5)."),
+         (1428, 760, 470, 300, 19, "Yes, directly proportional: y/x = 2.5 for every row, and 0 pretzels "
+                                   "would earn $0.")],
+    19: [(137, 400, 1650, 80, 28, "y = 2.5x"), (137, 780, 1650, 80, 28, "2.5(75) = $187.50")],
+    20: [(640, 940, 1250, 130, 20, "Each ride ticket costs $0.75 (the rate of change); the entrance fee is $6 "
+                                   "(the y-intercept).")],
+    21: [(137, 430, 1600, 120, 20, "No. 7.5 ÷ 2 = 3.75 but 9 ÷ 4 = 2.25: the ratio is not constant because of the "
+                                   "$6 entrance fee."),
+         (137, 600, 1600, 70, 24, "y = 0.75x + 6"),
+         (137, 850, 1600, 100, 22, "0.75x + 6 = 20 → x ≈ 18.67, so she can buy 18 ride tickets.")],
+    22: [(660, 800, 1220, 230, 19,
+          "No. The rate is −24 gallons per hour (−6 every 1/4 hour), but the tank is not empty at 0 hours, so "
+          "water ÷ time is not constant.")],
+    23: [(137, 370, 1600, 80, 22, "175 gallons (169 + 6 at time 0)"),
+         (137, 640, 1600, 80, 24, "y = 175 − 24x"),
+         (137, 910, 1600, 120, 22, "175 − 24x = 0 → x ≈ 7.29 hours (about 7 hours 17.5 minutes)")],
+    24: [(137, 400, 1650, 180, 22,
+          "Summary: If a table represents a linear function, the slope, or average rate of change, is constant "
+          "between all given points."),
+         (137, 760, 1680, 300, 19, EQ6)],
+    30: [(137, 470, 1600, 400, 22,
+          "Sample answer: The line passes through (0, 0): 0 T-shirts earns $0. The slope is 15: Gracie earns $15 per "
+          "T-shirt. Selling 4 T-shirts earns $60. In this situation only whole numbers of T-shirts, 0 or more, make "
+          "sense.")],
+    31: [(539, 380, 1240, 130, 20, "Both intercepts are (0, 0): if no T-shirts are sold, Gracie earns $0."),
+         (539, 700, 1240, 70, 24, "E(t) = 15t"),
+         (539, 1000, 1240, 80, 16, "(t, E(t)): t T-shirts sold and the $ earned; every point on the line is a "
+                                   "solution of E(t) = 15t.")],
+    32: [(137, 560, 520, 300, 20, "E(2) = 30: the point (2, 30); 2 T-shirts earn $30."),
+         (680, 560, 520, 300, 20, "E(5) = 75: the point (5, 75); 5 T-shirts earn $75."),
+         (1220, 560, 560, 300, 20, "E(2.75) = 41.25: the point exists on the line, but she cannot sell 2.75 "
+                                   "T-shirts.")],
+    34: [(137, 470, 1100, 170, 20, "6.67 T-shirts earn exactly $100. She can only sell whole shirts, so she must "
+                                   "sell 7 to earn at least $100."),
+         (137, 740, 1100, 230, 20, "E(t) is the dollars earned for t T-shirts. The goal is $100 earned, so 100 "
+                                   "replaces E(t).")],
+    37: [(137, 610, 780, 400, 20, "Equation: it may give an answer that does not make sense in the context (6.67 "
+                                  "shirts), so it must be rounded up or down."),
+         (960, 610, 800, 400, 20, "Graph: it can be hard to read an exact value from a graph.")],
+    38: [(137, 400, 1650, 250, 22,
+          "Summary: An equation or a graph can be used to determine the value of an independent variable. A graph "
+          "may give only an approximate answer; an equation always gives an exact answer.")],
+    41: [(1181, 910, 700, 160, 18, "Both lines have the same slope, 15 (the same rate of change), so they are "
+                                   "parallel.")],
+    42: [(512, 700, 1300, 360, 19,
+          "G(0) = −45: the point (0, −45). If no T-shirts are sold, she is $45 short (the cost of the 3 free "
+          "shirts). It does not make sense in the situation.\n"
+          "G(t) = 0 at (3, 0): after selling 3 T-shirts, her earnings are $0; she has no money to return to her "
+          "mom.")],
+    44: [(137, 490, 1600, 420, 22,
+          "15(t − 3) = 15t − 45 by the distributive property.\n"
+          "15(t − 3) = 100 → t − 3 ≈ 6.67 → t ≈ 9.67. On the graph G(t) reaches $100 at about 9.67. She needs to "
+          "sell 10 T-shirts.")],
+    46: (row(369, (487, 219, "T-shirts"), (706, 504, "Number of T-shirts sold"), (1210, 506, "Input"))
+         + row(458, (487, 219, "Dollars"), (706, 504, "Earnings for selling t T-shirts"), (1210, 506, "Output"))
+         + row(580, (487, 219, "$ per T-shirt"), (706, 504, "Selling price of a T-shirt"),
+               (1210, 506, "Slope (rate of change)"))
+         + row(669, (487, 219, "T-shirts"), (706, 504, "T-shirts sold, not counting the 3 free"),
+               (1210, 506, "The input minus a constant"))
+         + row(806, (487, 219, "Dollars"), (706, 504, "Earnings for t T-shirts at $15 each"),
+               (1210, 506, "The rate times the input"))
+         + row(895, (487, 219, "Dollars"), (706, 504, "Money lost on the 3 free T-shirts"),
+               (1210, 506, "Constant term: y-intercept (0, −45)"))),
+    51: [(119, 500, 880, 200, 20, "a = 15, the slope: draw a slope triangle, right 1 and up 15 (for example from "
+                                  "(3, 0) to (4, 15))."),
+         (119, 820, 880, 120, 20, "b = −45: the y-intercept, (0, −45).")],
+    53: [(122, 840, 960, 235, 18, "a = 15: slope triangle (right 1, up 15).\nc = 3: the x-intercept (3, 0).\n"
+                                  "The zero is 3: 15(t − 3) = 0 when t = 3.")],
+    54: [(137, 400, 1650, 180, 22,
+          "Summary: The general form and the factored form of a linear function each have a structure that "
+          "identifies characteristics of its graph."),
+         (137, 760, 1680, 300, 19, EQ6)],
+    60: [(466, 660, 1400, 360, 20,
+          "Both lines have the same slope, 15, so they are parallel.\nThe graph shifted down 35: the y-intercept "
+          "moved from (0, −45) to (0, −80) and the x-intercept from 3 to 5 1/3.")],
+    61: [(137, 600, 1600, 320, 22,
+          "6 T-shirts: F(t) = 15t − 80 is positive only when t > 5 1/3.\n"
+          "12 T-shirts: 15t − 80 = 100 → 15t = 180 → t = 12.")],
+    62: [(113, 640, 1330, 400, 22,
+          "F(t) = G(t) − 35\nF(t) = 15t − 80: a = 15 is the slope (slope triangle); b = −80 is the y-intercept "
+          "(0, −80).")],
+    63: [(115, 480, 1178, 300, 24,
+          "F(t) = 15(t − 16/3)\na = 15 is the slope; c = 16/3 = 5 1/3 is the zero, the x-intercept (5 1/3, 0).")],
+    64: [(137, 400, 1650, 250, 22,
+          "Summary: In general form f(x) = ax + b, a is the slope and b is the y-intercept. In factored form "
+          "f(x) = a(x − c), a is the slope and c is the x-intercept, or zero, of the function.")],
+    67: [(290, 585, 300, 60, 24, "always"), (290, 731, 300, 60, 24, "sometimes")],
+    68: [(290, 251, 300, 60, 24, "always"), (290, 397, 300, 60, 24, "sometimes"),
+         (290, 475, 300, 60, 24, "always"), (290, 621, 300, 60, 24, "always")],
+    69: [(290, 636, 700, 70, 26, "25x − 45"), (330, 726, 700, 70, 26, "255"), (440, 816, 700, 70, 26, "x = −4")],
+    70: [(300, 506, 700, 70, 26, "−6x + 24"), (330, 594, 700, 70, 26, "78"), (420, 684, 700, 70, 26, "x = 13")],
+    71: [(137, 790, 1600, 250, 22,
+          "General form: f(x) = 2x − 8: slope 2, y-intercept (0, −8).\n"
+          "Factored form: f(x) = 2(x − 4): slope 2, zero 4 (x-intercept (4, 0)).")],
+    72: [(900, 400, 900, 500, 22,
+          "Plot (0, −8) and (4, 0) and draw the line (slope 2).\nIn factored form f(x) = 2(x − 4) the only zero is "
+          "x = 4, so the line crosses the x-axis once. A non-horizontal line always crosses the x-axis exactly "
+          "once.")],
+    73: [(254, 494, 160, 60, 22, "−1"), (454, 494, 160, 60, 22, "−10", WITH),
+         (254, 595, 160, 60, 22, "0"), (454, 595, 160, 60, 22, "−8", WITH),
+         (254, 696, 160, 60, 22, "2"), (454, 696, 160, 60, 22, "−4", WITH),
+         (254, 797, 160, 60, 22, "4"), (454, 797, 160, 60, 22, "0", WITH)],
+    74: [(137, 400, 1650, 200, 22,
+          "Summary: Both forms relate to the graph and table of the function. The equation always gives exact "
+          "answers; the graph and table sometimes give only approximate values."),
+         (137, 760, 1680, 300, 19, EQ6)],
+    77: [(140, 400, 860, 500, 22,
+          "General form: f(x) = 2x − 8\nFactored form: f(x) = 2(x − 4)\nGraph: a line through (0, −8) and (4, 0)\n"
+          "Table: (0, −8), (2, −4), (4, 0), (6, 4)")],
+    79: [(520, 364, 1000, 60, 24, "= −2(3) − 5 = −11"), (520, 442, 1000, 60, 24, "= 2(−1) = −2"),
+         (520, 522, 1000, 60, 24, "= −1(−7) + 5 = 12"), (520, 600, 1000, 60, 24, "= 5(−5) + 5 = −20")],
+}
+
+NOTES6 = {
+    31: "TE correction: the TE answers only the y-intercept (E(0) = 0). The question asks for both: the x- and "
+        "y-intercepts are the same point, (0, 0). Also, in part 4 the TE writes f(t); the function is E(t).",
+    33: "Slide typo: the last line of the Worked Example reads '6.67 = 1'. It should read 6.67 = t.",
+    46: "Each click fills one row of the table.",
+    61: "TE correction (part d): the TE says she needs 'an additional 6 T-shirts'. She needs to sell 12 T-shirts in "
+        "all (6 more than the 6 she needs to break even).",
+    71: "TE correction: the TE writes 'y-intercept = −8'. The y-intercept is the point (0, −8).",
+}
+
+CORRECTIONS6 = [
+    ("Teacher Edition corrections in this deck", None),
+    ("Activity 6.2 Q2: the TE gives only the y-intercept. Added: the x- and y-intercepts are both (0, 0).", None),
+    ("Activity 6.2 Q4: the TE writes f(t); the function is E(t).", None),
+    ("Activity 6.2 Worked Example (slide 33): the last line reads '6.67 = 1'; it should be 6.67 = t.", None),
+    ("Activity 6.4 Q1d: the TE says 'an additional 6 T-shirts'. Clarified: she needs to sell 12 T-shirts in all.",
+     None),
+    ("Talk the Talk Q3a: the TE writes 'y-intercept = −8'; the y-intercept is the point (0, −8).", None),
+    ("Every other TE answer was re-solved and is correct, including the Assignment and Prepare (pp. 255-256).",
+     "16171D"),
+]
+
+PPTX = {5: (ANS5, NOTES5, CORRECTIONS5, 65),  # lesson -> answers, notes, corrections, slide the summary follows
+        6: (ANS6, NOTES6, CORRECTIONS6, 79)}
 
 
 if __name__ == "__main__":
-    tmp = Path(tempfile.mkdtemp())
-    pages = render(PDF, tmp)
-    assert len(pages) >= max(ANS), f"PDF rendered {len(pages)} pages; answers expect {max(ANS)}"
-    build(pages)
+    for lesson in map(int, sys.argv[1:] or ["4", *map(str, PPTX)]):
+        if lesson == 4:
+            pages = render(PDF, Path(tempfile.mkdtemp()))
+            assert len(pages) >= max(ANS4), f"PDF rendered {len(pages)} pages; answers expect {max(ANS4)}"
+            build(pages)
+            continue
+        src = HERE / f"lesson{lesson}" / f"BLMathematics_AlgI_M2_T1_L{lesson}_LessonSlides_ENG_2025.pptx"
+        annotate(src, src.with_name(f"BLMathematics_AlgI_M2_T1_L{lesson}_LessonSlides_ENG_with_answers.pptx"),
+                 *PPTX[lesson])
