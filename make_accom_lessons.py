@@ -6,7 +6,7 @@ IEP = a shorter, modified deck: vocabulary, a steps anchor chart, I do / we do /
 sentence frames, fewer practice items, and a short exit ticket.
 Both reuse the original deck's head and script, so they work as web decks too.
 Also writes IEP and 504 copies of the bell work, homework and quiz pages (see practice_pages),
-and a teacher answer key .pptx for each IEP / 504 bell work, homework and quiz (answer_key; needs node to read the page data).
+and a teacher answer key .pptx for each IEP / 504 bell work, homework, quiz and exit ticket (answer_key, exit_key; needs node to read the page data).
 Standard library only.  Run:  python make_accom_lessons.py
 """
 import html as html_mod
@@ -423,6 +423,38 @@ def answer_key(n, kind, folder, name):
     src.unlink()
 
 
+EXIT_WORK = {  # IEP exit tickets (the 504 decks keep the original exit ticket, whose notes hold the work)
+ 4: ["Put m = 4, x₁ = 1, y₁ = 6 into y − y₁ = m(x − x₁).", "Distribute: y − 6 = 4x − 4. Add 6: y = 4x + 2.",
+     "Both points have x = 4, so the line is vertical: x = 4, slope undefined."],
+ 5: ["b = 2, so start at (0, 2). Slope −3/4: down 3, right 4.", "y = 0: x = 8. x = 0: 2y = 8, so y = 4.",
+     "The signs flip: x + 3 gives x₁ = −3 and y − 1 gives y₁ = 1. The slope is 2."],
+ 6: ["(10 − 4) ÷ (3 − 1) = 3 and (22 − 10) ÷ (7 − 3) = 3, so linear. 4 = 3(1) + b gives b = 1.",
+     "x − 5 = 0 when x = 5.", "10 is the rate: $10 for each bracelet. −30 is the booth cost."]}
+
+
+def exit_key(n, kind, folder, sec):
+    """Teacher answer-key .pptx for the exit ticket slide of the IEP / 504 deck."""
+    qs = re.findall(r"<p>(.*?)</p>", sec, re.S)
+    ans = re.findall(r'class="step pop eq sm ans">(.*?)</div>', sec, re.S)
+    assert len(qs) == len(ans) == 3, (n, kind)
+    notes = re.search(r'<aside class="notes">(.*?)</aside>', sec, re.S)
+    work = (" ".join(f"{k}. {w}" for k, w in enumerate(EXIT_WORK[n], 1)) if kind == "IEP"
+            else re.sub(r"^.*?Work: |^Added for this deck; not from the textbook\. |Give 3–4 minutes.*?Sets A–[A-Z]\. ", "",
+                        notes.group(1)) if notes else "")  # keep only the math, not the classroom directions
+    label = "Section 504" if kind == "504" else "IEP"
+    foot = f'<p class="foot">Lesson {n} Exit Ticket · {label} Version · Answer Key (teacher copy)</p>'
+    rows = "".join(f'<tr><td>{q}</td><td><b>{a}</b></td></tr>' for q, a in zip(qs, ans))
+    slides = (f'<section class="slide"><h1>Answer Key</h1><h3>Lesson {n} Exit Ticket · {label} Version</h3>'
+              f'<p>3 questions, the same ones on the exit ticket slide of the {label} deck.</p>'
+              f'<p class="warn">Teacher copy. Do not share with students.</p>{foot}</section>'
+              f'<section class="slide"><h2>Exit ticket answers</h2><table style="font-size:20px"><tr><th>Question</th><th>Answer</th></tr>{rows}</table>'
+              f'<p class="small"><b>Work:</b> {work}</p>{foot}</section>')
+    src = HERE / folder / f"lesson{n}-exit-ticket-{kind}-ANSWER-KEY.html"
+    src.write_text(f'<!doctype html><meta charset="utf-8"><title>Lesson {n} Exit Ticket Answer Key · {label}</title><body>{slides}</body>', encoding="utf-8")
+    subprocess.run([sys.executable, str(HERE / "make_pptx.py"), src.relative_to(HERE).as_posix()], check=False)
+    src.unlink()
+
+
 def deck_link(kind, m):  # the accommodated bell work, homework and quiz sit next to the deck
     return f'href="{m.group(1)[:-5]}-{kind}.html"'
 
@@ -442,6 +474,7 @@ def main():
             practice_pages(n, kind, folder)
             for name in ("bellwork", "homework", "quiz"):
                 answer_key(n, kind, folder, name)
+            exit_key(n, kind, folder, next(s for s in secs if ">Exit Ticket<" in s))
             out = HERE / folder / f"{OUT[n]}-{kind}.html"
             out.write_text(html, encoding="utf-8")
             subprocess.run([sys.executable, str(HERE / "make_pptx.py"), out.relative_to(HERE).as_posix()], check=False)
