@@ -605,8 +605,8 @@ EQ6 = ("General form f(x) = ax + b: a (the leading coefficient) is the slope, it
        "x-intercept (c, 0).")
 
 
-def row(y, *cells):  # one table row, revealed on one click: cells are (x, w, text)
-    return [(x, y, w, 89, 14, t, *(() if i == 0 else (WITH,))) for i, (x, w, t) in enumerate(cells)]
+def row(y, h, *cells):  # one table row, centered in its cells and revealed on one click: cells are (x, w, text)
+    return [(x, y, w, h, 18, t, CENTER, *(() if i == 0 else (WITH,))) for i, (x, w, t) in enumerate(cells)]
 
 
 ANS6 = {
@@ -625,7 +625,7 @@ ANS6 = {
           "linear function.")],
     17: [(282, 820, 540, 120, 22, "f(x) = −0.25x + 5"),
          (845, 820, 550, 160, 20, "Not linear: the rate of change is 4, then 4, then 2.")],
-    18: [(122, 715, 1280, 130, 21, "He earns $2.50 per pretzel (every amount ÷ pretzels = 2.5)."),
+    18: [(122, 505, 1280, 70, 21, "He earns $2.50 per pretzel (every amount ÷ pretzels = 2.5)."),
          (1428, 760, 470, 300, 19, "Yes, directly proportional: y/x = 2.5 for every row, and 0 pretzels "
                                    "would earn $0.")],
     19: [(137, 400, 1650, 80, 28, "y = 2.5x"), (137, 780, 1650, 80, 28, "2.5(75) = $187.50")],
@@ -639,7 +639,7 @@ ANS6 = {
           "No. The rate is −24 gallons per hour (−6 every 1/4 hour), but the tank is not empty at 0 hours, so "
           "water ÷ time is not constant.")],
     23: [(137, 370, 1600, 80, 22, "175 gallons (169 + 6 at time 0)"),
-         (137, 640, 1600, 80, 24, "y = 175 − 24x"),
+         (137, 565, 1600, 70, 24, "y = 175 − 24x"),
          (137, 910, 1600, 120, 22, "175 − 24x = 0 → x ≈ 7.29 hours (about 7 hours 17.5 minutes)")],
     24: [(137, 400, 1650, 180, 22,
           "Summary: If a table represents a linear function, the slope, or average rate of change, is constant "
@@ -650,14 +650,14 @@ ANS6 = {
           "T-shirt. Selling 4 T-shirts earns $60. In this situation only whole numbers of T-shirts, 0 or more, make "
           "sense.")],
     31: [(539, 380, 1240, 130, 20, "Both intercepts are (0, 0): if no T-shirts are sold, Gracie earns $0."),
-         (539, 700, 1240, 70, 24, "E(t) = 15t"),
+         (539, 612, 1240, 70, 24, "E(t) = 15t"),
          (539, 1000, 1240, 80, 16, "(t, E(t)): t T-shirts sold and the $ earned; every point on the line is a "
                                    "solution of E(t) = 15t.")],
     32: [(137, 560, 520, 300, 20, "E(2) = 30: the point (2, 30); 2 T-shirts earn $30."),
          (680, 560, 520, 300, 20, "E(5) = 75: the point (5, 75); 5 T-shirts earn $75."),
          (1220, 560, 560, 300, 20, "E(2.75) = 41.25: the point exists on the line, but she cannot sell 2.75 "
                                    "T-shirts.")],
-    34: [(137, 470, 1100, 170, 20, "6.67 T-shirts earn exactly $100. She can only sell whole shirts, so she must "
+    34: [(137, 395, 1100, 150, 20, "6.67 T-shirts earn exactly $100. She can only sell whole shirts, so she must "
                                    "sell 7 to earn at least $100."),
          (137, 740, 1100, 230, 20, "E(t) is the dollars earned for t T-shirts. The goal is $100 earned, so 100 "
                                    "replaces E(t).")],
@@ -669,24 +669,26 @@ ANS6 = {
           "may give only an approximate answer; an equation always gives an exact answer.")],
     41: [(1181, 910, 700, 160, 18, "Both lines have the same slope, 15 (the same rate of change), so they are "
                                    "parallel.")],
-    42: [(512, 700, 1300, 360, 19,
+    42: [(512, 478, 1300, 120, 19,
           "G(0) = −45: the point (0, −45). If no T-shirts are sold, she is $45 short (the cost of the 3 free "
-          "shirts). It does not make sense in the situation.\n"
+          "shirts). It does not make sense in the situation."),
+         (512, 765, 1300, 140, 19,
           "G(t) = 0 at (3, 0): after selling 3 T-shirts, her earnings are $0; she has no money to return to her "
           "mom.")],
-    44: [(137, 490, 1600, 420, 22,
-          "15(t − 3) = 15t − 45 by the distributive property.\n"
+    44: [(137, 360, 1600, 80, 22, "15(t − 3) = 15t − 45 by the distributive property."),
+         (137, 625, 1600, 200, 22,
           "15(t − 3) = 100 → t − 3 ≈ 6.67 → t ≈ 9.67. On the graph G(t) reaches $100 at about 9.67. She needs to "
           "sell 10 T-shirts.")],
-    46: (row(369, (487, 219, "T-shirts"), (706, 504, "Number of T-shirts sold"), (1210, 506, "Input"))
-         + row(458, (487, 219, "Dollars"), (706, 504, "Earnings for selling t T-shirts"), (1210, 506, "Output"))
-         + row(580, (487, 219, "$ per T-shirt"), (706, 504, "Selling price of a T-shirt"),
+    # table rows (y, height) as PowerPoint lays them out; columns at x 486/704/1208
+    46: (row(368, 90, (487, 219, "T-shirts"), (706, 504, "Number of T-shirts sold"), (1210, 506, "Input"))
+         + row(458, 88, (487, 219, "Dollars"), (706, 504, "Earnings for selling t T-shirts"), (1210, 506, "Output"))
+         + row(604, 88, (487, 219, "$ per T-shirt"), (706, 504, "Selling price of a T-shirt"),
                (1210, 506, "Slope (rate of change)"))
-         + row(669, (487, 219, "T-shirts"), (706, 504, "T-shirts sold, not counting the 3 free"),
+         + row(692, 92, (487, 219, "T-shirts"), (706, 504, "T-shirts sold, not counting the 3 free"),
                (1210, 506, "The input minus a constant"))
-         + row(806, (487, 219, "Dollars"), (706, 504, "Earnings for t T-shirts at $15 each"),
+         + row(844, 88, (487, 219, "Dollars"), (706, 504, "Earnings for t T-shirts at $15 each"),
                (1210, 506, "The rate times the input"))
-         + row(895, (487, 219, "Dollars"), (706, 504, "Money lost on the 3 free T-shirts"),
+         + row(932, 90, (487, 219, "Dollars"), (706, 504, "Money lost on the 3 free T-shirts"),
                (1210, 506, "Constant term: y-intercept (0, −45)"))),
     51: [(119, 500, 880, 200, 20, "a = 15, the slope: draw a slope triangle, right 1 and up 15 (for example from "
                                   "(3, 0) to (4, 15))."),
@@ -700,9 +702,8 @@ ANS6 = {
     60: [(466, 660, 1400, 360, 20,
           "Both lines have the same slope, 15, so they are parallel.\nThe graph shifted down 35: the y-intercept "
           "moved from (0, −45) to (0, −80) and the x-intercept from 3 to 5 1/3.")],
-    61: [(137, 600, 1600, 320, 22,
-          "6 T-shirts: F(t) = 15t − 80 is positive only when t > 5 1/3.\n"
-          "12 T-shirts: 15t − 80 = 100 → 15t = 180 → t = 12.")],
+    61: [(137, 460, 1600, 80, 22, "6 T-shirts: F(t) = 15t − 80 is positive only when t > 5 1/3."),
+         (137, 640, 1600, 80, 22, "12 T-shirts: 15t − 80 = 100 → 15t = 180 → t = 12.")],
     62: [(113, 640, 1330, 400, 22,
           "F(t) = G(t) − 35\nF(t) = 15t − 80: a = 15 is the slope (slope triangle); b = −80 is the y-intercept "
           "(0, −80).")],
@@ -711,11 +712,11 @@ ANS6 = {
     64: [(137, 400, 1650, 250, 22,
           "Summary: In general form f(x) = ax + b, a is the slope and b is the y-intercept. In factored form "
           "f(x) = a(x − c), a is the slope and c is the x-intercept, or zero, of the function.")],
-    67: [(290, 585, 300, 60, 24, "always"), (290, 731, 300, 60, 24, "sometimes")],
-    68: [(290, 251, 300, 60, 24, "always"), (290, 397, 300, 60, 24, "sometimes"),
-         (290, 475, 300, 60, 24, "always"), (290, 621, 300, 60, 24, "always")],
-    69: [(290, 636, 700, 70, 26, "25x − 45"), (330, 726, 700, 70, 26, "255"), (440, 816, 700, 70, 26, "x = −4")],
-    70: [(300, 506, 700, 70, 26, "−6x + 24"), (330, 594, 700, 70, 26, "78"), (420, 684, 700, 70, 26, "x = 13")],
+    67: [(385, 463, 300, 60, 24, "always"), (385, 585, 300, 60, 24, "sometimes")],
+    68: [(296, 243, 300, 60, 24, "always"), (296, 365, 300, 60, 24, "sometimes"),
+         (296, 487, 300, 60, 24, "always"), (296, 553, 300, 60, 24, "always")],
+    69: [(395, 612, 700, 70, 26, "25x − 45"), (425, 714, 700, 70, 26, "255"), (510, 816, 700, 70, 26, "x = −4")],
+    70: [(335, 482, 700, 70, 26, "−6x + 24"), (355, 584, 700, 70, 26, "78"), (425, 684, 700, 70, 26, "x = 13")],
     71: [(137, 790, 1600, 250, 22,
           "General form: f(x) = 2x − 8: slope 2, y-intercept (0, −8).\n"
           "Factored form: f(x) = 2(x − 4): slope 2, zero 4 (x-intercept (4, 0)).")],
@@ -734,8 +735,8 @@ ANS6 = {
     77: [(140, 400, 860, 500, 22,
           "General form: f(x) = 2x − 8\nFactored form: f(x) = 2(x − 4)\nGraph: a line through (0, −8) and (4, 0)\n"
           "Table: (0, −8), (2, −4), (4, 0), (6, 4)")],
-    79: [(520, 364, 1000, 60, 24, "= −2(3) − 5 = −11"), (520, 442, 1000, 60, 24, "= 2(−1) = −2"),
-         (520, 522, 1000, 60, 24, "= −1(−7) + 5 = 12"), (520, 600, 1000, 60, 24, "= 5(−5) + 5 = −20")],
+    79: [(520, 354, 1000, 60, 24, "= −2(3) − 5 = −11"), (520, 420, 1000, 60, 24, "= 2(−1) = −2"),
+         (520, 486, 1000, 60, 24, "= −1(−7) + 5 = 12"), (520, 552, 1000, 60, 24, "= 5(−5) + 5 = −20")],
 }
 
 NOTES6 = {
