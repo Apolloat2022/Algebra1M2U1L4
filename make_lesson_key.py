@@ -223,11 +223,11 @@ def render(pdf, out):
     return sorted(out.glob("p*.jpg"))
 
 
-def text_box(sid, x, y, w, h, size, text, color=RED, bold=False, font="Arial"):
+def text_box(sid, x, y, w, h, size, text, color=RED, bold=False, font="Arial", center=False):
     b = ' b="1"' if bold else ""
     face = f'<a:latin typeface="{font}"/><a:cs typeface="{font}"/>' if font else ""  # None: the deck's theme font
     paras = "".join(
-        f'<a:p><a:pPr marL="0" indent="0" algn="l"><a:spcBef><a:spcPts val="0"/></a:spcBef><a:spcAft><a:spcPts val="300"/>'
+        f'<a:p><a:pPr marL="0" indent="0" algn="{"ctr" if center else "l"}"><a:spcBef><a:spcPts val="0"/></a:spcBef><a:spcAft><a:spcPts val="300"/>'
         f'</a:spcAft><a:buNone/></a:pPr><a:r><a:rPr lang="en-US" sz="{size * 100}"'
         f'{b} dirty="0"><a:solidFill><a:srgbClr val="{color}"/></a:solidFill>'
         f'{face}</a:rPr><a:t>{mp.esc(t)}</a:t></a:r></a:p>'
@@ -235,7 +235,7 @@ def text_box(sid, x, y, w, h, size, text, color=RED, bold=False, font="Arial"):
     return (f'<p:sp><p:nvSpPr><p:cNvPr id="{sid}" name="Answer {sid}"/><p:cNvSpPr txBox="1"/><p:nvPr/></p:nvSpPr>'
             f'<p:spPr><a:xfrm><a:off x="{x * PX}" y="{y * PX}"/><a:ext cx="{w * PX}" cy="{h * PX}"/></a:xfrm>'
             '<a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:noFill/></p:spPr><p:txBody><a:bodyPr wrap="square" '
-            'lIns="45720" tIns="18288" rIns="45720" bIns="18288" anchor="t"><a:noAutofit/></a:bodyPr><a:lstStyle/>'
+            f'lIns="45720" tIns="18288" rIns="45720" bIns="18288" anchor="{"ctr" if center else "t"}"><a:noAutofit/></a:bodyPr><a:lstStyle/>'
             f'{paras}</p:txBody></p:sp>')
 
 
@@ -328,6 +328,8 @@ def build(images):
 # The publisher decks are editable, so the answers go into the original slides (as in the Geometry deck)
 # instead of over pictures of them.
 
+WITH, CENTER = "with", "center"  # optional extra fields of an answer box (see annotate)
+
 ANS5 = {
     4: [(137, 790, 1700, 285, 19,
          "Yes. Use the form of the equation instead of a table of values.\n"
@@ -342,10 +344,10 @@ ANS5 = {
                                  "draw the line."),
         (975, 825, 850, 200, 18, "The slope and intercept are not shown. Find points: (2, 2) and (10, 5) are "
                                  "on the line (slope 3/8, y-intercept (0, 5/4)). Plot them and connect.")],
-    8: [(137, 400, 1650, 200, 22,
+    8: [(137, 610, 1650, 200, 22,
          "Summary: Characteristics of linear relationships can be identified when their equations are written in "
          "different forms, such as slope-intercept form, point-slope form, and standard form.")],
-    14: [(1300, 520, 580, 420, 22,
+    14: [(1300, 520, 580, 420, 20,
           "Plot the y-intercept (0, −1).\nSlope 3/2: up 3, right 2 → (2, 2), (4, 5).\nDown 3, left 2 → (−2, −4).\n"
           "Draw the line through the points.")],
     15: [(920, 420, 900, 380, 24,
@@ -357,11 +359,11 @@ ANS5 = {
     17: [(130, 600, 490, 460, 21,
           "y = 15x + 30\nx = number of lawns mowed, y = total savings ($).\nStart at (0, 30); go up 15 for each "
           "lawn: (2, 60), (4, 90), (6, 120).")],
-    18: [(1330, 430, 560, 600, 22,
+    18: [(1330, 430, 560, 600, 20,
           "y = 20x − 130\nx = time (minutes), y = depth (feet).\nStart at (0, −130) and rise 20 each minute: "
           "(1, −110), (5, −30).\nThe diver reaches the surface (y = 0) at 6.5 minutes, so the graph ends at "
           "(6.5, 0).")],
-    19: [(137, 400, 1650, 200, 22,
+    19: [(137, 460, 1650, 130, 22,
           "Summary: An equation in slope-intercept form can be graphed by plotting the y-intercept and then using "
           "the slope to locate two more points by counting from that point."),
          (137, 985, 1650, 90, 20, "Yes: use the y-intercept and the slope from the equation instead of a table.")],
@@ -375,7 +377,7 @@ ANS5 = {
           "Slope 1/2; point (−6, −8).\nFrom (−6, −8): up 1, right 2 → (−4, −7), (−2, −6), (0, −5), (2, −4).")],
     29: [(1209, 845, 690, 230, 17,
           "x = time (seconds), y = depth (meters)\ny + 25.8 = −0.3(x − 90)\nPlot (90, −25.8), then (190, −55.8).")],
-    30: [(137, 400, 1650, 200, 22,
+    30: [(137, 610, 1650, 200, 22,
           "Summary: An equation in point-slope form can be graphed by plotting the known point and then using "
           "the slope to locate two more points by counting from that point.")],
     34: [(209, 510, 700, 170, 20, "The money from student tickets: $5 times the number of student tickets sold."),
@@ -395,17 +397,21 @@ ANS5 = {
     39: [(137, 430, 1600, 300, 24,
           "m = (0 − 200)/(320 − 0) = −5/8\nThe number of adult tickets decreases by 5 for every 8 more student "
           "tickets sold.")],
-    40: [(550, 500, 260, 60, 22, "(6/5, 0)"), (820, 500, 260, 60, 22, "(0, 3)"), (1092, 500, 260, 60, 22, "m = −5/2"),
-         (232, 610, 310, 60, 22, "3x + 4y = 7"), (820, 610, 260, 60, 22, "(0, 7/4)"),
-         (232, 722, 310, 60, 22, "2x − 3y = 9"), (550, 722, 260, 60, 22, "(9/2, 0)"),
-         (550, 823, 260, 60, 22, "(−11/5, 0)"), (820, 823, 260, 60, 22, "(0, 11/7)"), (1092, 823, 260, 60, 22, "m = 5/7"),
+    # table cells: columns at x 227/543/812/1084, rows at y 469/569/691/791 (heights from the publisher's fallback)
+    40: [(543, 469, 269, 100, 22, "(6/5, 0)", CENTER), (812, 469, 272, 100, 22, "(0, 3)", CENTER),
+         (1084, 469, 267, 100, 22, "m = −5/2", CENTER),
+         (227, 569, 316, 122, 22, "3x + 4y = 7", CENTER), (812, 569, 272, 122, 22, "(0, 7/4)", CENTER),
+         (227, 691, 316, 100, 22, "2x − 3y = 9", CENTER), (543, 691, 269, 100, 22, "(9/2, 0)", CENTER),
+         (543, 791, 269, 100, 22, "(−11/5, 0)", CENTER), (812, 791, 272, 100, 22, "(0, 11/7)", CENTER),
+         (1084, 791, 267, 100, 22, "m = 5/7", CENTER),
          (1380, 420, 500, 420, 18, "Check each row: x-intercept (C/A, 0), y-intercept (0, C/B), slope −A/B.\n"
-                                   "Row 2: the given x-intercept 7/3 and slope −3/4 give 3x + 4y = 7.")],
+                                   "Row 2: the given x-intercept 7/3 and slope −3/4 give 3x + 4y = 7.\n"
+                                   "Row 3: the slide's y-intercept (0, 23) is a typo for (0, −3).")],
     41: [(720, 420, 1100, 70, 24, "(C/A, 0)"), (720, 510, 1100, 70, 24, "(0, C/B)"),
          (720, 600, 1100, 70, 24, "m = −A/B"),
          (137, 720, 1600, 200, 20, "Example: 5x + 2y = 6 has x-intercept (6/5, 0), y-intercept (0, 6/2) = (0, 3), "
                                    "and slope −5/2.")],
-    42: [(470, 475, 260, 60, 24, "Line 3"), (470, 640, 260, 60, 24, "Line 1"), (470, 800, 260, 60, 24, "Line 2"),
+    42: [(610, 470, 240, 60, 24, "Line 3"), (610, 612, 240, 60, 24, "Line 1"), (610, 754, 240, 60, 24, "Line 2"),
          (124, 930, 1700, 140, 18,
           "All three lines have y-intercept (0, 5), so match by slope: 3x − 12y = −60 has m = 1/4, 6x − 2y = −10 "
           "has m = 3, 9x − 9y = −45 has m = 1. The steepest line (Line 1) has the greatest slope.")],
@@ -414,8 +420,8 @@ ANS5 = {
           "Intercepts (25, 0) and (0, 10).")],
     44: [(1250, 520, 620, 460, 22,
           "x = student tickets, y = adult tickets\n5x + 6y = 270\nIntercepts (54, 0) and (0, 45); connect them.")],
-    46: [(560, 560, 1250, 330, 24,
-          "a. m = 3: −3x + y = −4  (or 3x − y = 4)\nb. m = −4: 4x + y = −1\nc. m = 1/2: x − 2y = −8")],
+    46: [(1110, 418, 760, 60, 24, "m = 3  →  3x − y = 4"), (1110, 542, 760, 60, 24, "m = −4  →  4x + y = −1"),
+         (1110, 662, 760, 60, 24, "m = 1/2  →  x − 2y = −8")],
     47: [(137, 400, 1650, 200, 22,
           "Summary: The standard form of a linear equation is Ax + By = C, where A, B, and C are integers and A and "
           "B are not both zero. It can be graphed by calculating and plotting the intercepts."),
@@ -439,7 +445,7 @@ ANS5 = {
          (960, 620, 900, 300, 20, "I plotted the intercepts (18, 0) and (0, 12) and connected them. Only "
                                   "whole-number scores make sense, so the solutions are the whole-number points "
                                   "on that segment.")],
-    60: [(400, 465, 540, 70, 26, "y = 5x + 20"),
+    60: [(440, 465, 500, 70, 26, "y = 5x + 20"),
          (960, 530, 900, 180, 20, "Slope-intercept form: the starting amount ($20) and the rate ($10 every 2 weeks, "
                                   "or $5 per week) are given."),
          (960, 790, 900, 260, 20, "I plotted the y-intercept (0, 20) and used the slope 5/1 to plot (2, 30), "
@@ -468,7 +474,8 @@ NOTES5 = {
     29: "TE correction: the TE defines x as time in minutes; the rate (0.3 m per second) and the 90 seconds make "
         "x seconds. Also note the y-intercept (0, 1.2): the ROV starts 1.2 m above the water, on the boat. "
         "The problem says 'submarine' but means the ROV.",
-    40: "TE correction: the TE gives the y-intercept of 3x + 4y = 7 as (0, 4/3). It is (0, 7/4): 4y = 7, y = 7/4.",
+    40: "TE correction: the TE gives the y-intercept of 3x + 4y = 7 as (0, 4/3). It is (0, 7/4): 4y = 7, y = 7/4. "
+        "Slide typo: row 3 shows the y-intercept as (0, 23); for 2x − 3y = 9 it is (0, −3) (the minus sign became a 2).",
     57: "TE correction: the last bullet ('Match each transformed graph to the equation in the table, written in "
         "terms of f(x)') belongs to a different lesson. There are no transformed graphs or table here; skip it.",
     59: "Ask students why the graph could be drawn as points: only whole numbers of questions make sense.",
@@ -481,6 +488,8 @@ CORRECTIONS5 = [
     ("Activity 5.2 Q3 (ROV): the TE defines x in minutes; it is seconds. The equation is y + 25.8 = −0.3(x − 90).",
      None),
     ("Activity 5.3 Q6 table: the TE gives the y-intercept of 3x + 4y = 7 as (0, 4/3). Corrected to (0, 7/4).", None),
+    ("Activity 5.3 Q6 table (slide 40): the slide shows the y-intercept of 2x − 3y = 9 as (0, 23). It is (0, −3).",
+     None),
     ("Talk the Talk: the bullet about matching transformed graphs to f(x) belongs to another lesson.", None),
     ("Lesson 5 Assignment Q4d: the TE calls the buyer 'Eugenie'; the problem says Brianna.", None),
     ("Every other TE answer was re-solved and is correct, including the Assignment and Prepare (pp. 235-237).",
@@ -544,11 +553,11 @@ def annotate(src, out, ans, notes, corrections, after):
         x, boxes = text(path), ans.get(k, [])
         if boxes:
             base = max(map(int, re.findall(r'<p:cNvPr id="(\d+)"', x))) + 1
-            shapes = "".join(text_box(base + j, *b[:6], font=None) for j, b in enumerate(boxes))
+            shapes = "".join(text_box(base + j, *b[:6], font=None, center=CENTER in b[6:]) for j, b in enumerate(boxes))
             x = x.replace("</p:spTree>", shapes + "</p:spTree>", 1)
-            groups = []  # a 7th field of WITH shows the box on the same click as the one before it
+            groups = []  # extra fields: WITH shows the box on the same click as the one before it; CENTER centers it
             for j, b in enumerate(boxes):
-                if b[6:] == (WITH,) and groups:
+                if WITH in b[6:] and groups:
                     groups[-1].append(base + j)
                 else:
                     groups.append([base + j])
@@ -591,7 +600,6 @@ def annotate(src, out, ans, notes, corrections, after):
     print(f"wrote {out.relative_to(HERE)}: {len(order) + 1} slides, {sum(map(len, ans.values()))} answers")
 
 
-WITH = "with"
 EQ6 = ("General form f(x) = ax + b: a (the leading coefficient) is the slope, its steepness and direction; "
        "b gives the y-intercept (0, b).\nFactored form f(x) = a(x − c): a is the slope; c is the zero, the "
        "x-intercept (c, 0).")
