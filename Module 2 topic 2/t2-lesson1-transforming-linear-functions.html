@@ -1,0 +1,502 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Transforming Linear Functions · Bluebonnet Algebra I</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<style>
+/* Layout: a fixed 1280×720 "slide" on graph paper, scaled to fit any screen; steps reveal one click at a time. */
+:root{
+  /* Bluebonnet Algebra I palette (ALGEBRA-platform/app/globals.css); orange = slope, blue = point stays. */
+  --paper:#f7f7fb; --rule:#e6e8f2; --ink:#16171d; --muted:#5f6272; --card:#ffffff; --line:#e3e4ec;
+  --slope:#c9561f; --point:#3050b8; --leaf:#4f8a3c; --soft:#eaeefb; --ga:#4f8a3c; --gb:#7a4fc4; --gc:#16171d; --ans:#4f8a3c; --ans-bg:#edf5e9; --warn-bg:#fdf3e7;
+  --display:ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --body:ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --math:"STIX Two Text", "Cambria Math", "Times New Roman", serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#111218; --rule:#1f2129; --ink:#eceef6; --muted:#9ea2b3; --card:#1a1c24; --line:#2c2f3b;
+  --slope:#ff9259; --point:#93a9f5; --leaf:#8cc47a; --soft:#232a45; --ga:#8cc47a; --gb:#b79cff; --gc:#eceef6; --ans:#8cc47a; --ans-bg:#1f2a1b; --warn-bg:#2e2418; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#111218; --rule:#1f2129; --ink:#eceef6; --muted:#9ea2b3; --card:#1a1c24; --line:#2c2f3b;
+  --slope:#ff9259; --point:#93a9f5; --leaf:#8cc47a; --soft:#232a45; --ga:#8cc47a; --gb:#b79cff; --gc:#eceef6; --ans:#8cc47a; --ans-bg:#1f2a1b; --warn-bg:#2e2418; color-scheme:dark}
+
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);overflow:hidden;
+  background-image:linear-gradient(var(--rule) 1px,transparent 1px),linear-gradient(90deg,var(--rule) 1px,transparent 1px);
+  background-size:32px 32px}
+#stage{position:absolute;left:50%;top:calc(50% - 22px);width:1280px;height:720px;transform-origin:center;cursor:pointer;touch-action:manipulation}
+.slide{position:absolute;inset:0;padding:48px 72px 40px;display:none;flex-direction:column;gap:18px;font-size:26px;line-height:1.4}
+.slide.on{display:flex;animation:slideIn .35s ease}
+@keyframes slideIn{from{opacity:0}to{opacity:1}}
+
+.eyebrow{font-size:16px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--point)}
+h1,h2{font-family:var(--display);font-weight:800;line-height:1.08;letter-spacing:-.02em;text-wrap:balance;margin:0}
+h1{font-size:76px}
+h2{font-size:46px}
+h3{font-family:var(--display);font-weight:600;font-size:28px;margin:0}
+p{margin:0}
+.muted{color:var(--muted)}
+.small{font-size:21px}
+.row{display:flex;gap:36px;align-items:flex-start}
+.col{display:flex;flex-direction:column;gap:14px;flex:1;min-width:0}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 22px;display:flex;flex-direction:column;gap:10px}
+
+/* math */
+.eq,.mt{font-family:var(--math);font-weight:500}
+.eq{font-size:38px;line-height:1.5}
+.eq.big{font-size:60px}
+.eq.sm{font-size:31px}
+.eq i,.mt i{font-style:italic}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.78em;line-height:1.15;margin:0 .1em}
+.fr>span:first-child{border-bottom:.07em solid currentColor;padding:0 .2em}
+.cm{color:var(--slope);font-weight:600}
+.cp{color:var(--point);font-weight:600}
+
+.ans{background:var(--ans-bg);border-radius:8px;padding:8px 18px;align-self:flex-start}
+.ans::before{content:"Answer";margin-right:14px;vertical-align:.25em;font-family:var(--body);font-size:15px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ans)}
+.warn{background:var(--warn-bg);border-radius:8px;padding:10px 18px;font-size:22px;align-self:flex-start}
+.think{border:2px dashed var(--point);border-radius:24px;padding:16px 26px;font-size:25px;align-self:flex-start;max-width:760px}
+
+table.tbl{border-collapse:collapse;font-family:var(--math);font-size:30px;text-align:center;font-variant-numeric:tabular-nums}
+table.tbl th,table.tbl td{border:2px solid var(--line);padding:6px 26px;background:var(--card)}
+table.tbl th{font-style:italic;background:var(--rule)}
+table.cmp{border-collapse:collapse;width:100%;font-size:24px}
+table.cmp th,table.cmp td{border-bottom:1px solid var(--line);padding:10px 14px;text-align:left}
+table.cmp th{font-family:var(--display);font-size:26px}
+
+.foot{margin-top:auto;font-size:15px;line-height:1.5;color:var(--muted)}
+.foot strong{color:var(--point)} .foot a{color:var(--point)}
+a.go{color:var(--point);text-decoration:none} a.go:hover{text-decoration:underline}
+
+/* graphs: drawn from data-g by graphSVG(); make_pptx.py draws the same spec */
+.graph{flex:none}
+.graph svg{display:block;max-width:100%;height:auto}
+.g-bg{fill:var(--card);stroke:var(--line)}
+.g-grid{stroke:var(--rule);stroke-width:1}
+.g-axis{stroke:var(--muted);stroke-width:1.5}
+.g-line{stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+.g-pt{fill:var(--point)}
+.g-line.ga{stroke:var(--ga)} .g-line.gb{stroke:var(--gb)} .g-line.gc{stroke:var(--gc)}
+.ga{color:var(--ga);font-weight:600} .gb{color:var(--gb);font-weight:600} .gc{color:var(--gc);font-weight:600}
+.g-tick{fill:var(--muted);font:13px var(--body)}
+.g-plab{fill:var(--point);font:600 15px var(--body)}
+.g-llab{fill:var(--ink);font:italic 17px var(--math)}
+.divider{justify-content:center}
+.divider h1{font-size:110px}
+
+/* step reveal: space is reserved, like PowerPoint "Appear" */
+.step{opacity:0;visibility:hidden}
+.step.shown{opacity:1;visibility:visible;animation:rise .45s cubic-bezier(.2,.8,.2,1)}
+.step.wipe.shown{animation:wipe .7s ease-out}
+.step.pop.shown{animation:pop .4s cubic-bezier(.3,1.6,.5,1)}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes wipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes pop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.slide.on,.step.shown{animation:none!important}}
+
+/* controls */
+#bar{position:fixed;left:0;right:0;bottom:0;height:44px;padding:0 16px env(safe-area-inset-bottom,0px);display:flex;align-items:center;gap:10px;
+  background:var(--card);border-top:1px solid var(--line);font-size:14px;color:var(--muted);z-index:2}
+#bar button{font:inherit;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:6px;padding:5px 12px;cursor:pointer}
+#bar button:hover{background:var(--soft)}
+#bar button:focus-visible{outline:2px solid var(--point);outline-offset:2px}
+#prog{flex:1;height:4px;background:var(--rule);border-radius:2px;overflow:hidden}
+#prog>div{height:100%;width:0;background:var(--point);transition:width .3s}
+#count{font-variant-numeric:tabular-nums;min-width:64px;text-align:right}
+#brand{display:flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none;font-size:15px;white-space:nowrap}
+#brand strong{color:var(--point)}
+@media (max-width:900px){#hint{display:none}}
+@media (max-width:560px){#brand,#fs{display:none} #bar{gap:8px;padding:0 10px} #count{min-width:0}}
+#bar button{touch-action:manipulation}
+/* Portrait (phones, iPad upright): a 760px-wide slide whose height fit() matches to the screen; columns stack. */
+@media (orientation:portrait){
+  #stage{width:760px}
+  .slide{padding:40px 36px 32px;overflow-y:auto}
+  .row{flex-direction:column;gap:20px}
+  .grid3{grid-template-columns:1fr}
+  h1{font-size:60px} .divider h1{font-size:84px} .eq.big{font-size:48px}
+}
+.slide aside.notes{display:none}
+#notes{position:fixed;left:0;right:0;bottom:44px;max-height:34vh;overflow:auto;z-index:2;padding:14px 20px;
+  background:var(--card);border-top:2px solid var(--point);font-size:17px;line-height:1.5}
+#notes b{display:block;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--point)}
+/* table cells revealed one at a time keep their border; only the text is hidden */
+table td.step{opacity:1;visibility:visible}
+table td.step:not(.shown){color:transparent}
+</style>
+
+<div id="stage">
+
+<section class="slide">
+  <p class="eyebrow">Bluebonnet Algebra I · Module 2 · Topic 2 · Lesson 1 · Student Edition pp. 269–286</p>
+  <h1 style="margin-top:6px;font-size:56px">Transforming Linear Functions</h1>
+  <div class="eq" style="margin-top:8px;font-size:40px"><i>g</i>(<i>x</i>) = <span class="cm"><i>a</i></span> · <i>f</i>(<i>x</i>) + <span class="cp"><i>d</i></span></div>
+  <p style="font-size:24px;margin-top:6px">Bell work: <b><a class="go" href="t2-lesson1-bellwork-day1.html" target="_blank" onclick="event.stopPropagation()">Day 1 →</a></b> · <b><a class="go" href="t2-lesson1-bellwork-day2.html" target="_blank" onclick="event.stopPropagation()">Day 2 →</a></b> · <b><a class="go" href="t2-lesson1-bellwork-day3.html" target="_blank" onclick="event.stopPropagation()">Day 3 →</a></b> &nbsp;|&nbsp; Practice: <b><a class="go" href="t2-lesson1-homework.html" target="_blank" onclick="event.stopPropagation()">Homework →</a></b> · <b><a class="go" href="t2-lesson1-quiz.html" target="_blank" onclick="event.stopPropagation()">Quiz →</a></b></p>
+  <p class="muted small">Click, or press → / Space, to reveal each step. ← goes back. F = full screen.</p>
+  <p class="foot"><strong>Bluebonnet Algebra I</strong> · a companion to Bluebonnet Learning Secondary Mathematics, Algebra I, Edition 1<br>This work is based on original works of the Texas Education Agency and Carnegie Learning, Inc. This work is made available under a Creative Commons Attribution-Non-Commercial-4.0 International License. This does not in any way imply endorsement by those authors of this work.<br>©2024–2025 Texas Education Agency, portions ©2021 Carnegie Learning, Inc.<br>Licensed <a href="https://creativecommons.org/licenses/by-nc/4.0/" rel="license" target="_blank" onclick="event.stopPropagation()">CC BY-NC 4.0</a>.<br><strong>This is a private site for Algebra I teachers and is not publicly available.</strong></p>
+  <aside class="notes">Welcome to Topic 2. Students transform the parent function f(x) = x: vertical translations f(x) + d (blue) and vertical dilations a · f(x) (orange). They prove a line and its translation are parallel and write equations of parallel lines. Three days on the 150-day calendar: Day 1 Getting Started and Activity 1.1; Day 2 Activities 1.2 and 1.3; Day 3 Activity 1.4, Activity 1.5 and Talk the Talk. Materials: masking tape and markers for the floor coordinate plane, the Problem-Solving Model Graphic Organizer.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 1 · Bell Work · Review</p>
+  <h2>Warm up: work these on your own</h2>
+  <div class="row" style="gap:56px;margin-top:6px">
+    <div class="col">
+      <p>1. What is the slope between <span class="mt">(1, 2)</span> and <span class="mt">(4, 11)</span>?</p>
+      <div class="step pop eq sm ans"><span class="mt">3</span></div>
+      <p style="margin-top:14px">2. What is the <span class="mt"><i>y</i></span>-intercept of <span class="mt"><i>y</i> = 3<i>x</i> − 7</span>?</p>
+      <div class="step pop eq sm ans"><span class="mt">(0, −7)</span></div>
+    </div>
+    <div class="col">
+      <p>3. <span class="mt"><i>f</i>(<i>x</i>) = 2<i>x</i> + 1</span>. What is <span class="mt"><i>f</i>(−3)</span>?</p>
+      <div class="step pop eq sm ans"><span class="mt">−5</span></div>
+      <p style="margin-top:14px">4. Which line is parallel to <span class="mt"><i>y</i> = 3<i>x</i> + 1</span>?</p>
+      <div class="step pop eq sm ans"><span class="mt"><i>y</i> = 3<i>x</i> − 5</span></div>
+    </div>
+  </div>
+  <aside class="notes">Added for this deck; not from the textbook. Have this up as students walk in; they work silently while you take attendance (about 5 minutes). The same 4 questions are on the online Day 1 bell work. Reveal the answers one at a time. Answer key: 1. Slope = (11 − 2) ÷ (4 − 1) = 9 ÷ 3 = 3. 2. In y = mx + b, the y-intercept is (0, b), so it is (0, −7). 3. 2(−3) + 1 = −6 + 1 = −5. 4. Parallel lines have the same slope. Only y = 3x − 5 has slope 3.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Lesson 1 · SE p. 269</p>
+  <h2>Today you will…</h2>
+  <div class="col" style="gap:10px;margin-top:4px;font-size:26px"><p class="step">1. Determine the effects on the graph of a linear function when <i>f</i>(<i>x</i>) is replaced by <i>f</i>(<i>x</i>) + <i>d</i> or <i>a</i> · <i>f</i>(<i>x</i>).</p><p class="step">2. Graph transformations of the parent function and describe them.</p><p class="step">3. Prove that a line and its vertical translation are parallel.</p><p class="step">4. Write the equation of a line parallel to a given line through a given point.</p></div>
+  <p class="step small muted">Key term: <b>parent function</b>, the simplest function of its type. <span class="mt"><i>f</i>(<i>x</i>) = <i>x</i></span> is the parent of the linear function family.</p>
+  <aside class="notes">Read each objective aloud as it appears.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Essential Question · SE p. 269</p>
+  <h2>You know linear functions and their slope and <i>y</i>-intercept.</h2>
+  <div class="col" style="gap:30px;margin-top:40px;font-size:36px"><p class="step">How can you transform a function? What effects do different transformations have on the characteristics of linear functions?</p></div>
+  <aside class="notes">Have students write the Essential Question at the top of their notes. Don't answer it yet; we come back to it at the end of the lesson.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 1 · Getting Started · Returning to Transformation Station · SE p. 270</p>
+  <h2>Translate <span class="mt"><i>A</i><i>B</i></span> with <span class="mt"><i>A</i>(−8, −8)</span> and <span class="mt"><i>B</i>(8, 8)</span></h2>
+  <div class="row" style="gap:40px"><div class="col" style="gap:10px"><p class="">1. How do translations affect the coordinates?</p><table class="tbl" style="font-size:26px"><tr><th>Original point</th><th>4 units up</th><th>4 units down</th></tr><tr><td>(<i>x</i>, <i>y</i>)</td><td class="step">(<i>x</i>, <i>y</i> + 4)</td><td class="step">(<i>x</i>, <i>y</i> − 4)</td></tr></table><p class="small">2. Draw <span class="mt"><i>C</i><i>D</i></span>, a translation of <span class="mt"><i>A</i><i>B</i></span> up 4 units.</p><p class="step small"><span class="mt"><i>C</i>(−8, −4)</span> and <span class="mt"><i>D</i>(8, 12)</span>. Every point moves straight up 4, so <span class="mt"><i>C</i><i>D</i></span> is <b>parallel</b> to <span class="mt"><i>A</i><i>B</i></span>.</p></div><div class="col" style="gap:10px"><div class="graph" data-g='{"w": 400, "h": 400, "x": [-10, 14], "y": [-10, 14], "gx": [2, 4], "gy": [2, 4], "lines": [{"p": [[-8, -8], [8, 8]], "label": "AB", "seg": true}, {"p": [[-8, -4], [8, 12]], "label": "CD", "c": "b", "step": true, "seg": true}], "pts": [], "alt": "AB from (−8, −8) to (8, 8) and CD from (−8, −4) to (8, 12)"}'></div></div></div>
+  <aside class="notes">Getting Started, 15–20 minutes. Tape a large coordinate plane on the floor; students stand on the points of AB and move as directed. Ask: Did anyone move left or right? (No: only the y-coordinates changed.)</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 1 · Getting Started · Dilations · SE p. 271</p>
+  <h2>Multiply every <i>y</i>-coordinate by 2, then by −2</h2>
+  <div class="row" style="gap:40px"><div class="col" style="gap:10px"><p class="step small">The points move straight up or down, away from the <i>x</i>-axis (twice as far).</p><p class="step small">× 2: <span class="mt"><i>E</i>(−8, −16)</span> and <span class="mt"><i>F</i>(8, 16)</span>. <span class="mt"><i>E</i><i>F</i></span> is <b>steeper</b>: a vertical stretch.</p><p class="step small">× (−2): <span class="mt"><i>G</i>(−8, 16)</span> and <span class="mt"><i>H</i>(8, −16)</span>. Steeper <b>and reflected</b> across the <i>x</i>-axis.</p><p class="step small">All three segments pass through the origin, which doesn't move.</p></div><div class="col" style="gap:10px"><div class="graph" data-g='{"w": 400, "h": 400, "x": [-10, 10], "y": [-18, 18], "gx": [2, 4], "gy": [2, 6], "lines": [{"p": [[-8, -8], [8, 8]], "label": "AB", "seg": true}, {"p": [[-8, -16], [8, 16]], "label": "EF", "c": "a", "step": true, "seg": true}, {"p": [[-8, 16], [8, -16]], "label": "GH", "c": "b", "step": true, "seg": true}], "pts": [], "alt": "AB, EF stretched by 2, and GH stretched by 2 and reflected"}'></div></div></div>
+  <aside class="notes">Ask: Which point did not move? (The origin: 0 times 2 is still 0.) What does multiplying by a negative do? (It reflects across the x-axis.)</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 1 · Activity 1.1 · Vertical Translations of Functions · SE p. 272</p>
+  <h2>Translate <span class="mt"><i>f</i>(<i>x</i>) = <i>x</i></span> down 5, then up 5</h2>
+  <div class="row" style="gap:40px"><div class="col" style="gap:10px"><table class="tbl" style="font-size:22px"><tr><th>x</th><th>f(x)</th><th>m(x)</th></tr><tr><td>−2</td><td>−2</td><td class="step">−7</td></tr><tr><td>−1</td><td>−1</td><td class="step">−6</td></tr><tr><td>0</td><td>0</td><td class="step">−5</td></tr><tr><td>1</td><td>1</td><td class="step">−4</td></tr><tr><td>2</td><td>2</td><td class="step">−3</td></tr></table><div class="step pop eq sm ans"><i>m</i>(<i>x</i>) = <i>x</i> − 5</div></div><div class="col" style="gap:10px"><table class="tbl" style="font-size:22px"><tr><th>x</th><th>f(x)</th><th>p(x)</th></tr><tr><td>−2</td><td>−2</td><td class="step">3</td></tr><tr><td>−1</td><td>−1</td><td class="step">4</td></tr><tr><td>0</td><td>0</td><td class="step">5</td></tr><tr><td>1</td><td>1</td><td class="step">6</td></tr><tr><td>2</td><td>2</td><td class="step">7</td></tr></table><div class="step pop eq sm ans"><i>p</i>(<i>x</i>) = <i>x</i> + 5</div></div><div class="col" style="gap:10px"><div class="graph" data-g='{"w": 330, "h": 330, "x": [-8, 8], "y": [-8, 8], "gx": [1, 2], "gy": [1, 2], "lines": [{"p": [[0, 0], [1, 1]], "label": "f(x)"}, {"p": [[0, -5], [1, -4]], "label": "m(x)", "c": "a", "step": true}, {"p": [[0, 5], [1, 6]], "label": "p(x)", "c": "b", "step": true}], "pts": [], "alt": "f(x) = x with m(x) = x − 5 and p(x) = x + 5"}'></div></div></div><p class="step small">The slope stays <b>1</b>; only the <i>y</i>-intercept moves: <span class="mt">(0, −5)</span> and <span class="mt">(0, 5)</span>. Also <span class="mt"><i>f</i>(2) = 2</span> and <span class="mt"><i>p</i>(2) = 7</span>: the output went up 5.</p>
+  <aside class="notes">Activity 1.1, 20–25 minutes. The slide reveals each table column, then the equation, then the graph line. Ask: Which values changed, the inputs or the outputs? (Only the outputs.)</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 1 · Activity 1.1 · Definition · SE p. 273</p>
+  <h2>Vertical translation: <span class="mt"><i>y</i> = <i>f</i>(<i>x</i>) + <i>d</i></span></h2>
+  <div class="col" style="gap:20px;margin-top:10px"><p class="step "><span class="cp"><span class="mt"><i>d</i></span></span> <span class="mt">> 0</span>: the graph moves <b>up</b> <span class="mt"><i>d</i></span> units. <span class="cp"><span class="mt"><i>d</i></span></span> <span class="mt">< 0</span>: it moves <b>down</b>.</p><p class="step ">Only the output values change. The slope stays the same, so the new line is <b>parallel</b> to the original.</p><p class="step ">For <span class="mt"><i>f</i>(<i>x</i>) = <i>x</i></span>: <span class="mt"><i>f</i>(<i>x</i>) + <i>d</i> = <i>x</i> + <i>d</i></span>, a line with slope 1 and <i>y</i>-intercept <span class="mt">(0, <i>d</i>)</span>.</p></div>
+  <aside class="notes">Have students copy the definition. Stamp the learning: a vertical translation changes the y-intercept, not the slope.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 1 · Activity 1.1 · Questions 5–6 · SE p. 274</p>
+  <h2>Translate <span class="mt"><i>j</i>(<i>x</i>) = 2<i>x</i> − 1</span> up 4 and down 4</h2>
+  <div class="row" style="gap:40px"><div class="col" style="gap:10px"><p class="small">Up 4:</p><div class="step pop eq sm ans"><i>q</i>(<i>x</i>) = <i>j</i>(<i>x</i>) + 4 = 2<i>x</i> + 3</div><p class="small">Down 4:</p><div class="step pop eq sm ans"><i>r</i>(<i>x</i>) = <i>j</i>(<i>x</i>) − 4 = 2<i>x</i> − 5</div><p class="step small">All three have slope 2 and different <i>y</i>-intercepts: (0, −1), (0, 3), (0, −5). They are parallel, so they <b>never intersect</b>.</p></div><div class="col" style="gap:10px"><div class="graph" data-g='{"w": 360, "h": 380, "x": [-6, 6], "y": [-8, 8], "gx": [1, 2], "gy": [1, 2], "lines": [{"p": [[0, -1], [1, 1]], "label": "j(x)"}, {"p": [[0, 3], [1, 5]], "label": "q(x)", "c": "b", "step": true}, {"p": [[0, -5], [1, -3]], "label": "r(x)", "c": "a", "step": true}], "pts": [], "alt": "j(x) = 2x − 1, q(x) = 2x + 3 and r(x) = 2x − 5"}'></div></div></div>
+  <aside class="notes">Ask Yourself: Will the graphs of j(x), q(x) and r(x) ever intersect? Ask: How can you tell from the equations? (Same slope, different y-intercepts.)</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 1 · Activity 1.1 · Summary</p>
+  <h2>What does a vertical translation do?</h2>
+  <div class="col" style="gap:22px;margin-top:10px"><p class="step "><span class="mt"><i>f</i>(<i>x</i>) + <i>d</i></span> moves every point up or down <span class="mt"><i>d</i></span> units.</p><p class="step ">The <b>slope</b> stays the same. The <b><i>y</i>-intercept</b> changes.</p><p class="step ">A line and its vertical translation are <b>parallel</b>.</p></div>
+  <aside class="notes">To close Day 1, have students reread the Essential Question and summarize Activity 1.1 in their own words. End of Day 1.</aside>
+</section>
+
+<section class="slide divider">
+  <p class="eyebrow">Lesson 1</p>
+  <h1>Day 2</h1>
+  <p class="step" style="font-size:32px;max-width:900px">Essential Question: How can you transform a function? What effects do different transformations have on the characteristics of linear functions?</p>
+  <aside class="notes">Show this, then go to the bell work while you take attendance. Afterward, have a student read the Essential Question aloud and ask two or three students to summarize Day 1: What does f(x) + d do to the graph?</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 2 · Bell Work · Review of Day 1</p>
+  <h2>Warm up: work these on your own</h2>
+  <div class="row" style="gap:56px;margin-top:6px">
+    <div class="col">
+      <p>1. <span class="mt"><i>f</i>(<i>x</i>) = <i>x</i></span> is translated up 4 units. Which equation is the new function? <span class="muted" style="font-size:21px">(SE p. 272)</span></p>
+      <div class="step pop eq sm ans"><span class="mt"><i>g</i>(<i>x</i>) = <i>x</i> + 4</span></div>
+      <p style="margin-top:14px">2. The point <span class="mt">(2, 5)</span> is translated down 3 units. Where does it go? <span class="muted" style="font-size:21px">(SE p. 273)</span></p>
+      <div class="step pop eq sm ans"><span class="mt">(2, 2)</span></div>
+    </div>
+    <div class="col">
+      <p>3. <span class="mt"><i>f</i>(<i>x</i>) = 2<i>x</i> − 1</span>. What is the slope of <span class="mt"><i>g</i>(<i>x</i>) = <i>f</i>(<i>x</i>) + 6</span>? <span class="muted" style="font-size:21px">(SE p. 275)</span></p>
+      <div class="step pop eq sm ans"><span class="mt">2</span></div>
+      <p style="margin-top:14px">4. <span class="mt"><i>f</i>(<i>x</i>) = 2<i>x</i> − 1</span>. What is the <span class="mt"><i>y</i></span>-intercept of <span class="mt"><i>g</i>(<i>x</i>) = <i>f</i>(<i>x</i>) + 6</span>? <span class="muted" style="font-size:21px">(SE p. 275)</span></p>
+      <div class="step pop eq sm ans"><span class="mt">(0, 5)</span></div>
+    </div>
+  </div>
+  <aside class="notes">Added for this deck; not from the textbook. Have this up as students walk in; they work silently while you take attendance (about 5 minutes). The same 4 questions are on the online Day 2 bell work. Reveal the answers one at a time. Answer key: 1. A vertical translation adds to the output: g(x) = f(x) + 4 = x + 4. 2. A vertical translation changes only y: 5 − 3 = 2, so (2, 2). 3. A vertical translation does not change the slope. g(x) = 2x + 5 still has slope 2. 4. g(x) = 2x − 1 + 6 = 2x + 5, so the y-intercept moves from (0, −1) up 6 to (0, 5).</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 2 · Activity 1.2 · Slopes of Parallel Lines · SE p. 275</p>
+  <h2>Will the graphs of <span class="mt"><i>j</i>(<i>x</i>)</span> and <span class="mt"><i>q</i>(<i>x</i>)</span> ever intersect?</h2>
+  <div class="eq"><i>j</i>(<i>x</i>) = 2<i>x</i> − 1 &nbsp;&nbsp; <i>q</i>(<i>x</i>) = 2<i>x</i> + 3</div><p class="step small">No. Both lines have slope 2 and stay 4 units apart, so they are <b>parallel</b>.</p><p class="">Prove it for any line. Translate line <i>AB</i> up <i>a</i> units to make line <i>A′B′</i>.</p><div class="row" style="gap:40px"><div class="col" style="gap:10px"><p class="small">Pre-image: <span class="mt"><i>A</i>(<i>x</i>₁, <i>y</i>₁)</span>, <span class="mt"><i>B</i>(<i>x</i>₂, <i>y</i>₂)</span></p><p class="step small">Image: <span class="mt"><i>A</i>′(<i>x</i>₁, <i>y</i>₁ + <i>a</i>)</span>, <span class="mt"><i>B</i>′(<i>x</i>₂, <i>y</i>₂ + <i>a</i>)</span></p></div><div class="col" style="gap:10px"><p class="step small">Slope of the image:</p><div class="eq sm step">((<i>y</i>₂ + <i>a</i>) − (<i>y</i>₁ + <i>a</i>)) ÷ (<i>x</i>₂ − <i>x</i>₁)</div><div class="eq sm step">= (<i>y</i>₂ − <i>y</i>₁) ÷ (<i>x</i>₂ − <i>x</i>₁)</div></div></div>
+  <aside class="notes">Activity 1.2, 15–20 minutes. The a's cancel, so the slopes are the same: the image is parallel to the pre-image. Ask: Why did the x-coordinates stay the same? (A vertical translation moves only up or down.)</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 2 · Activity 1.2 · Questions 3–4 · SE p. 276</p>
+  <h2>Write the equation of a parallel line</h2>
+  <div class="row" style="gap:40px"><div class="col" style="gap:10px"><div class="card"><h3>Catalina</h3><p class="small">Parallel to <span class="mt"><i>y</i> = ½<i>x</i> + 3</span> through (2, 9): the point on the line at <i>x</i> = 2 is (2, 4), so translate up 5.</p></div></div><div class="col" style="gap:10px"><div class="card"><h3>James</h3><p class="small">Use the slope ½ and the point (2, 9): <span class="mt">9 = ½(2) + <i>b</i></span>, so <span class="mt"><i>b</i> = 8</span>.</p></div></div></div><div class="step pop eq sm ans"><i>y</i> = ½<i>x</i> + 8</div><p class="">Now you: parallel to <span class="mt"><i>y</i> = −3<i>x</i> − 1</span> through <span class="mt">(−1, 5)</span>.</p><p class="step small">Parallel, so the slope is −3: <span class="mt">5 = −3(−1) + <i>b</i></span>, so <span class="mt"><i>b</i> = 2</span>.</p><div class="step pop eq sm ans"><i>y</i> = −3<i>x</i> + 2</div>
+  <aside class="notes">Question 3 has no single answer: let students defend the method they prefer. Catalina thinks in translations; James uses the slope and a point.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 2 · Activity 1.3 · Vertical Dilations of Functions · SE pp. 277–278</p>
+  <h2>Multiply the outputs of <span class="mt"><i>f</i>(<i>x</i>) = <i>x</i></span></h2>
+  <div class="row" style="gap:28px"><div class="col" style="gap:10px"><p class="small">× 4: <span class="mt"><i>a</i>(<i>x</i>)</span></p><table class="tbl" style="font-size:22px"><tr><th>x</th><th>f(x)</th><th>a(x)</th></tr><tr><td>−2</td><td>−2</td><td class="step">−8</td></tr><tr><td>−1</td><td>−1</td><td class="step">−4</td></tr><tr><td>0</td><td>0</td><td class="step">0</td></tr><tr><td>1</td><td>1</td><td class="step">4</td></tr><tr><td>2</td><td>2</td><td class="step">8</td></tr></table><div class="step pop eq sm ans"><i>a</i>(<i>x</i>) = 4<i>x</i></div></div><div class="col" style="gap:10px"><p class="small">× ⅔: <span class="mt"><i>b</i>(<i>x</i>)</span></p><table class="tbl" style="font-size:22px"><tr><th>x</th><th>f(x)</th><th>b(x)</th></tr><tr><td>−2</td><td>−2</td><td class="step">−4/3</td></tr><tr><td>−1</td><td>−1</td><td class="step">−2/3</td></tr><tr><td>0</td><td>0</td><td class="step">0</td></tr><tr><td>1</td><td>1</td><td class="step">2/3</td></tr><tr><td>2</td><td>2</td><td class="step">4/3</td></tr></table><div class="step pop eq sm ans"><i>b</i>(<i>x</i>) = ⅔<i>x</i></div></div><div class="col" style="gap:10px"><p class="small">× (−4): <span class="mt"><i>c</i>(<i>x</i>)</span></p><table class="tbl" style="font-size:22px"><tr><th>x</th><th>f(x)</th><th>c(x)</th></tr><tr><td>−2</td><td>−2</td><td class="step">8</td></tr><tr><td>−1</td><td>−1</td><td class="step">4</td></tr><tr><td>0</td><td>0</td><td class="step">0</td></tr><tr><td>1</td><td>1</td><td class="step">−4</td></tr><tr><td>2</td><td>2</td><td class="step">−8</td></tr></table><div class="step pop eq sm ans"><i>c</i>(<i>x</i>) = −4<i>x</i></div></div></div>
+  <aside class="notes">Activity 1.3, 20–25 minutes. All three pass through (0, 0): a dilation keeps the origin fixed. The slope becomes the factor: 4, 2/3, −4. Ask: f(−1) = −1 and c(−1) = 4. What did the dilation do to the value at x = −1? (Multiplied it by −4.)</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 2 · Activity 1.3 · Definition · SE p. 279</p>
+  <h2>Vertical dilation: <span class="mt"><i>y</i> = <i>a</i> · <i>f</i>(<i>x</i>)</span></h2>
+  <div class="row" style="gap:40px"><div class="col" style="gap:10px"><div class="col" style="gap:18px"><p class="step "><span class="mt">|<i>a</i>| > 1</span>: the graph <b>stretches</b> vertically (steeper).</p><p class="step "><span class="mt">0 < |<i>a</i>| < 1</span>: it <b>compresses</b> vertically (less steep).</p><p class="step "><span class="mt"><i>a</i> < 0</span>: it also <b>reflects</b> across the <i>x</i>-axis.</p><p class="step ">For <span class="mt"><i>f</i>(<i>x</i>) = <i>x</i></span>, the new slope is <span class="cm"><span class="mt"><i>a</i></span></span>; the <i>y</i>-intercept stays (0, 0).</p></div></div><div class="col" style="gap:10px"><div class="graph" data-g='{"w": 330, "h": 330, "x": [-6, 6], "y": [-6, 6], "gx": [1, 2], "gy": [1, 2], "lines": [{"p": [[0, 0], [1, 1]], "label": "f(x)"}, {"p": [[0, 0], [1, 4]], "label": "4f(x)", "c": "a", "step": true}, {"p": [[0, 0], [3, 2]], "label": "⅔f(x)", "c": "b", "step": true}], "pts": [], "alt": "f(x) = x, 4f(x) and two-thirds f(x)"}'></div></div></div>
+  <aside class="notes">Have students copy the definition. Watch for students who say the slope 'increases' when a = −3: it gets steeper, but the slope is −3.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 2 · Summary</p>
+  <h2>Translations vs. dilations</h2>
+  <div class="row" style="gap:40px"><div class="col" style="gap:10px"><div class="card"><h3>Translation <span class="mt"><i>f</i>(<i>x</i>) + <i>d</i></span></h3><p class="small">Moves the line up or down. Same slope; new <i>y</i>-intercept. Parallel lines.</p></div></div><div class="col" style="gap:10px"><div class="card"><h3>Dilation <span class="mt"><i>a</i> · <i>f</i>(<i>x</i>)</span></h3><p class="small">Stretches, compresses or reflects. New slope; for <span class="mt"><i>f</i>(<i>x</i>) = <i>x</i></span> the <i>y</i>-intercept stays (0, 0).</p></div></div></div><p class="step small">Parallel line through a point: keep the slope, then find <i>b</i> with the point.</p>
+  <aside class="notes">To close Day 2, have students reread the Essential Question. End of Day 2.</aside>
+</section>
+
+<section class="slide divider">
+  <p class="eyebrow">Lesson 1</p>
+  <h1>Day 3</h1>
+  <p class="step" style="font-size:32px;max-width:900px">Essential Question: How can you transform a function? What effects do different transformations have on the characteristics of linear functions?</p>
+  <aside class="notes">Show this, then go to the bell work while you take attendance. Afterward, have a student read the Essential Question aloud and ask two or three students to summarize Day 2: How is a · f(x) different from f(x) + d?</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 3 · Bell Work · Review of Day 2</p>
+  <h2>Warm up: work these on your own</h2>
+  <div class="row" style="gap:56px;margin-top:6px">
+    <div class="col">
+      <p>1. <span class="mt"><i>f</i>(<i>x</i>) = <i>x</i></span> and <span class="mt"><i>g</i>(<i>x</i>) = 3<i>f</i>(<i>x</i>)</span>. What is the slope of <span class="mt"><i>g</i>(<i>x</i>)</span>? <span class="muted" style="font-size:21px">(SE p. 277)</span></p>
+      <div class="step pop eq sm ans"><span class="mt">3</span></div>
+      <p style="margin-top:14px">2. How is <span class="mt"><i>g</i>(<i>x</i>) = −2<i>f</i>(<i>x</i>)</span> related to <span class="mt"><i>f</i>(<i>x</i>) = <i>x</i></span>? <span class="muted" style="font-size:21px">(SE p. 278)</span></p>
+      <div class="step pop eq sm ans">Stretched vertically by 2 and reflected across the <span class="mt"><i>x</i></span>-axis</div>
+    </div>
+    <div class="col">
+      <p>3. Which function is a vertical compression of <span class="mt"><i>f</i>(<i>x</i>) = <i>x</i></span>? <span class="muted" style="font-size:21px">(SE p. 278)</span></p>
+      <div class="step pop eq sm ans"><span class="mt"><i>g</i>(<i>x</i>) = ½<i>f</i>(<i>x</i>)</span></div>
+      <p style="margin-top:14px">4. <span class="mt"><i>f</i>(<i>x</i>) = <i>x</i></span> and <span class="mt"><i>g</i>(<i>x</i>) = 2<i>f</i>(<i>x</i>) − 5</span>. What is the <span class="mt"><i>y</i></span>-intercept of <span class="mt"><i>g</i>(<i>x</i>)</span>? <span class="muted" style="font-size:21px">(SE p. 280)</span></p>
+      <div class="step pop eq sm ans"><span class="mt">(0, −5)</span></div>
+    </div>
+  </div>
+  <aside class="notes">Added for this deck; not from the textbook. Have this up as students walk in; they work silently while you take attendance (about 5 minutes). The same 4 questions are on the online Day 3 bell work. Reveal the answers one at a time. Answer key: 1. g(x) = 3x. A vertical dilation by 3 multiplies the slope of f(x) = x by 3. 2. The 2 stretches the graph and the negative sign reflects it across the x-axis. 3. Multiplying by a number between 0 and 1 compresses the graph toward the x-axis. 4. g(x) = 2x − 5. The dilation keeps (0, 0) fixed, then the graph moves down 5.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 3 · Activity 1.4 · Graphing Linear Transformations · SE pp. 280–281</p>
+  <h2>Describe each transformation of <span class="mt"><i>f</i>(<i>x</i>) = <i>x</i></span>, then graph <i>g</i>(<i>x</i>)</h2>
+  <div class="grid3" style="gap:14px 18px"><div class="card"><h3>a. <span class="mt"><i>g</i>(<i>x</i>) = 2<i>f</i>(<i>x</i>) + 7</span></h3><p class="step small">Stretch by 2, then up 7</p><div class="step pop eq sm ans">2<i>x</i> + 7</div></div><div class="card"><h3>b. <span class="mt"><i>g</i>(<i>x</i>) = 3<i>f</i>(<i>x</i>) − 1</span></h3><p class="step small">Stretch by 3, then down 1</p><div class="step pop eq sm ans">3<i>x</i> − 1</div></div><div class="card"><h3>c. <span class="mt"><i>g</i>(<i>x</i>) = ⅓<i>f</i>(<i>x</i>) + 2</span></h3><p class="step small">Compress by ⅓, then up 2</p><div class="step pop eq sm ans">⅓<i>x</i> + 2</div></div><div class="card"><h3>d. <span class="mt"><i>g</i>(<i>x</i>) = ½<i>f</i>(<i>x</i>) − 3</span></h3><p class="step small">Compress by ½, then down 3</p><div class="step pop eq sm ans">½<i>x</i> − 3</div></div><div class="card"><h3>e. <span class="mt"><i>g</i>(<i>x</i>) = −<i>f</i>(<i>x</i>) − 4</span></h3><p class="step small">Reflect across the <i>x</i>-axis, then down 4</p><div class="step pop eq sm ans">−<i>x</i> − 4</div></div><div class="card"><h3>f. <span class="mt"><i>g</i>(<i>x</i>) = −⅔<i>f</i>(<i>x</i>) + 5</span></h3><p class="step small">Reflect and compress by ⅔, then up 5</p><div class="step pop eq sm ans">−⅔<i>x</i> + 5</div></div></div>
+  <aside class="notes">Activity 1.4, 20 minutes. To graph g(x), start at the y-intercept (0, d) and use the slope a. Teacher-guide note: the slide numbers two items 'a.' in the student slides; they are b and e. Ask: Which number tells you the slope? Which tells you the y-intercept?</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 3 · Activity 1.4 · Question 2 · SE p. 281</p>
+  <h2>What do <span class="cm"><span class="mt"><i>a</i></span></span> and <span class="cp"><span class="mt"><i>d</i></span></span> do in <span class="mt"><i>g</i>(<i>x</i>) = <i>a</i> · <i>f</i>(<i>x</i>) + <i>d</i></span>?</h2>
+  <div class="row" style="gap:40px"><div class="col" style="gap:10px"><div class="card"><h3><span class="cm"><span class="mt"><i>a</i></span></span></h3><p class="step small">Changes the slope. For <span class="mt"><i>f</i>(<i>x</i>) = <i>x</i></span> the slope becomes <span class="mt"><i>a</i></span>: steeper when <span class="mt">|<i>a</i>| > 1</span>, less steep when <span class="mt">0 < |<i>a</i>| < 1</span>, reflected when <span class="mt"><i>a</i> < 0</span>.</p><p class="step small">Does not change the <i>y</i>-intercept.</p></div></div><div class="col" style="gap:10px"><div class="card"><h3><span class="cp"><span class="mt"><i>d</i></span></span></h3><p class="step small">Does not change the slope.</p><p class="step small">Moves the <i>y</i>-intercept to <span class="mt">(0, <i>d</i>)</span>: up when <span class="mt"><i>d</i> > 0</span>, down when <span class="mt"><i>d</i> < 0</span>.</p></div></div></div>
+  <aside class="notes">TE correction: the teacher guide says the slope 'increases' or 'decreases'; it means steepness. For a = −3 the slope is −3.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 3 · Activity 1.5 · Hit the Targets · SE pp. 282–283</p>
+  <h2>Aim with <span class="mt"><i>g</i>(<i>x</i>) = <i>a</i> · <i>f</i>(<i>x</i>) + <i>d</i></span></h2>
+  <div class="row" style="gap:40px"><div class="col" style="gap:10px"><p class="small">Each shot is the graph of a transformation of <span class="mt"><i>f</i>(<i>x</i>) = <i>x</i></span>. Hit each target.</p><div class="card"><h3>Version B: <span class="mt"><i>a</i> = 1</span> or <span class="mt">−1</span>; choose <span class="mt"><i>d</i></span></h3><p class="step small"><span class="mt">(−4, 6)</span>: <span class="mt"><i>a</i> = −1, <i>d</i> = 2</span> &nbsp; <span class="mt">(5, 4)</span>: <span class="mt"><i>a</i> = 1, <i>d</i> = −1</span><br><span class="mt">(1, −3)</span>: <span class="mt"><i>a</i> = −1, <i>d</i> = −2</span> &nbsp; <span class="mt">(−5, 1)</span>: <span class="mt"><i>a</i> = −1, <i>d</i> = −4</span></p></div><div class="card"><h3>Version C: <span class="mt"><i>d</i> = 0</span>; choose <span class="mt"><i>a</i></span></h3><p class="step small"><span class="mt">(−4, 6)</span>: <span class="mt"><i>a</i> = −3/2</span> &nbsp; <span class="mt">(5, 4)</span>: <span class="mt"><i>a</i> = 4/5</span><br><span class="mt">(1, −3)</span>: <span class="mt"><i>a</i> = −3</span> &nbsp; <span class="mt">(−5, 1)</span>: <span class="mt"><i>a</i> = −1/5</span></p></div></div><div class="col" style="gap:10px"><div class="graph" data-g='{"w": 330, "h": 330, "x": [-8, 8], "y": [-8, 8], "gx": [1, 2], "gy": [1, 2], "lines": [], "pts": [[-4, 6, "(−4, 6)"], [5, 4, "(5, 4)"], [1, -3, "(1, −3)"], [-5, 1, "(−5, 1)"]], "alt": "Four targets at (−4, 6), (5, 4), (1, −3) and (−5, 1)"}'></div></div></div>
+  <aside class="notes">Activity 1.5, 20 minutes. Check any answer by substituting the target's x: for (−5, 1) with a = −1, d = −4: −(−5) − 4 = 1. Other Version B answers exist (for example a = 1, d = 6 for (−5, 1)). TE correction: for (−5, 1) the teacher guide's a = 1, d = 4 misses; it is d = 6. Version C's −6/4 simplifies to −3/2.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 3 · Talk the Talk · SE p. 284</p>
+  <h2>Match each graph to an equation in terms of <span class="mt"><i>f</i>(<i>x</i>)</span></h2>
+  <div class="grid3" style="gap:14px 18px"><div class="card"><h3><span class="mt"><i>k</i>(<i>x</i>)</span></h3><div class="step pop eq sm ans"><i>f</i>(<i>x</i>) + 8</div><p class="step small">Translated up 8.</p></div><div class="card"><h3><span class="mt"><i>h</i>(<i>x</i>)</span></h3><div class="step pop eq sm ans">2 · <i>f</i>(<i>x</i>)</div><p class="step small">Stretched by 2: steeper, through (0, 0).</p></div><div class="card"><h3><span class="mt"><i>g</i>(<i>x</i>)</span></h3><div class="step pop eq sm ans">⅓ · <i>f</i>(<i>x</i>)</div><p class="step small">Compressed by ⅓: less steep, through (0, 0).</p></div><div class="card"><h3><span class="mt"><i>j</i>(<i>x</i>)</span></h3><div class="step pop eq sm ans"><i>f</i>(<i>x</i>) − 7</div><p class="step small">Translated down 7.</p></div></div>
+  <aside class="notes">Talk the Talk, 10 minutes. Students match the four transformed graphs in their book (SE p. 284) to the equations.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Essential Question · Answered</p>
+  <h2>How can you transform a function?</h2>
+  <div class="col" style="gap:20px;margin-top:6px"><p class="step "><b>Translation</b> <span class="mt"><i>y</i> = <i>f</i>(<i>x</i>) + <i>d</i></span>: moves the graph up (<span class="mt"><i>d</i> > 0</span>) or down (<span class="mt"><i>d</i> < 0</span>). The slope stays the same, so the new line is parallel; the <i>y</i>-intercept changes.</p><p class="step "><b>Dilation</b> <span class="mt"><i>y</i> = <i>a</i> · <i>f</i>(<i>x</i>)</span>: stretches (<span class="mt">|<i>a</i>| > 1</span>) or compresses (<span class="mt">0 < |<i>a</i>| < 1</span>) the graph; <span class="mt"><i>a</i> < 0</span> also reflects it across the <i>x</i>-axis. The slope changes; for <span class="mt"><i>f</i>(<i>x</i>) = <i>x</i></span> it becomes <span class="mt"><i>a</i></span>.</p></div>
+  <aside class="notes">Have students answer the Essential Question on the lesson opener page.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Exit Ticket</p>
+  <h2>Show what you know</h2>
+  <div class="col" style="gap:12px;margin-top:6px"><p>1. <span class="mt"><i>f</i>(<i>x</i>) = <i>x</i></span> and <span class="mt"><i>g</i>(<i>x</i>) = 3<i>f</i>(<i>x</i>) − 2</span>. Describe the transformation and write <span class="mt"><i>g</i>(<i>x</i>)</span>.</p><div class="step pop eq sm ans">Stretch by 3, down 2: <i>g</i>(<i>x</i>) = 3<i>x</i> − 2</div><p>2. Write the line parallel to <span class="mt"><i>y</i> = 4<i>x</i> − 1</span> through <span class="mt">(1, 7)</span>.</p><div class="step pop eq sm ans"><i>y</i> = 4<i>x</i> + 3</div><p>3. <span class="mt">(2, 5)</span> is on <span class="mt"><i>f</i>(<i>x</i>)</span>. Which point is on <span class="mt">−2 · <i>f</i>(<i>x</i>)</span>?</p><div class="step pop eq sm ans">(2, −10)</div></div>
+  <aside class="notes">Added for this deck; not from the textbook. Give 3–4 minutes, collect the answers, and use them to decide who needs Skills Practice. Work: 1. 3x is the stretch, − 2 moves the line down 2. 2. 7 = 4(1) + b, so b = 3. 3. Multiply the output by −2: 5 · (−2) = −10.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Prepare · SE p. 286</p>
+  <h2>Write the equation of each line</h2>
+  <div class="row" style="gap:40px"><div class="col" style="gap:10px"><div class="graph" data-g='{"w": 360, "h": 360, "x": [-10, 6], "y": [-12, 4], "gx": [1, 2], "gy": [1, 2], "lines": [{"p": [[-8, -10], [4, -2]]}], "pts": [[-8, -10, "(−8, −10)"], [-2, -6, "(−2, −6)"], [4, -2, "(4, −2)"]], "alt": "Line through (−8, −10), (−2, −6) and (4, −2)"}'></div><div class="step pop eq sm ans"><i>f</i>(<i>x</i>) = ⅔<i>x</i> − 14/3</div></div><div class="col" style="gap:10px"><div class="graph" data-g='{"w": 360, "h": 360, "x": [-8, 8], "y": [-4, 6], "gx": [1, 2], "gy": [1, 2], "lines": [{"p": [[0, 2], [4, 1]]}], "pts": [[0, 2, "(0, 2)"], [4, 1, "(4, 1)"]], "alt": "Line through (0, 2) and (4, 1)"}'></div><div class="step pop eq sm ans"><i>g</i>(<i>x</i>) = −¼<i>x</i> + 2</div></div></div>
+  <aside class="notes">From the Lesson 1 Assignment. TE correction: the teacher guide gives f(x) = (2/3)x − 5, but the plotted points give slope 2/3 and y-intercept (0, −14/3). Check: (2/3)(4) − 14/3 = 8/3 − 14/3 = −2. ✓</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Practice Online</p>
+  <h2>Bell Work, Homework and Quiz</h2>
+  <div class="row" style="margin-top:20px"><div class="col"><div class="card"><h3>Bell work</h3><p class="small"><b><a class="go" href="t2-lesson1-bellwork-day1.html" target="_blank" onclick="event.stopPropagation()">Day 1 →</a></b> · <b><a class="go" href="t2-lesson1-bellwork-day2.html" target="_blank" onclick="event.stopPropagation()">Day 2 →</a></b> · <b><a class="go" href="t2-lesson1-bellwork-day3.html" target="_blank" onclick="event.stopPropagation()">Day 3 →</a></b></p><p class="small">4 questions each, the same as the bell work slides. Scored when students submit.</p></div></div><div class="col"><div class="card"><h3><a class="go" href="t2-lesson1-homework.html" target="_blank" onclick="event.stopPropagation()">Homework →</a></h3><p class="small">10 practice questions. Each answer is checked right away, with an explanation.</p></div></div><div class="col"><div class="card"><h3><a class="go" href="t2-lesson1-quiz.html" target="_blank" onclick="event.stopPropagation()">Quiz →</a></h3><p class="small">10 questions, scored when students submit. Correct answers are shown after submitting.</p></div></div></div>
+  <p class="small muted" style="margin-top:6px">All are multiple choice. The homework follows the Lesson 1 Assignment (SE pp. 285–286).</p>
+  <aside class="notes">Added for this deck; not from the textbook. Click a title to open it in a new tab. Put the day's bell work link up as students walk in. The 150-day pacing calendar (topic2-pacing-150.html) gives the day for each homework and quiz.</aside>
+</section>
+
+</div>
+
+<nav id="bar" aria-label="Slide controls">
+  <span id="brand"><svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#3050b8"/><g fill="#fff"><circle cx="16" cy="7.5" r="2.3"/><circle cx="12.8" cy="11.8" r="2.5" opacity=".92"/><circle cx="19.2" cy="11.8" r="2.5" opacity=".92"/><circle cx="16" cy="14.6" r="2.6"/><circle cx="11.8" cy="17.6" r="2.7" opacity=".82"/><circle cx="20.2" cy="17.6" r="2.7" opacity=".82"/></g><rect x="15.2" y="20.5" width="1.6" height="6.5" rx=".8" fill="#9fd18b"/></svg><span>Bluebonnet <strong>Algebra I</strong></span></span>
+  <button id="prev" type="button" aria-label="Previous step">← Back</button>
+  <button id="next" type="button" aria-label="Next step">Next →</button>
+  <div id="prog"><div></div></div>
+  <span id="hint">→ / Space next · ← back · N notes · F full screen</span>
+  <span id="count"></span>
+  <button id="nb" type="button" aria-pressed="false">Notes</button>
+  <button id="fs" type="button">Full screen</button>
+</nav>
+<div id="notes" hidden><b>Speaker notes</b><p id="notesText"></p></div>
+
+<script>
+const stage = document.getElementById('stage');
+// {{a|b}} → stacked fraction
+stage.innerHTML = stage.innerHTML.replace(/\{\{(.+?)\|(.+?)\}\}/g, '<span class="fr"><span>$1</span><span>$2</span></span>');
+
+// Graph spec (data-g): w,h px; x,y = [min,max]; gx,gy = [grid step, label step];
+// lines: [{p:[[x,y],[x,y]], label, c:'a'|'b'|'c' (pool color), dash, step (appears on its own click), seg (just this segment)}] extended to the window; pts: [[x,y,label]].
+// ptsStep: each point appears on its own click, in order, before the lines.
+// Keep in step with draw_graph() in make_pptx.py.
+const GM = {L: 34, R: 12, T: 12, B: 26};
+function clipLine([[ax, ay], [bx, by]], [x0, x1], [y0, y1]) {
+  const dx = bx - ax, dy = by - ay; let lo = -Infinity, hi = Infinity;
+  for (const [p, q] of [[-dx, ax - x0], [dx, x1 - ax], [-dy, ay - y0], [dy, y1 - ay]]) {
+    if (p === 0) { if (q < 0) return null; continue; }
+    const r = q / p; if (p < 0) lo = Math.max(lo, r); else hi = Math.min(hi, r);
+  }
+  return lo > hi ? null : [[ax + lo * dx, ay + lo * dy], [ax + hi * dx, ay + hi * dy]];
+}
+function graphSVG(g) {
+  const {w: W, h: H} = g, [x0, x1] = g.x, [y0, y1] = g.y;
+  const X = v => (GM.L + (v - x0) / (x1 - x0) * (W - GM.L - GM.R)).toFixed(1);
+  const Y = v => (GM.T + (y1 - v) / (y1 - y0) * (H - GM.T - GM.B)).toFixed(1);
+  const ticks = (a, b, t) => { const o = []; for (let v = Math.ceil(a / t - 1e-9) * t; v <= b + 1e-9; v += t) o.push(+v.toFixed(6)); return o; };
+  const num = v => String(v).replace('-', '−');
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${g.alt || 'graph'}">`;
+  s += `<rect class="g-bg" x=".5" y=".5" width="${W - 1}" height="${H - 1}" rx="8"/>`;
+  for (const v of ticks(x0, x1, g.gx[0])) s += `<line class="g-grid" x1="${X(v)}" y1="${GM.T}" x2="${X(v)}" y2="${H - GM.B}"/>`;
+  for (const v of ticks(y0, y1, g.gy[0])) s += `<line class="g-grid" x1="${GM.L}" y1="${Y(v)}" x2="${W - GM.R}" y2="${Y(v)}"/>`;
+  const ax = x0 <= 0 && 0 <= x1 ? 0 : x0, ay = y0 <= 0 && 0 <= y1 ? 0 : y0;
+  s += `<line class="g-axis" x1="${X(ax)}" y1="${GM.T}" x2="${X(ax)}" y2="${H - GM.B}"/>`;
+  s += `<line class="g-axis" x1="${GM.L}" y1="${Y(ay)}" x2="${W - GM.R}" y2="${Y(ay)}"/>`;
+  for (const v of ticks(x0, x1, g.gx[1])) s += `<text class="g-tick" x="${X(v)}" y="${H - GM.B + 17}" text-anchor="middle">${num(v)}</text>`;
+  for (const v of ticks(y0, y1, g.gy[1])) s += `<text class="g-tick" x="${GM.L - 6}" y="${+Y(v) + 4}" text-anchor="end">${num(v)}</text>`;
+  const ptsSVG = () => (g.pts || []).map(([px, py, lab]) => (g.ptsStep ? '<g class="step">' : '') +
+    `<circle class="g-pt" cx="${X(px)}" cy="${Y(py)}" r="5.5"/>` +
+    (lab ? `<text class="g-plab" x="${+X(px) + 9}" y="${+Y(py) - 8}">${lab}</text>` : '') +
+    (g.ptsStep ? '</g>' : '')).join('');
+  if (g.ptsStep) s += ptsSVG();
+  for (const ln of g.lines || []) {
+    const c = ln.seg ? ln.p : clipLine(ln.p, g.x, g.y); if (!c) continue;
+    if (ln.step) s += '<g class="step">';
+    s += `<line class="g-line${ln.c ? ' g' + ln.c : ''}"${ln.dash ? ' stroke-dasharray="10 7"' : ''} x1="${X(c[0][0])}" y1="${Y(c[0][1])}" x2="${X(c[1][0])}" y2="${Y(c[1][1])}"/>`;
+    if (ln.label) { const e = c[0][1] > c[1][1] ? c[0] : c[1];
+      const right = +X(e[0]) > W / 2;
+      s += `<text class="g-llab" x="${+X(e[0]) + (right ? -12 : 8)}" y="${+Y(e[1]) + 16}" text-anchor="${right ? 'end' : 'start'}">${ln.label}</text>`; }
+    if (ln.step) s += '</g>';
+  }
+  if (!g.ptsStep) s += ptsSVG();
+  return s + '</svg>';
+}
+stage.querySelectorAll('.graph').forEach(el => { el.innerHTML = graphSVG(JSON.parse(el.dataset.g)); });
+
+const slides = [...stage.querySelectorAll('.slide')];
+const steps = slides.map(s => [...s.querySelectorAll('.step')]);
+let i = 0, k = 0;
+
+function readHash(){ const m = /^#s(\d+)$/.exec(location.hash); return m ? Math.min(Math.max(+m[1] - 1, 0), slides.length - 1) : 0; }
+
+function show(n, revealAll){
+  slides[i].classList.remove('on');
+  i = n;
+  k = revealAll ? steps[i].length : 0;
+  steps[i].forEach((el, j) => el.classList.toggle('shown', j < k));
+  slides[i].classList.add('on');
+  update();
+}
+function next(){
+  if (k < steps[i].length) { steps[i][k++].classList.add('shown'); update(); }
+  else if (i < slides.length - 1) show(i + 1, false);
+}
+function prev(){
+  if (k > 0) { steps[i][--k].classList.remove('shown'); update(); }
+  else if (i > 0) show(i - 1, true);
+}
+function update(){
+  document.getElementById('count').textContent = (i + 1) + ' / ' + slides.length;
+  document.querySelector('#prog>div').style.width = ((i + 1) / slides.length * 100) + '%';
+  history.replaceState(null, '', '#s' + (i + 1));
+  const a = slides[i].querySelector('aside.notes');
+  document.getElementById('notesText').textContent = a ? a.textContent : '';
+}
+function fit(){
+  // Bar height varies (iPhone safe-area padding), so center the slide in whatever space is left above it.
+  const bar = document.getElementById('bar').offsetHeight, W = innerWidth, H = innerHeight - bar, portrait = matchMedia('(orientation:portrait)').matches;
+  const s = portrait ? W / 760 : Math.min(W / 1280, H / 720);
+  stage.style.height = portrait ? H / s + 'px' : '';
+  stage.style.top = H / 2 + 'px';
+  document.getElementById('notes').style.bottom = bar + 'px';
+  stage.style.transform = `translate(-50%,-50%) scale(${s})`;
+}
+function fullscreen(){
+  try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen().catch(() => {}); } catch (e) {}
+}
+
+stage.addEventListener('click', next);
+// Swipe left = next, swipe right = back (taps still advance via click).
+let tx = 0, ty = 0;
+stage.addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, {passive: true});
+stage.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) dx < 0 ? next() : prev();
+}, {passive: true});
+document.getElementById('next').addEventListener('click', next);
+document.getElementById('prev').addEventListener('click', prev);
+document.getElementById('fs').addEventListener('click', fullscreen);
+function toggleNotes(){
+  const n = document.getElementById('notes'); n.hidden = !n.hidden;
+  document.getElementById('nb').setAttribute('aria-pressed', String(!n.hidden));
+}
+document.getElementById('nb').addEventListener('click', toggleNotes);
+addEventListener('keydown', e => {
+  if (e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
+  if (['ArrowRight','ArrowDown',' ','PageDown','Enter'].includes(e.key)) { e.preventDefault(); next(); }
+  else if (['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
+  else if (e.key === 'Home') show(0, false);
+  else if (e.key === 'End') show(slides.length - 1, true);
+  else if (e.key === 'f' || e.key === 'F') fullscreen();
+  else if (e.key === 'n' || e.key === 'N') toggleNotes();
+});
+addEventListener('resize', fit);
+fit();
+slides[0].classList.add('on');
+show(readHash(), false);
+</script>

@@ -1,0 +1,444 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Determining Slopes of Perpendicular Lines · Bluebonnet Algebra I · Section 504</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<style>
+/* Layout: a fixed 1280×720 "slide" on graph paper, scaled to fit any screen; steps reveal one click at a time. */
+:root{
+  /* Bluebonnet Algebra I palette (ALGEBRA-platform/app/globals.css); orange = slope, blue = point stays. */
+  --paper:#f7f7fb; --rule:#e6e8f2; --ink:#16171d; --muted:#5f6272; --card:#ffffff; --line:#e3e4ec;
+  --slope:#c9561f; --point:#3050b8; --leaf:#4f8a3c; --soft:#eaeefb; --ga:#4f8a3c; --gb:#7a4fc4; --gc:#16171d; --ans:#4f8a3c; --ans-bg:#edf5e9; --warn-bg:#fdf3e7;
+  --display:ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --body:ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --math:"STIX Two Text", "Cambria Math", "Times New Roman", serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#111218; --rule:#1f2129; --ink:#eceef6; --muted:#9ea2b3; --card:#1a1c24; --line:#2c2f3b;
+  --slope:#ff9259; --point:#93a9f5; --leaf:#8cc47a; --soft:#232a45; --ga:#8cc47a; --gb:#b79cff; --gc:#eceef6; --ans:#8cc47a; --ans-bg:#1f2a1b; --warn-bg:#2e2418; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#111218; --rule:#1f2129; --ink:#eceef6; --muted:#9ea2b3; --card:#1a1c24; --line:#2c2f3b;
+  --slope:#ff9259; --point:#93a9f5; --leaf:#8cc47a; --soft:#232a45; --ga:#8cc47a; --gb:#b79cff; --gc:#eceef6; --ans:#8cc47a; --ans-bg:#1f2a1b; --warn-bg:#2e2418; color-scheme:dark}
+
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);overflow:hidden;
+  background-image:linear-gradient(var(--rule) 1px,transparent 1px),linear-gradient(90deg,var(--rule) 1px,transparent 1px);
+  background-size:32px 32px}
+#stage{position:absolute;left:50%;top:calc(50% - 22px);width:1280px;height:720px;transform-origin:center;cursor:pointer;touch-action:manipulation}
+.slide{position:absolute;inset:0;padding:48px 72px 40px;display:none;flex-direction:column;gap:18px;font-size:26px;line-height:1.4}
+.slide.on{display:flex;animation:slideIn .35s ease}
+@keyframes slideIn{from{opacity:0}to{opacity:1}}
+
+.eyebrow{font-size:16px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--point)}
+h1,h2{font-family:var(--display);font-weight:800;line-height:1.08;letter-spacing:-.02em;text-wrap:balance;margin:0}
+h1{font-size:76px}
+h2{font-size:46px}
+h3{font-family:var(--display);font-weight:600;font-size:28px;margin:0}
+p{margin:0}
+.muted{color:var(--muted)}
+.small{font-size:21px}
+.row{display:flex;gap:36px;align-items:flex-start}
+.col{display:flex;flex-direction:column;gap:14px;flex:1;min-width:0}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 22px;display:flex;flex-direction:column;gap:10px}
+
+/* math */
+.eq,.mt{font-family:var(--math);font-weight:500}
+.eq{font-size:38px;line-height:1.5}
+.eq.big{font-size:60px}
+.eq.sm{font-size:31px}
+.eq i,.mt i{font-style:italic}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.78em;line-height:1.15;margin:0 .1em}
+.fr>span:first-child{border-bottom:.07em solid currentColor;padding:0 .2em}
+.cm{color:var(--slope);font-weight:600}
+.cp{color:var(--point);font-weight:600}
+
+.ans{background:var(--ans-bg);border-radius:8px;padding:8px 18px;align-self:flex-start}
+.ans::before{content:"Answer";margin-right:14px;vertical-align:.25em;font-family:var(--body);font-size:15px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ans)}
+.warn{background:var(--warn-bg);border-radius:8px;padding:10px 18px;font-size:22px;align-self:flex-start}
+.think{border:2px dashed var(--point);border-radius:24px;padding:16px 26px;font-size:25px;align-self:flex-start;max-width:760px}
+
+table.tbl{border-collapse:collapse;font-family:var(--math);font-size:30px;text-align:center;font-variant-numeric:tabular-nums}
+table.tbl th,table.tbl td{border:2px solid var(--line);padding:6px 26px;background:var(--card)}
+table.tbl th{font-style:italic;background:var(--rule)}
+table.cmp{border-collapse:collapse;width:100%;font-size:24px}
+table.cmp th,table.cmp td{border-bottom:1px solid var(--line);padding:10px 14px;text-align:left}
+table.cmp th{font-family:var(--display);font-size:26px}
+
+.foot{margin-top:auto;font-size:15px;line-height:1.5;color:var(--muted)}
+.foot strong{color:var(--point)} .foot a{color:var(--point)}
+a.go{color:var(--point);text-decoration:none} a.go:hover{text-decoration:underline}
+
+/* graphs: drawn from data-g by graphSVG(); make_pptx.py draws the same spec */
+.graph{flex:none}
+.graph svg{display:block;max-width:100%;height:auto}
+.g-bg{fill:var(--card);stroke:var(--line)}
+.g-grid{stroke:var(--rule);stroke-width:1}
+.g-axis{stroke:var(--muted);stroke-width:1.5}
+.g-line{stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+.g-pt{fill:var(--point)}
+.g-line.ga{stroke:var(--ga)} .g-line.gb{stroke:var(--gb)} .g-line.gc{stroke:var(--gc)}
+.ga{color:var(--ga);font-weight:600} .gb{color:var(--gb);font-weight:600} .gc{color:var(--gc);font-weight:600}
+.g-tick{fill:var(--muted);font:13px var(--body)}
+.g-plab{fill:var(--point);font:600 15px var(--body)}
+.g-llab{fill:var(--ink);font:italic 17px var(--math)}
+.divider{justify-content:center}
+.divider h1{font-size:110px}
+
+/* step reveal: space is reserved, like PowerPoint "Appear" */
+.step{opacity:0;visibility:hidden}
+.step.shown{opacity:1;visibility:visible;animation:rise .45s cubic-bezier(.2,.8,.2,1)}
+.step.wipe.shown{animation:wipe .7s ease-out}
+.step.pop.shown{animation:pop .4s cubic-bezier(.3,1.6,.5,1)}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes wipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes pop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.slide.on,.step.shown{animation:none!important}}
+
+/* controls */
+#bar{position:fixed;left:0;right:0;bottom:0;height:44px;padding:0 16px env(safe-area-inset-bottom,0px);display:flex;align-items:center;gap:10px;
+  background:var(--card);border-top:1px solid var(--line);font-size:14px;color:var(--muted);z-index:2}
+#bar button{font:inherit;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:6px;padding:5px 12px;cursor:pointer}
+#bar button:hover{background:var(--soft)}
+#bar button:focus-visible{outline:2px solid var(--point);outline-offset:2px}
+#prog{flex:1;height:4px;background:var(--rule);border-radius:2px;overflow:hidden}
+#prog>div{height:100%;width:0;background:var(--point);transition:width .3s}
+#count{font-variant-numeric:tabular-nums;min-width:64px;text-align:right}
+#brand{display:flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none;font-size:15px;white-space:nowrap}
+#brand strong{color:var(--point)}
+@media (max-width:900px){#hint{display:none}}
+@media (max-width:560px){#brand,#fs{display:none} #bar{gap:8px;padding:0 10px} #count{min-width:0}}
+#bar button{touch-action:manipulation}
+/* Portrait (phones, iPad upright): a 760px-wide slide whose height fit() matches to the screen; columns stack. */
+@media (orientation:portrait){
+  #stage{width:760px}
+  .slide{padding:40px 36px 32px;overflow-y:auto}
+  .row{flex-direction:column;gap:20px}
+  .grid3{grid-template-columns:1fr}
+  h1{font-size:60px} .divider h1{font-size:84px} .eq.big{font-size:48px}
+}
+.slide aside.notes{display:none}
+#notes{position:fixed;left:0;right:0;bottom:44px;max-height:34vh;overflow:auto;z-index:2;padding:14px 20px;
+  background:var(--card);border-top:2px solid var(--point);font-size:17px;line-height:1.5}
+#notes b{display:block;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--point)}
+/* table cells revealed one at a time keep their border; only the text is hidden */
+table td.step{opacity:1;visibility:visible}
+table td.step:not(.shown){color:transparent}
+</style>
+
+<div id="stage">
+<section class="slide">
+  <p class="eyebrow">Bluebonnet Algebra I · Module 2 · Topic 2 · Lesson 3 · Student Edition pp. 305–318</p>
+  <h1 style="margin-top:6px;font-size:56px">Determining Slopes of Perpendicular Lines</h1>
+  <div class="eq" style="margin-top:8px;font-size:40px"><span class="cm"><i>m</i><sub>1</sub></span> · <span class="cm"><i>m</i><sub>2</sub></span> = −1</div>
+  <p style="font-size:24px;margin-top:6px"><b>Section 504 Version</b></p>
+  <p style="font-size:24px;margin-top:6px">Bell work: <b><a class="go" href="t2-lesson3-bellwork-day1-504.html" target="_blank" onclick="event.stopPropagation()">Day 1 →</a></b> · <b><a class="go" href="t2-lesson3-bellwork-day2-504.html" target="_blank" onclick="event.stopPropagation()">Day 2 →</a></b> &nbsp;|&nbsp; Practice: <b><a class="go" href="t2-lesson3-homework-504.html" target="_blank" onclick="event.stopPropagation()">Homework →</a></b> · <b><a class="go" href="t2-lesson3-quiz-504.html" target="_blank" onclick="event.stopPropagation()">Quiz →</a></b></p>
+  <p class="muted small">Click, or press → / Space, to reveal each step. ← goes back. F = full screen.</p>
+  <p class="foot"><strong>Bluebonnet Algebra I</strong> · a companion to Bluebonnet Learning Secondary Mathematics, Algebra I, Edition 1<br>This work is based on original works of the Texas Education Agency and Carnegie Learning, Inc. This work is made available under a Creative Commons Attribution-Non-Commercial-4.0 International License. This does not in any way imply endorsement by those authors of this work.<br>©2024–2025 Texas Education Agency, portions ©2021 Carnegie Learning, Inc.<br>Licensed <a href="https://creativecommons.org/licenses/by-nc/4.0/" rel="license" target="_blank" onclick="event.stopPropagation()">CC BY-NC 4.0</a>.<br><strong>This is a private site for Algebra I teachers and is not publicly available.</strong></p>
+  <aside class="notes">Students rotate a segment 90° at a time, prove that perpendicular lines have negative reciprocal slopes, work with horizontal and vertical lines, and write equations of perpendicular lines. Two days on the 150-day calendar: Day 1 Getting Started and Activity 3.1; Day 2 Activities 3.2, 3.3 and Talk the Talk. Materials: patty paper, straightedges.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 1 · Bell Work · Review</p>
+  <h2>Warm up: work these on your own</h2>
+  <div class="row" style="gap:56px;margin-top:6px">
+    <div class="col">
+      <p>1. What is the reciprocal of <span class="mt">⅔</span>?</p>
+      <div class="step pop eq sm ans"><span class="mt">3/2</span></div>
+      <p style="margin-top:14px">2. Rotate the point <span class="mt">(8, 5)</span> 90° counterclockwise about the origin. Where does it go? <span class="muted" style="font-size:21px">(SE p. 306)</span></p>
+      <div class="step pop eq sm ans"><span class="mt">(−5, 8)</span></div>
+    </div>
+    <div class="col">
+      <p>3. What is the slope of the segment from <span class="mt">(0, 0)</span> to <span class="mt">(8, 5)</span>? <span class="muted" style="font-size:21px">(SE p. 306)</span></p>
+      <div class="step pop eq sm ans"><span class="mt">5/8</span></div>
+      <p style="margin-top:14px">4. What is the slope of <span class="mt"><i>y</i> = −3<i>x</i> + 5</span>?</p>
+      <div class="step pop eq sm ans"><span class="mt">−3</span></div>
+    </div>
+  </div>
+  <aside class="notes">Added for this deck; not from the textbook. Have this up as students walk in; they work silently while you take attendance (about 5 minutes). The same 4 questions are on the online Day 1 bell work. Reveal the answers one at a time. Answer key: 1. Flip the fraction: ⅔ · 3/2 = 1. 2. A 90° counterclockwise rotation maps (x, y) to (−y, x). 3. Slope = (5 − 0) ÷ (8 − 0) = 5/8. 4. In y = mx + b, m = −3.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 1 · Today's Plan</p>
+  <h2>Today's plan</h2>
+  <p>☐ &nbsp;Bell work (5 min)</p><p>☐ &nbsp;Getting Started: rotate a segment</p><p>☐ &nbsp;Activity 3.1: slopes of perpendicular lines</p><p class="warn">One part at a time. Ask for help or a break whenever you need it.</p>
+  <aside class="notes">Section 504 support: chunked directions. Check off each part as the class finishes it.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Lesson 3 · SE p. 305</p>
+  <h2>Today you will…</h2>
+  <div class="col" style="gap:10px;margin-top:4px;font-size:26px"><p class="step">1. Identify and write the equations of lines perpendicular to given lines.</p><p class="step">2. Identify and write the equations of horizontal and vertical lines.</p></div>
+  <aside class="notes">Read each objective aloud as it appears.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Topic 2 Lesson 3 · Key Vocabulary</p>
+  <h2>Key vocabulary</h2>
+  <div class="grid3"><div class="card"><h3>Perpendicular</h3><p class="small">Lines that meet at a right angle (90°).</p><div class="eq sm">⊥</div></div><div class="card"><h3>Reciprocal</h3><p class="small">Flip the fraction. A number times its reciprocal is 1.</p><div class="eq sm">{{2|3}} → {{3|2}}</div></div><div class="card"><h3>Negative reciprocal</h3><p class="small">Flip the fraction and change the sign.</p><div class="eq sm">{{2|3}} → −{{3|2}}</div></div><div class="card"><h3>Rotation</h3><p class="small">Turning a figure about a point.</p><div class="eq sm">90°: (<i>x</i>, <i>y</i>) → (−<i>y</i>, <i>x</i>)</div></div><div class="card"><h3>Horizontal line</h3><p class="small"><i>y</i> = a number. Slope 0.</p><div class="eq sm"><i>y</i> = −1</div></div><div class="card"><h3>Vertical line</h3><p class="small"><i>x</i> = a number. Slope undefined.</p><div class="eq sm"><i>x</i> = 2</div></div></div>
+  <aside class="notes">Section 504 support: preview the key terms before the lesson. Leave this slide up or print it as a reference card.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Essential Question · SE p. 305</p>
+  <h2>You have translated graphs of linear equations to find the slopes of parallel lines.</h2>
+  <div class="col" style="gap:30px;margin-top:40px;font-size:36px"><p class="step">How can you rotate the graphs of linear equations to determine the slopes of perpendicular lines?</p></div>
+  <aside class="notes">Have students write the Essential Question at the top of their notes. Don't answer it yet; we come back to it at the end of the lesson.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 1 · Getting Started · Coordinate Rotation · SE p. 306</p>
+  <h2>Rotate <span class="mt"><i>A</i><i>B</i></span>, <span class="mt"><i>A</i>(0, 0)</span> and <span class="mt"><i>B</i>(8, 5)</span>, about the origin</h2>
+  <div class="row" style="gap:40px"><div class="col" style="gap:10px"><table class="tbl" style="font-size:22px"><tr><th></th><th>Original</th><th>90°</th><th>180°</th><th>270°</th></tr><tr><td>A</td><td>(0, 0)</td><td class="step">(0, 0)</td><td class="step">(0, 0)</td><td class="step">(0, 0)</td></tr><tr><td>B</td><td>(8, 5)</td><td class="step">(−5, 8)</td><td class="step">(−8, −5)</td><td class="step">(5, −8)</td></tr></table><p class="step small">Each 90° counterclockwise turn maps <span class="mt">(<i>x</i>, <i>y</i>)</span> to <span class="mt">(−<i>y</i>, <i>x</i>)</span>. A is the center, so it stays.</p><p class="step small">Slopes: <span class="mt"><i>A</i><i>B</i></span> and <span class="mt"><i>A</i>″<i>B</i>″</span>: <span class="cm"><span class="mt">5/8</span></span>. <span class="mt"><i>A</i>′<i>B</i>′</span> and <span class="mt"><i>A</i>‴<i>B</i>‴</span>: <span class="cm"><span class="mt">−8/5</span></span>.</p><p class="step small">The two slopes are reciprocals with opposite signs: <span class="mt">(5/8)(−8/5) = −1</span>.</p></div><div class="col" style="gap:10px"><div class="graph" data-g='{"w": 330, "h": 330, "x": [-9, 9], "y": [-9, 9], "gx": [1, 3], "gy": [1, 3], "lines": [{"p": [[0, 0], [8, 5]], "seg": true}, {"p": [[0, 0], [-5, 8]], "c": "a", "step": true, "seg": true}, {"p": [[0, 0], [-8, -5]], "c": "b", "step": true, "seg": true}, {"p": [[0, 0], [5, -8]], "c": "a", "step": true, "seg": true}], "pts": [[8, 5, "B"], [-5, 8, "B′"], [-8, -5, "B″"], [5, -8, "B‴"]], "alt": "AB and its rotations by 90, 180 and 270 degrees"}'></div></div></div>
+  <aside class="notes">Getting Started, 15–20 minutes. Patty paper helps: trace the segment and the axes, then turn the paper a quarter turn.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 1 · Activity 3.1 · Slopes of Perpendicular Lines · SE p. 307</p>
+  <h2>A line and its 90° rotation</h2>
+  <div class="row" style="gap:20px"><div class="col" style="gap:10px"><div class="card"><h3>Pair A</h3><div class="step pop eq sm ans"><i>y</i> = <i>x</i></div><div class="step pop eq sm ans"><i>y</i> = −<i>x</i></div></div></div><div class="col" style="gap:10px"><div class="card"><h3>Pair B</h3><div class="step pop eq sm ans"><i>y</i> = ⅓<i>x</i> + 5</div><div class="step pop eq sm ans"><i>y</i> = −3<i>x</i> + 5</div></div></div><div class="col" style="gap:10px"><div class="card"><h3>Pair C</h3><div class="step pop eq sm ans"><i>y</i> = −⅔<i>x</i> + 9</div><div class="step pop eq sm ans"><i>y</i> = 3/2<i>x</i> − 4</div></div></div></div><p class="step small">Each line is rotated 90°, so the lines meet at a right angle: they are <b>perpendicular</b>.</p><p class="step small">The slopes of each pair are reciprocals with opposite signs.</p>
+  <aside class="notes">Activity 3.1, 20–25 minutes. Students read the three graphs in their book (SE p. 307) and write the equations.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 1 · Activity 3.1 · Worked Example · SE p. 308</p>
+  <h2>Proof: perpendicular slopes are negative reciprocals</h2>
+  <div class="row" style="gap:40px"><div class="col" style="gap:10px"><div class="col" style="gap:12px"><p class="">Given <span class="mt"><i>p</i> ⊥ <i>q</i></span>. Point <span class="mt"><i>R</i>(<i>a</i>, <i>b</i>)</span> is on <span class="mt"><i>p</i></span>.</p><p class="step small">Rotate <span class="mt"><i>R</i></span> 90° counterclockwise about <span class="mt"><i>O</i></span>: it lands on <span class="mt"><i>q</i></span> at <span class="mt"><i>D</i>(−<i>b</i>, <i>a</i>)</span>.</p><p class="step small">Slope of <span class="mt"><i>p</i></span>: <span class="cm"><span class="mt"><i>m</i>₁ = <i>b</i>/<i>a</i></span></span>. Slope of <span class="mt"><i>q</i></span>: <span class="cm"><span class="mt"><i>m</i>₂ = <i>a</i>/(−<i>b</i>)</span></span>.</p><div class="eq sm step">−1/<i>m</i>₂ = −1 · (−<i>b</i>/<i>a</i>) = <i>b</i>/<i>a</i> = <i>m</i>₁</div><p class="step small">So <span class="mt"><i>m</i>₁ = −1/<i>m</i>₂</span>, and <span class="mt"><i>m</i>₁ · <i>m</i>₂ = −1</span>.</p></div></div><div class="col" style="gap:10px"><div class="graph" data-g='{"w": 340, "h": 300, "x": [-4, 6], "y": [-4, 4], "gx": [1, 1], "gy": [1, 1], "lines": [{"p": [[0, 0], [3, 1.5]], "label": "p"}, {"p": [[0, 0], [-1.5, 3]], "label": "q", "c": "b"}], "pts": [[2, 1, "R(a, b)"], [-1, 2, "D(−b, a)"]], "alt": "Line p through R(a, b) and line q through D(−b, a)"}'></div></div></div>
+  <aside class="notes">Have students restate each step. Question 3 asks for the same proof with a clockwise rotation: R(a, b) maps to D(b, −a), so m₂ = −a/b and again m₁ = −1/m₂.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 1 · Activity 3.1 · Question 4 · SE p. 309</p>
+  <h2>Line <span class="mt"><i>j</i></span> ⊥ line <span class="mt"><i>k</i></span>. Find the slope of line <span class="mt"><i>k</i></span>.</h2>
+  <div class="row" style="gap:40px"><div class="col" style="gap:10px"><div class="eq sm"><i>a</i>. &nbsp;<i>m</i> = ⅔</div><div class="step pop eq sm ans"><i>m</i> = −3/2</div></div><div class="col" style="gap:10px"><div class="eq sm"><i>b</i>. &nbsp;<i>m</i> = −⅘</div><div class="step pop eq sm ans"><i>m</i> = 5/4</div></div><div class="col" style="gap:10px"><div class="eq sm"><i>c</i>. &nbsp;<i>m</i> = −3</div><div class="step pop eq sm ans"><i>m</i> = ⅓</div></div></div><p class="step small">Flip the fraction and change the sign. Check: the product is −1.</p>
+  <aside class="notes">Stamp the learning: perpendicular lines have slopes that are negative reciprocals. End of Day 1.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 1 · Notes to Keep</p>
+  <h2>Notes to keep: Day 1</h2>
+  <div class="grid3"><div class="card"><h3>90° rotation</h3><div class="eq sm">(<i>x</i>, <i>y</i>) → (−<i>y</i>, <i>x</i>)</div></div><div class="card"><h3>Perpendicular slopes</h3><p class="small">Negative reciprocals. Their product is −1.</p><div class="eq sm">2 · (−{{1|2}}) = −1</div></div><div class="card"><h3>Parallel slopes</h3><p class="small">Equal.</p></div></div><p class="small muted">Copy these into your notes, or ask your teacher for a printed copy.</p>
+  <aside class="notes">Section 504 support: a copy of the day's notes. Hand out a printed copy if the student's plan lists copies of notes.</aside>
+</section>
+<section class="slide divider">
+  <p class="eyebrow">Lesson 3</p>
+  <h1>Day 2</h1>
+  <p class="step" style="font-size:32px;max-width:900px">Essential Question: How can you rotate the graphs of linear equations to determine the slopes of perpendicular lines?</p>
+  <aside class="notes">Show this, then go to the bell work while you take attendance. Afterward, have a student read the Essential Question aloud and ask two or three students to summarize Day 1: How do you find the slope of a perpendicular line?</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 2 · Bell Work · Review of Day 1</p>
+  <h2>Warm up: work these on your own</h2>
+  <div class="row" style="gap:56px;margin-top:6px">
+    <div class="col">
+      <p>1. Line <span class="mt"><i>j</i></span> has slope <span class="mt">⅔</span>. Line <span class="mt"><i>k</i></span> is perpendicular to it. What is the slope of <span class="mt"><i>k</i></span>? <span class="muted" style="font-size:21px">(SE p. 309)</span></p>
+      <div class="step pop eq sm ans"><span class="mt">−3/2</span></div>
+      <p style="margin-top:14px">2. What is the slope of any horizontal line? <span class="muted" style="font-size:21px">(SE p. 310)</span></p>
+      <div class="step pop eq sm ans"><span class="mt">0</span></div>
+    </div>
+    <div class="col">
+      <p>3. Which is the equation of the vertical line through <span class="mt">(2, −1)</span>? <span class="muted" style="font-size:21px">(SE p. 311)</span></p>
+      <div class="step pop eq sm ans"><span class="mt"><i>x</i> = 2</span></div>
+      <p style="margin-top:14px">4. What is the product of the slopes of two perpendicular lines (neither vertical)? <span class="muted" style="font-size:21px">(SE p. 308)</span></p>
+      <div class="step pop eq sm ans"><span class="mt">−1</span></div>
+    </div>
+  </div>
+  <aside class="notes">Added for this deck; not from the textbook. Have this up as students walk in; they work silently while you take attendance (about 5 minutes). The same 4 questions are on the online Day 2 bell work. Reveal the answers one at a time. Answer key: 1. Perpendicular slopes are negative reciprocals: ⅔ · (−3/2) = −1. 2. On a horizontal line y never changes, so the rise is 0. 3. Every point on a vertical line has the same x-value, here 2. 4. Negative reciprocals multiply to −1.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 2 · Today's Plan</p>
+  <h2>Today's plan</h2>
+  <p>☐ &nbsp;Bell work (5 min)</p><p>☐ &nbsp;Activity 3.2: horizontal and vertical lines</p><p>☐ &nbsp;Activity 3.3: write perpendicular lines</p><p>☐ &nbsp;Talk the Talk</p><p>☐ &nbsp;Exit ticket</p><p class="warn">One part at a time. Ask for help or a break whenever you need it.</p>
+  <aside class="notes">Section 504 support: chunked directions. Check off each part as the class finishes it.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 2 · Activity 3.2 · Horizontal and Vertical Lines · SE pp. 310–311</p>
+  <h2>Extend the segments into lines</h2>
+  <div class="row" style="gap:40px"><div class="col" style="gap:10px"><p class="step small">Line <span class="mt"><i>p</i></span> is vertical: <span class="mt"><i>x</i> = 4</span>. Lines <span class="mt"><i>q</i></span>, <span class="mt"><i>r</i></span> and <span class="mt"><i>s</i></span> are horizontal: <span class="mt"><i>y</i> = 4</span>, <span class="mt"><i>y</i> = 8</span>, <span class="mt"><i>y</i> = 12</span>.</p><div class="card"><h3>Horizontal</h3><p class="step small">When <i>x</i> goes up 1, <i>y</i> doesn't change. Slope <span class="mt">= 0/(<i>x</i>₂ − <i>x</i>₁) = 0</span>.</p></div><div class="card"><h3>Vertical</h3><p class="step small">When <i>y</i> goes up 1, <i>x</i> doesn't change. Slope <span class="mt">= (<i>y</i>₂ − <i>y</i>₁)/0</span>: <b>undefined</b>.</p></div></div><div class="col" style="gap:10px"><div class="graph" data-g='{"w": 320, "h": 320, "x": [-1, 17], "y": [-1, 17], "gx": [1, 4], "gy": [1, 4], "lines": [{"p": [[4, 0], [4, 1]], "label": "p"}, {"p": [[0, 4], [1, 4]], "label": "q", "c": "b", "step": true}, {"p": [[0, 8], [1, 8]], "label": "r", "c": "b", "step": true}, {"p": [[0, 12], [1, 12]], "label": "s", "c": "b", "step": true}], "pts": [[4, 12, "K"], [4, 8, "F"], [4, 4, "G"], [14, 12, "L"], [14, 8, "J"], [14, 4, "H"]], "alt": "Vertical line x = 4 and horizontal lines y = 4, 8 and 12"}'></div></div></div>
+  <aside class="notes">Activity 3.2, 15–20 minutes. Memory trick from Topic 1: HOY VUX.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 2 · Activity 3.2 · Questions 6–10 · SE p. 311</p>
+  <h2>Always, sometimes, or never?</h2>
+  <div class="row" style="gap:40px"><div class="col" style="gap:10px"><p class="small">All vertical lines are parallel.</p><p class="step small"><b>Always.</b> Their slopes are all undefined.</p><p class="small">All horizontal lines are parallel.</p><p class="step small"><b>Always.</b> Their slopes are all 0.</p><p class="small">A vertical line and a horizontal line?</p><p class="step small"><b>Always perpendicular.</b></p></div><div class="col" style="gap:10px"><p class="small">Through <span class="mt">(2, −1)</span>:</p><div class="step pop eq sm ans"><i>y</i> = −1 &nbsp;<i>a</i><i>n</i><i>d</i>&nbsp; <i>x</i> = 2</div><p class="small">⊥ to <span class="mt"><i>x</i> = 5</span> through <span class="mt">(1, 0)</span>:</p><div class="step pop eq sm ans"><i>y</i> = 0</div><p class="small">⊥ to <span class="mt"><i>y</i> = −2</span> through <span class="mt">(5, 6)</span>:</p><div class="step pop eq sm ans"><i>x</i> = 5</div></div></div>
+  <aside class="notes">Questions 8–10 assess the lesson. For more practice, assign Skills Practice Set A.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 2 · Activity 3.3 · Writing Equations of Perpendicular Lines · SE p. 312</p>
+  <h2>Use the negative reciprocal slope and point-slope form</h2>
+  <div class="row" style="gap:40px"><div class="col" style="gap:10px"><p class="small">1. ⊥ to <span class="mt"><i>y</i> = 2<i>x</i> + 1</span> through <span class="mt">(6, 2)</span></p><p class="step small">Slope <span class="cm"><span class="mt">−½</span></span>: <span class="mt"><i>y</i> − 2 = −½(<i>x</i> − 6)</span></p><div class="step pop eq sm ans"><i>y</i> = −½<i>x</i> + 5</div></div><div class="col" style="gap:10px"><p class="small">2. ⊥ to <span class="mt"><i>y</i> = −¾<i>x</i></span> through <span class="mt">(3, −8)</span></p><p class="step small">Slope <span class="cm"><span class="mt">4/3</span></span>: <span class="mt"><i>y</i> + 8 = 4/3(<i>x</i> − 3)</span></p><div class="step pop eq sm ans"><i>y</i> = 4/3<i>x</i> − 12</div></div></div>
+  <aside class="notes">Activity 3.3, 15–20 minutes. TE wording slip: for Question 2 the teacher guide says the given slope is 3/4; it is −3/4.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 2 · Activity 3.3 · Questions 3–5 · SE pp. 312–313</p>
+  <h2>First find the slope of the given line</h2>
+  <div class="row" style="gap:28px"><div class="col" style="gap:10px"><p class="small">3. Through <span class="mt">(6, 2)</span>, ⊥ to the line through <span class="mt">(−5, 3)</span> and <span class="mt">(−1, −9)</span></p><p class="step small"><span class="mt"><i>m</i> = −12/4 = −3</span>, so use <span class="cm"><span class="mt">⅓</span></span></p><div class="step pop eq sm ans"><i>y</i> = ⅓<i>x</i></div></div><div class="col" style="gap:10px"><p class="small">4. Through <span class="mt">(−2, 7)</span>, ⊥ to the line through <span class="mt">(−6, 1)</span> and <span class="mt">(0, 4)</span></p><p class="step small"><span class="mt"><i>m</i> = 3/6 = ½</span>, so use <span class="cm"><span class="mt">−2</span></span></p><div class="step pop eq sm ans"><i>y</i> = −2<i>x</i> + 3</div></div><div class="col" style="gap:10px"><p class="small">5. Lines meet at <span class="mt">(5, 9)</span>; one passes through <span class="mt">(−4, 4)</span></p><p class="step small"><span class="mt"><i>m</i> = 5/9</span>, so use <span class="cm"><span class="mt">−9/5</span></span></p><div class="step pop eq sm ans"><i>y</i> = −9/5<i>x</i> + 18</div></div></div>
+  <aside class="notes">The teacher guide prints the slope formula with y₂ − y₁ in the denominator; it is x₂ − x₁. Its numbers are correct. For more practice, assign Skills Practice Set B.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 2 · Talk the Talk · Things Aren't Always What They Seem · SE p. 314</p>
+  <h2>Linh or Jackson?</h2>
+  <p class="">Linh says lines <i>a</i>, <i>b</i> and <i>c</i> are parallel to each other and perpendicular to lines <i>d</i>, <i>e</i> and <i>f</i>. Jackson says they are parallel but <b>not</b> perpendicular to <i>d</i>, <i>e</i>, <i>f</i>.</p><p class="step small"><b>Jackson is correct.</b> The axes use different scales.</p><p class="step small">Lines <i>a</i>, <i>b</i>, <i>c</i> have slope 1, so they are parallel. Lines <i>d</i>, <i>e</i>, <i>f</i> have slope −¼.</p><p class="step small"><span class="mt">1 · (−¼) ≠ −1</span>: the slopes are not negative reciprocals, so the lines are not perpendicular.</p>
+  <aside class="notes">Show the graph in the book (SE p. 314). The x-axis counts 1 per square and the y-axis 1 per 2 squares, so the lines look perpendicular but aren't.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Day 2 · Notes to Keep</p>
+  <h2>Notes to keep: Day 2</h2>
+  <div class="grid3"><div class="card"><h3>Horizontal and vertical</h3><p class="small"><b>Horizontal:</b> <i>y</i> = a number, slope 0.<br><b>Vertical:</b> <i>x</i> = a number, slope undefined.<br>They are always perpendicular.</p></div><div class="card"><h3>Write a perpendicular line</h3><p class="small">1. Find the given slope.<br>2. Take the negative reciprocal.<br>3. Use the point: <i>y</i> − <i>y</i><sub>1</sub> = <i>m</i>(<i>x</i> − <i>x</i><sub>1</sub>).</p></div><div class="card"><h3>Check the scale</h3><p class="small">Lines can look perpendicular on a stretched grid. Check the slopes.</p></div></div><p class="small muted">Copy these into your notes, or ask your teacher for a printed copy.</p>
+  <aside class="notes">Section 504 support: a copy of the day's notes. Hand out a printed copy if the student's plan lists copies of notes.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Essential Question · Answered</p>
+  <h2>How does rotation give perpendicular slopes?</h2>
+  <div class="col" style="gap:20px;margin-top:6px"><p class="step ">A 90° rotation maps <span class="mt">(<i>x</i>, <i>y</i>)</span> to <span class="mt">(−<i>y</i>, <i>x</i>)</span>, so a slope <span class="mt"><i>b</i>/<i>a</i></span> becomes <span class="mt">−<i>a</i>/<i>b</i></span>.</p><p class="step ">Perpendicular lines have <b>negative reciprocal</b> slopes: their product is −1.</p><p class="step ">Any vertical line is perpendicular to any horizontal line.</p></div>
+  <aside class="notes">Have students answer the Essential Question on the lesson opener page.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Exit Ticket</p>
+  <h2>Show what you know</h2>
+  <div class="col" style="gap:12px;margin-top:6px"><p>1. What slope is perpendicular to <span class="mt">−5/2</span>?</p><div class="step pop eq sm ans">2/5</div><p>2. Write the line ⊥ to <span class="mt"><i>y</i> = 3<i>x</i> + 2</span> through <span class="mt">(3, 1)</span>.</p><div class="step pop eq sm ans"><i>y</i> = −⅓<i>x</i> + 2</div><p>3. Write the vertical line through <span class="mt">(−4, 7)</span>.</p><div class="step pop eq sm ans"><i>x</i> = −4</div></div>
+  <aside class="notes">Added for this deck; not from the textbook. Give 3–4 minutes, collect the answers, and use them to decide who needs Skills Practice. Work: 1. Flip and change the sign. 2. Slope −1/3: 1 = −1/3(3) + b, so b = 2. 3. A vertical line keeps x the same.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Prepare · SE p. 317</p>
+  <h2>Does each set of ordered pairs represent a function?</h2>
+  <div class="col" style="gap:10px"><div class="row" style="gap:30px;align-items:center"><div class="eq sm">1. &nbsp;{(−1, −1), (0, 0), (1, 1), (2, 2)}</div><div class="step pop eq sm ans">Function</div></div><div class="row" style="gap:30px;align-items:center"><div class="eq sm">2. &nbsp;{(−1, −2), (0, 0), (1, 2), (2, 4)}</div><div class="step pop eq sm ans">Function</div></div><div class="row" style="gap:30px;align-items:center"><div class="eq sm">3. &nbsp;{(−1, −1), (0, −1), (1, −1), (2, −1)}</div><div class="step pop eq sm ans">Function</div></div><div class="row" style="gap:30px;align-items:center"><div class="eq sm">4. &nbsp;{(−1, −1), (−1, 0), (−1, 1), (−1, 2)}</div><div class="step pop eq sm ans">Not a function</div></div></div>
+  <aside class="notes">From the Lesson 3 Assignment. In a function each input has exactly one output; in set 4 the input −1 has four outputs.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Practice Online</p>
+  <h2>Bell Work, Homework and Quiz</h2>
+  <div class="row" style="margin-top:20px"><div class="col"><div class="card"><h3>Bell work</h3><p class="small"><b><a class="go" href="t2-lesson3-bellwork-day1-504.html" target="_blank" onclick="event.stopPropagation()">Day 1 →</a></b> · <b><a class="go" href="t2-lesson3-bellwork-day2-504.html" target="_blank" onclick="event.stopPropagation()">Day 2 →</a></b></p><p class="small">4 questions each, the same as the bell work slides. Scored when students submit.</p></div></div><div class="col"><div class="card"><h3><a class="go" href="t2-lesson3-homework-504.html" target="_blank" onclick="event.stopPropagation()">Homework →</a></h3><p class="small">10 practice questions. Each answer is checked right away, with an explanation.</p></div></div><div class="col"><div class="card"><h3><a class="go" href="t2-lesson3-quiz-504.html" target="_blank" onclick="event.stopPropagation()">Quiz →</a></h3><p class="small">10 questions, scored when students submit. Correct answers are shown after submitting.</p></div></div></div>
+  <p class="small muted" style="margin-top:6px">All are multiple choice. The homework follows the Lesson 3 Assignment (SE pp. 315–317).</p>
+  <aside class="notes">Added for this deck; not from the textbook. Click a title to open it in a new tab. Put the day's bell work link up as students walk in. The 150-day pacing calendar (topic2-pacing-150.html) gives the day for each homework and quiz.</aside>
+</section>
+
+</div>
+
+<nav id="bar" aria-label="Slide controls">
+  <span id="brand"><svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#3050b8"/><g fill="#fff"><circle cx="16" cy="7.5" r="2.3"/><circle cx="12.8" cy="11.8" r="2.5" opacity=".92"/><circle cx="19.2" cy="11.8" r="2.5" opacity=".92"/><circle cx="16" cy="14.6" r="2.6"/><circle cx="11.8" cy="17.6" r="2.7" opacity=".82"/><circle cx="20.2" cy="17.6" r="2.7" opacity=".82"/></g><rect x="15.2" y="20.5" width="1.6" height="6.5" rx=".8" fill="#9fd18b"/></svg><span>Bluebonnet <strong>Algebra I</strong></span></span>
+  <button id="prev" type="button" aria-label="Previous step">← Back</button>
+  <button id="next" type="button" aria-label="Next step">Next →</button>
+  <div id="prog"><div></div></div>
+  <span id="hint">→ / Space next · ← back · N notes · F full screen</span>
+  <span id="count"></span>
+  <button id="nb" type="button" aria-pressed="false">Notes</button>
+  <button id="fs" type="button">Full screen</button>
+</nav>
+<div id="notes" hidden><b>Speaker notes</b><p id="notesText"></p></div>
+
+<script>
+const stage = document.getElementById('stage');
+// {{a|b}} → stacked fraction
+stage.innerHTML = stage.innerHTML.replace(/\{\{(.+?)\|(.+?)\}\}/g, '<span class="fr"><span>$1</span><span>$2</span></span>');
+
+// Graph spec (data-g): w,h px; x,y = [min,max]; gx,gy = [grid step, label step];
+// lines: [{p:[[x,y],[x,y]], label, c:'a'|'b'|'c' (pool color), dash, step (appears on its own click), seg (just this segment)}] extended to the window; pts: [[x,y,label]].
+// ptsStep: each point appears on its own click, in order, before the lines.
+// Keep in step with draw_graph() in make_pptx.py.
+const GM = {L: 34, R: 12, T: 12, B: 26};
+function clipLine([[ax, ay], [bx, by]], [x0, x1], [y0, y1]) {
+  const dx = bx - ax, dy = by - ay; let lo = -Infinity, hi = Infinity;
+  for (const [p, q] of [[-dx, ax - x0], [dx, x1 - ax], [-dy, ay - y0], [dy, y1 - ay]]) {
+    if (p === 0) { if (q < 0) return null; continue; }
+    const r = q / p; if (p < 0) lo = Math.max(lo, r); else hi = Math.min(hi, r);
+  }
+  return lo > hi ? null : [[ax + lo * dx, ay + lo * dy], [ax + hi * dx, ay + hi * dy]];
+}
+function graphSVG(g) {
+  const {w: W, h: H} = g, [x0, x1] = g.x, [y0, y1] = g.y;
+  const X = v => (GM.L + (v - x0) / (x1 - x0) * (W - GM.L - GM.R)).toFixed(1);
+  const Y = v => (GM.T + (y1 - v) / (y1 - y0) * (H - GM.T - GM.B)).toFixed(1);
+  const ticks = (a, b, t) => { const o = []; for (let v = Math.ceil(a / t - 1e-9) * t; v <= b + 1e-9; v += t) o.push(+v.toFixed(6)); return o; };
+  const num = v => String(v).replace('-', '−');
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${g.alt || 'graph'}">`;
+  s += `<rect class="g-bg" x=".5" y=".5" width="${W - 1}" height="${H - 1}" rx="8"/>`;
+  for (const v of ticks(x0, x1, g.gx[0])) s += `<line class="g-grid" x1="${X(v)}" y1="${GM.T}" x2="${X(v)}" y2="${H - GM.B}"/>`;
+  for (const v of ticks(y0, y1, g.gy[0])) s += `<line class="g-grid" x1="${GM.L}" y1="${Y(v)}" x2="${W - GM.R}" y2="${Y(v)}"/>`;
+  const ax = x0 <= 0 && 0 <= x1 ? 0 : x0, ay = y0 <= 0 && 0 <= y1 ? 0 : y0;
+  s += `<line class="g-axis" x1="${X(ax)}" y1="${GM.T}" x2="${X(ax)}" y2="${H - GM.B}"/>`;
+  s += `<line class="g-axis" x1="${GM.L}" y1="${Y(ay)}" x2="${W - GM.R}" y2="${Y(ay)}"/>`;
+  for (const v of ticks(x0, x1, g.gx[1])) s += `<text class="g-tick" x="${X(v)}" y="${H - GM.B + 17}" text-anchor="middle">${num(v)}</text>`;
+  for (const v of ticks(y0, y1, g.gy[1])) s += `<text class="g-tick" x="${GM.L - 6}" y="${+Y(v) + 4}" text-anchor="end">${num(v)}</text>`;
+  const ptsSVG = () => (g.pts || []).map(([px, py, lab]) => (g.ptsStep ? '<g class="step">' : '') +
+    `<circle class="g-pt" cx="${X(px)}" cy="${Y(py)}" r="5.5"/>` +
+    (lab ? `<text class="g-plab" x="${+X(px) + 9}" y="${+Y(py) - 8}">${lab}</text>` : '') +
+    (g.ptsStep ? '</g>' : '')).join('');
+  if (g.ptsStep) s += ptsSVG();
+  for (const ln of g.lines || []) {
+    const c = ln.seg ? ln.p : clipLine(ln.p, g.x, g.y); if (!c) continue;
+    if (ln.step) s += '<g class="step">';
+    s += `<line class="g-line${ln.c ? ' g' + ln.c : ''}"${ln.dash ? ' stroke-dasharray="10 7"' : ''} x1="${X(c[0][0])}" y1="${Y(c[0][1])}" x2="${X(c[1][0])}" y2="${Y(c[1][1])}"/>`;
+    if (ln.label) { const e = c[0][1] > c[1][1] ? c[0] : c[1];
+      const right = +X(e[0]) > W / 2;
+      s += `<text class="g-llab" x="${+X(e[0]) + (right ? -12 : 8)}" y="${+Y(e[1]) + 16}" text-anchor="${right ? 'end' : 'start'}">${ln.label}</text>`; }
+    if (ln.step) s += '</g>';
+  }
+  if (!g.ptsStep) s += ptsSVG();
+  return s + '</svg>';
+}
+stage.querySelectorAll('.graph').forEach(el => { el.innerHTML = graphSVG(JSON.parse(el.dataset.g)); });
+
+const slides = [...stage.querySelectorAll('.slide')];
+const steps = slides.map(s => [...s.querySelectorAll('.step')]);
+let i = 0, k = 0;
+
+function readHash(){ const m = /^#s(\d+)$/.exec(location.hash); return m ? Math.min(Math.max(+m[1] - 1, 0), slides.length - 1) : 0; }
+
+function show(n, revealAll){
+  slides[i].classList.remove('on');
+  i = n;
+  k = revealAll ? steps[i].length : 0;
+  steps[i].forEach((el, j) => el.classList.toggle('shown', j < k));
+  slides[i].classList.add('on');
+  update();
+}
+function next(){
+  if (k < steps[i].length) { steps[i][k++].classList.add('shown'); update(); }
+  else if (i < slides.length - 1) show(i + 1, false);
+}
+function prev(){
+  if (k > 0) { steps[i][--k].classList.remove('shown'); update(); }
+  else if (i > 0) show(i - 1, true);
+}
+function update(){
+  document.getElementById('count').textContent = (i + 1) + ' / ' + slides.length;
+  document.querySelector('#prog>div').style.width = ((i + 1) / slides.length * 100) + '%';
+  history.replaceState(null, '', '#s' + (i + 1));
+  const a = slides[i].querySelector('aside.notes');
+  document.getElementById('notesText').textContent = a ? a.textContent : '';
+}
+function fit(){
+  // Bar height varies (iPhone safe-area padding), so center the slide in whatever space is left above it.
+  const bar = document.getElementById('bar').offsetHeight, W = innerWidth, H = innerHeight - bar, portrait = matchMedia('(orientation:portrait)').matches;
+  const s = portrait ? W / 760 : Math.min(W / 1280, H / 720);
+  stage.style.height = portrait ? H / s + 'px' : '';
+  stage.style.top = H / 2 + 'px';
+  document.getElementById('notes').style.bottom = bar + 'px';
+  stage.style.transform = `translate(-50%,-50%) scale(${s})`;
+}
+function fullscreen(){
+  try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen().catch(() => {}); } catch (e) {}
+}
+
+stage.addEventListener('click', next);
+// Swipe left = next, swipe right = back (taps still advance via click).
+let tx = 0, ty = 0;
+stage.addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, {passive: true});
+stage.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) dx < 0 ? next() : prev();
+}, {passive: true});
+document.getElementById('next').addEventListener('click', next);
+document.getElementById('prev').addEventListener('click', prev);
+document.getElementById('fs').addEventListener('click', fullscreen);
+function toggleNotes(){
+  const n = document.getElementById('notes'); n.hidden = !n.hidden;
+  document.getElementById('nb').setAttribute('aria-pressed', String(!n.hidden));
+}
+document.getElementById('nb').addEventListener('click', toggleNotes);
+addEventListener('keydown', e => {
+  if (e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
+  if (['ArrowRight','ArrowDown',' ','PageDown','Enter'].includes(e.key)) { e.preventDefault(); next(); }
+  else if (['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
+  else if (e.key === 'Home') show(0, false);
+  else if (e.key === 'End') show(slides.length - 1, true);
+  else if (e.key === 'f' || e.key === 'F') fullscreen();
+  else if (e.key === 'n' || e.key === 'N') toggleNotes();
+});
+addEventListener('resize', fit);
+fit();
+slides[0].classList.add('on');
+show(readHash(), false);
+</script>
