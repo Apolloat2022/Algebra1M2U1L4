@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Topic 2 Lesson 2 Quiz · Vertical and Horizontal Transformations</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<link rel="stylesheet" href="../mc.css">
+<div class="wrap">
+  <p class="eyebrow">Module 2 · Topic 2 · Lesson 2 · Quiz</p>
+  <h1>Vertical and Horizontal Transformations Quiz</h1>
+  <p class="muted">Answer all 10 questions, then submit. You'll see your score and the correct answers after you submit.</p>
+  <label class="name">Your name <input id="name" autocomplete="name"></label>
+  <ol id="questions"></ol>
+  <div class="bar">
+    <button id="submit" disabled>Submit</button>
+    <button id="reset" class="ghost">Start over</button>
+  </div>
+  <p id="result" class="card" style="margin-top:16px" hidden></p>
+</div>
+<script>
+window.MC = { mode: "quiz", questions: [
+  {"se": 298, "q": "[[f(x) = x]] and [[g(x) = f(x − 7)]]. Describe the transformation.", "choices": ["Translated right 7 units", "Translated left 7 units", "Translated down 7 units", "Stretched by 7"], "why": "Subtracting 7 from the input moves the graph right 7."},
+  {"se": 298, "q": "[[f(x) = x]] and [[g(x) = 3f(x)]]. Describe the transformation.", "choices": ["Stretched vertically by a factor of 3", "Compressed horizontally by ⅓ only", "Translated up 3", "Translated right 3"], "why": "Multiplying the output by 3 is a vertical stretch. (For [[f(x) = x]] it matches [[f(3x)]].)"},
+  {"se": 291, "q": "For [[f(x) = x]], which gives the same graph as a translation down 4?", "choices": ["[[f(x − 4)]]", "[[f(x + 4)]]", "[[4f(x)]]", "[[f(x) + 4]]"], "why": "[[f(x − 4) = x − 4 = f(x) − 4]]."},
+  {"se": 297, "q": "[[m(x) = 2x − 1]]. Compare [[3m(x)]] and [[m(3x)]].", "choices": ["Parallel: [[6x − 3]] and [[6x − 1]]", "The same: both [[6x − 3]]", "The same: both [[6x − 1]]", "Perpendicular"], "why": "[[3(2x − 1) = 6x − 3]], but [[2(3x) − 1 = 6x − 1]]."},
+  {"se": 301, "q": "For [[f(x) = x]], which transformation is the same as [[k(x) = f(x) + 8]]?", "choices": ["[[f(x + 8)]]", "[[f(x − 8)]]", "[[8f(x)]]", "[[f(8x)]]"], "why": "[[x + 8]] is both up 8 and left 8 for the parent function."},
+  {"se": 296, "q": "[[f(x) = x]] is compressed horizontally by a factor of ½. Which is the new function?", "choices": ["[[g(x) = f(2x) = 2x]]", "[[g(x) = f(½x) = ½x]]", "[[g(x) = f(x) + 2]]", "[[g(x) = f(x − 2)]]"], "why": "For [[f(bx)]] with [[|b| > 1]], the graph compresses horizontally by [[1/b = ½]]."},
+  {"se": 303, "q": "In [[a · f(b(x − c)) + d]], which constants change the input values?", "choices": ["[[b]] and [[c]]", "[[a]] and [[d]]", "[[a]] and [[b]]", "[[c]] and [[d]]"], "why": "[[b]] and [[c]] are inside with [[x]]: horizontal changes."},
+  {"se": 292, "q": "[[j(x) = 2x − 1]]. Simplify [[j(x + 4)]].", "choices": ["[[2x + 7]]", "[[2x + 3]]", "[[2x + 4]]", "[[8x − 1]]"], "why": "[[2(x + 4) − 1 = 2x + 7]]."},
+  {"se": 297, "q": "For [[f(x) = x]], a vertical dilation by [[⅘]] gives the same graph as a horizontal dilation by which factor?", "choices": ["[[5/4]]", "[[⅘]]", "[[−⅘]]", "[[1]]"], "why": "A vertical dilation by [[n]] matches a horizontal dilation by [[1/n]]."},
+  {"se": 304, "q": "What is the reciprocal of [[−⅘]]?", "choices": ["[[−5/4]]", "[[5/4]]", "[[⅘]]", "[[−1]]"], "why": "[[−⅘ · (−5/4) = 1]]."},
+] };
+</script>
+<script src="../mc.js"></script>

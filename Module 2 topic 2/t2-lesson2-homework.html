@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Topic 2 Lesson 2 Homework · Vertical and Horizontal Transformations</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<link rel="stylesheet" href="../mc.css">
+<div class="wrap">
+  <p class="eyebrow">Module 2 · Topic 2 · Lesson 2 · Homework</p>
+  <h1>Vertical and Horizontal Transformations Practice</h1>
+  <p class="muted">Pick an answer for each question. You'll see right away whether it's correct, and why. The page numbers point to your Student Edition if you want to look back.</p>
+  <ol id="questions"></ol>
+  <div class="bar">
+    <p id="result" class="card" hidden></p>
+    <button id="reset" class="ghost">Start over</button>
+  </div>
+</div>
+<script>
+window.MC = { mode: "homework", questions: [
+  {"se": 289, "q": "[[f(x) = x]] is translated left 3 units to make [[t(x)]]. Which is [[t(x)]]?", "choices": ["[[t(x) = f(x + 3) = x + 3]]", "[[t(x) = f(x − 3) = x − 3]]", "[[t(x) = f(x) − 3]]", "[[t(x) = 3f(x)]]"], "why": "Left 3 adds 3 to the input: [[f(x + 3)]]."},
+  {"se": 290, "q": "A horizontal translation of [[f(x) = x]] changes which values in the table?", "choices": ["The input values", "The output values", "Both", "Neither"], "why": "The outputs stay the same; each input moves left or right."},
+  {"se": 291, "q": "For [[f(x) = x]], translating right [[n]] units gives the same graph as which translation?", "choices": ["Down [[n]] units", "Up [[n]] units", "Left [[n]] units", "Right [[2n]] units"], "why": "[[f(x − n) = x − n = f(x) − n]]."},
+  {"se": 293, "q": "[[j(x) = 2x − 1]] and [[b(x) = j(x − 2)]]. Simplify [[b(x)]].", "choices": ["[[b(x) = 2x − 5]]", "[[b(x) = 2x − 3]]", "[[b(x) = 2x − 4]]", "[[b(x) = 2x + 3]]"], "why": "[[2(x − 2) − 1 = 2x − 4 − 1 = 2x − 5]]."},
+  {"se": 294, "q": "[[j(x) = 2x − 1]], [[b(x) = j(x − 2)]] and [[v(x) = j(x) − 2]]. Are [[b(x)]] and [[v(x)]] the same?", "choices": ["No: [[b(x) = 2x − 5]] and [[v(x) = 2x − 3]] are parallel", "Yes, both are [[2x − 5]]", "Yes, both are [[2x − 3]]", "No, they are perpendicular"], "why": "Right 2 and down 2 match only for [[f(x) = x]]. Here the [[y]]-intercepts differ."},
+  {"se": 297, "q": "For [[f(x) = x]], the graph of [[f(½x)]] is the same as the graph of which function?", "choices": ["[[½f(x)]]", "[[2f(x)]]", "[[f(x) + ½]]", "[[f(x − ½)]]"], "why": "[[f(½x) = ½x = ½f(x)]]."},
+  {"se": 300, "q": "[[f(x) = x]] and [[g(x) = f(x + 5)]]. Describe the transformation.", "choices": ["Translated left 5 units", "Translated right 5 units", "Translated up 5 units", "Stretched by 5"], "why": "Adding 5 to the input moves the graph left 5."},
+  {"se": 297, "q": "[[f(x) = x]] and [[g(x) = f(⅓x)]]. Describe the transformation.", "choices": ["Stretched horizontally by a factor of 3", "Compressed horizontally by a factor of ⅓", "Stretched vertically by 3", "Translated right ⅓"], "why": "For [[f(bx)]] with [[0 < b < 1]], the graph stretches horizontally by [[1/b = 3]]."},
+  {"se": 303, "q": "Ricardo burns [[w(x) = 4x]] calories in [[x]] minutes of walking. Which domain fits the situation?", "choices": ["[[x ≥ 0]]", "All real numbers", "[[x ≤ 0]]", "[[x ≥ 4]]"], "why": "He can't walk a negative number of minutes."},
+  {"se": 303, "q": "Ricardo burns [[w(x) = 4x]] calories in [[x]] minutes. How many calories does he burn in 45 minutes?", "choices": ["[[180]]", "[[49]]", "[[11.25]]", "[[90]]"], "why": "[[4 · 45 = 180]]."},
+] };
+</script>
+<script src="../mc.js"></script>
