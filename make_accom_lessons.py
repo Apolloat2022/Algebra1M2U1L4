@@ -473,7 +473,7 @@ def main():
                 secs[1:1] = [s for s in sections if re.search(r"Day \d · Bell Work", s)]
             html = head.replace("</title>", f" · {label}</title>", 1) + '<div id="stage">\n' + "".join(secs) + "\n</div>\n" + tail
             if kind == "504":
-                html = html.replace("Prepared by <b>Mr. Pandey</b>", "Prepared by <b>Mr. Pandey</b> · <b>Section 504 Version</b>")
+                html = html.replace('<p style="font-size:24px;margin-top:6px">Bell work:', '<p style="font-size:24px;margin-top:6px"><b>Section 504 Version</b></p>\n  <p style="font-size:24px;margin-top:6px">Bell work:', 1)
             html = re.sub(r'href="(lesson\d-[^"]+\.html)"', lambda m: deck_link(kind, m), html)
             practice_pages(n, kind, folder)
             for name in ("bellwork", "homework", "quiz"):
