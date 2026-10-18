@@ -766,8 +766,8 @@ PPTX = {5: (ANS5, NOTES5, CORRECTIONS5, 65),  # lesson -> answers, notes, correc
 
 # ---------------------------------------------------------------- Topic 2 Lesson 1: Transforming Linear Functions
 
-def cells(x, y, *values, h=58):  # a table column filled top to bottom on one click
-    return [(x, y + i * h, 116, h, 20, v, CENTER, *(() if i == 0 else (WITH,))) for i, v in enumerate(values)]
+def cells(x, y, *values, h=58, more=False):  # a table column filled top to bottom on one click (more: same click as before)
+    return [(x, y + i * h, 116, h, 20, v, CENTER, *(() if i == 0 and not more else (WITH,))) for i, v in enumerate(values)]
 
 
 ANS_T2_1 = {
@@ -883,8 +883,265 @@ CORRECTIONS_T2_1 = [
      "16171D"),
 ]
 
+# ---------------------------------------------------------------- Topic 2 Lesson 2: Vertical and Horizontal Transformations
+
+def blanks(x, ys, *values, w=440, size=22):  # answers written on a column of blank lines, one click each
+    return [(x, y, w, 50, size, v) for y, v in zip(ys, values)]
+
+
+ANS_T2_2 = {
+    6: [*blanks(424, [448], "All real numbers"), *blanks(386, [516], "All real numbers", w=420),
+        *blanks(494, [584, 652], "(8/3, 0)", "(0, −8)", w=300), *blanks(372, [720], "3", w=300),
+        *blanks(216, [850], "Increasing"),
+        (1600, 400, 300, 260, 18, "Graph g(x): through (0, −8) and (3, 1)")],
+    7: [*blanks(422, [366], "All real numbers"), *blanks(386, [434], "All real numbers", w=420),
+        *blanks(492, [502, 570], "(7.5, 0)", "(0, 5)", w=300), *blanks(370, [638], "−2/3", w=300),
+        *blanks(216, [772], "Decreasing"),
+        (1590, 280, 310, 260, 18, "Graph h(x): through (0, 5) and (3, 3)")],
+    13: [*cells(1196, 734, "−5", "−4", "−3", "−2", "−1"), *cells(1312, 734, "−2", "−1", "0", "1", "2", more=True),
+         (1450, 734, 440, 150, 20, "Graph t(x): through (−3, 0) and (0, 3)")],
+    14: [*cells(1452, 659, "−2", "−1", "0", "1", "2"), *cells(1568, 659, "1", "2", "3", "4", "5", more=True),
+         (82, 420, 380, 300, 20, "Graph w(x): through (0, 3) and (−3, 0). It is the same line as t(x).")],
+    15: [(122, 380, 1700, 90, 20, "The input values. The output values stay the same."),
+         (122, 558, 1700, 90, 20, "The output values. The input values stay the same."),
+         (122, 736, 1700, 120, 20, "The graphs of t(x) and w(x) are the same line, y = x + 3, but their tables of "
+                                   "values are different.")],
+    16: [(122, 400, 1700, 130, 20, "Horizontal translations, y = f(x − c). The output values of the corresponding "
+                                   "points stay the same."),
+         (122, 636, 1700, 130, 20, "Vertical translations, y = f(x) + d. The input values of the corresponding "
+                                   "points stay the same.")],
+    17: [(122, 400, 1700, 80, 22, "A vertical translation down n units."),
+         (122, 636, 1700, 80, 22, "A horizontal translation left n units.")],
+    20: [(122, 945, 860, 130, 18, "b. q(x) = j(x) + 4\nGraph q(x): through (0, 3), slope 2"),
+         (990, 945, 900, 130, 18, "d. r(x) = j(x + 4)\nGraph r(x): through (0, 7), slope 2")],
+    21: [(122, 336, 1700, 70, 20, "The graphs are not the same. They are parallel lines with different y-intercepts."),
+         (800, 560, 1080, 260, 20, "r(x) = j(x + 4) = 2(x + 4) − 1 = 2x + 8 − 1\nr(x) = 2x + 7\n"
+                                   "The equations for q(x) and r(x) are not the same.")],
+    22: [(1130, 450, 760, 200, 20, "Graph b(x): through (0, −5) and (2.5, 0), slope 2"),
+         (1150, 915, 740, 60, 24, "b(x) = j(x − 2)")],
+    23: [(1130, 450, 760, 200, 20, "Graph v(x): through (0, −3) and (1.5, 0), slope 2"),
+         (1150, 915, 740, 60, 24, "v(x) = j(x) − 2")],
+    24: [(122, 345, 1700, 60, 18, "The graphs are not the same. They are parallel lines with different y-intercepts."),
+         (122, 600, 1700, 200, 22, "b(x) = j(x − 2) = 2(x − 2) − 1 = 2x − 5\nv(x) = j(x) − 2 = 2x − 1 − 2 = 2x − 3\n"
+                                   "The equations for b(x) and v(x) are not the same.")],
+    25: [(122, 395, 1700, 110, 20, "No. It is true only for f(x) = x. For j(x) = 2x − 1, right 2 gives 2x − 5 but "
+                                   "down 2 gives 2x − 3."),
+         (122, 630, 1700, 110, 20, "No. For j(x) = 2x − 1, left 4 gives r(x) = 2x + 7 but up 4 gives "
+                                   "q(x) = 2x + 3.")],
+    29: [(122, 620, 1690, 380, 20,
+          "When f(x) is replaced by a·f(b(x − c)) + d, b and c affect the input values (horizontal "
+          "transformations), while a and d affect the output values (vertical transformations).\n"
+          "For f(x) = x, a translation right n gives the same graph as a translation down n, and a horizontal "
+          "dilation by n gives the same graph as a vertical dilation by 1/n. For other linear functions these "
+          "pairs are not the same.")],
+    31: [*cells(1301, 679, "−4", "−2", "0", "2", "4"),
+         (1440, 680, 450, 150, 20, "Graph a(x): through (0, 0) and (1, 2)")],
+    32: [*cells(1184, 670, "−1", "−1/2", "0", "1/2", "1"),
+         (1440, 670, 450, 150, 20, "Graph b(x): through (0, 0) and (1, 2), the same line as a(x)")],
+    33: [(122, 380, 1700, 110, 22, "The graphs of a(x) and b(x) are the same line, y = 2x, but their tables of "
+                                   "values are different.")],
+    34: [*cells(1292, 707, "−8/5", "−4/5", "0", "4/5", "8/5"),
+         (1430, 707, 460, 150, 20, "Graph c(x): through (0, 0) and (5, 4)")],
+    35: [*cells(1174, 660, "−5/2", "−5/4", "0", "5/4", "5/2"),
+         (1430, 660, 460, 150, 20, "Graph d(x): through (0, 0) and (5, 4), the same line as c(x)")],
+    36: [(122, 380, 1700, 110, 22, "The graphs of c(x) and d(x) are the same line, y = (4/5)x, but their tables of "
+                                   "values are different.")],
+    37: [(122, 440, 1700, 70, 22, "A factor of 1/n."), (122, 680, 1700, 70, 22, "A factor of 1/n.")],
+    41: [(780, 470, 1110, 580, 20,
+          "No. It is true only for the parent function f(x) = x.\n"
+          "Counterexample: m(x) = 2x − 1.\n"
+          "n(x) = 3·m(x) = 3(2x − 1) = 6x − 3\n"
+          "p(x) = m(3x) = 2(3x) − 1 = 6x − 1\n"
+          "The graphs of n(x) and p(x) are parallel, not the same.\n"
+          "Graph: m(x) through (0, −1), slope 2; n(x) through (0, −3) and p(x) through (0, −1), slope 6.")],
+    45: [(1290, 500, 600, 400, 20, "f(x) is translated right 7 units.\nGraph g(x) = x − 7: through (7, 0) and "
+                                   "(0, −7)")],
+    46: [(1290, 270, 600, 400, 20, "f(x) is stretched vertically by a factor of 3.\nGraph g(x) = 3x: through "
+                                   "(0, 0) and (2, 6)")],
+    47: [(1290, 270, 600, 400, 20, "f(x) is translated up 2 units.\nGraph g(x) = x + 2: through (0, 2) and "
+                                   "(−2, 0)")],
+    48: [(1290, 270, 600, 400, 20, "f(x) is stretched horizontally by a factor of 2.\nGraph g(x) = (1/2)x: "
+                                   "through (0, 0) and (4, 2)")],
+    49: [(1290, 270, 600, 400, 20, "f(x) is translated down 4 units.\nGraph g(x) = x − 4: through (0, −4) and "
+                                   "(4, 0)")],
+    50: [(1290, 270, 600, 400, 20, "f(x) is translated left 5 units.\nGraph g(x) = x + 5: through (0, 5) and "
+                                   "(−5, 0)")],
+    55: [*blanks(340, [406, 472, 538, 604], "f(x) + 8", "2f(x)", "f((1/3)x)", "f(x − 7)")],
+    59: [(180, 450, 400, 70, 24, "1/3"), (700, 450, 400, 70, 24, "−1/10"), (180, 720, 400, 70, 24, "5"),
+         (700, 720, 400, 70, 24, "−4/5"), (180, 960, 400, 70, 24, "−1/c"), (700, 960, 400, 70, 24, "b/a")],
+}
+
+NOTES_T2_2 = {
+    22: "Slide typo: the second item is labeled 'a.'; it is item b.",
+    23: "Slide typo: both items are labeled 'a.'; they are items c and d.",
+    41: "Counterexamples will vary: any linear function other than f(x) = x works, as long as students compare "
+        "n·m(x) with m(nx).",
+    46: "Slide typo: slides 46, 47, 49 and 50 number their item '1.'; they are items 2, 3, 5 and 6.",
+    59: "TE correction: the TE prints the reciprocal of −10 as 1/10. It is −1/10, since (−10)(−1/10) = 1.",
+}
+
+CORRECTIONS_T2_2 = [
+    ("Teacher Edition corrections in this deck", None),
+    ("Prepare Q2: the TE gives the reciprocal of −10 as 1/10; it is −1/10.", None),
+    ("Slide typos: slide 22's second item 'a.' is b; slide 23's two 'a.' items are c and d; slides 46, 47, 49 and "
+     "50 are items 2, 3, 5 and 6, not '1.'", None),
+    ("Every other TE answer was re-solved and is correct.", "16171D"),
+]
+
+# ---------------------------------------------------------------- Topic 2 Lesson 3: Determining Slopes of Perpendicular Lines
+
+def rotated(x, a, b):  # one table column of the rotation table: A on row 1, B on row 2, one click
+    return [(x, 883, 432, 62, 20, a, CENTER), (x, 945, 432, 62, 20, b, CENTER, WITH)]
+
+
+ANS_T2_3 = {
+    6: [*rotated(554, "A′(0, 0)", "B′(−5, 8)"), *rotated(986, "A″(0, 0)", "B″(−8, −5)"),
+        *rotated(1418, "A‴(0, 0)", "B‴(5, −8)")],
+    7: [(140, 380, 1700, 200, 20, "Each 90° counterclockwise rotation changes (x, y) to (−y, x): B(8, 5) → B′(−5, 8) "
+                                  "→ B″(−8, −5) → B‴(5, −8). Endpoint A is the center of rotation, so it does not "
+                                  "change."),
+        (470, 740, 300, 60, 24, "m = 5/8"), (1120, 740, 400, 60, 24, "m = −8/5"),
+        (470, 880, 300, 60, 24, "m = 5/8"), (1120, 880, 400, 60, 24, "m = −8/5")],
+    8: [(616, 420, 1260, 300, 20, "AB and A″B″ (0° and 180°) have equal slopes, 5/8. A′B′ and A‴B‴ (90° and 270°) "
+                                  "have equal slopes, −8/5. The two slopes are reciprocals with opposite signs: "
+                                  "(5/8)(−8/5) = −1.")],
+    13: [(122, 370, 1250, 150, 18, "Yes. Each line is rotated 90°, so the lines meet at a 90° angle, a right angle. "
+                                   "Lines that form right angles are perpendicular."),
+         (122, 620, 1280, 400, 20, "A: y = x;   A′: y = −x\nB: y = (1/3)x + 5;   B′: y = −3x + 5\n"
+                                   "C: y = −(2/3)x + 9;   C′: y = (3/2)x − 4\n"
+                                   "The slopes of each pair are reciprocals with opposite signs.")],
+    17: [(122, 590, 1180, 470, 18, "Rotating R(a, b) 90° clockwise about O maps it onto line q at D(b, −a).\n"
+                                   "Slope of p: m1 = b/a.   Slope of q: m2 = −a/b.\n"
+                                   "−1/m2 = −1 ÷ (−a/b) = −1 · (b/−a) = b/a = m1, so m1 = −1/m2.\n"
+                                   "The slopes are negative reciprocals.")],
+    18: [(620, 430, 600, 60, 24, "m = −3/2"), (620, 656, 600, 60, 24, "m = 5/4"), (620, 872, 600, 60, 24, "m = 1/3")],
+    22: [(122, 420, 1690, 260, 22, "Rotating a line 90° about a point maps (x, y) to (−y, x), so a slope b/a becomes "
+                                   "−a/b. The slopes of perpendicular lines are negative reciprocals (their product "
+                                   "is −1). Any vertical line is perpendicular to any horizontal line.")],
+    24: [(880, 600, 1000, 300, 22, "Line p is the vertical line x = 4.\nLines q, r and s are the horizontal lines "
+                                   "y = 4, y = 8 and y = 12.")],
+    25: [(122, 430, 1700, 60, 22, "The value of y does not change: it changes by 0 units."),
+         (122, 650, 1700, 150, 20, "The slope of any horizontal line is 0. The value of y stays the same, so "
+                                   "m = (y2 − y1)/(x2 − x1) = 0/(x2 − x1) = 0.")],
+    26: [(122, 380, 1700, 60, 22, "The value of x does not change: it changes by 0 units."),
+         (122, 600, 1700, 150, 20, "The slope of any vertical line is undefined. The value of x stays the same, so "
+                                   "m = (y2 − y1)/(x2 − x1) = (y2 − y1)/0, which is undefined.")],
+    27: [(1010, 410, 880, 100, 18, "Always. All vertical lines have an undefined slope, so they are parallel."),
+         (1010, 532, 880, 100, 18, "Always. All horizontal lines have slope 0, so they are parallel."),
+         (122, 790, 1700, 80, 22, "Any vertical line and any horizontal line are always perpendicular.")],
+    28: [(122, 372, 1700, 60, 22, "Horizontal line: y = −1;   vertical line: x = 2"),
+         (122, 562, 1700, 60, 22, "y = 0  (a horizontal line through (1, 0))"),
+         (122, 752, 1700, 60, 22, "x = 5  (a vertical line through (5, 6))")],
+    32: [(540, 720, 1300, 340, 20, "The perpendicular slope is −1/2.\ny − 2 = −(1/2)(x − 6)\ny − 2 = −(1/2)x + 3\n"
+                                   "y = −(1/2)x + 5")],
+    33: [(140, 420, 1700, 200, 20, "The perpendicular slope is 4/3.\ny − (−8) = (4/3)(x − 3);   y + 8 = (4/3)x − 4;   "
+                                   "y = (4/3)x − 12"),
+         (140, 820, 1700, 240, 20, "m = (−9 − 3)/(−1 − (−5)) = −12/4 = −3, so the perpendicular slope is 1/3.\n"
+                                   "y − 2 = (1/3)(x − 6);   y − 2 = (1/3)x − 2;   y = (1/3)x")],
+    34: [(122, 430, 1700, 140, 20, "m = (4 − 1)/(0 − (−6)) = 3/6 = 1/2, so the perpendicular slope is −2.\n"
+                                   "y − 7 = −2(x − (−2));   y − 7 = −2x − 4;   y = −2x + 3"),
+         (122, 720, 1700, 200, 20, "m = (4 − 9)/(−4 − 5) = −5/−9 = 5/9, so the perpendicular slope is −9/5.\n"
+                                   "y − 9 = −(9/5)(x − 5);   y − 9 = −(9/5)x + 9;   y = −(9/5)x + 18")],
+    39: [(520, 740, 1060, 290, 18, "Jackson is correct. The axes have different scales. Lines a, b and c all have "
+                                   "slope 1, so they are parallel. Lines d, e and f all have slope −1/4. Since "
+                                   "1 · (−1/4) ≠ −1, the slopes are not negative reciprocals, so the lines are not "
+                                   "perpendicular.")],
+    43: [(1080, 425, 800, 60, 20, "Function: each input has exactly one output."),
+         (1080, 559, 800, 60, 20, "Function: each input has exactly one output."),
+         (1080, 693, 800, 60, 20, "Function: each input has exactly one output."),
+         (1080, 827, 800, 60, 20, "Not a function: the input −1 has 4 different outputs.")],
+}
+
+NOTES_T2_3 = {
+    24: "Read from the graph: G and K are on x = 4; H and G are on y = 4, F and J on y = 8, K and L on y = 12.",
+    33: "TE wording slip (Q2): the TE says 'a line with a slope of 3/4'; the given line y = −(3/4)x has slope −3/4. "
+        "The answer y = (4/3)x − 12 is correct. In Q3 to Q5 the TE writes the slope formula as (y2 − y1)/(y2 − y1); "
+        "the denominator is x2 − x1. Its numbers are correct.",
+    39: "The x-axis counts 1 unit per grid square and the y-axis 1 unit per 2 squares, so the lines look "
+        "perpendicular but are not.",
+}
+
+CORRECTIONS_T2_3 = [
+    ("Teacher Edition notes for this deck", None),
+    ("Activity 3.3 Q2: the TE says the given line has slope 3/4; y = −(3/4)x has slope −3/4. Its answer, "
+     "y = (4/3)x − 12, is correct.", None),
+    ("Activity 3.3 Q3 to Q5: the TE prints the slope formula as (y2 − y1)/(y2 − y1); the denominator is x2 − x1. "
+     "The computed slopes are correct.", None),
+    ("Every TE answer was re-solved and is correct, including the Assignment (pp. 315-317) and Prepare.",
+     "16171D"),
+]
+
+# ---------------------------------------------------------------- Topic 2 Lesson 4: Comparing Linear Functions in Different Forms
+
+ANS_T2_4 = {
+    7: [(122, 560, 800, 480, 18, "Sample answers: A (the table) is the only decreasing function (slope −2). D (the "
+                                 "graph) is the only one whose y-intercept is not 0. C (the equation) is the only one "
+                                 "with a slope between 0 and 1. B (the description) is the only one whose domain is "
+                                 "whole numbers only.")],
+    11: [(950, 740, 920, 120, 18, "b. The slope is −4. Neither parallel nor perpendicular to y = 4x − 3."),
+         (720, 900, 1150, 120, 18, "a. The slope is 4. Parallel to y = 4x − 3.")],
+    12: [(122, 400, 800, 150, 18, "c. The slope is 1/4. Neither parallel nor perpendicular to y = 4x − 3."),
+         (1040, 800, 840, 150, 18, "d. The slope is 1/4. Neither parallel nor perpendicular to y = 4x − 3.")],
+    13: [(212, 820, 700, 150, 18, "e. The slope is −1/4. Perpendicular to y = 4x − 3, since 4 · (−1/4) = −1."),
+         (970, 420, 880, 150, 18, "f. The slope is 4 (dozen cookies per hour). Parallel to y = 4x − 3.")],
+    18: [(122, 370, 1700, 70, 18, "Table and graph: x = weight of cardboard (tons); y = payout amount (dollars)."),
+         (394, 625, 80, 50, 24, "<", CENTER), (750, 625, 110, 50, 24, "<", CENTER), (1090, 625, 110, 50, 24, "<", CENTER),
+         (122, 720, 1700, 90, 18, "Travis pays $15 per ton: w(0.5) = 7.50, w(1) = 15, w(3) = 45. Hays pays $20 per "
+                                  "ton: j(0.5) = 10, j(1) = 20, j(3) = 60.")],
+    19: [(540, 420, 1340, 120, 18, "Both y-intercepts are 0: each center pays $0 for 0 tons of cardboard."),
+         (540, 660, 1340, 150, 18, "Hays County: it pays $20 per ton, while Travis County pays only $15 per ton, "
+                                   "so Hays pays more for any weight.")],
+    23: [(122, 420, 1690, 420, 20,
+          "Every representation (equation, table, graph or verbal description) shows the same key features: the "
+          "slope or rate of change and the y-intercept or starting value. Compare functions by finding these in each "
+          "form: equal slopes mean parallel lines, slopes with a product of −1 mean perpendicular lines, and the "
+          "quantities and units tell what the slope and y-intercept mean in the situation.")],
+    26: [(860, 760, 1000, 100, 18, "Joey's table columns: degrees Fahrenheit (left), degrees Celsius (right)")],
+    27: [(122, 440, 1300, 120, 17, "Xavier's equation: x is degrees Celsius and J(x) is degrees Fahrenheit, so Xavier "
+                                   "converts °C to °F. Joey's table converts °F to °C (50°F = 10°C)."),
+         (122, 760, 620, 300, 16, "a. Joey's slope is about 5/9: each 9°F increase is about a 5°C increase. "
+                                  "Xavier's slope is 9/5: each 5°C increase is a 9°F increase."),
+         (760, 760, 640, 300, 16, "b. Joey's y-intercept is about −17.8: 0°F is about −17.8°C. Xavier's "
+                                  "y-intercept is 32: 0°C is 32°F.")],
+    32: [(490, 420, 1380, 140, 17, "Miguel saves the same amount each month and has $80 after 4 months, so the "
+                                   "x-axis ticks are 1 month each and the y-axis ticks are $20 each. The origin is "
+                                   "(0 months, $0 saved)."),
+         (560, 760, 640, 300, 16, "a. Miguel's slope is 20: he saves $20 each month. Lauren's slope is 25: she "
+                                  "saves $25 each month."),
+         (1220, 760, 640, 300, 16, "b. Miguel's y-intercept is 0: he started with $0. Lauren's y-intercept is 25: "
+                                   "she started with $25.")],
+    36: [(140, 650, 1700, 100, 18, "Sample: Alejandra has read 2.5 pages of a book and reads 2.5 more pages every "
+                                   "10 minutes (x = minutes from now, y = pages read). The slope is 1/4."),
+         (140, 860, 1700, 70, 20, "Sample: y = 0.2x + 30 (slope 0.2 < 0.25)")],
+    37: [(122, 450, 1050, 200, 17, "Sample: the graphed line has slope 1/3 ≈ 0.333 (through (0, −4) and (3, −3)). "
+                                   "It is steeper than the table (1/4) and my equation (0.2)."),
+         (122, 670, 1050, 200, 17, "Answers will vary: for example, finding the rate of change from two points and "
+                                   "comparing the absolute values of the slopes.")],
+    41: [(700, 395, 400, 60, 24, "x = 24"), (700, 559, 400, 60, 24, "x = 7.7"), (700, 705, 400, 60, 24, "x = 7.5"),
+         (700, 855, 400, 60, 24, "x = 13")],
+}
+
+NOTES_T2_4 = {
+    7: "Any choice is correct if the justification is. Function B (ratio 1 : 1) has slope 1; Function D passes "
+       "through (0, 5).",
+    31: "Slide typo: the introduction says 'Michelle opened her bank account'; the person is Lauren.",
+    36: "TE wording slip: the TE's sample says Alejandra is 'at the middle of page 2'. Having read 2.5 pages puts her "
+        "in the middle of page 3, so the situation here says 'has read 2.5 pages'.",
+}
+
+CORRECTIONS_T2_4 = [
+    ("Teacher Edition notes for this deck", None),
+    ("Slide typo: slide 31 calls Lauren 'Michelle'.", None),
+    ("Talk the Talk Q1: the TE's sample starts Alejandra 'at the middle of page 2'; y = 2.5 pages read is the middle "
+     "of page 3.", None),
+    ("Every TE answer was re-solved and is correct, including the Assignment (pp. 327-330) and Prepare.", "16171D"),
+]
+
 TOPIC2 = HERE / "Module 2 topic 2"
-PPTX_T2 = {1: (ANS_T2_1, NOTES_T2_1, CORRECTIONS_T2_1, 67)}  # Topic 2 lesson -> as PPTX
+PPTX_T2 = {1: (ANS_T2_1, NOTES_T2_1, CORRECTIONS_T2_1, 67),
+           2: (ANS_T2_2, NOTES_T2_2, CORRECTIONS_T2_2, 57),
+           3: (ANS_T2_3, NOTES_T2_3, CORRECTIONS_T2_3, 41),
+           4: (ANS_T2_4, NOTES_T2_4, CORRECTIONS_T2_4, 39)}  # Topic 2 lesson -> as PPTX
 
 
 if __name__ == "__main__":
