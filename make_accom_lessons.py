@@ -7,7 +7,7 @@ sentence frames, fewer practice items, and a short exit ticket.
 Both reuse the original deck's head and script, so they work as web decks too.
 Also writes IEP and 504 copies of the bell work, homework and quiz pages (see practice_pages),
 and a teacher answer key .pptx for each IEP / 504 bell work, homework, quiz and exit ticket (answer_key, exit_key; needs node to read the page data).
-Standard library only.  Run:  python make_accom_lessons.py
+Standard library only.  Run:  python make_accom_lessons.py   (Topic 2 practice pages and keys only: add t2)
 """
 import html as html_mod
 import json
@@ -348,9 +348,33 @@ REF = {
  6: ["<b>Is it linear?</b> Find (change in <i>y</i>) ÷ (change in <i>x</i>) for every pair. Always the same → linear.",
      "<b>General form:</b> <i>f</i>(<i>x</i>) = <i>ax</i> + <i>b</i>. <b>Factored form:</b> <i>f</i>(<i>x</i>) = <i>a</i>(<i>x</i> − <i>c</i>). Distribute to switch.",
      "<b>How much?</b> Put the number in for <i>x</i>. <b>How many?</b> Set <i>f</i>(<i>x</i>) equal to the amount and solve.",
-     "<b>Round up</b> when you need at least that much (you can't sell part of a shirt)."]}
-KEEP = {"homework": {4: [0, 2, 5, 6, 7, 8], 5: [0, 1, 2, 3, 4, 5], 6: [0, 1, 5, 7, 8, 9]},
-        "quiz": {4: [0, 1, 3, 6, 7, 8], 5: [0, 1, 4, 5, 6, 9], 6: [0, 1, 4, 5, 6, 8]}}
+     "<b>Round up</b> when you need at least that much (you can't sell part of a shirt)."],
+ "2.1": ["<b>Translate:</b> <i>f</i>(<i>x</i>) + <i>d</i> moves the graph up (<i>d</i> &gt; 0) or down (<i>d</i> &lt; 0). The slope stays the same.",
+         "<b>Dilate:</b> <i>a</i> · <i>f</i>(<i>x</i>) stretches when |<i>a</i>| &gt; 1, compresses when 0 &lt; |<i>a</i>| &lt; 1, and reflects across the <i>x</i>-axis when <i>a</i> &lt; 0.",
+         "<b>For <i>f</i>(<i>x</i>) = <i>x</i>:</b> <i>a</i> · <i>f</i>(<i>x</i>) + <i>d</i> = <i>ax</i> + <i>d</i>, with slope <i>a</i> and <i>y</i>-intercept (0, <i>d</i>).",
+         "<b>Parallel lines</b> have the same slope. Put the point into <i>y</i> = <i>mx</i> + <i>b</i> to find <i>b</i>."],
+ "2.2": ["<b>Inside the parentheses</b> changes the input (horizontal). <b>Outside</b> changes the output (vertical).",
+         "<b><i>f</i>(<i>x</i> − <i>c</i>)</b> moves right <i>c</i>. <b><i>f</i>(<i>x</i> + <i>c</i>)</b> moves left <i>c</i>. The sign flips.",
+         "<b><i>f</i>(<i>bx</i>)</b> compresses horizontally when |<i>b</i>| &gt; 1 and stretches when 0 &lt; |<i>b</i>| &lt; 1.",
+         "<b>Only for <i>f</i>(<i>x</i>) = <i>x</i>:</b> right <i>n</i> = down <i>n</i>, and a vertical dilation by <i>n</i> = a horizontal dilation by 1/<i>n</i>."],
+ "2.3": ["<b>Perpendicular slopes</b> are negative reciprocals: flip the fraction and change the sign. Their product is −1.",
+         "<b>Parallel slopes</b> are equal.",
+         "<b>Horizontal:</b> <i>y</i> = a number, slope 0. <b>Vertical:</b> <i>x</i> = a number, slope undefined. They are always perpendicular.",
+         "<b>Point-slope form:</b> <i>y</i> − <i>y</i><sub>1</sub> = <i>m</i>(<i>x</i> − <i>x</i><sub>1</sub>), then get <i>y</i> alone."],
+ "2.4": ["<b>Slope from a table or two points:</b> (change in <i>y</i>) ÷ (change in <i>x</i>).",
+         "<b>Same slope</b> → parallel. <b>Slopes multiply to −1</b> → perpendicular. Otherwise neither.",
+         "<b><i>y</i>-intercept:</b> the output when <i>x</i> = 0, the starting amount.",
+         "<b>Units:</b> the slope is output units per input unit, for example dollars per ton."]}
+KEEP = {"homework": {4: [0, 2, 5, 6, 7, 8], 5: [0, 1, 2, 3, 4, 5], 6: [0, 1, 5, 7, 8, 9],
+                     "2.1": [0, 1, 3, 6, 7, 8], "2.2": [0, 2, 3, 6, 8, 9], "2.3": [0, 1, 2, 4, 5, 9], "2.4": [0, 1, 3, 5, 6, 8]},
+        "quiz": {4: [0, 1, 3, 6, 7, 8], 5: [0, 1, 4, 5, 6, 9], 6: [0, 1, 4, 5, 6, 8],
+                 "2.1": [0, 2, 3, 4, 6, 8], "2.2": [0, 1, 2, 5, 7, 9], "2.3": [0, 2, 6, 7, 8, 9], "2.4": [1, 2, 3, 5, 6, 8]}}
+
+
+def src(n):  # folder, file prefix and name of lesson n's general pages ("2.1" = Topic 2 Lesson 1)
+    if isinstance(n, str):
+        return HERE / "Module 2 topic 2", f"t2-lesson{n[2:]}", f"Topic 2 Lesson {n[2:]}"
+    return HERE / f"lesson{n}", f"lesson{n}", f"Lesson {n}"
 HELP = {"IEP": "Each question has 3 choices. Use the reminders below, and press <b>Read aloud</b> to hear a question.",
         "504": "Use the reminders below, and press <b>Read aloud</b> to hear a question. Take the time you need."}
 
@@ -358,14 +382,14 @@ HELP = {"IEP": "Each question has 3 choices. Use the reminders below, and press 
 def practice_pages(n, kind, folder):
     label = "Section 504" if kind == "504" else "IEP"
     card = (f'<div class="card ref"><p>{HELP[kind]}</p>' + "".join(f"<p>{r}</p>" for r in REF[n]) + "</div>")
-    pages = sorted((HERE / f"lesson{n}").glob(f"lesson{n}-bellwork-day*.html")) + \
-        [HERE / f"lesson{n}/lesson{n}-{p}.html" for p in ("homework", "quiz")]
+    d, pre, _ = src(n)
+    pages = sorted(d.glob(f"{pre}-bellwork-day*.html")) + [d / f"{pre}-{p}.html" for p in ("homework", "quiz")]
     for f in pages:
         accom = {"readAloud": True}
         s = f.read_text(encoding="utf-8")
         if kind == "IEP":
             accom["choices"] = 3
-            page = f.stem.split("-")[1]
+            page = f.stem.split("-")[-1]
             if page in KEEP:
                 accom["keep"] = KEEP[page][n]
                 s = s.replace("Answer all 10 questions", f"Answer all {len(accom['keep'])} questions")
@@ -388,13 +412,14 @@ def answer_key(n, kind, folder, name):
     """Teacher answer-key .pptx for the IEP / 504 bell work (all days), homework or quiz.
     Choices are shuffled on screen, so it gives answer text, not letters."""
     title = {"bellwork": "Bell Work", "homework": "Homework", "quiz": "Quiz"}[name]
+    d, pre, lesson = src(n)
     if name == "bellwork":  # one key for every day, a heading per day
-        groups = [(f"Day {f.stem[-1]} · ", page_data(f)) for f in sorted((HERE / f"lesson{n}").glob(f"lesson{n}-bellwork-day*.html"))]
+        groups = [(f"Day {f.stem[-1]} · ", page_data(f)) for f in sorted(d.glob(f"{pre}-bellwork-day*.html"))]
     else:
-        groups = [("", page_data(HERE / f"lesson{n}/lesson{n}-{name}.html"))]
+        groups = [("", page_data(d / f"{pre}-{name}.html"))]
     plain = lambda t: html_mod.escape(re.sub(r"\[\[(.+?)\]\]", r"\1", t))
     label = "Section 504" if kind == "504" else "IEP"
-    foot = f'<p class="foot">Lesson {n} {title} · {label} Version · Answer Key (teacher copy)</p>'
+    foot = f'<p class="foot">{lesson} {title} · {label} Version · Answer Key (teacher copy)</p>'
     per = {"bellwork": 2, "homework": 2, "quiz": 3}[name]  # rows per slide that fit the 7.5 in height
     body, total = [], 0
     for day, data in groups:
@@ -413,14 +438,14 @@ def answer_key(n, kind, folder, name):
                 else "Each IEP question has 3 choices; the questions are the same as the general bell work.")
     else:
         note = f"Same {total} questions and choices as the general {title.lower()}."
-    slides = [f'<section class="slide"><h1>Answer Key</h1><h3>Lesson {n} {title} · {label} Version</h3>'
+    slides = [f'<section class="slide"><h1>Answer Key</h1><h3>{lesson} {title} · {label} Version</h3>'
               f'<p>{total} questions{f" over {len(groups)} days" if len(groups) > 1 else ""}, 1 point each. '
               f'The answer choices are shuffled for each student, so match the answer text, not the letter.</p>'
               f'<p>{note}</p><p class="warn">Teacher copy. Do not share with students.</p>{foot}</section>'] + body
-    src = HERE / folder / f"lesson{n}-{name}-{kind}-ANSWER-KEY.html"
-    src.write_text(f'<!doctype html><meta charset="utf-8"><title>Lesson {n} {title} Answer Key · {label}</title><body>{"".join(slides)}</body>', encoding="utf-8")
-    subprocess.run([sys.executable, str(HERE / "make_pptx.py"), src.relative_to(HERE).as_posix()], check=False)
-    src.unlink()
+    out = HERE / folder / f"{pre}-{name}-{kind}-ANSWER-KEY.html"
+    out.write_text(f'<!doctype html><meta charset="utf-8"><title>{lesson} {title} Answer Key · {label}</title><body>{"".join(slides)}</body>', encoding="utf-8")
+    subprocess.run([sys.executable, str(HERE / "make_pptx.py"), out.relative_to(HERE).as_posix()], check=False)
+    out.unlink()
 
 
 EXIT_WORK = {  # IEP exit tickets (the 504 decks keep the original exit ticket, whose notes hold the work)
@@ -459,6 +484,14 @@ def deck_link(kind, m):  # the accommodated bell work, homework and quiz sit nex
     return f'href="{m.group(1)[:-5]}-{kind}.html"'
 
 
+def topic2():  # Topic 2 has only the publisher decks, so just the practice pages and their keys
+    for n in ("2.1", "2.2", "2.3", "2.4"):
+        for kind, folder in (("504", "Section 504"), ("IEP", "IEP")):
+            practice_pages(n, kind, folder)
+            for name in ("bellwork", "homework", "quiz"):
+                answer_key(n, kind, folder, name)
+
+
 def main():
     for n, path in LESSONS.items():
         src = (HERE / path).read_text(encoding="utf-8")
@@ -485,4 +518,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    topic2() if sys.argv[1:] == ["t2"] else main()

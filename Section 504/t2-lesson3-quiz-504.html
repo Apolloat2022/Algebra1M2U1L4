@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Topic 2 Lesson 3 Quiz · Slopes of Perpendicular Lines · Section 504</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<link rel="stylesheet" href="../mc.css">
+<div class="wrap big">
+  <p class="eyebrow">Module 2 · Topic 2 · Lesson 3 · Quiz · Section 504 Version</p>
+  <h1>Slopes of Perpendicular Lines Quiz</h1>
+  <p class="muted">Answer all 10 questions, then submit. You'll see your score and the correct answers after you submit.</p>
+  <div class="card ref"><p>Use the reminders below, and press <b>Read aloud</b> to hear a question. Take the time you need.</p><p><b>Perpendicular slopes</b> are negative reciprocals: flip the fraction and change the sign. Their product is −1.</p><p><b>Parallel slopes</b> are equal.</p><p><b>Horizontal:</b> <i>y</i> = a number, slope 0. <b>Vertical:</b> <i>x</i> = a number, slope undefined. They are always perpendicular.</p><p><b>Point-slope form:</b> <i>y</i> − <i>y</i><sub>1</sub> = <i>m</i>(<i>x</i> − <i>x</i><sub>1</sub>), then get <i>y</i> alone.</p></div>
+  <label class="name">Your name <input id="name" autocomplete="name"></label>
+  <ol id="questions"></ol>
+  <div class="bar">
+    <button id="submit" disabled>Submit</button>
+    <button id="reset" class="ghost">Start over</button>
+  </div>
+  <p id="result" class="card" style="margin-top:16px" hidden></p>
+</div>
+<script>
+window.MC = { mode: "quiz", questions: [
+  {"se": 308, "q": "Are [[y = ¾x + 1]] and [[y = −4/3x − 2]] perpendicular?", "choices": ["Yes, the slopes multiply to [[−1]]", "No, they are parallel", "No, the slopes are not equal", "Cannot tell"], "why": "[[¾ · (−4/3) = −1]]."},
+  {"se": 309, "q": "How are [[y = 2x]] and [[y = −2x]] related?", "choices": ["Neither parallel nor perpendicular", "Perpendicular", "Parallel", "The same line"], "why": "[[2 · (−2) = −4]], not [[−1]], and the slopes are not equal."},
+  {"se": 312, "q": "Which line is perpendicular to [[y = −¾x]] and passes through [[(3, −8)]]?", "choices": ["[[y = 4/3x − 12]]", "[[y = −¾x − 5.75]]", "[[y = 4/3x − 4]]", "[[y = −4/3x − 4]]"], "why": "Slope [[4/3]]: [[−8 = 4/3(3) + b = 4 + b]], so [[b = −12]]."},
+  {"se": 312, "q": "Which line passes through [[(6, 2)]] and is perpendicular to the line through [[(−5, 3)]] and [[(−1, −9)]]?", "choices": ["[[y = ⅓x]]", "[[y = −3x + 20]]", "[[y = ⅓x + 2]]", "[[y = 3x − 16]]"], "why": "Given slope [[−12/4 = −3]], so the new slope is [[⅓]]: [[2 = ⅓(6) + b]], [[b = 0]]."},
+  {"se": 313, "q": "Two perpendicular lines meet at [[(5, 9)]]. One passes through [[(−4, 4)]]. Which is the other line?", "choices": ["[[y = −9/5x + 18]]", "[[y = 5/9x + 56/9]]", "[[y = −9/5x + 9]]", "[[y = 9/5x]]"], "why": "Slope through the points [[= 5/9]], so the other slope is [[−9/5]]: [[9 = −9/5(5) + b]], [[b = 18]]."},
+  {"se": 308, "q": "Rotating [[(a, b)]] 90° counterclockwise about the origin gives which point?", "choices": ["[[(−b, a)]]", "[[(b, −a)]]", "[[(−a, −b)]]", "[[(a, −b)]]"], "why": "This is the rotation used in the proof that perpendicular slopes are negative reciprocals."},
+  {"se": 311, "q": "“All horizontal lines are parallel.” Is this always, sometimes, or never true?", "choices": ["Always", "Sometimes", "Never", "Only through the origin"], "why": "Every horizontal line has slope 0."},
+  {"se": 311, "q": "Which is the horizontal line through [[(2, −1)]]?", "choices": ["[[y = −1]]", "[[x = 2]]", "[[y = 2]]", "[[x = −1]]"], "why": "Every point on a horizontal line has the same [[y]]-value."},
+  {"se": 309, "q": "What is the slope of a line perpendicular to a line with slope [[⅕]]?", "choices": ["[[−5]]", "[[5]]", "[[−⅕]]", "[[⅕]]"], "why": "[[⅕ · (−5) = −1]]."},
+  {"se": 314, "q": "Lines with slope 1 and lines with slope [[−¼]] look perpendicular on a graph. Are they?", "choices": ["No: [[1 · (−¼) ≠ −1]]", "Yes, they look it", "Yes: [[1 · (−¼) = −1]]", "Only if they cross at the origin"], "why": "Different axis scales can make lines look perpendicular. Check the slopes."},
+] };
+window.MC.accom = {"readAloud": true};
+</script>
+<script src="../mc.js"></script>

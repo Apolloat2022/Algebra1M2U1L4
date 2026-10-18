@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Topic 2 Lesson 4 Quiz · Comparing Linear Functions · IEP</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<link rel="stylesheet" href="../mc.css">
+<div class="wrap big">
+  <p class="eyebrow">Module 2 · Topic 2 · Lesson 4 · Quiz · IEP Version</p>
+  <h1>Comparing Linear Functions Quiz</h1>
+  <p class="muted">Answer all 6 questions, then submit. You'll see your score and the correct answers after you submit.</p>
+  <div class="card ref"><p>Each question has 3 choices. Use the reminders below, and press <b>Read aloud</b> to hear a question.</p><p><b>Slope from a table or two points:</b> (change in <i>y</i>) ÷ (change in <i>x</i>).</p><p><b>Same slope</b> → parallel. <b>Slopes multiply to −1</b> → perpendicular. Otherwise neither.</p><p><b><i>y</i>-intercept:</b> the output when <i>x</i> = 0, the starting amount.</p><p><b>Units:</b> the slope is output units per input unit, for example dollars per ton.</p></div>
+  <label class="name">Your name <input id="name" autocomplete="name"></label>
+  <ol id="questions"></ol>
+  <div class="bar">
+    <button id="submit" disabled>Submit</button>
+    <button id="reset" class="ghost">Start over</button>
+  </div>
+  <p id="result" class="card" style="margin-top:16px" hidden></p>
+</div>
+<script>
+window.MC = { mode: "quiz", questions: [
+  {"se": 320, "q": "Which function is decreasing?", "choices": ["A table with [[(−5, 10)]], [[(0, 0)]] and [[(2.5, −5)]]", "[[c(x) = ⅕x]]", "A 1 : 1 ratio of 9th- to 10th-graders", "A line through [[(0, 5)]] and [[(1, 10)]]"], "why": "The table's slope is [[−2]]; the others have positive slopes."},
+  {"se": 321, "q": "Which line is perpendicular to [[y = 4x − 3]]?", "choices": ["[[y = −¼x + 2]]", "[[y = 4x + 2]]", "[[y = ¼x − 3]]", "[[y = −4x − 3]]"], "why": "The slope must be the negative reciprocal of 4."},
+  {"se": 321, "q": "For every hour Chiletso bakes, she makes 4 dozen cookies. How does this compare to [[y = 4x − 3]]?", "choices": ["Parallel", "Perpendicular", "Neither", "The same line"], "why": "Both have slope 4 but different [[y]]-intercepts."},
+  {"se": 322, "q": "Travis County pays $15 per ton; Hays County's graph shows $20 per ton. Which is true?", "choices": ["Hays pays $5 more per ton", "Travis pays more per ton", "They pay the same", "Hays pays $20 less per ton"], "why": "Compare the slopes: 20 > 15."},
+  {"se": 324, "q": "Miguel saves $20 a month from $0. Lauren starts with $25 and saves $25 a month. Compare the slopes.", "choices": ["Lauren's is greater (25 > 20)", "Miguel's is greater", "They are equal", "Neither has a slope"], "why": "The slope is the monthly deposit."},
+  {"se": 324, "q": "What does the [[y]]-intercept of Miguel's account (0) mean?", "choices": ["He started with $0", "He saves $0 each month", "He has $0 after 4 months", "The graph has no [[y]]-intercept"], "why": "The [[y]]-intercept is the amount at 0 months."},
+  {"se": 325, "q": "What is the slope of this table?", "choices": ["[[¼]]", "[[4]]", "[[½]]", "[[2.5]]"], "why": "[[(5 − 0) ÷ (10 − (−10)) = 5 ÷ 20 = ¼]].", "extra": "<table class=\"data\"><tr><th>x</th><td>−10</td><td>10</td><td>20</td><td>25</td></tr><tr><th>y</th><td>0</td><td>5</td><td>7.5</td><td>8.75</td></tr></table>"},
+  {"se": 325, "q": "What is the [[y]]-intercept of the same table ([[x]]: −10, 10, 20, 25; [[y]]: 0, 5, 7.5, 8.75)?", "choices": ["[[(0, 2.5)]]", "[[(0, 0)]]", "[[(−10, 0)]]", "[[(0, 5)]]"], "why": "From [[(−10, 0)]], move right 10 at slope [[¼]]: up 2.5."},
+  {"se": 325, "q": "Which equation is less steep than a slope of [[¼]]?", "choices": ["[[y = 0.2x + 30]]", "[[y = ⅓x − 4]]", "[[y = x]]", "[[y = 0.3x]]"], "why": "[[0.2 < 0.25]]."},
+  {"se": 323, "q": "Joey's table converts °F to °C with a [[y]]-intercept of about [[−17.8]]. What does it mean?", "choices": ["0°F is about −17.8°C", "0°C is about −17.8°F", "It drops 17.8° per degree", "It has no meaning"], "why": "The input is °F, so at 0°F the output is about −17.8°C."},
+] };
+window.MC.accom = {"readAloud": true, "choices": 3, "keep": [1, 2, 3, 5, 6, 8]};
+</script>
+<script src="../mc.js"></script>

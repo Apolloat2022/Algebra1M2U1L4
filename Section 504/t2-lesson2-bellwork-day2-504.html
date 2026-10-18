@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Topic 2 Lesson 2 Day 2 Bell Work · Vertical and Horizontal Transformations · Section 504</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<link rel="stylesheet" href="../mc.css">
+<div class="wrap big">
+  <p class="eyebrow">Module 2 · Topic 2 · Lesson 2 · Day 2 Bell Work · Section 504 Version</p>
+  <h1>Bell Work: Review</h1>
+  <p class="muted">Warm up while attendance is taken. Answer all 4 questions, then submit to see which ones you got right.</p>
+  <div class="card ref"><p>Use the reminders below, and press <b>Read aloud</b> to hear a question. Take the time you need.</p><p><b>Inside the parentheses</b> changes the input (horizontal). <b>Outside</b> changes the output (vertical).</p><p><b><i>f</i>(<i>x</i> − <i>c</i>)</b> moves right <i>c</i>. <b><i>f</i>(<i>x</i> + <i>c</i>)</b> moves left <i>c</i>. The sign flips.</p><p><b><i>f</i>(<i>bx</i>)</b> compresses horizontally when |<i>b</i>| &gt; 1 and stretches when 0 &lt; |<i>b</i>| &lt; 1.</p><p><b>Only for <i>f</i>(<i>x</i>) = <i>x</i>:</b> right <i>n</i> = down <i>n</i>, and a vertical dilation by <i>n</i> = a horizontal dilation by 1/<i>n</i>.</p></div>
+  <label class="name">Your name <input id="name" autocomplete="name"></label>
+  <ol id="questions"></ol>
+  <div class="bar">
+    <button id="submit" disabled>Submit</button>
+    <button id="reset" class="ghost">Start over</button>
+  </div>
+  <p id="result" class="card" style="margin-top:16px" hidden></p>
+</div>
+<script>
+window.MC = { mode: "quiz", questions: [
+  {"se": 289, "q": "[[f(x) = x]] is translated right 5 units. Which equation is the new function?", "choices": ["[[g(x) = f(x − 5) = x − 5]]", "[[g(x) = f(x + 5) = x + 5]]", "[[g(x) = f(x) + 5]]", "[[g(x) = 5f(x)]]"], "why": "A horizontal translation right 5 subtracts 5 from the input: [[f(x − 5)]]."},
+  {"se": 291, "q": "For [[f(x) = x]], a translation right 5 gives the same graph as which other translation?", "choices": ["Down 5 units", "Up 5 units", "Left 5 units", "None"], "why": "[[f(x − 5) = x − 5 = f(x) − 5]], a vertical translation down 5."},
+  {"se": 292, "q": "[[j(x) = 2x − 1]] and [[r(x) = j(x + 4)]]. Simplify [[r(x)]].", "choices": ["[[r(x) = 2x + 7]]", "[[r(x) = 2x + 3]]", "[[r(x) = 2x + 8]]", "[[r(x) = 2x − 5]]"], "why": "[[2(x + 4) − 1 = 2x + 8 − 1 = 2x + 7]]."},
+  {"se": 295, "q": "For [[f(x) = x]], is the graph of [[f(2x)]] the same as the graph of [[2f(x)]]?", "choices": ["Yes, both are [[y = 2x]]", "No, they are parallel", "No, they are perpendicular", "No, one is [[y = ½x]]"], "why": "[[f(2x) = 2x]] and [[2f(x) = 2x]]. For the parent function they match."},
+] };
+window.MC.accom = {"readAloud": true};
+</script>
+<script src="../mc.js"></script>
