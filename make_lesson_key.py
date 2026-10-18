@@ -764,9 +764,136 @@ CORRECTIONS6 = [
 PPTX = {5: (ANS5, NOTES5, CORRECTIONS5, 65),  # lesson -> answers, notes, corrections, slide the summary follows
         6: (ANS6, NOTES6, CORRECTIONS6, 79)}
 
+# ---------------------------------------------------------------- Topic 2 Lesson 1: Transforming Linear Functions
+
+def cells(x, y, *values, h=58):  # a table column filled top to bottom on one click
+    return [(x, y + i * h, 116, h, 20, v, CENTER, *(() if i == 0 else (WITH,))) for i, v in enumerate(values)]
+
+
+ANS_T2_1 = {
+    4: [(122, 700, 1690, 370, 17,
+         "Translation: y = f(x) + d moves the graph up (d > 0) or down (d < 0) by |d| units. The slope stays the "
+         "same, so the new line is parallel to the original; the y-intercept changes.\n"
+         "Dilation: y = a · f(x) stretches the graph vertically when |a| > 1 and compresses it when 0 < |a| < 1; "
+         "when a < 0 it is also reflected across the x-axis. The slope changes; for f(x) = x the new slope is a.")],
+    7: [(110, 905, 640, 165, 18, "The points move straight up or straight down. There is no movement left "
+                                 "or right.")],
+    8: [(585, 522, 360, 144, 26, "(x, y + 4)", CENTER), (945, 522, 360, 144, 26, "(x, y − 4)", CENTER, WITH)],
+    9: [(1240, 480, 640, 480, 20, "C(−8, −4) and D(8, 12): every point of AB moves up 4.\n"
+                                  "The segments are parallel, with CD 4 units above AB.")],
+    10: [(122, 400, 1700, 200, 22, "Each point moves straight up or down, away from the x-axis (twice as far). The "
+                                   "segment gets steeper: a vertical stretch. When the factor is −2, the points also "
+                                   "reflect across the x-axis.")],
+    11: [(1250, 470, 640, 500, 20, "E(−8, −16) and F(8, 16).\nEF is steeper than AB (stretched vertically by a "
+                                   "factor of 2); both pass through the origin.")],
+    12: [(1250, 470, 640, 500, 20, "G(−8, 16) and H(8, −16).\nGH is steeper than AB, and it is reflected across "
+                                   "the x-axis.")],
+    18: [(122, 470, 1700, 130, 24, "Slope: 1;  y-intercept: (0, −5)\nm(x) = x − 5")],
+    19: [*cells(1407, 685, "3", "4", "5", "6", "7"),
+         (1026, 990, 860, 60, 18, "Graph p(x): the line through (0, 5), parallel to f(x)")],
+    20: [(122, 420, 1700, 130, 24, "Slope: 1;  y-intercept: (0, 5)\np(x) = x + 5")],
+    21: [(122, 770, 1700, 130, 24, "f(2) = 2 and p(2) = 7.\nThe vertical translation increased the value at x = 2 "
+                                   "by 5.")],
+    22: [(1490, 420, 410, 300, 22, "q(x) = j(x) + 4\nGraph: the line through (0, 3), parallel to j(x)")],
+    23: [(526, 368, 1380, 55, 20, "r(x) = j(x) − 4  (graph: the line through (0, −5), parallel to j(x))"),
+         (526, 505, 1380, 55, 22, "q(x) = 2x + 3;  r(x) = 2x − 5"),
+         (526, 690, 1380, 130, 20, "All three have slope 2 but different y-intercepts: (0, −1), (0, 3), (0, −5). "
+                                   "The lines are parallel, so they never intersect.")],
+    29: [(122, 500, 1700, 130, 24, "No. Both lines have slope 2 and stay 4 units apart, so they are parallel.")],
+    31: [(160, 395, 1600, 70, 24, "A′(x1, y1 + a)  and  B′(x2, y2 + a)"),
+         (160, 570, 1600, 70, 24, "m = (y2 − y1) / (x2 − x1)"),
+         (160, 750, 1600, 120, 24, "m = ((y2 + a) − (y1 + a)) / (x2 − x1) = (y2 − y1) / (x2 − x1)")],
+    32: [(542, 400, 1350, 60, 22, "The slopes are the same."),
+         (542, 640, 1350, 90, 22, "The graphs are parallel lines.")],
+    34: [(122, 400, 1700, 130, 22, "Answers will vary. Catalina translates the given line up 5; James uses the "
+                                   "slope formula with the point (2, 9). Both get y = (1/2)x + 8."),
+         (122, 680, 1700, 200, 24, "y = −3x + 2\nParallel, so the slope is −3: 5 = −3(−1) + b, so b = 2.")],
+    38: [*cells(1252, 776, "−8", "−4", "0", "4", "8"),
+         (1400, 640, 480, 130, 20, "Graph a(x): through (0, 0) and (1, 4)")],
+    39: [(122, 420, 1700, 130, 24, "Slope: 4;  y-intercept: (0, 0)\na(x) = 4x")],
+    40: [*cells(1252, 732, "−4/3", "−2/3", "0", "2/3", "4/3"),
+         (1400, 590, 480, 130, 20, "Graph b(x): through (0, 0) and (3, 2)")],
+    41: [(122, 420, 1700, 130, 24, "Slope: 2/3;  y-intercept: (0, 0)\nb(x) = (2/3)x")],
+    42: [*cells(1252, 732, "8", "4", "0", "−4", "−8"),
+         (1400, 590, 480, 130, 20, "Graph c(x): through (0, 0) and (1, −4)")],
+    43: [(122, 420, 1700, 130, 24, "Slope: −4;  y-intercept: (0, 0)\nc(x) = −4x")],
+    44: [(122, 830, 1700, 130, 24, "f(−1) = −1 and c(−1) = 4.\nThe vertical dilation multiplied the value at x = −1 "
+                                   "by −4.")],
+    50: [(1450, 470, 450, 280, 18, "a. g(x) = 2x + 7\nVertical stretch by a factor of 2, then up 7. "
+                                   "Graph: through (0, 7), slope 2."),
+         (1450, 770, 450, 280, 18, "b. g(x) = 3x − 1\nVertical stretch by a factor of 3, then down 1. "
+                                   "Graph: through (0, −1), slope 3.")],
+    51: [(120, 840, 760, 220, 18, "g(x) = (1/3)x + 2\nVertical compression by a factor of 1/3, then up 2. "
+                                  "Graph: through (0, 2), slope 1/3."),
+         (860, 840, 900, 220, 18, "g(x) = (1/2)x − 3\nVertical compression by a factor of 1/2, then down 3. "
+                                  "Graph: through (0, −3), slope 1/2.")],
+    52: [(120, 830, 760, 230, 18, "g(x) = −x − 4\nReflection across the x-axis, then down 4. "
+                                  "Graph: through (0, −4), slope −1."),
+         (860, 830, 900, 230, 18, "g(x) = −(2/3)x + 5\nReflection across the x-axis and vertical compression by "
+                                  "a factor of 2/3, then up 5. Graph: through (0, 5), slope −2/3.")],
+    53: [(216, 640, 1640, 95, 18, "a changes the slope (for f(x) = x the slope becomes a: |a| > 1 steeper, "
+                                  "0 < |a| < 1 less steep, a < 0 reflected). It does not change the y-intercept."),
+         (216, 850, 1640, 130, 18, "d does not change the slope. It changes the y-intercept to (0, d): d > 0 moves "
+                                   "the line up, d < 0 moves it down.")],
+    59: [(546, 450, 1340, 120, 20, "Sample: a = 0 with d = 6, 4, 1 and −3: horizontal lines through each target "
+                                   "(move the cannon to (0, d))."),
+         (546, 700, 1340, 300, 18, "The cannon shoots in only one direction. Targets in Quadrant II (left of the "
+                                   "y-axis): domain x ≤ 0. Targets in Quadrants I and IV: domain x ≥ 0.")],
+    60: [(122, 895, 870, 180, 16, "Version B (a = 1 or −1; move d), clockwise from top left:\n"
+                                  "a = −1, d = 2 (x ≤ 0);  a = 1, d = −1 (x ≥ 0);\n"
+                                  "a = −1, d = −2 (x ≥ 0);  a = −1, d = −4 (x ≤ 0)"),
+         (1010, 895, 880, 180, 16, "Version C (d = 0; change a), clockwise from top left:\n"
+                                   "a = −3/2 (x ≤ 0);  a = 4/5 (x ≥ 0);\na = −3 (x ≥ 0);  a = −1/5 (x ≤ 0)")],
+    65: [(760, 418, 420, 56, 24, "f(x) + 8", CENTER),
+         (540, 690, 1340, 60, 18, "k(x): f(x) translated up 8 units.", WITH),
+         (760, 484, 420, 56, 24, "2 · f(x)", CENTER),
+         (540, 755, 1340, 60, 18, "h(x): f(x) stretched vertically by a factor of 2 (through the origin, steeper).",
+          WITH),
+         (760, 550, 420, 56, 24, "(1/3) · f(x)", CENTER),
+         (540, 820, 1340, 60, 18, "g(x): f(x) compressed vertically by a factor of 1/3 (through the origin, less "
+                                  "steep).", WITH),
+         (760, 616, 420, 56, 24, "f(x) − 7", CENTER),
+         (540, 885, 1340, 60, 18, "j(x): f(x) translated down 7 units.", WITH)],
+    69: [(163, 985, 700, 80, 24, "f(x) = (2/3)x − 14/3"), (1125, 985, 700, 80, 24, "g(x) = −(1/4)x + 2")],
+}
+
+NOTES_T2_1 = {
+    34: "Q1 has no single answer; let students defend either method.",
+    50: "Slide typo: the second item is labeled 'a.'; it is item b.",
+    52: "Slide typo: the first item is labeled 'a.'; it is item e.",
+    53: "TE correction (part a): the TE says the slope 'increases' when a > 1 or a < −1 and 'decreases' between −1 "
+        "and 1. That describes steepness, not slope: for a = −3 the slope is −3. For f(x) = x the new slope is a.",
+    60: "The targets, read from the picture as the TE does: (−4, 6), (5, 4), (1, −3), (−5, 1). Other answers: "
+        "Version B also a = 1, d = 10; a = −1, d = 9; a = 1, d = −4; a = 1, d = 6. TE correction: for the lower "
+        "Quadrant II target the TE's alternative a = 1, d = 4 gives y = x + 4, which misses (−5, 1); it is d = 6. "
+        "The TE's Version C slope −6/4 simplifies to −3/2.",
+    69: "TE correction: the TE gives f(x) = (2/3)x − 5. The marked points (−8, −10), (−2, −6) and (4, −2) give slope "
+        "2/3 and y-intercept (0, −14/3), so f(x) = (2/3)x − 14/3.",
+}
+
+CORRECTIONS_T2_1 = [
+    ("Teacher Edition corrections in this deck", None),
+    ("Activity 1.4 Q2a: the TE says the slope 'increases' or 'decreases'; it means steepness. For f(x) = x the new "
+     "slope is a.", None),
+    ("Activity 1.5 Q3 Version B: for the lower Quadrant II target (−5, 1), the TE's a = 1, d = 4 misses; it is "
+     "a = 1, d = 6.", None),
+    ("Prepare Q1: the TE gives f(x) = (2/3)x − 5. The graph's points give f(x) = (2/3)x − 14/3.", None),
+    ("Slide typos: slide 50's second item 'a.' is b; slide 52's first item 'a.' is e.", None),
+    ("Every other TE answer was re-solved and is correct, including the Assignment (pp. 285-286) and Prepare Q2.",
+     "16171D"),
+]
+
+TOPIC2 = HERE / "Module 2 topic 2"
+PPTX_T2 = {1: (ANS_T2_1, NOTES_T2_1, CORRECTIONS_T2_1, 67)}  # Topic 2 lesson -> as PPTX
+
 
 if __name__ == "__main__":
-    for lesson in map(int, sys.argv[1:] or ["4", *map(str, PPTX)]):
+    for arg in sys.argv[1:] or ["4", *map(str, PPTX), *(f"2.{n}" for n in PPTX_T2)]:
+        if arg.startswith("2."):  # Topic 2 lessons: python make_lesson_key.py 2.1
+            src = TOPIC2 / f"BLMathematics_AlgI_M2_T2_L{arg[2:]}_LessonSlides_ENG_2025.pptx"
+            annotate(src, src.with_name(src.name.replace("2025", "with_answers")), *PPTX_T2[int(arg[2:])])
+            continue
+        lesson = int(arg)
         if lesson == 4:
             pages = render(PDF, Path(tempfile.mkdtemp()))
             assert len(pages) >= max(ANS4), f"PDF rendered {len(pages)} pages; answers expect {max(ANS4)}"
