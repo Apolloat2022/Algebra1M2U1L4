@@ -71,8 +71,8 @@ def block(src, idx, kind, day, title, why):  # kind: 0 General, 1 IEP, 2 Section
     sfx = {1: "-IEP", 2: "-504"}.get(kind)
     links = (f'{go(f"{pre}-homework{sfx}.html", "Homework →")} · {go(f"{pre}-quiz{sfx}.html", "Quiz →")}' if sfx else
              f'{go(f"../{pre}/{pre}-homework.html", "Homework →")} · {go(f"../{pre}/{pre}-quiz.html", "Quiz →")}')
-    out = [divider(f"Topic 1 Catch-Up · Day {day} · about 15 minutes", f"Topic 1 {lesson}: {title}",
-                   small(f"Expected date: {DATES[day]}") + f'\n  <p style="font-size:30px;max-width:1000px">{why}</p>\n  <p style="font-size:24px">Topic 1 {lesson} practice: {links}</p>',
+    out = [divider(f"Topic 1 Catch-Up · {DATES[day]} · about 15 minutes", f"Topic 1 {lesson}: {title}",
+                   f'<p style="font-size:30px;max-width:1000px">{why}</p>\n  <p style="font-size:24px">Topic 1 {lesson} practice: {links}</p>',
                    f"Catch-up from Topic 1 {lesson} so the class is ready for the End of Topic 1 Assessment (Lessons 1–6). "
                    "Keep it to about 15 minutes, then go back to the Topic 2 lesson.")]
     for i in idx:
@@ -85,31 +85,74 @@ def back(n):
                    "End of the Topic 1 Catch-Up. Continue with the Topic 2 lesson.")
 
 
+LONG = {1: "Monday, October 19", 2: "Tuesday, October 20", 3: "Wednesday, October 21", 5: "Monday, October 26",
+        6: "Tuesday, October 27", 8: "Thursday, October 29", 9: "Monday, November 2", 10: "Tuesday, November 3",
+        11: "Wednesday, November 4"}
+# what the next class is after each lesson's last day (from topic2-pacing-150.html)
+AFTER = {3: "Next class: Thursday, October 22. Skills Practice day: Lesson 1 quiz and Topic 1 Lesson 5 homework. "
+            "Then Lesson 2 starts Monday, October 26.",
+         6: "Next class: Wednesday, October 28. Skills Practice day: Lesson 2 quiz and Topic 1 Lesson 5 quiz. "
+            "Then Lesson 3 starts Thursday, October 29.",
+         9: "Next class: Tuesday, November 3. Open the Lesson 4 deck.",
+         11: "Next class: Thursday, November 5. End of Topic 1 Assessment. Lesson 3 and 4 quizzes go home as homework."}
+# IEP decks are not split by day: which content slides belong to each lesson day
+IEP_DAYS = {1: [[4, 5, 6, 7], [10, 11, 8], [9, 12]], 2: [[3, 4, 5, 6, 7, 8], [9, 10]],
+            3: [[3, 4, 5, 6], [7, 8, 9, 10]], 4: [[3, 4, 5, 6, 7], [8, 9, 10]]}
+
+
+def start(n, k, total, d, topic, eq=""):
+    return divider(f"Topic 2 · Lesson {n} · Day {k} of {total} · Start here", f"Start: {LONG[d]}",
+                   f'<p style="font-size:28px">Today: bell work → Topic 1 catch-up ({topic}) → Lesson {n}, Day {k}.</p>' + eq,
+                   f"Class starts here on {LONG[d]}.")
+
+
+def stop(n, k, d, nxt):
+    text = AFTER.get(d) or f"Next class: {LONG[nxt]}. Start at the next slide, “Start: {LONG[nxt]}.”"
+    return divider(f"Topic 2 · Lesson {n} · End of Day {k}", f"Stop here: {LONG[d]}",
+                   f'<p style="font-size:30px;max-width:1000px">{text}</p>', f"Class ends here on {LONG[d]}.")
+
+
 def build(n, kind):
     path = [T2 / f"{NAMES[n]}.html", IEP / f"{NAMES[n]}-IEP.html", S504 / f"{NAMES[n]}-504.html"][kind]
     s = path.read_text(encoding="utf-8")
     secs = sections(s)
     mine = [b for b in BLOCKS if b[0] == n]
-    if kind == 1:  # IEP decks put every day's bell work first: one catch-up run after them, one block per day
-        last_bell = max(i for i, x in enumerate(secs) if re.search(r'class="eyebrow">[^<]*Bell Work', x))
-        add = {last_bell: sum((block(b[2], b[4], 1, b[1], b[5], b[6]) for b in mine), []) + [back(n)]}
-    else:  # General and 504 decks: after each day's bell work slide
-        bells = [i for i, x in enumerate(secs) if re.search(r'class="eyebrow">[^<]*Bell Work', x)]
-        assert len(bells) == len(mine), (n, bells)
-        add = {i: block(b[2], b[3], kind, b[1], b[5], b[6]) + [back(n)] for i, b in zip(bells, mine)}
     days = [b[1] for b in mine]  # lesson day k -> pacing day
-    date = lambda k: DATES[days[int(k) - 1]]
-    new = []
-    for i, x in enumerate(secs):
-        if i == 0:
-            x = x.replace("</h1>", '</h1>\n  <p class="warn" style="font-size:22px">This version adds a 15-minute Topic 1 Catch-Up '
-                          '(Lessons 5–6) at the start of each day.</p>\n  '
-                          + small("Expected dates: " + " · ".join(f"Day {k}: {DATES[d]}" for k, d in enumerate(days, 1))), 1)
-        # small expected date on each bell work eyebrow and each "Day N" divider
-        x = re.sub(r'(<p class="eyebrow">Day (\d) · Bell Work[^<]*)', lambda m: f"{m.group(1)} · {date(m.group(2))}", x, count=1)
-        x = re.sub(r'(<section class="slide divider">.*?<h1>Day (\d)</h1>)',
-                   lambda m: m.group(1) + "\n  " + small(f"Expected date: {date(m.group(2))}"), x, count=1, flags=re.S)
-        new += [x] + add.get(i, [])
+    ev = lambda x, t: re.search(rf'class="eyebrow">[^<]*{t}', x)
+    bells = [i for i, x in enumerate(secs) if ev(x, "Bell Work")]
+    assert len(bells) == len(mine), (n, bells)
+    for i in bells:  # small expected date on each bell work eyebrow
+        secs[i] = re.sub(r'(<p class="eyebrow">Day (\d) · Bell Work[^<]*)',
+                         lambda m: f"{m.group(1)} · {DATES[days[int(m.group(2)) - 1]]}", secs[i], count=1)
+    catch = [block(b[2], b[4] if kind == 1 else b[3], kind, b[1], b[5], b[6]) + [back(n)] for b in mine]
+    title = secs[0].replace("</h1>", '</h1>\n  <p class="warn" style="font-size:22px">This version adds a 15-minute Topic 1 Catch-Up '
+                            '(Lessons 5–6) at the start of each day.</p>\n  '
+                            + small("Expected dates: " + " · ".join(f"Day {k}: {DATES[d]}" for k, d in enumerate(days, 1))), 1)
+    # one list of slides per lesson day, each opening with its bell work
+    if kind == 1:  # IEP: every bell work is up front and the lesson is not split by day, so regroup by day
+        chunks = [[secs[bells[k]]] + catch[k] + [secs[i] for i in idx] for k, idx in enumerate(IEP_DAYS[n])]
+        used = {0, len(secs) - 1, *bells, *sum(IEP_DAYS[n], [])}
+        assert used == set(range(len(secs))), (n, set(range(len(secs))) - used)
+        tail = [secs[-1]]
+        starts = [start(n, k + 1, len(days), d, b[5]) for k, (d, b) in enumerate(zip(days, mine))]
+    else:  # General and 504: days are already in order, split at the "Day N" dividers; tail starts at the answered EQ
+        divs = [i for i, x in enumerate(secs) if 'class="slide divider"' in x[:40] and re.search(r"<h1>Day \d</h1>", x)]
+        end = next(i for i, x in enumerate(secs) if ev(x, "Essential Question · Answered"))
+        exit_ = next(i for i, x in enumerate(secs) if ev(x, "Exit Ticket"))
+        bounds = [1] + [i + 1 for i in divs] + [end]
+        chunks = []
+        for k in range(len(days)):
+            day = secs[bounds[k]:bounds[k + 1] - (1 if k + 1 < len(days) else 0)]  # drop the next "Day N" divider
+            b = day.index(secs[bells[k]])
+            chunks.append(day[:b + 1] + catch[k] + day[b + 1:])
+        chunks[-1] += secs[end:exit_ + 1]  # the last day ends with the answered EQ and the exit ticket
+        tail = secs[exit_ + 1:]
+        eqs = [""] + [re.search(r'<p class="step".*?</p>', secs[i], re.S).group(0) for i in divs]
+        starts = [start(n, k + 1, len(days), d, b[5], f"\n  {eq}" if eq else "") for k, (d, b, eq) in enumerate(zip(days, mine, eqs))]
+    new = [title]
+    for k, d in enumerate(days):
+        new += [starts[k]] + chunks[k] + [stop(n, k + 1, d, days[k + 1] if k + 1 < len(days) else None)]
+    new += tail
     head, tail = s[:s.index(secs[0])], s[s.index(secs[-1]) + len(secs[-1]):]
     head = head.replace("</title>", " + Topic 1 Catch-Up</title>", 1)
     out = path.with_name(path.stem + "-catchup.html")
