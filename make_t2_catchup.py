@@ -1,6 +1,6 @@
 # Topic 2 web decks with a Topic 1 Catch-Up: about 15 minutes of Topic 1 Lessons 5-6 at the start of each Topic 2
 # lesson day, spread across Lessons 1-4. Slides are copied as-is from the Lesson 5/6 decks (General) and their IEP
-# decks (IEP), so the originals stay the single source. Writes *-catchup.html next to each Topic 2 deck.
+# and Section 504 decks, so the originals stay the single source. Writes *-catchup.html next to each Topic 2 deck.
 # Run: python make_t2_catchup.py
 import re
 from pathlib import Path
@@ -8,12 +8,16 @@ from pathlib import Path
 ROOT = Path(__file__).parent
 T2 = ROOT / "Module 2 topic 2"
 IEP = ROOT / "IEP"
-SRC = {"L5": (ROOT / "lesson5/using-linear-equations-lesson5.html", IEP / "lesson5-using-linear-equations-IEP.html"),
-       "L6": (ROOT / "lesson6/making-sense-of-representations-lesson6.html", IEP / "lesson6-representations-IEP.html")}
+S504 = ROOT / "Section 504"
+SRC = {"L5": (ROOT / "lesson5/using-linear-equations-lesson5.html", IEP / "lesson5-using-linear-equations-IEP.html",
+              S504 / "lesson5-using-linear-equations-504.html"),
+       "L6": (ROOT / "lesson6/making-sense-of-representations-lesson6.html", IEP / "lesson6-representations-IEP.html",
+              S504 / "lesson6-representations-504.html")}
 NAMES = {1: "t2-lesson1-transforming-linear-functions", 2: "t2-lesson2-vertical-horizontal-transformations",
          3: "t2-lesson3-perpendicular-slopes", 4: "t2-lesson4-comparing-linear-functions"}
 
-# (topic 2 lesson, pacing day, source lesson, general slide indexes, IEP slide indexes, title, why it fits today)
+# (topic 2 lesson, pacing day, source lesson, general slide indexes (504 uses the same slides, found by title),
+#  IEP slide indexes, title, why it fits today)
 BLOCKS = [
  (1, 1, "L5", [4, 6, 7, 11], [4, 5, 6, 7, 8], "Graphing from slope-intercept form",
   "Today's g(x) = a · f(x) + d is slope-intercept form: a is the slope and d is the y-intercept."),
@@ -52,11 +56,20 @@ def divider(eyebrow, h1, body, notes):
             f'  <aside class="notes">{notes}</aside>\n</section>')
 
 
-def block(src, idx, iep, day, title, why):
+def title_of(x):
+    return re.search(r'<h[123][^>]*>(.*?)</h[123]>', x, re.S).group(1)
+
+
+def block(src, idx, kind, day, title, why):  # kind: 0 General, 1 IEP, 2 Section 504
     lesson = "Lesson 5" if src == "L5" else "Lesson 6"
-    slides = sections(SRC[src][iep].read_text(encoding="utf-8"))
+    slides = sections(SRC[src][kind].read_text(encoding="utf-8"))
+    if kind == 2:  # 504 decks add plan/vocabulary/notes slides, so match the general slides by title
+        gen = sections(SRC[src][0].read_text(encoding="utf-8"))
+        titles = [title_of(x) for x in slides]
+        idx = [titles.index(title_of(gen[i])) for i in idx]
     pre = PRACTICE[src]
-    links = (f'{go(f"{pre}-homework-IEP.html", "Homework →")} · {go(f"{pre}-quiz-IEP.html", "Quiz →")}' if iep else
+    sfx = {1: "-IEP", 2: "-504"}.get(kind)
+    links = (f'{go(f"{pre}-homework{sfx}.html", "Homework →")} · {go(f"{pre}-quiz{sfx}.html", "Quiz →")}' if sfx else
              f'{go(f"../{pre}/{pre}-homework.html", "Homework →")} · {go(f"../{pre}/{pre}-quiz.html", "Quiz →")}')
     out = [divider(f"Topic 1 Catch-Up · Day {day} · about 15 minutes", f"Topic 1 {lesson}: {title}",
                    small(f"Expected date: {DATES[day]}") + f'\n  <p style="font-size:30px;max-width:1000px">{why}</p>\n  <p style="font-size:24px">Topic 1 {lesson} practice: {links}</p>',
@@ -72,18 +85,18 @@ def back(n):
                    "End of the Topic 1 Catch-Up. Continue with the Topic 2 lesson.")
 
 
-def build(n, iep):
-    path = (IEP / f"{NAMES[n]}-IEP.html") if iep else (T2 / f"{NAMES[n]}.html")
+def build(n, kind):
+    path = [T2 / f"{NAMES[n]}.html", IEP / f"{NAMES[n]}-IEP.html", S504 / f"{NAMES[n]}-504.html"][kind]
     s = path.read_text(encoding="utf-8")
     secs = sections(s)
     mine = [b for b in BLOCKS if b[0] == n]
-    if iep:  # IEP decks put every day's bell work first: one catch-up run after them, one block per day
+    if kind == 1:  # IEP decks put every day's bell work first: one catch-up run after them, one block per day
         last_bell = max(i for i, x in enumerate(secs) if re.search(r'class="eyebrow">[^<]*Bell Work', x))
-        add = {last_bell: sum((block(b[2], b[4], True, b[1], b[5], b[6]) for b in mine), []) + [back(n)]}
-    else:  # general decks: after each day's bell work slide
+        add = {last_bell: sum((block(b[2], b[4], 1, b[1], b[5], b[6]) for b in mine), []) + [back(n)]}
+    else:  # General and 504 decks: after each day's bell work slide
         bells = [i for i, x in enumerate(secs) if re.search(r'class="eyebrow">[^<]*Bell Work', x)]
         assert len(bells) == len(mine), (n, bells)
-        add = {i: block(b[2], b[3], False, b[1], b[5], b[6]) + [back(n)] for i, b in zip(bells, mine)}
+        add = {i: block(b[2], b[3], kind, b[1], b[5], b[6]) + [back(n)] for i, b in zip(bells, mine)}
     days = [b[1] for b in mine]  # lesson day k -> pacing day
     date = lambda k: DATES[days[int(k) - 1]]
     new = []
@@ -106,5 +119,5 @@ def build(n, iep):
 
 if __name__ == "__main__":
     for n in NAMES:
-        for iep in (False, True):
-            print(*build(n, iep))
+        for kind in (0, 1, 2):
+            print(*build(n, kind))
