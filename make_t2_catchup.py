@@ -42,7 +42,6 @@ PRACTICE = {"L5": "lesson5", "L6": "lesson6"}
 # expected dates on the 150-day calendar (Topic 2 starts Mon Oct 19, 2026)
 DATES = {1: "Mon, Oct 19", 2: "Tue, Oct 20", 3: "Wed, Oct 21", 5: "Mon, Oct 26", 6: "Tue, Oct 27", 8: "Thu, Oct 29",
          9: "Mon, Nov 2", 10: "Tue, Nov 3", 11: "Wed, Nov 4"}
-small = lambda t: f'<p class="muted" style="font-size:18px">{t}</p>'
 
 sections = lambda s: re.findall(r'<section[^>]*>.*?</section>', s, re.S)
 
@@ -125,9 +124,9 @@ def build(n, kind):
         secs[i] = re.sub(r'(<p class="eyebrow">Day (\d) · Bell Work[^<]*)',
                          lambda m: f"{m.group(1)} · {DATES[days[int(m.group(2)) - 1]]}", secs[i], count=1)
     catch = [block(b[2], b[4] if kind == 1 else b[3], kind, b[1], b[5], b[6]) + [back(n)] for b in mine]
-    title = secs[0].replace("</h1>", '</h1>\n  <p class="warn" style="font-size:22px">This version adds a 15-minute Topic 1 Catch-Up '
-                            '(Lessons 5–6) at the start of each day.</p>\n  '
-                            + small("Expected dates: " + " · ".join(f"Day {k}: {DATES[d]}" for k, d in enumerate(days, 1))), 1)
+    title = secs[0].replace("</h1>", '</h1>\n  <p class="warn" style="font-size:22px">Adds a 15-minute Topic 1 Catch-Up '
+                            '(Lessons 5–6) each day · ' + " · ".join(f"Day {k}: {DATES[d]}" for k, d in enumerate(days, 1))
+                            + '</p>', 1)
     # one list of slides per lesson day, each opening with its bell work
     if kind == 1:  # IEP: every bell work is up front and the lesson is not split by day, so regroup by day
         chunks = [[secs[bells[k]]] + catch[k] + [secs[i] for i in idx] for k, idx in enumerate(IEP_DAYS[n])]

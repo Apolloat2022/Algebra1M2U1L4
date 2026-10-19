@@ -737,8 +737,10 @@ def build():
         sl = Slide()
         top = 2.3 if "divider" in sec.cls else PAD_TOP
         fs = "divider" if "divider" in sec.cls else 26
-        h = stack(sl, sec, PAD_X, top, SW - 2 * PAD_X, fs if fs != "divider" else 26, 18 / 96) \
-            if fs != "divider" else divider(sl, sec, top)
+        if fs == "divider" and top + divider(Slide(), sec, top) > SH - 0.3:
+            top, fs = 1.0, 76  # long divider (e.g. dated Start/Stop slides): start higher, smaller title
+        h = stack(sl, sec, PAD_X, top, SW - 2 * PAD_X, 26, 18 / 96) if fs == 26 \
+            else divider(sl, sec, top, fs)
         foot = next((n for n in sec.els() if "foot" in n.cls), None)
         if foot:  # bottom-aligned: measure on a scratch slide, then place so it ends 0.3 in from the edge
             fh = text_block(Slide(), foot, PAD_X, 0, SW - 2 * PAD_X, 15)
@@ -827,14 +829,14 @@ def build():
     return not warnings
 
 
-def divider(sl, sec, top):
+def divider(sl, sec, top, h1="divider"):
     y = top
     for k in sec.els():
         if k.tag == "aside":
             continue
         fs = 110 if k.tag == "h1" else 26
         h = lay(sl, k, PAD_X, y, SW - 2 * PAD_X, fs) if k.tag != "h1" else text_block(
-            sl, k, PAD_X, y, SW - 2 * PAD_X, "divider")
+            sl, k, PAD_X, y, SW - 2 * PAD_X, h1)
         y += (h or 0) + 18 / 96
     return y - top
 
