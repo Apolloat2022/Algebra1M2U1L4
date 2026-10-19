@@ -35,6 +35,10 @@ BLOCKS = [
   "Lesson 4 compares tables, graphs, equations and descriptions: the same four views."),
 ]
 PRACTICE = {"L5": "lesson5", "L6": "lesson6"}
+# expected dates on the 150-day calendar (Topic 2 starts Mon Oct 19, 2026)
+DATES = {1: "Mon, Oct 19", 2: "Tue, Oct 20", 3: "Wed, Oct 21", 5: "Mon, Oct 26", 6: "Tue, Oct 27", 8: "Thu, Oct 29",
+         9: "Mon, Nov 2", 10: "Tue, Nov 3", 11: "Wed, Nov 4"}
+small = lambda t: f'<p class="muted" style="font-size:18px">{t}</p>'
 
 sections = lambda s: re.findall(r'<section[^>]*>.*?</section>', s, re.S)
 
@@ -55,7 +59,7 @@ def block(src, idx, iep, day, title, why):
     links = (f'{go(f"{pre}-homework-IEP.html", "Homework →")} · {go(f"{pre}-quiz-IEP.html", "Quiz →")}' if iep else
              f'{go(f"../{pre}/{pre}-homework.html", "Homework →")} · {go(f"../{pre}/{pre}-quiz.html", "Quiz →")}')
     out = [divider(f"Topic 1 Catch-Up · Day {day} · about 15 minutes", f"Topic 1 {lesson}: {title}",
-                   f'<p style="font-size:30px;max-width:1000px">{why}</p>\n  <p style="font-size:24px">Topic 1 {lesson} practice: {links}</p>',
+                   small(f"Expected date: {DATES[day]}") + f'\n  <p style="font-size:30px;max-width:1000px">{why}</p>\n  <p style="font-size:24px">Topic 1 {lesson} practice: {links}</p>',
                    f"Catch-up from Topic 1 {lesson} so the class is ready for the End of Topic 1 Assessment (Lessons 1–6). "
                    "Keep it to about 15 minutes, then go back to the Topic 2 lesson.")]
     for i in idx:
@@ -80,11 +84,18 @@ def build(n, iep):
         bells = [i for i, x in enumerate(secs) if re.search(r'class="eyebrow">[^<]*Bell Work', x)]
         assert len(bells) == len(mine), (n, bells)
         add = {i: block(b[2], b[3], False, b[1], b[5], b[6]) + [back(n)] for i, b in zip(bells, mine)}
+    days = [b[1] for b in mine]  # lesson day k -> pacing day
+    date = lambda k: DATES[days[int(k) - 1]]
     new = []
     for i, x in enumerate(secs):
         if i == 0:
             x = x.replace("</h1>", '</h1>\n  <p class="warn" style="font-size:22px">This version adds a 15-minute Topic 1 Catch-Up '
-                          '(Lessons 5–6) at the start of each day.</p>', 1)
+                          '(Lessons 5–6) at the start of each day.</p>\n  '
+                          + small("Expected dates: " + " · ".join(f"Day {k}: {DATES[d]}" for k, d in enumerate(days, 1))), 1)
+        # small expected date on each bell work eyebrow and each "Day N" divider
+        x = re.sub(r'(<p class="eyebrow">Day (\d) · Bell Work[^<]*)', lambda m: f"{m.group(1)} · {date(m.group(2))}", x, count=1)
+        x = re.sub(r'(<section class="slide divider">.*?<h1>Day (\d)</h1>)',
+                   lambda m: m.group(1) + "\n  " + small(f"Expected date: {date(m.group(2))}"), x, count=1, flags=re.S)
         new += [x] + add.get(i, [])
     head, tail = s[:s.index(secs[0])], s[s.index(secs[-1]) + len(secs[-1]):]
     head = head.replace("</title>", " + Topic 1 Catch-Up</title>", 1)
