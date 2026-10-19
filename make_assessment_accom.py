@@ -162,11 +162,12 @@ NIEP = ("IEP version: the modified Form M. Multiple choice has 3 choices; open i
         "(assessment/Topic1-Assessment-FormM-ANSWER-KEY.pdf). "
         "Apply the student's IEP accommodations as well: extended time, breaks, read-aloud, small-group setting.")
 
-for folder, name, label, dirs, qs, notes in [
-        ("IEP", "Topic1-Assessment-IEP", "IEP Version", DIRIEP, IEP, NIEP),
-        ("Section 504", "Topic1-Assessment-504", "Section 504 Version", DIR504, S504, N504)]:
-    src = ROOT / folder / f"{name}.html"
-    src.write_text(deck(label, f"Topic 1 Assessment · {label}", dirs, REF, qs, notes), encoding="utf-8")
-    r = subprocess.run([sys.executable, str(ROOT / "make_pptx.py"), f"{folder}/{name}.html"], cwd=ROOT)
-    if "--keep" not in sys.argv:
-        src.unlink()
+if __name__ == "__main__":
+    for folder, name, label, dirs, qs, notes in [
+            ("IEP", "Topic1-Assessment-IEP", "IEP Version", DIRIEP, IEP, NIEP),
+            ("Section 504", "Topic1-Assessment-504", "Section 504 Version", DIR504, S504, N504)]:
+        src = ROOT / folder / f"{name}.html"
+        src.write_text(deck(label, f"Topic 1 Assessment · {label}", dirs, REF, qs, notes), encoding="utf-8")
+        r = subprocess.run([sys.executable, str(ROOT / "make_pptx.py"), f"{folder}/{name}.html"], cwd=ROOT)
+        if "--keep" not in sys.argv:
+            src.unlink()
