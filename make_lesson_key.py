@@ -549,8 +549,13 @@ def annotate(src, out, ans, notes, corrections, after):
     order = ["ppt/" + prels[r] for r in ids]
     assert len(order) >= max(ans), f"{src.name} has {len(order)} slides; answers expect {max(ans)}"
 
+    after = after if corrections else len(order)  # no corrections slide: nothing shifts the page numbers
+    page = lambda sid, k: mp.num_xml(sid, k, 1790 * PX, 1040 * PX, 110 * PX, 32 * PX)  # bottom-right page number
     for k, path in enumerate(order, 1):
         x, boxes = text(path), ans.get(k, [])
+        top = max(map(int, re.findall(r'<p:cNvPr id="(\d+)"', x)))
+        x = x.replace("</p:spTree>", page(top + 1000, k + (k > after)) + "</p:spTree>", 1)
+        files[path] = x.encode("utf-8")
         if boxes:
             base = max(map(int, re.findall(r'<p:cNvPr id="(\d+)"', x))) + 1
             shapes = "".join(text_box(base + j, *b[:6], font=None, center=CENTER in b[6:]) for j, b in enumerate(boxes))
@@ -575,29 +580,30 @@ def annotate(src, out, ans, notes, corrections, after):
             para = f'<a:p><a:r><a:rPr lang="en-US" b="1" dirty="0"/><a:t>{mp.esc(notes[k])}</a:t></a:r></a:p>'
             files[npath] = (nx[:close] + para + nx[close:]).encode("utf-8")
 
-    # corrections slide, on the layout of the slide it follows
-    n = max(int(m) for m in re.findall(r"ppt/slides/slide(\d+)\.xml", " ".join(files))) + 1
-    ref = order[after - 1]
-    layout = next(t for t in rel_map(ref.replace("slides/", "slides/_rels/") + ".rels").values() if "slideLayout" in t)
-    files[f"ppt/slides/slide{n}.xml"] = (mp.HDR + f'<p:sld {mp.NS}><p:cSld><p:spTree>{mp.GRP}'
-                                         f'{corrections_shapes(corrections, 2, font=None)}</p:spTree></p:cSld>'
-                                         '<p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>').encode("utf-8")
-    files[f"ppt/slides/_rels/slide{n}.xml.rels"] = mp.rels([("rId1", "slideLayout", layout)]).encode("utf-8")
-    ct = text("[Content_Types].xml")
-    files["[Content_Types].xml"] = ct.replace(
-        "</Types>", f'<Override PartName="/ppt/slides/slide{n}.xml" ContentType="{mp.CT}slide+xml"/></Types>').encode()
-    rid = f"rId{max(int(r[3:]) for r in prels) + 1}"
-    pr = text("ppt/_rels/presentation.xml.rels")
-    files["ppt/_rels/presentation.xml.rels"] = pr.replace("</Relationships>", (
-        f'<Relationship Id="{rid}" Type="{mp.REL}slide" Target="slides/slide{n}.xml"/></Relationships>')).encode()
-    sid = max(map(int, re.findall(r'<p:sldId id="(\d+)"', pres))) + 1
-    anchor = re.search(rf'<p:sldId [^>]*r:id="{ids[after - 1]}"/>', pres).group(0)
-    files["ppt/presentation.xml"] = pres.replace(anchor, anchor + f'<p:sldId id="{sid}" r:id="{rid}"/>').encode()
+    if corrections:  # corrections slide, on the layout of the slide it follows
+        n = max(int(m) for m in re.findall(r"ppt/slides/slide(\d+)\.xml", " ".join(files))) + 1
+        ref = order[after - 1]
+        layout = next(t for t in rel_map(ref.replace("slides/", "slides/_rels/") + ".rels").values() if "slideLayout" in t)
+        files[f"ppt/slides/slide{n}.xml"] = (mp.HDR + f'<p:sld {mp.NS}><p:cSld><p:spTree>{mp.GRP}'
+                                             f'{corrections_shapes(corrections, 2, font=None)}{page(999, after + 1)}'
+                                             '</p:spTree></p:cSld>'
+                                             '<p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>').encode("utf-8")
+        files[f"ppt/slides/_rels/slide{n}.xml.rels"] = mp.rels([("rId1", "slideLayout", layout)]).encode("utf-8")
+        ct = text("[Content_Types].xml")
+        files["[Content_Types].xml"] = ct.replace(
+            "</Types>", f'<Override PartName="/ppt/slides/slide{n}.xml" ContentType="{mp.CT}slide+xml"/></Types>').encode()
+        rid = f"rId{max(int(r[3:]) for r in prels) + 1}"
+        pr = text("ppt/_rels/presentation.xml.rels")
+        files["ppt/_rels/presentation.xml.rels"] = pr.replace("</Relationships>", (
+            f'<Relationship Id="{rid}" Type="{mp.REL}slide" Target="slides/slide{n}.xml"/></Relationships>')).encode()
+        sid = max(map(int, re.findall(r'<p:sldId id="(\d+)"', pres))) + 1
+        anchor = re.search(rf'<p:sldId [^>]*r:id="{ids[after - 1]}"/>', pres).group(0)
+        files["ppt/presentation.xml"] = pres.replace(anchor, anchor + f'<p:sldId id="{sid}" r:id="{rid}"/>').encode()
 
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
         for name, data in files.items():
             z.writestr(name, data)
-    print(f"wrote {out.relative_to(HERE)}: {len(order) + 1} slides, {sum(map(len, ans.values()))} answers")
+    print(f"wrote {out.name}: {len(order) + bool(corrections)} slides, {sum(map(len, ans.values()))} answers")
 
 
 EQ6 = ("General form f(x) = ax + b: a (the leading coefficient) is the slope, its steepness and direction; "
@@ -795,9 +801,9 @@ ANS_T2_1 = {
     21: [(122, 770, 1700, 130, 24, "f(2) = 2 and p(2) = 7.\nThe vertical translation increased the value at x = 2 "
                                    "by 5.")],
     22: [(1490, 420, 410, 300, 22, "q(x) = j(x) + 4\nGraph: the line through (0, 3), parallel to j(x)")],
-    23: [(526, 368, 1380, 55, 20, "r(x) = j(x) − 4  (graph: the line through (0, −5), parallel to j(x))"),
-         (526, 505, 1380, 55, 22, "q(x) = 2x + 3;  r(x) = 2x − 5"),
-         (526, 690, 1380, 130, 20, "All three have slope 2 but different y-intercepts: (0, −1), (0, 3), (0, −5). "
+    23: [(526, 770, 1370, 55, 20, "a. r(x) = j(x) − 4  (graph: the line through (0, −5), parallel to j(x))"),
+         (526, 830, 1370, 55, 20, "b. q(x) = 2x + 3;  r(x) = 2x − 5"),
+         (526, 890, 1370, 110, 20, "c. All three have slope 2 but different y-intercepts: (0, −1), (0, 3), (0, −5). "
                                    "The lines are parallel, so they never intersect.")],
     29: [(122, 500, 1700, 130, 24, "No. Both lines have slope 2 and stay 4 units apart, so they are parallel.")],
     31: [(160, 395, 1600, 70, 24, "A′(x1, y1 + a)  and  B′(x2, y2 + a)"),
@@ -831,9 +837,9 @@ ANS_T2_1 = {
                                   "Graph: through (0, −4), slope −1."),
          (860, 830, 900, 230, 18, "g(x) = −(2/3)x + 5\nReflection across the x-axis and vertical compression by "
                                   "a factor of 2/3, then up 5. Graph: through (0, 5), slope −2/3.")],
-    53: [(216, 640, 1640, 95, 18, "a changes the slope (for f(x) = x the slope becomes a: |a| > 1 steeper, "
+    53: [(216, 840, 1540, 95, 18, "a. a changes the slope (for f(x) = x the slope becomes a: |a| > 1 steeper, "
                                   "0 < |a| < 1 less steep, a < 0 reflected). It does not change the y-intercept."),
-         (216, 850, 1640, 130, 18, "d does not change the slope. It changes the y-intercept to (0, d): d > 0 moves "
+         (216, 945, 1540, 95, 18, "b. d does not change the slope. It changes the y-intercept to (0, d): d > 0 moves "
                                    "the line up, d < 0 moves it down.")],
     59: [(546, 450, 1340, 120, 20, "Sample: a = 0 with d = 6, 4, 1 and −3: horizontal lines through each target "
                                    "(move the cannon to (0, d))."),
@@ -844,15 +850,15 @@ ANS_T2_1 = {
                                   "a = −1, d = −2 (x ≥ 0);  a = −1, d = −4 (x ≤ 0)"),
          (1010, 895, 880, 180, 16, "Version C (d = 0; change a), clockwise from top left:\n"
                                    "a = −3/2 (x ≤ 0);  a = 4/5 (x ≥ 0);\na = −3 (x ≥ 0);  a = −1/5 (x ≤ 0)")],
-    65: [(760, 418, 420, 56, 24, "f(x) + 8", CENTER),
+    65: [(1225, 418, 480, 56, 24, "f(x) + 8"),
          (540, 690, 1340, 60, 18, "k(x): f(x) translated up 8 units.", WITH),
-         (760, 484, 420, 56, 24, "2 · f(x)", CENTER),
+         (1225, 484, 480, 56, 24, "2 · f(x)"),
          (540, 755, 1340, 60, 18, "h(x): f(x) stretched vertically by a factor of 2 (through the origin, steeper).",
           WITH),
-         (760, 550, 420, 56, 24, "(1/3) · f(x)", CENTER),
+         (1225, 550, 480, 56, 24, "(1/3) · f(x)"),
          (540, 820, 1340, 60, 18, "g(x): f(x) compressed vertically by a factor of 1/3 (through the origin, less "
                                   "steep).", WITH),
-         (760, 616, 420, 56, 24, "f(x) − 7", CENTER),
+         (1225, 616, 480, 56, 24, "f(x) − 7"),
          (540, 885, 1340, 60, 18, "j(x): f(x) translated down 7 units.", WITH)],
     69: [(163, 985, 700, 80, 24, "f(x) = (2/3)x − 14/3"), (1125, 985, 700, 80, 24, "g(x) = −(1/4)x + 2")],
 }
@@ -885,19 +891,19 @@ CORRECTIONS_T2_1 = [
 
 # ---------------------------------------------------------------- Topic 2 Lesson 2: Vertical and Horizontal Transformations
 
-def blanks(x, ys, *values, w=440, size=22):  # answers written on a column of blank lines, one click each
+def blanks(x, ys, *values, w=440, size=22):  # answers in the empty space past a column of blank lines, one click each
     return [(x, y, w, 50, size, v) for y, v in zip(ys, values)]
 
 
 ANS_T2_2 = {
-    6: [*blanks(424, [448], "All real numbers"), *blanks(386, [516], "All real numbers", w=420),
-        *blanks(494, [584, 652], "(8/3, 0)", "(0, −8)", w=300), *blanks(372, [720], "3", w=300),
-        *blanks(216, [850], "Increasing"),
-        (1600, 400, 300, 260, 18, "Graph g(x): through (0, −8) and (3, 1)")],
-    7: [*blanks(422, [366], "All real numbers"), *blanks(386, [434], "All real numbers", w=420),
-        *blanks(492, [502, 570], "(7.5, 0)", "(0, 5)", w=300), *blanks(370, [638], "−2/3", w=300),
-        *blanks(216, [772], "Decreasing"),
-        (1590, 280, 310, 260, 18, "Graph h(x): through (0, 5) and (3, 3)")],
+    6: [(1600, 540, 300, 100, 18, "Domain:\nall real numbers"), (1600, 650, 300, 100, 18, "Range:\nall real numbers"),
+        *blanks(800, [584, 652], "(8/3, 0)", "(0, −8)", w=170), *blanks(650, [720], "3", w=150),
+        *blanks(770, [850], "Increasing", w=200, size=20),
+        (1600, 400, 300, 130, 18, "Graph g(x): through (0, −8) and (3, 1)")],
+    7: [(1590, 400, 310, 100, 18, "Domain:\nall real numbers"), (1590, 510, 310, 100, 18, "Range:\nall real numbers"),
+        *blanks(800, [502, 570], "(7.5, 0)", "(0, 5)", w=160), *blanks(650, [638], "−2/3", w=150),
+        *blanks(765, [772], "Decreasing", w=190, size=20),
+        (1590, 280, 310, 110, 18, "Graph h(x): through (0, 5) and (3, 3)")],
     13: [*cells(1196, 734, "−5", "−4", "−3", "−2", "−1"), *cells(1312, 734, "−2", "−1", "0", "1", "2", more=True),
          (1450, 734, 440, 150, 20, "Graph t(x): through (−3, 0) and (0, 3)")],
     14: [*cells(1452, 659, "−2", "−1", "0", "1", "2"), *cells(1568, 659, "1", "2", "3", "4", "5", more=True),
@@ -966,7 +972,7 @@ ANS_T2_2 = {
                                    "(4, 0)")],
     50: [(1290, 270, 600, 400, 20, "f(x) is translated left 5 units.\nGraph g(x) = x + 5: through (0, 5) and "
                                    "(−5, 0)")],
-    55: [*blanks(340, [406, 472, 538, 604], "f(x) + 8", "2f(x)", "f((1/3)x)", "f(x − 7)")],
+    55: [*blanks(945, [406, 472, 538, 604], "f(x) + 8", "2f(x)", "f((1/3)x)", "f(x − 7)")],
     59: [(180, 450, 400, 70, 24, "1/3"), (700, 450, 400, 70, 24, "−1/10"), (180, 720, 400, 70, 24, "5"),
          (700, 720, 400, 70, 24, "−4/5"), (180, 960, 400, 70, 24, "−1/c"), (700, 960, 400, 70, 24, "b/a")],
 }
@@ -1085,8 +1091,8 @@ ANS_T2_4 = {
     13: [(212, 820, 700, 150, 18, "e. The slope is −1/4. Perpendicular to y = 4x − 3, since 4 · (−1/4) = −1."),
          (970, 420, 880, 150, 18, "f. The slope is 4 (dozen cookies per hour). Parallel to y = 4x − 3.")],
     18: [(122, 370, 1700, 70, 18, "Table and graph: x = weight of cardboard (tons); y = payout amount (dollars)."),
-         (394, 625, 80, 50, 24, "<", CENTER), (750, 625, 110, 50, 24, "<", CENTER), (1090, 625, 110, 50, 24, "<", CENTER),
-         (122, 720, 1700, 90, 18, "Travis pays $15 per ton: w(0.5) = 7.50, w(1) = 15, w(3) = 45. Hays pays $20 per "
+         (122, 720, 1700, 55, 24, "a. w(0.5) < j(0.5)     b. w(1) < j(1)     c. w(3) < j(3)"),
+         (122, 790, 1700, 90, 18, "Travis pays $15 per ton: w(0.5) = 7.50, w(1) = 15, w(3) = 45. Hays pays $20 per "
                                   "ton: j(0.5) = 10, j(1) = 20, j(3) = 60.")],
     19: [(540, 420, 1340, 120, 18, "Both y-intercepts are 0: each center pays $0 for 0 tons of cardboard."),
          (540, 660, 1340, 150, 18, "Hays County: it pays $20 per ton, while Travis County pays only $15 per ton, "

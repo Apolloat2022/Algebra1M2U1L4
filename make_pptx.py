@@ -17,7 +17,10 @@ from pathlib import Path
 HERE = Path(__file__).parent
 SRC = (HERE / (sys.argv[1] if len(sys.argv) > 1 else "lesson4/point-slope-form-lesson4.html")).resolve()
 OUT = SRC.with_suffix(".pptx")
-SITE = "https://algebra1m2u1l4.vercel.app/" + SRC.parent.relative_to(HERE.resolve()).as_posix() + "/"  # base for the deck's relative links
+try:  # base for the deck's relative links
+    SITE = "https://algebra1m2u1l4.vercel.app/" + SRC.parent.relative_to(HERE.resolve()).as_posix() + "/"
+except ValueError:  # deck outside this repo (e.g. run from the Claude skill): links resolve beside the deck
+    SITE = ""
 LINKS = {}  # url -> rId for the slide being built; reset per slide
 
 # Slide is 13.333 x 7.5 in; the HTML stage is 1280 x 720 px, so 96 px = 1 in.
@@ -208,6 +211,17 @@ def sp_xml(sid, x, y, w, h, runs=None, size=26, align="l", fill=None, line=None,
             f'<a:prstGeom prst="{geom}">{av}</a:prstGeom>{fill_x}{ln}</p:spPr>'
             f'<p:txBody><a:bodyPr wrap="square" lIns="{li}" tIns="{ti}" rIns="{li}" bIns="{ti}" anchor="{anchor}">'
             f'<a:noAutofit/></a:bodyPr><a:lstStyle/>{txt}</p:txBody></p:sp>')
+
+
+def num_xml(sid, n, x, y, cx, cy):
+    """Page number (EMU box, right-aligned): a slidenum field, so PowerPoint renumbers it if slides move."""
+    return (f'<p:sp><p:nvSpPr><p:cNvPr id="{sid}" name="Slide Number {sid}"/><p:cNvSpPr txBox="1"/><p:nvPr/></p:nvSpPr>'
+            f'<p:spPr><a:xfrm><a:off x="{x}" y="{y}"/><a:ext cx="{cx}" cy="{cy}"/></a:xfrm>'
+            '<a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:noFill/></p:spPr>'
+            '<p:txBody><a:bodyPr wrap="none" lIns="0" tIns="0" rIns="0" bIns="0" anchor="b"><a:noAutofit/></a:bodyPr>'
+            '<a:lstStyle/><a:p><a:pPr algn="r"/><a:fld id="{5C1A6E0B-3B1F-4D5E-9C7A-2F4B8D6E1A90}" type="slidenum">'
+            f'<a:rPr lang="en-US" sz="1200" dirty="0"><a:solidFill><a:srgbClr val="{C["muted"]}"/></a:solidFill>'
+            f'</a:rPr><a:t>{n}</a:t></a:fld></a:p></p:txBody></p:sp>')
 
 
 def seg_xml(sid, x1, y1, x2, y2, color, width=9525, cap="flat", dash=False):
@@ -745,6 +759,7 @@ def build():
         if foot:  # bottom-aligned: measure on a scratch slide, then place so it ends 0.3 in from the edge
             fh = text_block(Slide(), foot, PAD_X, 0, SW - 2 * PAD_X, 15)
             text_block(sl, foot, PAD_X, SH - 0.3 - fh, SW - 2 * PAD_X, 15)
+        sl.add(lambda sid: num_xml(sid, k, emu(SW - 1.0), emu(SH - 0.27), emu(0.75), emu(0.22)))  # under the foot line
         if top + h > SH - 0.3:
             warnings.append(f"slide {k}: content may run to {top + h:.2f} in (slide is {SH} in tall)")
         aside = next((n for n in sec.els() if n.tag == "aside"), None)
