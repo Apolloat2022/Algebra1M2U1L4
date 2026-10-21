@@ -266,12 +266,13 @@ def corrections_shapes(corrections, sid, font="Arial"):
 
 def build(images):
     slides = []  # (xml, notes, image or None)
+    page = lambda k: mp.num_xml(999, k, 1790 * PX, 1040 * PX, 110 * PX, 32 * PX)  # bottom-right page number
     for k, img in enumerate(images, 1):
         boxes = ANS4.get(k, [])
-        shapes = PIC + "".join(text_box(10 + j, *b) for j, b in enumerate(boxes))
+        shapes = PIC + "".join(text_box(10 + j, *b) for j, b in enumerate(boxes)) + page(len(slides) + 1)
         slides.append((slide_xml(shapes, [("fade", [10 + j]) for j in range(len(boxes))]), NOTES4.get(k, ""), img))
         if k == 54:  # corrections summary goes before the acknowledgment pages
-            slides.append((slide_xml(corrections_shapes(CORRECTIONS4, 10), []),
+            slides.append((slide_xml(corrections_shapes(CORRECTIONS4, 10) + page(len(slides) + 1), []),
                            "Summary of every change from the Teacher Edition answers.", None))
 
     n = len(slides)
