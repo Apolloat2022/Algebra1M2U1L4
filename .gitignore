@@ -6,3 +6,4 @@ __pycache__/
 .vercel
 !assessment/Retest-*.pdf
 !Module 2 topic 2/Topic2-Lessons1-3-Posters.pdf
+!Module 2 topic 2/Topic2-*Posters.pdf

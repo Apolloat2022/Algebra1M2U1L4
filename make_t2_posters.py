@@ -1,12 +1,14 @@
-"""Ten one-page classroom posters for Module 2 Topic 2, Lessons 1-3 (letter size, printed to PDF with Edge).
-Run: python make_t2_posters.py  ->  Module 2 topic 2/Topic2-Lessons1-3-Posters.{html,pdf}"""
+"""One-page classroom posters for Module 2 Topic 2 (letter size, printed to PDF with Edge): ten for Lessons 1-3, five for Lesson 4.
+Run: python make_t2_posters.py  ->  Module 2 topic 2/Topic2-Lessons1-3-Posters.{html,pdf} and Topic2-Lesson4-Posters.{html,pdf}"""
+import itertools
 import math
 import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).parent
-OUT = ROOT / "Module 2 topic 2" / "Topic2-Lessons1-3-Posters"
+OUT = ROOT / "Module 2 topic 2"
 EDGE = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
+CLIP = itertools.count()  # unique clipPath ids; two graphs sharing one id would clip to the wrong box
 INK, BLUE, ORANGE, GREEN, PURPLE, GRID = "#16171d", "#3050b8", "#c9561f", "#4f8a3c", "#7a4fc4", "#d5d8e4"
 
 
@@ -27,23 +29,27 @@ def fr(n, d):  # stacked fraction
     return f'<span class="fr"><span>{n}</span><span>{d}</span></span>'
 
 
-def graph(lines=(), pts=(), lo=-6, hi=6, size=430, marks=""):
+def graph(lines=(), pts=(), lo=-6, hi=6, size=430, marks="", xs=1, ys=1, xl="x", yl="y"):
     """lines: (m, b, color, label, label_x[, dash]) for y = mx + b, or ("x", k, color, label, label_y) for x = k.
-    pts: (x, y, label, color, dx, dy). Equal scales, so right angles look right."""
-    s = size / (hi - lo)
+    pts: (x, y, label, color, dx, dy). xs, ys: units per grid square (1 keeps equal scales, so right angles look right).
+    lo..hi counts grid squares; lines, points and label positions are in real units."""
+    lines = [ln if ln[0] == "x" else (ln[0] * xs / ys, ln[1] / ys, *ln[2:4], ln[4] / xs, *ln[5:]) for ln in lines]
+    pts = [(x / xs, y / ys, *rest) for x, y, *rest in pts]
+    s, cid = size / (hi - lo), next(CLIP)
     X, Y = (lambda x: (x - lo) * s), (lambda y: (hi - y) * s)
-    g = [f'<svg class="g" viewBox="-14 -14 {size + 28} {size + 28}" width="{size + 28}" height="{size + 28}">',
-         f'<defs><clipPath id="c{id(lines)}"><rect width="{size}" height="{size}"/></clipPath></defs>']
+    pad = 44 if lo == 0 else 14  # room for tick labels when the axes sit on the edge
+    g = [f'<svg class="g" viewBox="-{pad} -14 {size + pad + 14} {size + pad + 14}" width="{size + pad + 14}" height="{size + pad + 14}">',
+         f'<defs><clipPath id="c{cid}"><rect width="{size}" height="{size}"/></clipPath></defs>']
     for k in range(lo, hi + 1):
         g.append(f'<line x1="{X(k)}" y1="0" x2="{X(k)}" y2="{size}" stroke="{GRID}"/><line x1="0" y1="{Y(k)}" x2="{size}" y2="{Y(k)}" stroke="{GRID}"/>')
     g.append(f'<line x1="{X(0)}" y1="0" x2="{X(0)}" y2="{size}" stroke="{INK}" stroke-width="2"/>'
              f'<line x1="0" y1="{Y(0)}" x2="{size}" y2="{Y(0)}" stroke="{INK}" stroke-width="2"/>')
     for k in range(lo, hi + 1):
         if k and k % 2 == 0:
-            g.append(f'<text x="{X(k)}" y="{Y(0) + 18}" class="t" text-anchor="middle">{k}</text>'
-                     f'<text x="{X(0) - 6}" y="{Y(k) + 5}" class="t" text-anchor="end">{k}</text>')
-    g.append(f'<text x="{size - 4}" y="{Y(0) - 8}" class="v" text-anchor="end">x</text><text x="{X(0) + 8}" y="16" class="v">y</text>')
-    g.append(f'<g clip-path="url(#c{id(lines)})">')
+            g.append(f'<text x="{X(k)}" y="{Y(0) + 18}" class="t" text-anchor="middle">{k * xs:g}</text>'
+                     f'<text x="{X(0) - 6}" y="{Y(k) + 5}" class="t" text-anchor="end">{k * ys:g}</text>')
+    g.append(f'<text x="{size - 4}" y="{Y(0) - 8}" class="v" text-anchor="end">{xl}</text><text x="{X(0) + 8}" y="16" class="v">{yl}</text>')
+    g.append(f'<g clip-path="url(#c{cid})">')
     labels = []
     for ln in lines:
         if ln[0] == "x":
@@ -83,8 +89,8 @@ def arrow(x1, y1, x2, y2, col, lo=-6, hi=6, size=430):
             f'stroke-width="4" marker-end="url(#ah)"/>')
 
 
-def table(head, rows):
-    return ('<table><tr>' + "".join(f"<th>{h}</th>" for h in head) + "</tr>"
+def table(head, rows, cls=""):
+    return (f'<table class="{cls}"><tr>' + "".join(f"<th>{h}</th>" for h in head) + "</tr>"
             + "".join("<tr>" + "".join(f"<td>{v}</td>" for v in r) + "</tr>" for r in rows) + "</table>")
 
 
@@ -92,10 +98,10 @@ def box(title, body, col=BLUE, cls=""):
     return f'<div class="box {cls}" style="border-color:{col}"><h3 style="color:{col}">{title}</h3>{body}</div>'
 
 
-def poster(n, lesson, title, formula, body, col=BLUE):
-    return (f'<section class="page"><div class="top"><header style="background:{col}"><span>Module 2 · Topic 2 · {lesson}</span><span>{n} / 10</span></header>'
+def poster(n, lesson, title, formula, body, col=BLUE, total=10):
+    return (f'<section class="page"><div class="top"><header style="background:{col}"><span>Module 2 · Topic 2 · {lesson}</span><span>{n} / {total}</span></header>'
             f'<h1>{title}</h1><div class="formula">{formula}</div></div>{body}'
-            f'<footer>Bluebonnet Algebra I · Transforming Linear Functions</footer></section>')
+            f'<footer>Bluebonnet Algebra I · Transforming and Comparing Linear Functions</footer></section>')
 
 
 ARROW = f'<defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10z" fill="{INK}"/></marker></defs>'
@@ -221,6 +227,66 @@ def posters():
     return P
 
 
+
+def lesson4_posters():
+    P, T = [], dict(total=5)
+    # 1 · Four representations of one function
+    P.append(poster(1, "Lesson 4", "Four Ways to Show a Line", "equation · table · graph · words",
+        '<div class="grid2 tall">'
+        + box("Equation", f"<p class='big'>{M('y = 2x + 1')}</p><p>slope {c('2', ORANGE)}, <i>y</i>-intercept {c('1', BLUE)}</p>", ORANGE)
+        + box("Words", f"<p class='big'>Start at {c('1', BLUE)}. Add {c('2', ORANGE)} each time.</p>", PURPLE)
+        + box("Table", table([M("x"), M("y")], [["0", c("1", BLUE)], ["1", "3"], ["2", "5"], ["3", "7"]])
+              + f"<p>Each time <i>x</i> goes up 1, <i>y</i> goes up {c('2', ORANGE)}.</p>", GREEN)
+        + box("Graph", graph([(2, 1, ORANGE, "y = 2x + 1", 1.6)], [(0, 1, "(0, 1)", BLUE, 10, 22), (1, 3, "", ORANGE, 0, 0), (2, 5, "", ORANGE, 0, 0)],
+                             lo=-4, hi=6, size=270), BLUE) + "</div>"
+        + '<p class="key">Every form shows the same two things: the <b>slope</b> (rate of change) and the <b><i>y</i>-intercept</b> (starting value).</p>',
+        PURPLE, **T))
+
+    # 2 · Finding slope and y-intercept in each form
+    P.append(poster(2, "Lesson 4", "Find the Slope and Start", M(f"y = {c('m', ORANGE)}x + {c('b', BLUE)}"),
+        table(["Form", c("Slope (rate)", ORANGE), c("<i>y</i>-intercept (start)", BLUE)], [
+            ["<b>Equation</b>", f"the number times <i>x</i><br>{M('y = 3x + 10')} → 3", f"the number added<br>{M('y = 3x + 10')} → 10"],
+            ["<b>Table</b>", f"change in <i>y</i> ÷ change in <i>x</i><br>{M('(0, 3), (2, 11)')} → {M('8 ÷ 2 = 4')}", f"<i>y</i> when {M('x = 0')}<br>{M('(0, 3)')} → 3"],
+            ["<b>Graph</b>", "rise ÷ run<br>between two points", "where the line<br>crosses the <i>y</i>-axis"],
+            ["<b>Words</b>", "<i>per, each, every</i><br>$25 <b>each</b> month → 25", "<i>starts with, fee</i><br><b>starts with</b> $25 → 25"]], "full")
+        + '<p class="key">Slope formula: ' + M("m = (y₂ − y₁) ÷ (x₂ − x₁)") + '. Use any two points from a table or a graph.</p>', ORANGE, **T))
+
+    # 3 · Parallel, perpendicular or neither
+    P.append(poster(3, "Lesson 4", "Parallel or Perpendicular?", f"Compare to {M('y = 4x − 3')}",
+        '<div class="row">' + graph([(4, -3, INK, "y = 4x − 3", 2), (4, 2, BLUE, "∥ slope 4", -1.2), (-0.25, 1, ORANGE, "⊥ slope −¼", -5.6)],
+                                    marks=right_angle(16 / 17, 13 / 17, 4))
+        + '<div class="col">' + box("Same slope", "<p class='big'><b>Parallel</b> ∥</p>", BLUE)
+        + box("Product is −1", f"<p class='big'><b>Perpendicular</b> ⊥</p><p>{M('4 · (−¼) = −1')}</p>", ORANGE)
+        + box("Anything else", f"<p class='big'><b>Neither</b></p><p>{M('4 · ¼ = 1')}, not −1</p>", PURPLE) + "</div></div>"
+        + table(["Function", "Slope", "Compared to slope 4"], [
+            ["Chiletso bakes 4 dozen cookies every hour.", "4", "<b>parallel</b>"],
+            [f"Table: {M('(−4, 3), (0, 2)')}", "−¼", "<b>perpendicular</b>"],
+            [M("y = ¼x + 5"), "¼", "<b>neither</b>"]], "full"), BLUE, **T))
+
+    # 4 · Which grows faster?
+    P.append(poster(4, "Lesson 4", "Which Grows Faster?", "Steeper line = bigger rate",
+        '<div class="row">' + graph([(20, 0, ORANGE, "Hays $20/ton", 1), (15, 0, BLUE, "Travis $15/ton", 4.3)], [(3, 60, "", ORANGE, 0, 0), (3, 45, "", BLUE, 0, 0)],
+                                    lo=0, hi=12, size=400, xs=0.5, ys=10, xl="tons", yl="dollars")
+        + '<div class="col"><p class="lead">Recycling cardboard</p>'
+        + box("Travis County (table)", table(["Tons", "Payout"], [["1", "$15"], ["2", "$30"]]) + "<p>$15 per ton</p>", BLUE)
+        + box("Hays County (graph)", "<p>through (1, 20)</p><p>$20 per ton</p>", ORANGE) + "</div></div>"
+        + '<div class="grid2">' + box("Compare the slopes", "<p>20 &gt; 15, so <b>Hays pays more</b> for every ton: 3 tons → $60 vs. $45.</p>", ORANGE)
+        + box("Compare the starts", "<p>Both <i>y</i>-intercepts are 0: 0 tons pays $0.</p>", BLUE) + "</div>"
+        + f'<p class="key">{M("f(x) = 3x + 10")} vs. a table with {M("(0, 4), (1, 9)")}: the table grows faster (slope 5 &gt; 3), but {M("f")} starts higher (10 &gt; 4).</p>',
+        GREEN, **T))
+
+    # 5 · Units and scales
+    P.append(poster(5, "Lesson 4", "Units and Scales", "slope unit = output per input",
+        '<div class="row">' + graph([(20, 0, BLUE, "Miguel", 6.5), (25, 25, ORANGE, "Lauren", 3)], [(0, 25, "$25 start", ORANGE, 10, 24), (4, 80, "(4, 80)", BLUE, 10, 22)],
+                                    lo=0, hi=12, size=400, xs=1, ys=15, xl="months", yl="dollars")
+        + '<div class="col"><p class="lead">Saving money</p>'
+        + box("Miguel", "<p>$0 to start<br>saves <b>$20 per month</b></p>", BLUE)
+        + box("Lauren", "<p>$25 to start<br>saves <b>$25 per month</b></p>", ORANGE) + "</div></div>"
+        + '<div class="grid2">' + box("Units tell the meaning", "<p><b>Slope:</b> dollars <b>per</b> month.<br><b><i>y</i>-intercept:</b> dollars at 0 months.</p>", GREEN)
+        + box("Choose good scales", "<p>Label each axis with the quantity and units. Pick tick sizes so all the data fits (here 1 month and $15).</p>", PURPLE) + "</div>"
+        + '<p class="key">Taxi: $2.50 per mile plus $3. Slope 2.50 dollars per mile; <i>y</i>-intercept $3.</p>', PURPLE, **T))
+    return P
+
 CSS = f"""@page{{size:letter;margin:0}}
 *{{box-sizing:border-box}} body{{margin:0;font-family:"Segoe UI",system-ui,sans-serif;color:{INK};-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 .top{{display:flex;flex-direction:column;gap:12px}}
@@ -237,18 +303,18 @@ h1{{font-size:52px;line-height:1.05;margin:6px 0 0;letter-spacing:-.02em}}
 .ok{{color:{GREEN};font-weight:700}} .no{{color:#b4372b;font-weight:700}}
 .key{{font-size:24px;margin:0;padding:12px 18px;background:#eef0f8;border-left:8px solid {INK};border-radius:6px}}
 .warn{{font-size:26px;font-weight:700;margin:0;color:#b4372b}}
-table{{border-collapse:collapse;font-size:26px;align-self:center}} th,td{{border:2px solid {INK};padding:6px 20px;text-align:center}} th{{background:#eef0f8;white-space:nowrap}}
+table{{border-collapse:collapse;font-size:26px;align-self:center}} th,td{{border:2px solid {INK};padding:6px 20px;text-align:center}} th{{background:#eef0f8;white-space:nowrap}} table.full{{width:100%;font-size:25px}} table.full td{{padding:12px}}
 .steps{{margin:0;padding-left:30px;font-size:23px;line-height:1.45}} .steps li{{margin:4px 0}} .big4{{font-size:26px}}
 .g{{flex:none}} .g .t{{font:15px "Segoe UI",sans-serif;fill:#5f6272}} .g .v{{font:italic 22px Cambria,serif}}
 .g .l{{font:italic 700 22px Cambria,serif;paint-order:stroke;stroke:#fff;stroke-width:5px}}
 footer{{position:absolute;bottom:.25in;left:.55in;right:.55in;font-size:13px;color:#5f6272;border-top:1px solid #ccc;padding-top:6px}}"""
 
 if __name__ == "__main__":
-    pages = posters()
-    assert len(pages) == 10
-    html = OUT.with_suffix(".html")
-    html.write_text(f'<!doctype html><meta charset="utf-8"><title>Topic 2 Lessons 1–3 Posters</title><style>{CSS}</style><body>{"".join(pages)}</body>',
-                    encoding="utf-8")
-    subprocess.run([EDGE, "--headless", "--disable-gpu", "--no-pdf-header-footer", f"--print-to-pdf={OUT.with_suffix('.pdf')}", html.as_uri()],
-                   check=True, capture_output=True)
-    print("wrote", OUT.with_suffix(".pdf"))
+    for name, title, pages, n in [("Topic2-Lessons1-3-Posters", "Topic 2 Lessons 1–3 Posters", posters(), 10),
+                                  ("Topic2-Lesson4-Posters", "Topic 2 Lesson 4 Posters", lesson4_posters(), 5)]:
+        assert len(pages) == n
+        html = OUT / f"{name}.html"
+        html.write_text(f'<!doctype html><meta charset="utf-8"><title>{title}</title><style>{CSS}</style><body>{"".join(pages)}</body>', encoding="utf-8")
+        subprocess.run([EDGE, "--headless", "--disable-gpu", "--no-pdf-header-footer", f"--print-to-pdf={OUT / f'{name}.pdf'}", html.as_uri()],
+                       check=True, capture_output=True)
+        print("wrote", OUT / f"{name}.pdf")
