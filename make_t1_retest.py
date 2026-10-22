@@ -1,8 +1,9 @@
 # Module 2 Topic 1 Retest (Retest-Alg1M2T1): three forms of the four Edia retest items (point from point-slope form,
 # point-slope to slope-intercept, line from a slope and a point, slope from standard form) plus an answer key.
-# Writes assessment/Retest-Alg1M2T1.html (printable), .pdf and .pptx, and the same three for the -ANSWER-KEY.
+# Writes assessment/Retest-Alg1M2T1.html (printable), .pdf and .pptx, and the same three for the -ANSWER-KEY,
+# plus Retest-Alg1M2T1-online.html: the test taken on the web, marked correct / incorrect with the answers after submit.
 # PDFs print through headless Edge; the PowerPoints go through make_pptx.py.  Run: python make_t1_retest.py
-import pathlib, subprocess, sys
+import json, pathlib, subprocess, sys
 
 ROOT = pathlib.Path(__file__).parent
 OUT = ROOT / "assessment"
@@ -80,6 +81,121 @@ def key_html():
             f'<table><tr><th>Item</th><th>Question</th><th>Answer</th><th>Work</th></tr>{rows}</table></section></body>')
 
 
+# ---------------------------------------------------------------- online test (checks typed answers, then shows the key)
+# How each answer is checked: ["pt", x, y], ["line", m, b] (any equivalent y = mx + b), ["num", value]
+CHECK = {"A": [["pt", -1, 5], ["line", 3, -10], ["line", 1/3, 3], ["num", -2/5]],
+         "B": [["pt", 8, -2], ["line", -2, -3], ["line", 3/4, -4], ["num", 2]],
+         "C": [["pt", -3, 7], ["line", 5, 16], ["line", -2/5, 3], ["num", -2]]}
+HINT = {"pt": "Type an ordered pair, like (2, −3)", "line": "Type an equation, like y = 2x + 1 (fractions as 1/2)",
+        "num": "Type a number or a fraction, like −3/4"}
+ICON = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' "
+        "fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E"
+        "%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E"
+        "%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E")
+ONLINE_JS = r"""
+const list = document.getElementById("questions"), result = document.getElementById("result");
+const submit = document.getElementById("submit");
+let form = FORMS[0];
+// Typed math -> a number: only digits, x, + - * / ( ) and . are allowed; "2x" and ")(" become multiplication.
+const clean = s => s.toLowerCase().replace(/[−–—]/g, "-").replace(/[×·]/g, "*").replace(/÷/g, "/").replace(/\s+/g, "");
+function val(e, x = 0) {
+  if (!/^[0-9x.+\-*/()]+$/.test(e)) return NaN;
+  e = e.replace(/(\d|\)|x)(?=[x(])/g, "$1*").replace(/(\)|x)(?=\d)/g, "$1*");
+  try { const v = Function("x", `"use strict";return (${e})`)(x); return typeof v === "number" ? v : NaN; } catch { return NaN; }
+}
+const near = (a, b) => Math.abs(a - b) < 1e-9;
+function correct(raw, [kind, a, b]) {
+  let s = clean(raw);
+  if (kind === "num") { s = s.replace(/^(m|slope)=/, ""); return !s.includes("x") && near(val(s), a); }
+  if (kind === "pt") {
+    const p = s.replace(/^\((.*)\)$/, "$1").split(",");
+    return p.length === 2 && !s.includes("x") && near(val(p[0]), a) && near(val(p[1]), b);
+  }
+  s = s.replace(/^(y|f\(x\))=/, "");  // line: slope-intercept form, so no y on the right and no x inside parentheses
+  return !/[y=]/.test(s) && !/\([^()]*x/.test(s) && [0, 1, 2, -3].every(x => near(val(s, x), a * x + b));
+}
+
+function render() {
+  list.innerHTML = form.qs.map((q, n) => `<li class="card"><fieldset>
+    <legend>${q.q}</legend>
+    <label class="lbl">Show your work here (optional)<textarea rows="3"></textarea></label>
+    <label class="lbl">Your answer<input class="answer" autocomplete="off" spellcheck="false"></label>
+    <p class="hint muted">${q.hint}</p><p class="why" hidden></p></fieldset></li>`).join("");
+  result.hidden = true; submit.disabled = false;
+  document.querySelectorAll(".seg input").forEach(r => r.disabled = false);
+}
+
+submit.onclick = () => {
+  const boxes = [...list.querySelectorAll("fieldset")];
+  const blank = boxes.filter(f => !f.querySelector(".answer").value.trim()).length;
+  if (blank && !confirm(`${blank} question${blank > 1 ? "s are" : " is"} blank. Submit anyway?`)) return;
+  let score = 0;
+  boxes.forEach((f, n) => {
+    const q = form.qs[n], input = f.querySelector(".answer"), ok = correct(input.value, q.check);
+    score += ok;
+    input.classList.add(ok ? "right" : "wrong");
+    const why = f.querySelector(".why");
+    why.innerHTML = (ok ? '<b class="ok">Correct.</b> ' : `<b class="no">Incorrect.</b> The answer is <b>${q.a}</b>. `) + `Work: ${q.w}`;
+    why.hidden = false; f.disabled = true;
+  });
+  const name = document.getElementById("name").value.trim();
+  result.innerHTML = `${name ? `<b>${name.replace(/</g, "&lt;")}</b> · ` : ""}Form ${form.form}: <b>${score} / ${boxes.length}</b> correct (${Math.round(100 * score / boxes.length)}%). Each question shows the correct answer and the work.`;
+  result.hidden = false; submit.disabled = true;
+  document.querySelectorAll(".seg input").forEach(r => r.disabled = true);
+  result.scrollIntoView({ behavior: "smooth", block: "center" });
+};
+document.getElementById("reset").onclick = () => { if (confirm("Clear your answers and start over?")) render(); };
+document.querySelectorAll(".seg input").forEach(r => r.onchange = () => { form = FORMS.find(f => f.form === r.value); render(); });
+render();
+"""
+
+
+def online_html():
+    data = [dict(form=form, qs=[dict(q=q, a=a, w=w, check=CHECK[form][n], hint=HINT[CHECK[form][n][0]])
+                                for n, (q, a, w) in enumerate(qs(FH))]) for form, qs in FORMS]
+    seg = "".join(f'<label><input type="radio" name="form" value="{f}"{" checked" * (f == "A")}>Form {f}</label>' for f, _ in FORMS)
+    return f"""<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Topic 1 Retest · Online</title>
+<link rel="icon" href="{ICON}">
+<link rel="stylesheet" href="../mc.css">
+<style>
+  ol#questions legend{{line-height:1.7}}
+  .seg{{display:inline-flex;gap:4px;margin-top:16px;padding:4px;border:1px solid var(--line);border-radius:999px;background:var(--card)}}
+  .seg label{{padding:6px 16px;border-radius:999px;cursor:pointer;font-weight:600;color:var(--muted)}}
+  .seg input{{position:absolute;opacity:0;pointer-events:none}}
+  .seg label:has(input:checked){{background:var(--point);color:#fff}}
+  .seg label:has(input:focus-visible){{outline:2px solid var(--point);outline-offset:2px}}
+  .seg label:has(input:disabled){{cursor:not-allowed}}
+  .lbl{{display:flex;flex-direction:column;gap:4px;font-weight:600;margin-top:10px}}
+  .lbl textarea,.lbl input{{font:inherit;font-weight:400;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);width:100%}}
+  .lbl input{{font-family:var(--math);font-size:1.1em;border-width:2px}}
+  .lbl input.right{{border-color:var(--ans);background:var(--ans-bg)}} .lbl input.wrong{{border-color:var(--bad);background:var(--bad-bg)}}
+  .hint{{font-size:14px;margin-top:4px}}
+  .fr{{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.85em;line-height:1.1}}
+  .fr span:first-child{{border-bottom:1px solid currentColor;padding:0 2px}}
+</style>
+<div class="wrap">
+  <p class="eyebrow">Module 2 · Topic 1 · Retest</p>
+  <h1>Topic 1 Retest</h1>
+  <p class="muted">Pick the form your teacher assigned. Show your work, type each answer, then submit. After you submit you will see which answers are correct or incorrect, and the correct answer for each question.</p>
+  <label class="name">Your name <input id="name" autocomplete="name"></label>
+  <div class="seg" role="radiogroup" aria-label="Form">{seg}</div>
+  <ol id="questions"></ol>
+  <div class="bar">
+    <button id="submit">Submit answers</button>
+    <button id="reset" class="ghost">Start over</button>
+  </div>
+  <p id="result" class="card" style="margin-top:16px" hidden></p>
+</div>
+<script>
+const FORMS = {json.dumps(data, ensure_ascii=False)};
+{ONLINE_JS}</script>
+"""
+
+
 # ---------------------------------------------------------------- make_pptx.py decks
 FP = lambda a, b: "({{" + f"{a}|{b}" + "}})"  # make_pptx flattens fractions, so keep them in parentheses
 slide = lambda body, foot=TITLE: f'<section class="slide">{body}<p class="foot">{foot}</p></section>'
@@ -107,7 +223,8 @@ def key_deck():
 
 
 if __name__ == "__main__":
-    assert all(len(qs(FH)) == 4 for _, qs in FORMS)
+    assert all(len(qs(FH)) == 4 == len(CHECK[f]) for f, qs in FORMS)
+    (OUT / f"{NAME}-online.html").write_text(online_html(), encoding="utf-8")
     for name, page, deck in [(NAME, student_html(), student_deck()), (f"{NAME}-ANSWER-KEY", key_html(), key_deck())]:
         html = OUT / f"{name}.html"
         html.write_text(page, encoding="utf-8")

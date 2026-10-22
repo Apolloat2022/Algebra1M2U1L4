@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Topic 1 Retest · Online</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../mc.css">
+<style>
+  ol#questions legend{line-height:1.7}
+  .seg{display:inline-flex;gap:4px;margin-top:16px;padding:4px;border:1px solid var(--line);border-radius:999px;background:var(--card)}
+  .seg label{padding:6px 16px;border-radius:999px;cursor:pointer;font-weight:600;color:var(--muted)}
+  .seg input{position:absolute;opacity:0;pointer-events:none}
+  .seg label:has(input:checked){background:var(--point);color:#fff}
+  .seg label:has(input:focus-visible){outline:2px solid var(--point);outline-offset:2px}
+  .seg label:has(input:disabled){cursor:not-allowed}
+  .lbl{display:flex;flex-direction:column;gap:4px;font-weight:600;margin-top:10px}
+  .lbl textarea,.lbl input{font:inherit;font-weight:400;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);width:100%}
+  .lbl input{font-family:var(--math);font-size:1.1em;border-width:2px}
+  .lbl input.right{border-color:var(--ans);background:var(--ans-bg)} .lbl input.wrong{border-color:var(--bad);background:var(--bad-bg)}
+  .hint{font-size:14px;margin-top:4px}
+  .fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.85em;line-height:1.1}
+  .fr span:first-child{border-bottom:1px solid currentColor;padding:0 2px}
+</style>
+<div class="wrap">
+  <p class="eyebrow">Module 2 · Topic 1 · Retest</p>
+  <h1>Topic 1 Retest</h1>
+  <p class="muted">Pick the form your teacher assigned. Show your work, type each answer, then submit. After you submit you will see which answers are correct or incorrect, and the correct answer for each question.</p>
+  <label class="name">Your name <input id="name" autocomplete="name"></label>
+  <div class="seg" role="radiogroup" aria-label="Form"><label><input type="radio" name="form" value="A" checked>Form A</label><label><input type="radio" name="form" value="B">Form B</label><label><input type="radio" name="form" value="C">Form C</label></div>
+  <ol id="questions"></ol>
+  <div class="bar">
+    <button id="submit">Submit answers</button>
+    <button id="reset" class="ghost">Start over</button>
+  </div>
+  <p id="result" class="card" style="margin-top:16px" hidden></p>
+</div>
+<script>
+const FORMS = [{"form": "A", "qs": [{"q": "What is the point of the line given by the point-slope equation <i>y</i> − 5 = <span class=\"fr\"><span>2</span><span>3</span></span>(<i>x</i> + 1)? Enter your answer as an ordered pair.", "a": "(−1, 5)", "w": "y − y₁ = m(x − x₁): x₁ = −1, y₁ = 5.", "check": ["pt", -1, 5], "hint": "Type an ordered pair, like (2, −3)"}, {"q": "Rewrite the equation in slope-intercept form. Simplify your answer.<br><b><i>y</i> − 2 = 3(<i>x</i> − 4)</b>", "a": "y = 3x − 10", "w": "y − 2 = 3x − 12 → y = 3x − 10", "check": ["line", 3, -10], "hint": "Type an equation, like y = 2x + 1 (fractions as 1/2)"}, {"q": "What is the equation in slope-intercept form of a line with a slope of <span class=\"fr\"><span>1</span><span>3</span></span> that passes through the point (−3, 2)?", "a": "y = (1/3)x + 3", "w": "2 = (1/3)(−3) + b → 2 = −1 + b → b = 3", "check": ["line", 0.3333333333333333, 3], "hint": "Type an equation, like y = 2x + 1 (fractions as 1/2)"}, {"q": "What is the slope of the line given by the equation 2<i>x</i> + 5<i>y</i> = 10?", "a": "−2/5", "w": "5y = −2x + 10 → y = (−2/5)x + 2", "check": ["num", -0.4], "hint": "Type a number or a fraction, like −3/4"}]}, {"form": "B", "qs": [{"q": "What is the point of the line given by the point-slope equation <i>y</i> + 2 = <span class=\"fr\"><span>5</span><span>4</span></span>(<i>x</i> − 8)? Enter your answer as an ordered pair.", "a": "(8, −2)", "w": "y + 2 = y − (−2): x₁ = 8, y₁ = −2.", "check": ["pt", 8, -2], "hint": "Type an ordered pair, like (2, −3)"}, {"q": "Rewrite the equation in slope-intercept form. Simplify your answer.<br><b><i>y</i> + 5 = −2(<i>x</i> − 1)</b>", "a": "y = −2x − 3", "w": "y + 5 = −2x + 2 → y = −2x − 3", "check": ["line", -2, -3], "hint": "Type an equation, like y = 2x + 1 (fractions as 1/2)"}, {"q": "What is the equation in slope-intercept form of a line with a slope of <span class=\"fr\"><span>3</span><span>4</span></span> that passes through the point (4, −1)?", "a": "y = (3/4)x − 4", "w": "−1 = (3/4)(4) + b → −1 = 3 + b → b = −4", "check": ["line", 0.75, -4], "hint": "Type an equation, like y = 2x + 1 (fractions as 1/2)"}, {"q": "What is the slope of the line given by the equation 4<i>x</i> − 2<i>y</i> = 8?", "a": "2", "w": "−2y = −4x + 8 → y = 2x − 4", "check": ["num", 2], "hint": "Type a number or a fraction, like −3/4"}]}, {"form": "C", "qs": [{"q": "What is the point of the line given by the point-slope equation <i>y</i> − 7 = −<span class=\"fr\"><span>1</span><span>2</span></span>(<i>x</i> + 3)? Enter your answer as an ordered pair.", "a": "(−3, 7)", "w": "x + 3 = x − (−3): x₁ = −3, y₁ = 7.", "check": ["pt", -3, 7], "hint": "Type an ordered pair, like (2, −3)"}, {"q": "Rewrite the equation in slope-intercept form. Simplify your answer.<br><b><i>y</i> − 6 = 5(<i>x</i> + 2)</b>", "a": "y = 5x + 16", "w": "y − 6 = 5x + 10 → y = 5x + 16", "check": ["line", 5, 16], "hint": "Type an equation, like y = 2x + 1 (fractions as 1/2)"}, {"q": "What is the equation in slope-intercept form of a line with a slope of −<span class=\"fr\"><span>2</span><span>5</span></span> that passes through the point (5, 1)?", "a": "y = −(2/5)x + 3", "w": "1 = (−2/5)(5) + b → 1 = −2 + b → b = 3", "check": ["line", -0.4, 3], "hint": "Type an equation, like y = 2x + 1 (fractions as 1/2)"}, {"q": "What is the slope of the line given by the equation 6<i>x</i> + 3<i>y</i> = 9?", "a": "−2", "w": "3y = −6x + 9 → y = −2x + 3", "check": ["num", -2], "hint": "Type a number or a fraction, like −3/4"}]}];
+
+const list = document.getElementById("questions"), result = document.getElementById("result");
+const submit = document.getElementById("submit");
+let form = FORMS[0];
+// Typed math -> a number: only digits, x, + - * / ( ) and . are allowed; "2x" and ")(" become multiplication.
+const clean = s => s.toLowerCase().replace(/[−–—]/g, "-").replace(/[×·]/g, "*").replace(/÷/g, "/").replace(/\s+/g, "");
+function val(e, x = 0) {
+  if (!/^[0-9x.+\-*/()]+$/.test(e)) return NaN;
+  e = e.replace(/(\d|\)|x)(?=[x(])/g, "$1*").replace(/(\)|x)(?=\d)/g, "$1*");
+  try { const v = Function("x", `"use strict";return (${e})`)(x); return typeof v === "number" ? v : NaN; } catch { return NaN; }
+}
+const near = (a, b) => Math.abs(a - b) < 1e-9;
+function correct(raw, [kind, a, b]) {
+  let s = clean(raw);
+  if (kind === "num") { s = s.replace(/^(m|slope)=/, ""); return !s.includes("x") && near(val(s), a); }
+  if (kind === "pt") {
+    const p = s.replace(/^\((.*)\)$/, "$1").split(",");
+    return p.length === 2 && !s.includes("x") && near(val(p[0]), a) && near(val(p[1]), b);
+  }
+  s = s.replace(/^(y|f\(x\))=/, "");  // line: slope-intercept form, so no y on the right and no x inside parentheses
+  return !/[y=]/.test(s) && !/\([^()]*x/.test(s) && [0, 1, 2, -3].every(x => near(val(s, x), a * x + b));
+}
+
+function render() {
+  list.innerHTML = form.qs.map((q, n) => `<li class="card"><fieldset>
+    <legend>${q.q}</legend>
+    <label class="lbl">Show your work here (optional)<textarea rows="3"></textarea></label>
+    <label class="lbl">Your answer<input class="answer" autocomplete="off" spellcheck="false"></label>
+    <p class="hint muted">${q.hint}</p><p class="why" hidden></p></fieldset></li>`).join("");
+  result.hidden = true; submit.disabled = false;
+  document.querySelectorAll(".seg input").forEach(r => r.disabled = false);
+}
+
+submit.onclick = () => {
+  const boxes = [...list.querySelectorAll("fieldset")];
+  const blank = boxes.filter(f => !f.querySelector(".answer").value.trim()).length;
+  if (blank && !confirm(`${blank} question${blank > 1 ? "s are" : " is"} blank. Submit anyway?`)) return;
+  let score = 0;
+  boxes.forEach((f, n) => {
+    const q = form.qs[n], input = f.querySelector(".answer"), ok = correct(input.value, q.check);
+    score += ok;
+    input.classList.add(ok ? "right" : "wrong");
+    const why = f.querySelector(".why");
+    why.innerHTML = (ok ? '<b class="ok">Correct.</b> ' : `<b class="no">Incorrect.</b> The answer is <b>${q.a}</b>. `) + `Work: ${q.w}`;
+    why.hidden = false; f.disabled = true;
+  });
+  const name = document.getElementById("name").value.trim();
+  result.innerHTML = `${name ? `<b>${name.replace(/</g, "&lt;")}</b> · ` : ""}Form ${form.form}: <b>${score} / ${boxes.length}</b> correct (${Math.round(100 * score / boxes.length)}%). Each question shows the correct answer and the work.`;
+  result.hidden = false; submit.disabled = true;
+  document.querySelectorAll(".seg input").forEach(r => r.disabled = true);
+  result.scrollIntoView({ behavior: "smooth", block: "center" });
+};
+document.getElementById("reset").onclick = () => { if (confirm("Clear your answers and start over?")) render(); };
+document.querySelectorAll(".seg input").forEach(r => r.onchange = () => { form = FORMS.find(f => f.form === r.value); render(); });
+render();
+</script>
