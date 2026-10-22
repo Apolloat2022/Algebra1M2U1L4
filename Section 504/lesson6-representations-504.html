@@ -106,7 +106,7 @@ a.go{color:var(--point);text-decoration:none} a.go:hover{text-decoration:underli
 #prog>div{height:100%;width:0;background:var(--point);transition:width .3s}
 #count{font-variant-numeric:tabular-nums;min-width:64px;text-align:right}
 #brand{display:flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none;font-size:15px;white-space:nowrap}
-#brand strong{color:var(--point)}
+#brand strong{color:var(--point)}#home{color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:5px 12px;white-space:nowrap}#home:hover{background:var(--soft)}
 @media (max-width:900px){#hint{display:none}}
 @media (max-width:560px){#brand,#fs{display:none} #bar{gap:8px;padding:0 10px} #count{min-width:0}}
 #bar button{touch-action:manipulation}
@@ -730,7 +730,7 @@ table td.step:not(.shown){color:transparent}
 </div>
 
 <nav id="bar" aria-label="Slide controls">
-  <span id="brand"><svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#3050b8"/><g fill="#fff"><circle cx="16" cy="7.5" r="2.3"/><circle cx="12.8" cy="11.8" r="2.5" opacity=".92"/><circle cx="19.2" cy="11.8" r="2.5" opacity=".92"/><circle cx="16" cy="14.6" r="2.6"/><circle cx="11.8" cy="17.6" r="2.7" opacity=".82"/><circle cx="20.2" cy="17.6" r="2.7" opacity=".82"/></g><rect x="15.2" y="20.5" width="1.6" height="6.5" rx=".8" fill="#9fd18b"/></svg><span>Bluebonnet <strong>Algebra I</strong></span></span>
+  <a id="home" href="../index.html">⌂ Home</a> <span id="brand"><svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#3050b8"/><g fill="#fff"><circle cx="16" cy="7.5" r="2.3"/><circle cx="12.8" cy="11.8" r="2.5" opacity=".92"/><circle cx="19.2" cy="11.8" r="2.5" opacity=".92"/><circle cx="16" cy="14.6" r="2.6"/><circle cx="11.8" cy="17.6" r="2.7" opacity=".82"/><circle cx="20.2" cy="17.6" r="2.7" opacity=".82"/></g><rect x="15.2" y="20.5" width="1.6" height="6.5" rx=".8" fill="#9fd18b"/></svg><span>Bluebonnet <strong>Algebra I</strong></span></span>
   <button id="prev" type="button" aria-label="Previous step">← Back</button>
   <button id="next" type="button" aria-label="Next step">Next →</button>
   <div id="prog"><div></div></div>

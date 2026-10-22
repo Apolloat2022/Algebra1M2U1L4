@@ -59,3 +59,8 @@ label.name input{font:inherit;font-weight:400;padding:8px 10px;border:1px solid 
 .big{font-size:21px} .big .choice{padding:14px 14px}
 .ref{margin-top:16px;border-left:6px solid var(--point)} .ref p+p{margin-top:6px}
 button.say{margin-top:12px;padding:6px 14px;font-size:15px}
+/* Home button back to the course page (mc.js adds it to practice pages) */
+.home{display:inline-flex;align-items:center;gap:6px;margin-bottom:14px;padding:6px 14px;border:1px solid var(--line);border-radius:999px;
+  background:var(--card);color:var(--point);font-size:15px;font-weight:600;text-decoration:none}
+.home:hover{background:var(--soft);text-decoration:none}
+@media print{.home{display:none}}

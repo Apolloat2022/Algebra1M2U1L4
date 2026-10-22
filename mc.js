@@ -6,6 +6,7 @@
 // Optional `accom` (IEP / 504 pages): {keep: [question indices], choices: n (drop trailing distractors),
 // readAloud: true (a speech button on each question)}.
 (function () {
+  document.querySelector(".wrap").insertAdjacentHTML("afterbegin", '<a class="home" href="../index.html">← Home</a>');
   const { mode, accom = {} } = window.MC;
   const questions = (accom.keep ? accom.keep.map(i => window.MC.questions[i]) : window.MC.questions)
     .map(item => accom.choices ? { ...item, choices: item.choices.slice(0, accom.choices) } : item);

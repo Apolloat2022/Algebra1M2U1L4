@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Topic 1 Retest · Results</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../mc.css">
+<style>
+  .wrap{max-width:1100px}
+  .row{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-top:16px}
+  .row input{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
+  .scroll{overflow-x:auto;margin-top:16px}
+  table{border-collapse:collapse;width:100%;background:var(--card);font-size:16px}
+  th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+  th{background:var(--soft);font-weight:600;white-space:nowrap}
+  td.ok{background:var(--ans-bg)} td.no{background:var(--bad-bg)}
+  td.a{font-family:var(--math);white-space:nowrap}
+  tr.work td{font-size:14px;color:var(--muted);white-space:pre-wrap}
+  .stats{margin-top:16px}
+  #msg:empty{display:none}
+</style>
+<div class="wrap">
+  <a class="home" href="../index.html">← Home</a>
+  <p class="eyebrow">Module 2 · Topic 1 · Retest · Teacher</p>
+  <h1>Retest Results</h1>
+  <p class="muted">Scores students submitted on the online retest, newest first. Green answers are correct, red are incorrect.</p>
+  <form class="row" id="login">
+    <label class="name" style="margin:0">Teacher password <input id="pw" type="password" autocomplete="current-password"></label>
+    <button>Show scores</button>
+  </form>
+  <p id="msg" class="card" style="margin-top:16px"></p>
+  <div id="view" hidden>
+    <div class="row">
+      <input id="find" type="search" placeholder="Find a student" aria-label="Find a student">
+      <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="showWork"> Show work</label>
+      <button type="button" id="refresh" class="ghost">Refresh</button>
+      <button type="button" id="csv" class="ghost">Download CSV</button>
+    </div>
+    <p class="stats card" id="stats"></p>
+    <div class="scroll"><table><thead><tr><th>Submitted</th><th>Name</th><th>Form</th><th>Score</th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th></tr></thead>
+      <tbody id="rows"></tbody></table></div>
+  </div>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const when = t => new Date(t).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+let all = [];
+const store = { get() { try { return sessionStorage.getItem("retestPw") || ""; } catch { return ""; } },
+                set(v) { try { sessionStorage.setItem("retestPw", v); } catch {} } };
+
+async function load() {
+  const pw = $("pw").value;
+  $("msg").textContent = "Loading…";
+  try {
+    const r = await fetch("/api/retest", { headers: { Authorization: `Bearer ${pw}` }, cache: "no-store" });
+    if (r.status === 401) { $("msg").textContent = "Wrong password."; $("view").hidden = true; return; }
+    if (!r.ok) throw new Error(r.status);
+    all = await r.json();
+  } catch (e) { $("msg").textContent = `Could not load scores (${e.message}). Check your connection and try again.`; return; }
+  store.set(pw);
+  $("msg").textContent = ""; $("view").hidden = false;
+  show();
+}
+
+function show() {
+  const q = $("find").value.trim().toLowerCase(), work = $("showWork").checked;
+  const rows = all.filter(s => s.name.toLowerCase().includes(q));
+  $("rows").innerHTML = rows.map(s => `<tr><td>${when(s.time)}</td><td><b>${esc(s.name)}</b></td><td>${esc(s.form)}</td>
+    <td>${s.score} / ${s.total}</td>${s.answers.map((a, n) => `<td class="a ${s.correct[n] ? "ok" : "no"}">${esc(a) || "(blank)"}</td>`).join("")}</tr>`
+    + (work && s.work.some(w => w.trim()) ? `<tr class="work"><td colspan="4">Work shown</td>${s.work.map(w => `<td>${esc(w)}</td>`).join("")}</tr>` : "")).join("")
+    || '<tr><td colspan="8">No submissions yet.</td></tr>';
+  const n = rows.length, pct = n ? Math.round(100 * rows.reduce((t, s) => t + s.score / s.total, 0) / n) : 0;
+  const perQ = [0, 1, 2, 3].map(i => n ? Math.round(100 * rows.filter(s => s.correct[i]).length / n) : 0);
+  $("stats").innerHTML = `<b>${n}</b> submission${n === 1 ? "" : "s"} · average <b>${pct}%</b> · correct by question: `
+    + perQ.map((p, i) => `Q${i + 1} ${p}%`).join(" · ");
+}
+
+function csv() {
+  const cell = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const head = ["Submitted", "Name", "Form", "Score", "Total", "Q1", "Q1 correct", "Q2", "Q2 correct", "Q3", "Q3 correct", "Q4", "Q4 correct"];
+  const lines = all.map(s => [new Date(s.time).toLocaleString(), s.name, s.form, s.score, s.total,
+    ...s.answers.flatMap((a, n) => [a, s.correct[n] ? "yes" : "no"])].map(cell).join(","));
+  const url = URL.createObjectURL(new Blob([[head.join(","), ...lines].join("\r\n")], { type: "text/csv" }));
+  Object.assign(document.createElement("a"), { href: url, download: "topic1-retest-scores.csv" }).click();
+  URL.revokeObjectURL(url);
+}
+
+$("login").onsubmit = e => { e.preventDefault(); load(); };
+$("refresh").onclick = load;
+$("csv").onclick = csv;
+$("find").oninput = show;
+$("showWork").onchange = show;
+if (($("pw").value = store.get())) load();
+</script>

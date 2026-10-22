@@ -1,7 +1,8 @@
 # Module 2 Topic 1 Retest (Retest-Alg1M2T1): three forms of the four Edia retest items (point from point-slope form,
 # point-slope to slope-intercept, line from a slope and a point, slope from standard form) plus an answer key.
 # Writes assessment/Retest-Alg1M2T1.html (printable), .pdf and .pptx, and the same three for the -ANSWER-KEY,
-# plus Retest-Alg1M2T1-online.html: the test taken on the web, marked correct / incorrect with the answers after submit.
+# plus Retest-Alg1M2T1-online.html: the test taken on the web, graded and saved by api/retest.js (also written here);
+# teachers read the saved scores on assessment/retest-results.html.
 # PDFs print through headless Edge; the PowerPoints go through make_pptx.py.  Run: python make_t1_retest.py
 import json, pathlib, subprocess, sys
 
@@ -58,6 +59,7 @@ CSS = """<style>
  .fr span:first-child{border-bottom:1px solid currentColor;padding:0 2px}
  table{border-collapse:collapse;width:100%;font-size:13pt} td,th{border:1px solid #999;padding:6px 8px;text-align:left;vertical-align:top}
  .key{color:#b00;font-weight:bold;white-space:nowrap} .muted{color:#555}
+ .home{display:inline-block;margin-bottom:10px;color:#3050b8;font-weight:600;text-decoration:none} @media print{.home{display:none}}
 </style>"""
 FH = lambda a, b: f'<span class="fr"><span>{a}</span><span>{b}</span></span>'
 head = lambda sub: f'<div class="hdr"><div><h1>{TITLE}</h1><h2>{sub}</h2></div><div>Name ____________________ &nbsp; Date __________</div></div>'
@@ -69,13 +71,14 @@ def student_html():
         items = "".join(f'<div class="q"><span class="n">{n}.</span><div>{q}<div class="work">Show your work here</div>'
                         f'<div class="ans">Answer:</div></div></div>' for n, (q, _, _) in enumerate(qs(FH), 1))
         pages.append(f'<section class="page">{head(f"Form {form} · 4 questions")}<p class="muted">{DIRS}</p>{items}</section>')
-    return f'<!doctype html><meta charset="utf-8"><title>{NAME}</title>{CSS}<body>' + "".join(pages) + "</body>"
+    return f'<!doctype html><meta charset="utf-8"><title>{NAME}</title>{CSS}<body><a class="home" href="../index.html">← Home</a>' + "".join(pages) + "</body>"
 
 
 def key_html():
     rows = "".join(f'<tr><td><b>{form}{n}</b></td><td>{q}</td><td class="key">{a}</td><td>{w}</td></tr>'
                    for form, qs in FORMS for n, (q, a, w) in enumerate(qs(FH), 1))
     return (f'<!doctype html><meta charset="utf-8"><title>{NAME} Answer Key</title>{CSS}<body><section class="page">'
+            '<a class="home" href="../index.html">← Home</a>'
             f'<div class="hdr"><div><h1>{TITLE}</h1><h2>Answer Key · Forms A, B, C (teacher copy)</h2></div></div>'
             '<p class="muted">1 point each. Item 1 matches the original retest item 1 on every form, item 2 matches item 2, and so on.</p>'
             f'<table><tr><th>Item</th><th>Question</th><th>Answer</th><th>Work</th></tr>{rows}</table></section></body>')
@@ -92,19 +95,17 @@ ICON = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0
         "fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E"
         "%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E"
         "%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E")
-ONLINE_JS = r"""
-const list = document.getElementById("questions"), result = document.getElementById("result");
-const submit = document.getElementById("submit");
-let form = FORMS[0];
+# Grading runs on the server (api/retest.js, written below) so the answers are not in the page source.
+CHECKER_JS = r"""
 // Typed math -> a number: only digits, x, + - * / ( ) and . are allowed; "2x" and ")(" become multiplication.
-const clean = s => s.toLowerCase().replace(/[−–—]/g, "-").replace(/[×·]/g, "*").replace(/÷/g, "/").replace(/\s+/g, "");
+const clean = s => String(s).toLowerCase().replace(/[−–—]/g, "-").replace(/[×·]/g, "*").replace(/÷/g, "/").replace(/\s+/g, "");
 function val(e, x = 0) {
   if (!/^[0-9x.+\-*/()]+$/.test(e)) return NaN;
   e = e.replace(/(\d|\)|x)(?=[x(])/g, "$1*").replace(/(\)|x)(?=\d)/g, "$1*");
   try { const v = Function("x", `"use strict";return (${e})`)(x); return typeof v === "number" ? v : NaN; } catch { return NaN; }
 }
 const near = (a, b) => Math.abs(a - b) < 1e-9;
-function correct(raw, [kind, a, b]) {
+export function correct(raw, [kind, a, b]) {
   let s = clean(raw);
   if (kind === "num") { s = s.replace(/^(m|slope)=/, ""); return !s.includes("x") && near(val(s), a); }
   if (kind === "pt") {
@@ -114,33 +115,89 @@ function correct(raw, [kind, a, b]) {
   s = s.replace(/^(y|f\(x\))=/, "");  // line: slope-intercept form, so no y on the right and no x inside parentheses
   return !/[y=]/.test(s) && !/\([^()]*x/.test(s) && [0, 1, 2, -3].every(x => near(val(s, x), a * x + b));
 }
+"""
+API_JS = r"""// Generated by make_t1_retest.py: grades and saves Topic 1 retest submissions (Vercel Blob, private store).
+// POST {name, form, answers[4], work[4]} -> saves one JSON blob, returns {score, total, results: [{ok, a, w}]}.
+// GET with "Authorization: Bearer <TEACHER_PASSWORD>" -> every saved submission, newest first.
+import { put, list, get } from "@vercel/blob";
+import { createHash, timingSafeEqual } from "node:crypto";
+
+const KEY = __KEY__;
+const PREFIX = "retest-alg1m2t1/";
+const json = (body, status = 200) => Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
+const str = (v, max) => String(v ?? "").slice(0, max);
+__CHECKER__
+export async function POST(request) {
+  let body;
+  try { body = await request.json(); } catch { return json({ error: "Bad request" }, 400); }
+  const key = KEY[body?.form], name = str(body?.name, 80).trim();
+  if (!key || !name || !Array.isArray(body.answers)) return json({ error: "Name, form and answers are required" }, 400);
+  const answers = key.map((_, n) => str(body.answers[n], 120));
+  const work = key.map((_, n) => str(body.work?.[n], 2000));
+  const results = key.map((k, n) => ({ ok: correct(answers[n], k.check), a: k.a, w: k.w }));
+  const score = results.filter(r => r.ok).length, time = new Date().toISOString();
+  await put(`${PREFIX}${time}.json`, JSON.stringify({ time, name, form: body.form, score, total: key.length, answers, work,
+    correct: results.map(r => r.ok) }), { access: "private", contentType: "application/json", addRandomSuffix: true });
+  return json({ score, total: key.length, results });
+}
+
+const hash = s => createHash("sha256").update(String(s)).digest();
+export async function GET(request) {
+  const pw = process.env.TEACHER_PASSWORD, given = (request.headers.get("authorization") || "").replace(/^Bearer /, "");
+  if (!pw || !timingSafeEqual(hash(pw), hash(given))) return json({ error: "Wrong password" }, 401);
+  const blobs = [];
+  let cursor;
+  do { const page = await list({ prefix: PREFIX, cursor }); blobs.push(...page.blobs); cursor = page.cursor; } while (cursor);
+  // ponytail: one read per submission; fine for a few hundred, switch to a summary file if it grows past that
+  const rows = await Promise.all(blobs.map(async b => {
+    const r = await get(b.pathname, { access: "private" });
+    return { ...JSON.parse(await new Response(r.stream).text()), id: b.pathname };
+  }));
+  return json(rows.sort((a, b) => b.time.localeCompare(a.time)));
+}
+"""
+ONLINE_JS = r"""
+const list = document.getElementById("questions"), result = document.getElementById("result");
+const submit = document.getElementById("submit"), nameBox = document.getElementById("name");
+let form = FORMS[0];
 
 function render() {
   list.innerHTML = form.qs.map((q, n) => `<li class="card"><fieldset>
     <legend>${q.q}</legend>
-    <label class="lbl">Show your work here (optional)<textarea rows="3"></textarea></label>
+    <label class="lbl">Show your work here (optional)<textarea rows="3" class="work"></textarea></label>
     <label class="lbl">Your answer<input class="answer" autocomplete="off" spellcheck="false"></label>
     <p class="hint muted">${q.hint}</p><p class="why" hidden></p></fieldset></li>`).join("");
-  result.hidden = true; submit.disabled = false;
+  result.hidden = true; submit.disabled = false; nameBox.disabled = false;
   document.querySelectorAll(".seg input").forEach(r => r.disabled = false);
 }
 
-submit.onclick = () => {
+submit.onclick = async () => {
+  const name = nameBox.value.trim();
+  if (!name) { nameBox.focus(); result.innerHTML = '<b class="no">Type your name first</b> so your teacher gets your score.'; result.hidden = false; return; }
   const boxes = [...list.querySelectorAll("fieldset")];
-  const blank = boxes.filter(f => !f.querySelector(".answer").value.trim()).length;
+  const answers = boxes.map(f => f.querySelector(".answer").value), work = boxes.map(f => f.querySelector(".work").value);
+  const blank = answers.filter(a => !a.trim()).length;
   if (blank && !confirm(`${blank} question${blank > 1 ? "s are" : " is"} blank. Submit anyway?`)) return;
-  let score = 0;
+  submit.disabled = true; result.innerHTML = "Submitting…"; result.hidden = false;
+  let res;
+  try {
+    const r = await fetch("/api/retest", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, form: form.form, answers, work }) });
+    if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || r.status);
+    res = await r.json();
+  } catch (e) {
+    result.innerHTML = `<b class="no">Your answers were not sent</b> (${e.message}). Check your internet connection and press Submit again.`;
+    submit.disabled = false; return;
+  }
   boxes.forEach((f, n) => {
-    const q = form.qs[n], input = f.querySelector(".answer"), ok = correct(input.value, q.check);
-    score += ok;
-    input.classList.add(ok ? "right" : "wrong");
+    const { ok, a, w } = res.results[n];
+    f.querySelector(".answer").classList.add(ok ? "right" : "wrong");
     const why = f.querySelector(".why");
-    why.innerHTML = (ok ? '<b class="ok">Correct.</b> ' : `<b class="no">Incorrect.</b> The answer is <b>${q.a}</b>. `) + `Work: ${q.w}`;
+    why.innerHTML = (ok ? '<b class="ok">Correct.</b> ' : `<b class="no">Incorrect.</b> The answer is <b>${a}</b>. `) + `Work: ${w}`;
     why.hidden = false; f.disabled = true;
   });
-  const name = document.getElementById("name").value.trim();
-  result.innerHTML = `${name ? `<b>${name.replace(/</g, "&lt;")}</b> · ` : ""}Form ${form.form}: <b>${score} / ${boxes.length}</b> correct (${Math.round(100 * score / boxes.length)}%). Each question shows the correct answer and the work.`;
-  result.hidden = false; submit.disabled = true;
+  result.innerHTML = `<b>${name.replace(/</g, "&lt;")}</b> · Form ${form.form}: <b>${res.score} / ${res.total}</b> correct (${Math.round(100 * res.score / res.total)}%). Your score was sent to your teacher. Each question shows the correct answer and the work.`;
+  nameBox.disabled = true;
   document.querySelectorAll(".seg input").forEach(r => r.disabled = true);
   result.scrollIntoView({ behavior: "smooth", block: "center" });
 };
@@ -150,9 +207,14 @@ render();
 """
 
 
+def api_js():
+    key = {form: [dict(check=CHECK[form][n], a=a, w=w) for n, (_, a, w) in enumerate(qs(FH))] for form, qs in FORMS}
+    return API_JS.replace("__KEY__", json.dumps(key, ensure_ascii=False)).replace("__CHECKER__", CHECKER_JS)
+
+
 def online_html():
-    data = [dict(form=form, qs=[dict(q=q, a=a, w=w, check=CHECK[form][n], hint=HINT[CHECK[form][n][0]])
-                                for n, (q, a, w) in enumerate(qs(FH))]) for form, qs in FORMS]
+    data = [dict(form=form, qs=[dict(q=q, hint=HINT[CHECK[form][n][0]]) for n, (q, _, _) in enumerate(qs(FH))])
+            for form, qs in FORMS]
     seg = "".join(f'<label><input type="radio" name="form" value="{f}"{" checked" * (f == "A")}>Form {f}</label>' for f, _ in FORMS)
     return f"""<!doctype html>
 <html lang="en">
@@ -178,6 +240,7 @@ def online_html():
   .fr span:first-child{{border-bottom:1px solid currentColor;padding:0 2px}}
 </style>
 <div class="wrap">
+  <a class="home" href="../index.html">← Home</a>
   <p class="eyebrow">Module 2 · Topic 1 · Retest</p>
   <h1>Topic 1 Retest</h1>
   <p class="muted">Pick the form your teacher assigned. Show your work, type each answer, then submit. After you submit you will see which answers are correct or incorrect, and the correct answer for each question.</p>
@@ -225,6 +288,7 @@ def key_deck():
 if __name__ == "__main__":
     assert all(len(qs(FH)) == 4 == len(CHECK[f]) for f, qs in FORMS)
     (OUT / f"{NAME}-online.html").write_text(online_html(), encoding="utf-8")
+    (ROOT / "api" / "retest.js").write_text(api_js(), encoding="utf-8")
     for name, page, deck in [(NAME, student_html(), student_deck()), (f"{NAME}-ANSWER-KEY", key_html(), key_deck())]:
         html = OUT / f"{name}.html"
         html.write_text(page, encoding="utf-8")
