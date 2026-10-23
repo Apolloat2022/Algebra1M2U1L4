@@ -42,10 +42,15 @@ def card(h, body, step=False):
 
 
 def graph(w, h, x, y, gx, gy, lines=(), pts=(), alt="", pts_step=False):
-    g = dict(w=w, h=h, x=x, y=y, gx=gx, gy=gy, lines=list(lines), pts=list(pts), alt=alt)
+    g = dict(w=w, h=h, x=x, y=y, gx=gx, gy=gy, lines=list(lines), pts=[list(p) + [""] * (3 - len(p)) for p in pts], alt=alt)
     if pts_step:
         g["ptsStep"] = True
     return "<div class=\"graph\" data-g='" + json.dumps(g, ensure_ascii=False) + "'></div>"
+
+
+# IEP decks add one graph option: a line with dot: true also plots a point at its end, on the same click (see move)
+GRAPH_JS = "    if (ln.step) s += '</g>';\n"
+DOT_JS = '    if (ln.dot) s += `<circle class="g-pt" cx="${X(c[1][0])}" cy="${Y(c[1][1])}" r="5.5"/>`;\n'
 
 
 def row(*cols, gap=40):
@@ -181,6 +186,76 @@ def walk(title, *probs):  # probs: (problem, [step, ...], answer). One click per
     return sec("Check it · Step by step", title, row(*cards, gap=24),
                "For the teacher or assistant: click once for each step. Read the step aloud, and before each click ask "
                "the student what to do next. Students check their own paper and fix any mistake in a different color.")
+
+
+def mt(s):  # page-data math [[...]] -> deck markup, the same rule as mc.js
+    return re.sub(r"\[\[(.+?)\]\]", lambda m: '<span class="mt">' + re.sub(r"[A-Za-z]", r"<i>\g<0></i>", m.group(1)) + "</span>", s)
+
+
+def move(pts, dy=0, dx=0, label=""):  # dashed arrows from each point to its moved copy, one click each, a dot at the end
+    return [dict(p=[[x, y], [x + dx, y + dy]], seg=True, dash=True, step=True, dot=True, c="b", label=label) for x, y in pts]
+
+
+def bell_steps(n, day, data):  # the general bell work questions with the IEP formula and worked steps (BELL)
+    return [{**q, "formula": f, "steps": st} for q, (f, st) in zip(data, BELL[n, day])]
+
+
+def bell_slides(n):  # IEP bell work: same questions as the general deck, plus a formula and the worked steps
+    d, pre, _ = src(n)
+    out = []
+    for f in sorted(d.glob(f"{pre}-bellwork-day*.html")):
+        day = int(f.stem[-1])
+        cards = [f'<div class="card" style="padding:10px 18px;gap:4px"><p class="small"><b>{k}.</b> {mt(q["q"])}</p>'
+                 f'<p class="small" style="color:var(--point)"><b>Formula:</b> {mt(q["formula"])}</p>'
+                 f'<div class="step pop ans" style="font-size:19px;line-height:1.35;padding:6px 14px"><b>{mt(q["choices"][0])}</b>'
+                 + "".join(f"<br><b>{j}.</b> {mt(t)}" for j, t in enumerate(q["steps"], 1)) + "</div></div>"
+                 for k, q in enumerate(bell_steps(n, day, page_data(f)), 1)]
+        out.append(sec(f"Day {day} · Bell Work · Review", "Warm up: work these on your own", row("".join(cards[:2]), "".join(cards[2:]), gap=24),
+                       f"Have this up as students walk in (about 5 minutes). The same 4 questions are on the online IEP Day {day} bell work, "
+                       "which shows the same formula under each question and these steps after each answer. Click to reveal one answer at a time; "
+                       "read each step aloud and point to where the formula is used."))
+    return out
+
+
+# formula and worked steps for every Topic 2 bell work question, in page-data math [[...]]
+SLOPE = "[[m = (y₂ − y₁) ÷ (x₂ − x₁)]]"
+BELL = {
+ ("2.1", 1): [(SLOPE, ["Label the points: [[(x₁, y₁) = (1, 2)]] and [[(x₂, y₂) = (4, 11)]].", "Subtract the [[y]]-values: [[11 − 2 = 9]]. Subtract the [[x]]-values: [[4 − 1 = 3]].", "Divide: [[9 ÷ 3 = 3]]."]),
+              ("[[y = mx + b]], [[y]]-intercept [[(0, b)]]", ["Match [[y = 3x − 7]] to [[y = mx + b]]: [[m = 3]] and [[b = −7]].", "The [[y]]-intercept is [[(0, b) = (0, −7)]]."]),
+              ("put the number in for [[x]]", ["Replace [[x]] with [[(−3)]]: [[f(−3) = 2(−3) + 1]].", "Multiply: [[2(−3) = −6]].", "Add: [[−6 + 1 = −5]]."]),
+              ("parallel lines have the same slope", ["The slope of [[y = 3x + 1]] is 3, the number with [[x]].", "Find the choice with slope 3: [[y = 3x − 5]]."])],
+ ("2.1", 2): [("up [[d]]: [[g(x) = f(x) + d]]", ["Up 4 means add 4 to every output: [[g(x) = f(x) + 4]].", "Replace [[f(x)]] with [[x]]: [[g(x) = x + 4]]."]),
+              ("down [[d]]: [[(x, y) → (x, y − d)]]", ["[[x]] stays the same: [[x = 2]].", "Down 3, so subtract 3 from [[y]]: [[5 − 3 = 2]].", "The new point is [[(2, 2)]]."]),
+              ("moving up or down does not change the slope", ["[[g(x) = 2x − 1 + 6 = 2x + 5]].", "The number with [[x]] is still 2, so the slope is 2."]),
+              ("[[y = mx + b]], [[y]]-intercept [[(0, b)]]", ["[[g(x) = 2x − 1 + 6]].", "Combine: [[−1 + 6 = 5]], so [[g(x) = 2x + 5]].", "[[b = 5]], so the [[y]]-intercept is [[(0, 5)]]: [[(0, −1)]] moved up 6."])],
+ ("2.1", 3): [("for [[f(x) = x]], [[a · f(x) = ax]] has slope [[a]]", ["Replace [[f(x)]] with [[x]]: [[g(x) = 3x]].", "The number with [[x]] is 3, so the slope is 3."]),
+              ("[[a · f(x)]]: [[|a| > 1]] stretches, [[a < 0]] flips", ["[[a = −2]]. The size, 2, is more than 1: stretched by 2.", "The sign is negative: reflected (flipped) across the [[x]]-axis."]),
+              ("[[a · f(x)]]: [[0 < a < 1]] compresses", ["Look for a number between 0 and 1 in front of [[f(x)]].", "[[½]] is between 0 and 1, so [[g(x) = ½f(x)]] compresses."]),
+              ("[[a · f(x) + d]] has [[y]]-intercept [[(0, d)]]", ["Replace [[f(x)]] with [[x]]: [[g(x) = 2x − 5]].", "[[d = −5]], so the [[y]]-intercept is [[(0, −5)]]."])],
+ ("2.2", 1): [("outside: + moves up, − moves down", ["The [[−3]] is outside [[f(x)]], so the graph moves up or down.", "Minus means down: down 3 units."]),
+              ("[[y = mx + b]], slope [[m]]", ["Match [[g(x) = 3x − 8]] to [[y = mx + b]].", "[[m = 3]], so the slope is 3."]),
+              ("[[x]]-intercept: set [[g(x) = 0]] and solve", ["[[3x − 8 = 0]].", "Add 8 to both sides: [[3x = 8]].", "Divide both sides by 3: [[x = 8/3]]. The point is [[(8/3, 0)]]."]),
+              ("slope + rises, slope − falls", ["The slope is [[−⅔]], the number with [[x]].", "It is negative, so the line falls from left to right: decreasing."])],
+ ("2.2", 2): [("right [[c]]: [[g(x) = f(x − c)]]", ["Right 5 means subtract 5 inside: [[f(x − 5)]].", "For [[f(x) = x]]: [[f(x − 5) = x − 5]]."]),
+              ("for [[f(x) = x]] only: right [[n]] = down [[n]]", ["Right 5: [[f(x − 5) = x − 5]].", "Down 5: [[f(x) − 5 = x − 5]].", "Same equation, so the same graph: down 5."]),
+              ("put [[(x + 4)]] in for [[x]], then distribute", ["[[r(x) = 2(x + 4) − 1]].", "Distribute: [[2 · x + 2 · 4 = 2x + 8]].", "Combine: [[2x + 8 − 1 = 2x + 7]]."]),
+              ("inside: [[f(2x)]] · outside: [[2f(x)]]", ["[[f(2x)]]: put [[2x]] in for [[x]], so [[2x]].", "[[2f(x)]]: multiply [[x]] by 2, so [[2x]].", "Both are [[y = 2x]]: yes, the same graph."])],
+ ("2.3", 1): [("reciprocal: flip the fraction", ["[[⅔]] has 2 on top and 3 on the bottom. Flip them: [[3/2]].", "Check: [[⅔ · 3/2 = 1]]."]),
+              ("90° counterclockwise: [[(x, y) → (−y, x)]]", ["[[x = 8]] and [[y = 5]].", "[[(−y, x) = (−5, 8)]]."]),
+              (SLOPE, ["Subtract the [[y]]-values: [[5 − 0 = 5]].", "Subtract the [[x]]-values: [[8 − 0 = 8]].", "Divide: [[5 ÷ 8 = 5/8]]."]),
+              ("[[y = mx + b]], slope [[m]]", ["Match [[y = −3x + 5]] to [[y = mx + b]]: [[m = −3]] and [[b = 5]].", "The slope is [[−3]]."])],
+ ("2.3", 2): [("perpendicular: flip and change the sign", ["Flip [[⅔]]: [[3/2]].", "Change the sign: [[−3/2]].", "Check: [[⅔ · (−3/2) = −1]]."]),
+              ("slope = rise ÷ run", ["A horizontal line is flat: it never goes up or down, so the rise is 0.", "[[0 ÷ run = 0]]. The slope is 0."]),
+              ("vertical line: [[x =]] a number", ["On a vertical line, [[x]] never changes.", "The point has [[x = 2]], so the line is [[x = 2]]."]),
+              ("[[m₁ · m₂ = −1]]", ["Example: slopes [[2]] and [[−½]] are perpendicular.", "[[2 · (−½) = −1]]. The product is always [[−1]]."])],
+ ("2.4", 1): [(SLOPE, ["Subtract the [[y]]-values: [[4 − (−6) = 4 + 6 = 10]].", "Subtract the [[x]]-values: [[0 − (−2.5) = 2.5]].", "Divide: [[10 ÷ 2.5 = 4]]."]),
+              ("parallel lines have the same slope", ["The slope of [[y = 4x − 3]] is 4, the number with [[x]].", "A parallel line has the same slope: 4."]),
+              ("perpendicular: flip and change the sign", ["[[4 = 4/1]]. Flip it: [[1/4]].", "Change the sign: [[−¼]].", "Check: [[4 · (−¼) = −1]]."]),
+              ("slope = change in [[y]] ÷ change in [[x]]", ["[[1 : 1]] means 1 tenth-grader for every 1 ninth-grader.", "[[1 ÷ 1 = 1]], so [[y = x]] and the slope is 1."])],
+ ("2.4", 2): [("total = rate × amount", ["Rate: $15 per ton. Amount: 3 tons.", "[[15 · 3 = 45]], so $45."]),
+              (SLOPE, ["Change in [[y]]: [[20 − 0 = 20]]. Change in [[x]]: [[1 − 0 = 1]].", "[[20 ÷ 1 = 20]], so $20 per ton."]),
+              ("put the number in for [[x]]", ["[[J(10) = 9/5 · 10 + 32]].", "Multiply: [[9/5 · 10 = 90 ÷ 5 = 18]].", "Add: [[18 + 32 = 50]]. 10°C is 50°F."]),
+              ("rate = change in amount ÷ change in time", ["Change in money: [[80 − 0 = 80]] dollars.", "Change in time: 4 months.", "[[80 ÷ 4 = 20]], so $20 per month."])]}
 
 
 def exit_and_practice(n, qs):
@@ -439,15 +514,24 @@ def iep_t2_1():
         "<b class=\"cp\"><i>d</i></b> moves the line up (+) or down (−). The <i>y</i>-intercept is (0, <i>d</i>).",
         "Plot (0, <i>d</i>), then count the slope <i>a</i>."), "Leave this slide up, or give students a printed copy, while they work."))
     s.append(sec("I do · Watch me", f"Move {FX} = <i>x</i> up 5", row(
-        f'<p>Add 5 to every output.</p><div class="eq sm"><i>p</i>(<i>x</i>) = {FX} + 5</div>' + ans('<i>p</i>(<i>x</i>) = <i>x</i> + 5')
-        + '<p>Slope: still 1. <i>y</i>-intercept: (0, 5).</p>',
-        graph(340, 340, [-6, 6], [-6, 8], [1, 2], [1, 2], [dict(p=[[0, 0], [1, 1]], label="f(x)"), dict(p=[[0, 5], [1, 6]], label="p(x)", c="b", step=True)], [], "f(x) = x and p(x) = x + 5")),
-        "Think aloud: every point moves straight up 5. The lines are parallel."))
-    s.append(sec("We do · Together", f"Move <i>j</i>(<i>x</i>) = 2<i>x</i> − 1 down 4",
-                 '<p><i>r</i>(<i>x</i>) = <i>j</i>(<i>x</i>) − ____</p>' + ans('<i>r</i>(<i>x</i>) = <i>j</i>(<i>x</i>) − 4')
-                 + '<p>Simplify: 2<i>x</i> − 1 − 4 = ____</p>' + ans('<i>r</i>(<i>x</i>) = 2<i>x</i> − 5')
-                 + '<p>Slope ____ &nbsp; <i>y</i>-intercept ____</p>' + ans('slope 2, (0, −5)'),
-                 "Students fill in the blanks on their paper first, then reveal."))
+        graph(380, 400, [-5, 5], [-5, 9], [1, 1], [1, 2], [dict(p=[[0, 0], [1, 1]], label="f(x)")] + move([[-4, -4], [-1, -1], [2, 2]], 5, label="+5 ↑")
+              + [dict(p=[[0, 5], [1, 6]], label="p(x)", c="b", step=True)], [[-4, -4], [-1, -1], [2, 2]],
+              "f(x) = x with points (−4, −4), (−1, −1), (2, 2), each moved up 5 to (−4, 1), (−1, 4), (2, 7) on p(x) = x + 5"),
+        '<p>Up means <b>+</b>: add 5 to every output (<i>y</i>).</p><table class="tbl" style="font-size:24px"><tr><th>x</th><th>f(x)</th><th>+ 5</th><th>p(x)</th></tr>'
+        + "".join(f'<tr><td>{x}</td><td>{x}</td><td>+ 5</td><td class="step">{x + 5}</td></tr>'.replace("-", "−") for x in (-4, -1, 2)) + '</table>'
+        + ans(f'<i>p</i>(<i>x</i>) = {FX} + 5 = <i>x</i> + 5') + '<p class="small">Slope: still 1. <i>y</i>-intercept: (0, 0) → (0, 5).</p>'),
+        "Click once for each blue arrow: point to a black point on f(x), count up 5 squares, and land on the blue point. "
+        "Then the blue line p(x) appears through the moved points. Fill in the table the same way: + 5 to each output. The lines are parallel."))
+    s.append(sec("We do · Together", f"Move <i>j</i>(<i>x</i>) = 2<i>x</i> − 1 down 4", row(
+        '<p>Down means <b>−</b>: subtract 4 from every output.</p>'
+        '<p><i>r</i>(<i>x</i>) = <i>j</i>(<i>x</i>) − ____</p>' + ans('<i>r</i>(<i>x</i>) = <i>j</i>(<i>x</i>) − 4')
+        + '<p>Simplify: 2<i>x</i> − 1 − 4 = ____</p>' + ans('<i>r</i>(<i>x</i>) = 2<i>x</i> − 5 &nbsp;(−1 − 4 = −5)')
+        + '<p>Slope ____ &nbsp; <i>y</i>-intercept ____</p>' + ans('slope 2, (0, −1) → (0, −5)'),
+        graph(360, 420, [-3, 3], [-8, 4], [1, 1], [1, 2], [dict(p=[[0, -1], [1, 1]], label="j(x)")] + move([[-1, -3], [0, -1], [1, 1]], -4, label="−4 ↓")
+              + [dict(p=[[0, -5], [1, -3]], label="r(x)", c="b", step=True)], [[-1, -3], [0, -1], [1, 1]],
+              "j(x) = 2x − 1 with points (−1, −3), (0, −1), (1, 1), each moved down 4 to (−1, −7), (0, −5), (1, −3) on r(x) = 2x − 5")),
+        "Students fill in the blanks on their paper first, then reveal. On the graph, each click moves one point down 4: "
+        "count 4 squares down from the black point to the blue point. Then the blue line r(x) appears."))
     s.append(sec("I do · Stretch", f"Multiply {FX} = <i>x</i> by 4", row(
         '<p>Multiply every output by 4.</p>' + ans('<i>a</i>(<i>x</i>) = 4<i>x</i>') + '<p>The slope is now <b class="cm">4</b>: steeper.</p>'
         + '<p>With −4, the line also <b>flips</b>:</p>' + ans('<i>c</i>(<i>x</i>) = −4<i>x</i>'),
@@ -510,9 +594,16 @@ def iep_t2_2():
         "Inside: − is right, + is left (the sign flips).",
         "To simplify, put the inside into the rule and distribute."), "Leave this slide up, or give students a printed copy, while they work."))
     s.append(sec("I do · Watch me", f"<i>f</i>(<i>x</i> − 7) and {FX} − 4", row(
-        card("<i>f</i>(<i>x</i> − 7)", '<p class="small">Inside, minus → <b>right 7</b>.</p>' + ans('<i>g</i>(<i>x</i>) = <i>x</i> − 7')),
-        card(f"{FX} − 4", '<p class="small">Outside, minus → <b>down 4</b>.</p>' + ans('<i>g</i>(<i>x</i>) = <i>x</i> − 4'))),
-        "Think aloud about inside versus outside before naming the direction."))
+        card("<i>f</i>(<i>x</i> − 7)", '<p class="small">Inside, minus → <b>right 7</b>: each point moves 7 to the right.</p>'
+             + graph(330, 250, [-2, 10], [-3, 4], [1, 2], [1, 1], [dict(p=[[0, 0], [1, 1]], label="f(x)")] + move([[0, 0], [2, 2]], dx=7, label="+7 →")
+                     + [dict(p=[[7, 0], [8, 1]], label="g(x)", c="b", step=True)], [[0, 0], [2, 2]], "f(x) = x with (0, 0) and (2, 2) moved right 7")
+             + ans('<i>g</i>(<i>x</i>) = <i>x</i> − 7')),
+        card(f"{FX} − 4", '<p class="small">Outside, minus → <b>down 4</b>: each point moves 4 down.</p>'
+             + graph(330, 250, [-4, 4], [-7, 4], [1, 2], [1, 2], [dict(p=[[0, 0], [1, 1]], label="f(x)")] + move([[-2, -2], [0, 0], [2, 2]], -4, label="−4 ↓")
+                     + [dict(p=[[0, -4], [1, -3]], label="g(x)", c="b", step=True)], [[-2, -2], [0, 0], [2, 2]], "f(x) = x with three points moved down 4")
+             + ans('<i>g</i>(<i>x</i>) = <i>x</i> − 4'))),
+        "Think aloud about inside versus outside before naming the direction. Each click moves one point: right 7 on the left graph, down 4 on the right. "
+        "For f(x) = x both give a line parallel to f(x)."))
     s.append(sec("You do · Try it", "Which way, and how far?", row(
         '<div class="card"><p>1. <i>f</i>(<i>x</i> + 5)</p>' + ans('left 5') + '</div>',
         f'<div class="card"><p>2. {FX} + 2</p>' + ans('up 2') + '</div>',
@@ -726,6 +817,11 @@ def practice_pages(n, kind, folder):
             if page in KEEP:
                 accom["keep"] = KEEP[page][n]
                 s = s.replace("Answer all 10 questions", f"Answer all {len(accom['keep'])} questions")
+            elif (n, int(page[-1])) in BELL:  # bell work: a formula under each question, worked steps after it
+                accom["add"] = [{"extra": f'<p class="formula" style="margin:8px 0 2px;padding:6px 12px;border-left:4px solid #2f6fdd;'
+                                          f'background:rgba(47,111,221,.08);border-radius:4px"><b>Formula:</b> {mt(q["formula"])}</p>',
+                                 "why": "Here is how:" + "".join(f"<br><b>{j}.</b> {t}" for j, t in enumerate(q["steps"], 1))}
+                                for q in bell_steps(n, int(page[-1]), page_data(f))]
         s = s.replace("</title>", f" · {label}</title>", 1).replace('<div class="wrap">', '<div class="wrap big">', 1)
         s = re.sub(r'(<p class="eyebrow">.*?)</p>', lambda m: f"{m.group(1)} · {label} Version</p>", s, count=1)
         s = re.sub(r'(<p class="muted">.*?</p>)', lambda m: m.group(1) + "\n  " + card, s, count=1)
@@ -748,6 +844,9 @@ def answer_key(n, kind, folder, name):
     d, pre, lesson = src(n)
     if name == "bellwork":  # one key for every day, a heading per day
         groups = [(f"Day {f.stem[-1]} · ", page_data(f)) for f in sorted(d.glob(f"{pre}-bellwork-day*.html"))]
+        if kind == "IEP" and (n, 1) in BELL:  # the IEP key gives the same worked steps as the deck and page
+            groups = [(day, [{**q, "why": " ".join(f"{j}. {re.sub(r'<.*?>', '', t)}" for j, t in enumerate(q["steps"], 1))}
+                             for q in bell_steps(n, int(day[4]), data)]) for day, data in groups]
     else:
         groups = [("", page_data(d / f"{pre}-{name}.html"))]
     plain = lambda t: html_mod.escape(re.sub(r"\[\[(.+?)\]\]", r"\1", t))
@@ -834,7 +933,9 @@ def main(lessons=(4, 5, 6)):
                 secs = build_504(n, sections)
             else:  # the general deck's bell work slides go right after the title, one per day
                 secs = IEP[n]()
-                secs[1:1] = [s for s in sections if re.search(r"Day \d · Bell Work", s)]
+                secs[1:1] = bell_slides(n) if (n, 1) in BELL else [s for s in sections if re.search(r"Day \d · Bell Work", s)]
+                tail = tail.replace(GRAPH_JS, DOT_JS + GRAPH_JS, 1)
+                assert DOT_JS in tail or not isinstance(n, str), n
             html = head.replace("</title>", f" · {label}</title>", 1) + '<div id="stage">\n' + "".join(secs) + "\n</div>\n" + tail
             if kind == "504":
                 html = html.replace('<p style="font-size:24px;margin-top:6px">Bell work:', '<p style="font-size:24px;margin-top:6px"><b>Section 504 Version</b></p>\n  <p style="font-size:24px;margin-top:6px">Bell work:', 1)

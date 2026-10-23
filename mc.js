@@ -4,11 +4,12 @@
 // The first choice is always the correct one; choices are shuffled on screen.
 // Math goes inside [[ ]] and gets the math font, with every letter (always a variable) italic.
 // Optional `accom` (IEP / 504 pages): {keep: [question indices], choices: n (drop trailing distractors),
-// readAloud: true (a speech button on each question)}.
+// readAloud: true (a speech button on each question), add: [fields merged into question i, such as extra or why]}.
 (function () {
   document.querySelector(".wrap").insertAdjacentHTML("afterbegin", '<a class="home" href="../index.html">← Home</a>');
   const { mode, accom = {} } = window.MC;
-  const questions = (accom.keep ? accom.keep.map(i => window.MC.questions[i]) : window.MC.questions)
+  const all = window.MC.questions.map((item, i) => ({ ...item, ...(accom.add || [])[i] }));
+  const questions = (accom.keep ? accom.keep.map(i => all[i]) : all)
     .map(item => accom.choices ? { ...item, choices: item.choices.slice(0, accom.choices) } : item);
   const list = document.getElementById("questions");
   const result = document.getElementById("result");

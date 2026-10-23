@@ -336,6 +336,10 @@ def draw_graph(sl, g, ox, oy):
             else:
                 sl.add(lambda sid, e=e: sp_xml(sid, X(e[0]) + 8 * P, Y(e[1]) + 2 * P, 2.6, 0.25,
                                                [[ln["label"], st]], 17, "l", ins=(0, 0)))
+        if ln.get("dot"):  # a point at the segment's end, on the same click
+            r = 5.5 * P
+            sl.add(lambda sid, e=c[1]: sp_xml(sid, X(e[0]) - r, Y(e[1]) - r, 2 * r, 2 * r, fill=C["point"],
+                                              geom="ellipse", txbox=False))
         if own_step:
             sl.open.pop()
     if not g.get("ptsStep"):
