@@ -175,6 +175,14 @@ def steps(*items):
     return "".join(f'<p><b>{k}.</b> {t}</p>' for k, t in enumerate(items, 1))
 
 
+def walk(title, *probs):  # probs: (problem, [step, ...], answer). One click per step, so students see every move.
+    cards = [card(p, "".join(f'<p class="step small"><b>Step {k}.</b> {t}</p>' for k, t in enumerate(st, 1)) + ans(a))
+             for p, st, a in probs]
+    return sec("Check it · Step by step", title, row(*cards, gap=24),
+               "For the teacher or assistant: click once for each step. Read the step aloud, and before each click ask "
+               "the student what to do next. Students check their own paper and fix any mistake in a different color.")
+
+
 def exit_and_practice(n, qs):
     body = "".join(f'<div class="card"><p>{q}</p>{ans(a)}</div>' for q, a in qs)
     return [sec("Exit Ticket", "Show what you know", f'<div class="col">{body}</div>',
@@ -448,6 +456,17 @@ def iep_t2_1():
     s.append(sec("You do · Try it", "Describe the change and write <i>g</i>(<i>x</i>)", row(
         f'<div class="card"><p>1. <i>g</i>(<i>x</i>) = 2 · {FX} + 7</p>' + ans('stretch by 2, up 7: 2<i>x</i> + 7') + '</div>',
         f'<div class="card"><p>2. <i>g</i>(<i>x</i>) = {{{{1|2}}}} · {FX} − 3</p>' + ans('compress by {{1|2}}, down 3: {{1|2}}<i>x</i> − 3') + '</div>')))
+    s.append(walk("Describe the change and write <i>g</i>(<i>x</i>)",
+        ("1. <i>g</i>(<i>x</i>) = 2 · <i>f</i>(<i>x</i>) + 7", [
+            "<i>f</i>(<i>x</i>) = <i>x</i>, so write <i>x</i> in its place: <i>g</i>(<i>x</i>) = 2<i>x</i> + 7.",
+            "The number <b class=\"cm\">multiplied</b> is <i>a</i> = 2. It is the new slope. 2 is more than 1, so the line <b>stretches</b> (gets steeper).",
+            "The number <b class=\"cp\">added</b> is <i>d</i> = +7. Plus means the line moves <b>up 7</b>. It crosses the <i>y</i>-axis at (0, 7)."],
+         "stretch by 2, up 7: <i>g</i>(<i>x</i>) = 2<i>x</i> + 7"),
+        ("2. <i>g</i>(<i>x</i>) = {{1|2}} · <i>f</i>(<i>x</i>) − 3", [
+            "Write <i>x</i> in place of <i>f</i>(<i>x</i>): <i>g</i>(<i>x</i>) = {{1|2}}<i>x</i> − 3.",
+            "<i>a</i> = {{1|2}} is between 0 and 1, so the line <b>compresses</b> (gets less steep). The slope is {{1|2}}.",
+            "<i>d</i> = −3. Minus means the line moves <b>down 3</b>. It crosses the <i>y</i>-axis at (0, −3)."],
+         "compress by {{1|2}}, down 3: {{1|2}}<i>x</i> − 3")))
     s.append(sec("We do · Parallel line", "Parallel to <i>y</i> = −3<i>x</i> − 1, through (−1, 5)",
                  '<p>Step 1: same slope. &nbsp;<i>m</i> = ____</p>' + ans('<i>m</i> = −3')
                  + '<p>Step 2: 5 = −3(−1) + <i>b</i>, so <i>b</i> = ____</p>' + ans('<i>b</i> = 2')
@@ -456,6 +475,19 @@ def iep_t2_1():
     s.append(sec("You do · Try it", "Parallel to <i>y</i> = 2<i>x</i>", row(
         '<div class="card"><p>1. Through (0, 4)</p>' + ans('<i>y</i> = 2<i>x</i> + 4') + '</div>',
         '<div class="card"><p>2. Through (2, 0)</p><p class="small">0 = 2(2) + <i>b</i></p>' + ans('<i>y</i> = 2<i>x</i> − 4') + '</div>')))
+    s.append(walk("Parallel to <i>y</i> = 2<i>x</i>",
+        ("1. Through (0, 4)", [
+            "Parallel means the <b>same slope</b>: <i>m</i> = 2.",
+            "Put <i>x</i> = 0 and <i>y</i> = 4 into <i>y</i> = <i>mx</i> + <i>b</i>: 4 = 2(0) + <i>b</i>.",
+            "2(0) = 0, so 4 = <i>b</i>.",
+            "Write the slope and <i>b</i>: <i>y</i> = 2<i>x</i> + 4."],
+         "<i>y</i> = 2<i>x</i> + 4"),
+        ("2. Through (2, 0)", [
+            "Same slope: <i>m</i> = 2.",
+            "Put <i>x</i> = 2 and <i>y</i> = 0 into <i>y</i> = <i>mx</i> + <i>b</i>: 0 = 2(2) + <i>b</i>.",
+            "Multiply: 0 = 4 + <i>b</i>.",
+            "Subtract 4 from both sides: −4 = <i>b</i>."],
+         "<i>y</i> = 2<i>x</i> − 4")))
     s += exit_and_practice(n, [(f"1. <i>g</i>(<i>x</i>) = {FX} + 6. Up or down? How far?", "up 6"),
                                (f"2. What is the slope of <i>g</i>(<i>x</i>) = 5 · {FX}?", "5"),
                                ("3. Write the line parallel to <i>y</i> = 4<i>x</i> + 1 through (0, −2).", "<i>y</i> = 4<i>x</i> − 2")])
@@ -485,6 +517,13 @@ def iep_t2_2():
         '<div class="card"><p>1. <i>f</i>(<i>x</i> + 5)</p>' + ans('left 5') + '</div>',
         f'<div class="card"><p>2. {FX} + 2</p>' + ans('up 2') + '</div>',
         '<div class="card"><p>3. <i>f</i>(<i>x</i> − 3)</p>' + ans('right 3') + '</div>')))
+    s.append(walk("Which way, and how far?",
+        ("1. <i>f</i>(<i>x</i> + 5)", ["The 5 is <b>inside</b> the parentheses with <i>x</i>, so the graph moves left or right.",
+                                         "Inside, the sign flips: <b>plus</b> means <b>left</b>."], "left 5"),
+        ("2. <i>f</i>(<i>x</i>) + 2", ["The 2 is <b>outside</b> the parentheses, so the graph moves up or down.",
+                                        "Outside, no flip: <b>plus</b> means <b>up</b>."], "up 2"),
+        ("3. <i>f</i>(<i>x</i> − 3)", ["The 3 is <b>inside</b>, so left or right.",
+                                         "Inside, the sign flips: <b>minus</b> means <b>right</b>."], "right 3")))
     s.append(sec("We do · Simplify", "<i>j</i>(<i>x</i>) = 2<i>x</i> − 1. Simplify <i>j</i>(<i>x</i> + 4).",
                  '<p>Put (<i>x</i> + 4) in for <i>x</i>: 2(____) − 1</p>' + ans('2(<i>x</i> + 4) − 1')
                  + '<p>Distribute: ____ − 1</p>' + ans('2<i>x</i> + 8 − 1') + '<p>Combine:</p>' + ans('2<i>x</i> + 7'),
@@ -492,6 +531,17 @@ def iep_t2_2():
     s.append(sec("You do · Try it", "<i>j</i>(<i>x</i>) = 2<i>x</i> − 1", row(
         '<div class="card"><p>1. Simplify <i>j</i>(<i>x</i> − 2).</p>' + ans('2<i>x</i> − 5') + '</div>',
         '<div class="card"><p>2. Simplify <i>j</i>(<i>x</i>) − 2.</p>' + ans('2<i>x</i> − 3') + '<p class="small">Same graph as #1? ____</p>' + ans('No') + '</div>')))
+    s.append(walk("<i>j</i>(<i>x</i>) = 2<i>x</i> − 1",
+        ("1. Simplify <i>j</i>(<i>x</i> − 2)", [
+            "The change is inside, so put (<i>x</i> − 2) where <i>x</i> was: 2(<i>x</i> − 2) − 1.",
+            "Distribute the 2: 2 · <i>x</i> = 2<i>x</i> and 2 · (−2) = −4. Now it is 2<i>x</i> − 4 − 1.",
+            "Combine the numbers: −4 − 1 = −5."],
+         "2<i>x</i> − 5"),
+        ("2. Simplify <i>j</i>(<i>x</i>) − 2", [
+            "The change is outside, so write the whole rule, then subtract 2: 2<i>x</i> − 1 − 2.",
+            "Combine the numbers: −1 − 2 = −3. That gives 2<i>x</i> − 3.",
+            "Compare with #1: 2<i>x</i> − 5 and 2<i>x</i> − 3 cross the <i>y</i>-axis at different places."],
+         "2<i>x</i> − 3 · not the same graph as #1")))
     s.append(sec("I do · Stretch inside", f"For {FX} = <i>x</i>: <i>f</i>(2<i>x</i>) and 2{FX}", row(
         '<p><i>f</i>(2<i>x</i>) = 2<i>x</i></p><p>2 · <i>f</i>(<i>x</i>) = 2<i>x</i></p>' + ans('The same line: <i>y</i> = 2<i>x</i>') + '<p class="small">This only works for <i>f</i>(<i>x</i>) = <i>x</i>.</p>',
         graph(320, 320, [-4, 4], [-5, 5], [1, 1], [1, 1], [dict(p=[[0, 0], [1, 1]], label="f(x)"), dict(p=[[0, 0], [1, 2]], label="y = 2x", step=True)], [], "f(x) = x and y = 2x"))))
@@ -524,6 +574,12 @@ def iep_t2_3():
         '<div class="card"><p>1. 4</p>' + ans('−{{1|4}}') + '</div>',
         '<div class="card"><p>2. −{{4|5}}</p>' + ans('{{5|4}}') + '</div>',
         '<div class="card"><p>3. {{1|2}}</p>' + ans('−2') + '</div>')))
+    s.append(walk("Find the perpendicular slope",
+        ("1. 4", ["Write it as a fraction: {{4|1}}.", "Flip it: {{1|4}}.", "Change the sign: −{{1|4}}.",
+                  "Check: 4 · (−{{1|4}}) = −1 ✓"], "−{{1|4}}"),
+        ("2. −{{4|5}}", ["Flip it: −{{5|4}}.", "Change the sign: − becomes +, so {{5|4}}.",
+                         "Check: −{{4|5}} · {{5|4}} = −1 ✓"], "{{5|4}}"),
+        ("3. {{1|2}}", ["Flip it: {{2|1}} = 2.", "Change the sign: −2.", "Check: {{1|2}} · (−2) = −1 ✓"], "−2")))
     s.append(sec("We do · Flat and straight-up lines", "Through (2, −1)", row(
         '<p>Horizontal: <i>y</i> = ____</p>' + ans('<i>y</i> = −1') + '<p>Vertical: <i>x</i> = ____</p>' + ans('<i>x</i> = 2')
         + '<p class="small">A horizontal line and a vertical line are always perpendicular.</p>',
@@ -535,6 +591,15 @@ def iep_t2_3():
     s.append(sec("You do · Try it", "⊥ to <i>y</i> = 3<i>x</i>, through (3, 1)",
                  '<p>New slope: ____</p>' + ans('−{{1|3}}') + '<p><i>y</i> − 1 = ____(<i>x</i> − 3)</p>' + ans('<i>y</i> − 1 = −{{1|3}}(<i>x</i> − 3)')
                  + '<p><i>y</i> = ____</p>' + ans('<i>y</i> = −{{1|3}}<i>x</i> + 2')))
+    s.append(walk("⊥ to <i>y</i> = 3<i>x</i>, through (3, 1)",
+        ("Write the perpendicular line", [
+            "The given slope is the number with <i>x</i>: 3.",
+            "3 = {{3|1}}. Flip it to {{1|3}}, then change the sign: the new slope is −{{1|3}}.",
+            "Put <i>m</i> = −{{1|3}}, <i>x</i><sub>1</sub> = 3, <i>y</i><sub>1</sub> = 1 into <i>y</i> − <i>y</i><sub>1</sub> = <i>m</i>(<i>x</i> − <i>x</i><sub>1</sub>): "
+            "<i>y</i> − 1 = −{{1|3}}(<i>x</i> − 3).",
+            "Distribute: −{{1|3}} · <i>x</i> = −{{1|3}}<i>x</i> and −{{1|3}} · (−3) = +1. Now <i>y</i> − 1 = −{{1|3}}<i>x</i> + 1.",
+            "Add 1 to both sides to get <i>y</i> alone: 1 + 1 = 2."],
+         "<i>y</i> = −{{1|3}}<i>x</i> + 2")))
     s += exit_and_practice(n, [("1. What slope is perpendicular to {{3|4}}?", "−{{4|3}}"),
                                ("2. Write the vertical line through (5, 6).", "<i>x</i> = 5"),
                                ("3. Write the line ⊥ to <i>y</i> = −<i>x</i> through (0, 3).", "<i>y</i> = <i>x</i> + 3")])
@@ -565,6 +630,15 @@ def iep_t2_4():
     s.append(sec("You do · Try it", "Compare to <i>y</i> = 4<i>x</i> − 3", row(
         '<div class="card"><p>1. Chiletso makes 4 dozen cookies per hour.</p>' + ans('slope 4: parallel') + '</div>',
         '<div class="card"><p>2. <i>y</i> = −{{1|4}}<i>x</i> + 2</p>' + ans('perpendicular') + '</div>')))
+    s.append(walk("Compare to <i>y</i> = 4<i>x</i> − 3",
+        ("1. Chiletso makes 4 dozen cookies per hour.", [
+            "Look for \"per\": 4 dozen <b>per</b> hour. The slope is 4.",
+            "The slope of <i>y</i> = 4<i>x</i> − 3 is the number with <i>x</i>: 4.",
+            "4 and 4 are the same slope, so the lines are parallel."], "slope 4: parallel"),
+        ("2. <i>y</i> = −{{1|4}}<i>x</i> + 2", [
+            "The slope is the number with <i>x</i>: −{{1|4}}.",
+            "Is it the same as 4? No, so not parallel.",
+            "Multiply the slopes: 4 · (−{{1|4}}) = −1. A product of −1 means perpendicular."], "perpendicular")))
     s.append(sec("We do · Table and graph", "Which recycling center pays more?", row(
         '<p>Travis County</p>' + tb([1, 2], [15, 30], "tons", "$") + '<p>Rate: ____ per ton</p>' + ans('$15'),
         '<p>Hays County graph: through (1, 20)</p><p>Rate: ____ per ton</p>' + ans('$20') + '<p>Which pays more?</p>' + ans('Hays County'))))
@@ -575,6 +649,15 @@ def iep_t2_4():
                  "Units: dollars per month."))
     s.append(sec("You do · Try it", "A taxi charges $3 plus $2 per mile",
                  '<p>1. Slope (with units): ____</p>' + ans('$2 per mile') + '<p>2. <i>y</i>-intercept meaning: ____</p>' + ans('$3 before driving')))
+    s.append(walk("A taxi charges $3 plus $2 per mile",
+        ("1. Slope (with units)", [
+            "Look for \"per\": $2 <b>per</b> mile.",
+            "The slope is how much the cost goes up for each 1 mile: $2.",
+            "Units: output (dollars) per input (miles)."], "$2 per mile"),
+        ("2. What the <i>y</i>-intercept means", [
+            "The <i>y</i>-intercept is the cost when <i>x</i> = 0 miles.",
+            "At 0 miles you still pay the $3.",
+            "So the equation is <i>y</i> = 2<i>x</i> + 3, and 3 is the start."], "$3 before driving")))
     s += exit_and_practice(n, [("1. A table has (0, 1) and (2, 9). What is its slope?", "4"),
                                ("2. Is <i>y</i> = 4<i>x</i> + 7 parallel or perpendicular to <i>y</i> = 4<i>x</i> − 3?", "parallel"),
                                ("3. Savings: <i>y</i> = 10<i>x</i> + 50. What does 50 mean?", "$50 to start")])
