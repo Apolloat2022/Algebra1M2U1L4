@@ -259,9 +259,14 @@ BELL = {
 
 
 def exit_and_practice(n, qs):
-    body = "".join(f'<div class="card"><p>{q}</p>{ans(a)}</div>' for q, a in qs)
-    return [sec("Exit Ticket", "Show what you know", f'<div class="col">{body}</div>',
-                "Give students time to try all items before revealing. Students may use the steps slide and their notes."),
+    if isinstance(n, str):  # Topic 2: side by side, the answer then one click per worked step (EXIT_WORK)
+        body = row(*[f'<div class="card"><p>{q}</p>{ans(a)}' + "".join(f'<p class="step small"><b>{j}.</b> {t}</p>' for j, t in enumerate(w, 1))
+                     + '</div>' for (q, a), w in zip(qs, EXIT_WORK[n])], gap=20)
+        tip = " After each answer, click once per step and read it aloud so students can find where their work went wrong."
+    else:
+        body, tip = '<div class="col">' + "".join(f'<div class="card"><p>{q}</p>{ans(a)}</div>' for q, a in qs) + "</div>", ""
+    return [sec("Exit Ticket", "Show what you know", body,
+                "Give students time to try all items before revealing. Students may use the steps slide and their notes." + tip),
             sec("Practice Online", "Bell work, homework and quiz",
                 links(n, DAYS[n]) + '<p class="small">The IEP pages have 3 answer choices, 6 homework and quiz questions, a reminder card and read-aloud. '
                 'Allow notes and a calculator, and give extended time as the IEP lists.</p>')]
@@ -887,10 +892,19 @@ EXIT_WORK = {  # IEP exit tickets (the 504 decks keep the original exit ticket, 
      "The signs flip: x + 3 gives x₁ = −3 and y − 1 gives y₁ = 1. The slope is 2."],
  6: ["(10 − 4) ÷ (3 − 1) = 3 and (22 − 10) ÷ (7 − 3) = 3, so linear. 4 = 3(1) + b gives b = 1.",
      "x − 5 = 0 when x = 5.", "10 is the rate: $10 for each bracelet. −30 is the booth cost."],
- "2.1": ["+ 6 is outside, so the graph moves up 6.", "5 · f(x) = 5x, so the slope is 5.", "Same slope 4; the point (0, −2) is the y-intercept."],
- "2.2": ["Inside, minus moves right: right 6.", "Outside, plus moves up: up 1.", "3(x + 1) = 3x + 3."],
- "2.3": ["Flip 3/4 to 4/3 and change the sign.", "A vertical line keeps x the same: x = 5.", "y = −x has slope −1, so the new slope is 1; (0, 3) is the y-intercept."],
- "2.4": ["(9 − 1) ÷ (2 − 0) = 4.", "Both slopes are 4, so the lines are parallel.", "50 is the y-intercept: the starting amount."]}
+ # Topic 2: numbered steps, shown on the exit ticket slide too
+ "2.1": [["The + 6 is outside f(x), so the graph moves up or down.", "Plus means up: up 6."],
+         ["Replace f(x) with x: g(x) = 5x.", "The number with x is 5, so the slope is 5."],
+         ["Parallel means the same slope: m = 4.", "Put x = 0, y = −2 into y = mx + b: −2 = 4(0) + b, so b = −2.", "Write it: y = 4x − 2."]],
+ "2.2": [["The 6 is inside the parentheses, so the graph moves left or right.", "Inside, the sign flips: minus means right. Right 6."],
+         ["The 1 is outside, so the graph moves up or down.", "Outside, no flip: plus means up. Up 1."],
+         ["Put (x + 1) in for x: j(x + 1) = 3(x + 1).", "Distribute: 3 · x + 3 · 1 = 3x + 3."]],
+ "2.3": [["Flip 3/4: 4/3.", "Change the sign: −4/3.", "Check: 3/4 · (−4/3) = −1."],
+         ["On a vertical line, x never changes.", "The point has x = 5, so the line is x = 5."],
+         ["The slope of y = −x is −1.", "Flip and change the sign: −1 becomes 1.", "(0, 3) is on the y-axis, so b = 3: y = x + 3."]],
+ "2.4": [["Change in y: 9 − 1 = 8.", "Change in x: 2 − 0 = 2.", "Divide: 8 ÷ 2 = 4."],
+         ["The slope is the number with x: both are 4.", "Same slope means parallel."],
+         ["In y = mx + b, 50 is b: the value when x = 0.", "x = 0 months is the start, so 50 is the $50 saved at the start."]]}
 
 
 def exit_key(n, kind, folder, sec):
@@ -899,7 +913,7 @@ def exit_key(n, kind, folder, sec):
     ans = re.findall(r'class="step pop eq sm ans">(.*?)</div>', sec, re.S)
     assert len(qs) == len(ans) == 3, (n, kind)
     notes = re.search(r'<aside class="notes">(.*?)</aside>', sec, re.S)
-    work = (" ".join(f"{k}. {w}" for k, w in enumerate(EXIT_WORK[n], 1)) if kind == "IEP"
+    work = (" ".join(f"{k}. {w if isinstance(w, str) else ' '.join(w)}" for k, w in enumerate(EXIT_WORK[n], 1)) if kind == "IEP"
             else re.sub(r"^.*?Work: |^Added for this deck; not from the textbook\. |Give 3–4 minutes.*?Sets A–[A-Z]\. ", "",
                         notes.group(1)) if notes else "")  # keep only the math, not the classroom directions
     label = "Section 504" if kind == "504" else "IEP"
