@@ -595,7 +595,11 @@ def inline_answers(x, items):
             after.setdefault(pj, []).append((j, b))
         parts, plast, count = [], 0, 0
         for pi, pm in enumerate(paras):
-            parts += [sp[plast:pm.end()]]
+            seg = sp[plast:pm.end()]
+            if pi in after:  # the answer takes the blank writing line: drop a trailing empty line break
+                seg = re.sub(r"<a:br>(?:(?!</a:br>).)*</a:br>(?=(?:<a:endParaRPr.*?</a:endParaRPr>|<a:endParaRPr[^>]*/>)?</a:p>$)",
+                             "", seg, flags=re.S)
+            parts += [seg]
             plast = pm.end()
             count += 1
             q = pm.group(0)
