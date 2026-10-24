@@ -506,10 +506,14 @@ def clicks(groups, start):
         effects = ""
         for j, sid in enumerate(group):
             node = "clickEffect" if j == 0 else "withEffect"
+            para = isinstance(sid, tuple)  # (shape id, paragraph #): reveal one paragraph of a text box
+            tgt = (f'<p:spTgt spid="{sid[0]}"><p:txEl><p:pRg st="{sid[1]}" end="{sid[1]}"/></p:txEl></p:spTgt>' if para
+                   else f'<p:spTgt spid="{sid}"/>')
+            grp = 'grpId="0" ' if para else ""
             effects += (f'<p:par><p:cTn id="{next(ids)}" presetID="1" presetClass="entr" presetSubtype="0" fill="hold" '
-                        f'nodeType="{node}"><p:stCondLst><p:cond delay="0"/></p:stCondLst><p:childTnLst><p:set><p:cBhvr>'
+                        f'{grp}nodeType="{node}"><p:stCondLst><p:cond delay="0"/></p:stCondLst><p:childTnLst><p:set><p:cBhvr>'
                         f'<p:cTn id="{next(ids)}" dur="1" fill="hold"><p:stCondLst><p:cond delay="0"/></p:stCondLst>'
-                        f'</p:cTn><p:tgtEl><p:spTgt spid="{sid}"/></p:tgtEl><p:attrNameLst><p:attrName>style.visibility'
+                        f'</p:cTn><p:tgtEl>{tgt}</p:tgtEl><p:attrNameLst><p:attrName>style.visibility'
                         '</p:attrName></p:attrNameLst></p:cBhvr><p:to><p:strVal val="visible"/></p:to></p:set>'
                         '</p:childTnLst></p:cTn></p:par>')
         out += (f'<p:par><p:cTn id="{next(ids)}" fill="hold"><p:stCondLst><p:cond delay="indefinite"/></p:stCondLst>'
@@ -571,7 +575,57 @@ def space_after(x, gaps):
     return "".join(out) + x[last:]
 
 
-def annotate(src, out, ans, notes, corrections, after, se=None, stars=(), gaps=None):
+def inline_answers(x, items):
+    """Put answers inside the publisher's text box, each as a red paragraph right after its question paragraph, so
+    PowerPoint lays them out: never on the text, always under their own letter. items: (answer #, shape #, para #, box).
+    The answer paragraph is one level deeper with no bullet, so the question numbering (a., b., c.) is not broken.
+    Returns the new slide XML and {answer #: (shape id, paragraph #)} for the click reveals."""
+    by_shape = {}
+    for j, si, pj, b in items:
+        by_shape.setdefault(si, []).append((pj, j, b))
+    targets, out, last = {}, [], 0
+    for i, m in enumerate(re.finditer(r"<p:sp>.*?</p:sp>", x, re.S)):
+        if i not in by_shape:
+            continue
+        sp = m.group(0)
+        sid = re.search(r'<p:cNvPr id="(\d+)"', sp).group(1)
+        paras = list(re.finditer(r"<a:p>.*?</a:p>", sp, re.S))
+        after = {}
+        for pj, j, b in by_shape[i]:
+            after.setdefault(pj, []).append((j, b))
+        parts, plast, count = [], 0, 0
+        for pi, pm in enumerate(paras):
+            parts += [sp[plast:pm.end()]]
+            plast = pm.end()
+            count += 1
+            q = pm.group(0)
+            lvl = int((re.search(r'<a:pPr[^>]*\slvl="(\d+)"', q) or [0, 0])[1])
+            marL = int((re.search(r'<a:pPr[^>]*\smarL="(\d+)"', q) or [0, 0])[1])
+            for j, b in after.get(pi, []):
+                size, text = b[4], b[5]
+                runs = "<a:br/>".join(f'<a:r><a:rPr lang="en-US" sz="{size * 100}" dirty="0"><a:solidFill><a:srgbClr val="{RED}"/>'
+                                      f'</a:solidFill></a:rPr><a:t>{mp.esc(t)}</a:t></a:r>' for t in text.split("\n"))
+                parts.append(f'<a:p><a:pPr marL="{marL}" lvl="{min(lvl + 1, 8)}" indent="0"><a:lnSpc><a:spcPct val="100000"/></a:lnSpc>'
+                             f'<a:spcBef><a:spcPts val="200"/></a:spcBef><a:spcAft><a:spcPts val="600"/></a:spcAft><a:buNone/></a:pPr>'
+                             f'{runs}</a:p>')
+                targets[j] = (int(sid), count)
+                count += 1
+        out += [x[last:m.start()], "".join(parts) + sp[plast:]]
+        last = m.end()
+    return "".join(out) + x[last:], targets
+
+
+def build_list(x, spids):  # paragraph reveals need a build entry per text box
+    entries = "".join(f'<p:bldP spid="{s}" grpId="0" build="p"/>' for s in sorted(spids)
+                      if f'<p:bldP spid="{s}"' not in x)
+    if not entries:
+        return x
+    if "<p:bldLst>" in x:
+        return x.replace("<p:bldLst>", "<p:bldLst>" + entries, 1)
+    return x.replace("</p:tnLst>", "</p:tnLst><p:bldLst>" + entries + "</p:bldLst>", 1)
+
+
+def annotate(src, out, ans, notes, corrections, after, se=None, stars=(), gaps=None, inline=None):
     """se: {slide: Student Edition page}; stars: (first, last) slide ranges of the activities the 150-day pacing guide
     stars as essential. Each labeled slide gets "SE p. N" (and "★ Essential") left of the page number; the first
     slide of a starred range (the activity divider) also gets a large badge in its empty top band."""
@@ -607,16 +661,21 @@ def annotate(src, out, ans, notes, corrections, after, se=None, stars=(), gaps=N
                                                   color=SE_GREEN, bold=True, font=None, center=True) + "</p:spTree>", 1)
         files[path] = x.encode("utf-8")
         if boxes:
+            spec = (inline or {}).get(k, [])  # (shape #, para #, [answer #, ...]): these answers go inside that text box
+            x, inl = inline_answers(x, [(j, si, pj, boxes[j]) for si, pj, js in spec for j in js])
             base = max(map(int, re.findall(r'<p:cNvPr id="(\d+)"', x))) + 1
-            shapes = "".join(text_box(base + j, *b[:6], font=None, center=CENTER in b[6:]) for j, b in enumerate(boxes))
+            shapes = "".join(text_box(base + j, *b[:6], font=None, center=CENTER in b[6:])
+                             for j, b in enumerate(boxes) if j not in inl)
             x = x.replace("</p:spTree>", shapes + "</p:spTree>", 1)
             groups = []  # extra fields: WITH shows the box on the same click as the one before it; CENTER centers it
             for j, b in enumerate(boxes):
+                t = inl.get(j, base + j)
                 if WITH in b[6:] and groups:
-                    groups[-1].append(base + j)
+                    groups[-1].append(t)
                 else:
-                    groups.append([base + j])
-            files[path] = add_clicks(x, groups).encode("utf-8")
+                    groups.append([t])
+            x = add_clicks(x, groups)
+            files[path] = build_list(x, {s for s, _ in inl.values()}).encode("utf-8")
         if k in notes:
             srels = rel_map(path.replace("slides/", "slides/_rels/") + ".rels")
             target = next((t for t in srels.values() if "notesSlide" in t), None)
@@ -887,28 +946,21 @@ ANS_T2_1 = {
                                   "Graph: through (0, −4), slope −1."),
          (860, 830, 900, 230, 18, "g(x) = −(2/3)x + 5\nReflection across the x-axis and vertical compression by "
                                   "a factor of 2/3, then up 5. Graph: through (0, 5), slope −2/3.")],
-    53: [(290, 682, 1515, 96, 18, "a. a changes the slope (for f(x) = x the slope becomes a: |a| > 1 steeper, "
-                                  "0 < |a| < 1 less steep, a < 0 reflected). It does not change the y-intercept."),
-         (290, 923, 1515, 96, 18, "b. d does not change the slope. It changes the y-intercept to (0, d): d > 0 moves "
-                                   "the line up, d < 0 moves it down.")],
+    53: [(290, 0, 1515, 50, 16, "a. a changes the slope (|a| > 1 steeper, 0 < |a| < 1 less steep, a < 0 reflects). "
+                                "It does not change the y-intercept."),  # inside the text box, under its letter
+         (290, 0, 1515, 50, 16, "b. d does not change the slope. It moves the y-intercept to (0, d): up if d > 0, down if d < 0.")],
     59: [(623, 468, 1048, 106, 20, "Sample: a = 0 with d = 6, 4, 1 and −3: horizontal lines through each target "
                                    "(move the cannon to (0, d))."),
          (623, 718, 1048, 96, 18, "The cannon shoots in only one direction. Targets in Quadrant II (left of the "
                                    "y-axis): domain x ≤ 0. Targets in Quadrants I and IV: domain x ≥ 0.")],
-    60: [(122, 920, 870, 100, 16, "B (a = ±1, move d), clockwise from top left: a = −1, d = 2 (x ≤ 0);  a = 1, d = −1 (x ≥ 0);  "
-                                  "a = −1, d = −2 (x ≥ 0);  a = −1, d = −4 (x ≤ 0)"),  # below question 3
-         (1010, 920, 880, 100, 16, "C (d = 0, change a), clockwise from top left: a = −3/2 (x ≤ 0);  a = 4/5 (x ≥ 0);  "
-                                   "a = −3 (x ≥ 0);  a = −1/5 (x ≤ 0)")],
-    65: [(1225, 418, 480, 56, 24, "f(x) + 8"),
-         (540, 694, 1340, 54, 18, "k(x): f(x) translated up 8 units.", WITH),
-         (1225, 488, 480, 69, 24, "2 · f(x)"),
-         (540, 755, 1340, 60, 18, "h(x): f(x) stretched vertically by a factor of 2 (through the origin, steeper).",
-          WITH),
-         (1225, 558, 480, 69, 24, "(1/3) · f(x)"),
-         (540, 820, 1340, 60, 18, "g(x): f(x) compressed vertically by a factor of 1/3 (through the origin, less "
-                                  "steep).", WITH),
-         (1225, 628, 480, 69, 24, "f(x) − 7"),
-         (540, 885, 1340, 60, 18, "j(x): f(x) translated down 7 units.", WITH)],
+    60: [(122, 0, 870, 50, 14, "Version B: a = −1, d = 2 (x ≤ 0); a = 1, d = −1 (x ≥ 0); a = −1, d = −2 (x ≥ 0); "
+                               "a = −1, d = −4 (x ≤ 0)"),  # targets clockwise from top left (see the notes)
+         (1010, 0, 880, 50, 14, "Version C: a = −3/2 (x ≤ 0); a = 4/5 (x ≥ 0); a = −3 (x ≥ 0); a = −1/5 (x ≤ 0)")],
+    65: [(540, 0, 1340, 50, 16, "f(x) + 8: translated up 8 units."),  # inside the text box, under each blank
+         (540, 0, 1340, 50, 16, "2 · f(x): stretched vertically by a factor of 2 (through the origin, steeper)."),
+         (540, 0, 1340, 50, 16, "(1/3) · f(x): compressed vertically by a factor of 1/3 (through the origin, less steep)."),
+         (540, 0, 1340, 50, 16, "f(x) − 7: translated down 7 units.")],
+    64: [(1380, 470, 510, 330, 20, "Matching (see the next slide):\nk(x) = f(x) + 8\nh(x) = 2 · f(x)\ng(x) = (1/3) · f(x)\nj(x) = f(x) − 7")],
     69: [(163, 985, 700, 80, 24, "f(x) = (2/3)x − 14/3"), (1125, 985, 700, 80, 24, "g(x) = −(1/4)x + 2")],
 }
 
@@ -1142,9 +1194,7 @@ ANS_T2_4 = {
     13: [(212, 820, 700, 150, 18, "e. The slope is −1/4. Perpendicular to y = 4x − 3, since 4 · (−1/4) = −1."),
          (970, 464, 880, 98, 18, "f. The slope is 4 (dozen cookies per hour). Parallel to y = 4x − 3.")],
     18: [(210, 463, 1650, 52, 18, "Table and graph: x = weight of cardboard (tons); y = payout amount (dollars)."),
-         (200, 864, 390, 112, 20, "a. w(0.5) < j(0.5)\n7.50 < 10"),  # each under its own statement
-         (590, 864, 345, 112, 20, "b. w(1) < j(1)\n15 < 20"),
-         (935, 864, 360, 112, 20, "c. w(3) < j(3)\n45 < 60"),
+         (200, 0, 1600, 50, 18, "a. w(0.5) < j(0.5) (7.50 < 10)     b. w(1) < j(1) (15 < 20)     c. w(3) < j(3) (45 < 60)"),
          (203, 978, 1658, 47, 16, "Travis pays $15 per ton and Hays pays $20 per ton, so Hays pays more for every weight.")],
     19: [(616, 463, 1167, 52, 18, "Both y-intercepts are 0: each center pays $0 for 0 tons of cardboard."),
          (616, 659, 1167, 96, 18, "Hays County: it pays $20 per ton, while Travis County pays only $15 per ton, "
@@ -1218,12 +1268,19 @@ STARS_T2 = {1: ((6, 14), (15, 25), (28, 36), (37, 46), (49, 55)),  # Getting Sta
             2: ((5, 9), (10, 27), (30, 43), (44, 52)),  # Getting Started, 2.1-2.3
             3: ((11, 20), (23, 30), (31, 36)),  # 3.1-3.3 (not Getting Started)
             4: ()}
-GAPS_T2 = {  # lesson -> {slide: [(shape #, paragraph #, points)]}: room under lettered parts for their answers
- 1: {23: [(2, 0, 32.4), (2, 1, 32.4), (2, 2, 56.8)], 31: [(1, 0, 37.3), (1, 1, 37.3), (1, 2, 37.3)], 32: [(2, 0, 34.8), (2, 1, 34.8)], 34: [(1, 0, 61.7), (1, 1, 69.6)], 53: [(1, 2, 51.9), (1, 3, 51.9)], 59: [(2, 0, 56.8), (2, 1, 51.9)]},
- 2: {15: [(1, 0, 32.4), (1, 1, 32.4), (1, 2, 32.4)], 16: [(1, 0, 32.4), (1, 1, 32.4)], 17: [(1, 0, 34.8), (1, 1, 34.8)], 24: [(1, 0, 30.0), (1, 1, 94.5)], 25: [(1, 0, 32.4), (1, 1, 32.4)], 37: [(1, 0, 34.8), (1, 1, 34.8)]},
- 3: {13: [(1, 0, 51.9), (1, 1, 114.6)], 25: [(1, 0, 34.8), (1, 1, 56.8)], 26: [(1, 0, 34.8), (1, 1, 56.8)], 28: [(1, 0, 34.8), (1, 1, 34.8), (1, 2, 34.8)], 34: [(1, 0, 59.8), (1, 1, 59.8)]},
- 4: {18: [(1, 0, 30.0), (1, 3, 84.3)], 19: [(2, 0, 30.0), (2, 1, 51.9)], 27: [(1, 0, 49.5), (1, 2, 96.0)], 32: [(2, 0, 70.2), (2, 2, 96.0)], 37: [(1, 0, 70.2), (1, 1, 49.5)]},
+INLINE_T2 = {  # lesson -> {slide: [(shape #, paragraph #, [answer #, ...])]}: answers inside the question's text box
+ 1: {21: [(1, 1, [0])], 23: [(2, 0, [0]), (2, 1, [1]), (2, 2, [2])], 29: [(1, 1, [0])],
+     31: [(1, 0, [0]), (1, 1, [1]), (1, 2, [2])], 32: [(2, 0, [0]), (2, 1, [1])], 34: [(1, 0, [0]), (1, 1, [1])],
+     44: [(1, 1, [0])], 53: [(1, 2, [0]), (1, 3, [1])], 59: [(2, 0, [0]), (2, 1, [1])], 60: [(4, 0, [0, 1])],
+     65: [(2, 1, [0]), (2, 2, [1]), (2, 3, [2]), (2, 4, [3])]},
+ 2: {15: [(1, 0, [0]), (1, 1, [1]), (1, 2, [2])], 16: [(1, 0, [0]), (1, 1, [1])], 17: [(1, 0, [0]), (1, 1, [1])],
+     24: [(1, 0, [0]), (1, 1, [1])], 25: [(1, 0, [0]), (1, 1, [1])], 37: [(1, 0, [0]), (1, 1, [1])]},
+ 3: {13: [(1, 0, [0]), (1, 1, [1])], 25: [(1, 0, [0]), (1, 1, [1])], 26: [(1, 0, [0]), (1, 1, [1])],
+     28: [(1, 0, [0]), (1, 1, [1]), (1, 2, [2])], 34: [(1, 0, [0]), (1, 1, [1])]},
+ 4: {18: [(1, 0, [0]), (1, 3, [1, 2])], 19: [(2, 0, [0]), (2, 1, [1])], 27: [(1, 0, [0]), (1, 2, [1, 2])],
+     32: [(2, 0, [0]), (2, 2, [1, 2])], 37: [(1, 0, [0]), (1, 1, [1])]},
 }
+GAPS_T2 = {}  # lesson -> {slide: [(shape #, paragraph #, points)]}: extra room after a paragraph (now unused: see INLINE_T2)
 
 PPTX_T2 = {1: (ANS_T2_1, NOTES_T2_1, CORRECTIONS_T2_1, 67),
            2: (ANS_T2_2, NOTES_T2_2, CORRECTIONS_T2_2, 57),
@@ -1237,7 +1294,7 @@ if __name__ == "__main__":
             src = TOPIC2 / f"BLMathematics_AlgI_M2_T2_L{arg[2:]}_LessonSlides_ENG_2025.pptx"
             n = int(arg[2:])
             annotate(src, src.with_name(src.name.replace("2025", "with_answers")), *PPTX_T2[n], se=SE_T2[n], stars=STARS_T2[n],
-                     gaps=GAPS_T2.get(n))
+                     gaps=GAPS_T2.get(n), inline=INLINE_T2.get(n))
             continue
         lesson = int(arg)
         if lesson == 4:
