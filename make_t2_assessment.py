@@ -6,6 +6,7 @@ import subprocess, sys
 from make_assessment_accom import ROOT, g, vtbl, ch, tip, work, B
 
 N = 14
+TEST, SUB = "Topic 2 Assessment", "End of Topic Assessment"  # titles; make_t2_retake.py swaps them
 F = lambda a, b: "{{" + f"{a}|{b}" + "}}"  # stacked fraction for make_pptx.py
 fx = lambda s: f"<i>{s}</i>"
 x, y = fx("x"), fx("y")
@@ -16,14 +17,14 @@ def deck(label, foot, directions, ref, qs, notes):
         head = f'<h3>Question {n} of {N}</h3>' if n else ""
         return (f'<section class="slide">{head}<div style="font-size:30px">{body}</div><p class="foot">{foot}</p>'
                 + (f'<aside class="notes">{aside}</aside>' if aside else "") + "</section>")
-    out = [slide(f'<h1>Topic 2: Transforming and Comparing Linear Functions</h1><h3>End of Topic Assessment · {label}</h3>'
+    out = [slide(f'<h1>Topic 2: Transforming and Comparing Linear Functions</h1><h3>{SUB} · {label}</h3>'
                  f'<p>Name {B}{B}{B} &nbsp; Date {B}{B}</p><div class="card">{directions}</div>', aside=notes)]
     out += [slide(ref)] if ref else []
     out += [slide(b, n) for n, b in enumerate(qs, 1)]
     out.append(slide('<h2>You are done!</h2><p>Go back and check each answer.</p>'
                      '<p>Did you answer <b>every</b> question?</p><p>Did you include <b>units</b> and <b>explanations</b> where asked?</p>'
                      '<p>Raise your hand when you are finished.</p>'))
-    return f'<!doctype html><meta charset="utf-8"><title>Topic 2 Assessment · {label}</title><body>' + "".join(out) + "</body>"
+    return f'<!doctype html><meta charset="utf-8"><title>{TEST} · {label}</title><body>' + "".join(out) + "</body>"
 
 
 card = lambda t: f'<div class="card"><p style="font-size:21px">{t}</p></div>'
@@ -188,7 +189,7 @@ def key(kind, label, foot):
         return f'<section class="slide"><div>{body}</div><p class="foot">{foot} · Answer Key (teacher copy)</p></section>'
     grading = ("Section 504 and General use this same key: same items and letters." if kind == "GEN" else
                "IEP Form: 3 choices per multiple-choice item; written answers match the general test.")
-    out = [slide(f'<h1>Answer Key</h1><h3>Topic 2 Assessment · {label}</h3><p>{grading}</p>'
+    out = [slide(f'<h1>Answer Key</h1><h3>{TEST} · {label}</h3><p>{grading}</p>'
                  f'<p>1 point per multiple-choice item, 2 points per written item. Total: <b>{sum(PTS)} points</b>.</p>'
                  '<p class="warn">Teacher copy. Do not share with students.</p>')]
     for start in (1, 5, 9, 13):
@@ -197,7 +198,7 @@ def key(kind, label, foot):
         out.append(slide(f'<h2>Questions {qs[0]}–{qs[-1]}</h2><table style="font-size:20px"><tr><th>Q</th><th>Answer</th><th>Work / meaning</th></tr>{rows}</table>'))
     quick = " · ".join(f"{q} {MC[kind][q].split('.')[0]}" if q in MC[kind] else f"{q} {WRITTEN[q].split(';')[0]}" for q in range(1, N + 1))
     out.append(slide(f'<h2>Quick key</h2><p>{quick}</p>'))
-    return f'<!doctype html><meta charset="utf-8"><title>Topic 2 Assessment Answer Key · {label}</title><body>' + "".join(out) + "</body>"
+    return f'<!doctype html><meta charset="utf-8"><title>{TEST} Answer Key · {label}</title><body>' + "".join(out) + "</body>"
 
 
 if __name__ == "__main__":

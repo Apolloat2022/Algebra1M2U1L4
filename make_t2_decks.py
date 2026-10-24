@@ -508,8 +508,9 @@ def lesson4():
     s = [title(4, "319–330", "Comparing Linear Functions in Different Forms", "table · graph · equation · description", 2,
                "Students compare linear functions given as tables, graphs, equations and verbal descriptions: slope (parallel or perpendicular), "
                "y-intercept, and the units and scales in context. The 150-day guide omits this lesson, but the End of Topic 2 Assessment covers it "
-               "(questions 11–14). On the class calendar: Day 1 (Mon Nov 2, review day) Getting Started, Activities 4.1 and 4.2, then the online "
-               "Topic 2 Review practice test; Day 2 (Wed Nov 4, after the test, for students not retaking) Activities 4.3, 4.4 and Talk the Talk.")]
+               "(questions 11–14). On the class calendar: Day 1 (Thu Oct 29) Getting Started, Activities 4.1 and 4.2, plus the rate of change and "
+               "starting value of Activity 4.4 if time allows; Day 2 (Wed Nov 4, after the test, for students not retaking) Activities 4.3, "
+               "4.4 and Talk the Talk.")]
     s.append(bell(4, 1, "Review"))
     s.append(today(4, 319, ["Compare linear functions represented algebraically, graphically, in tables, or with verbal descriptions.",
                             "Choose and interpret appropriate units to represent independent and dependent quantities in situations modeled by linear functions.",

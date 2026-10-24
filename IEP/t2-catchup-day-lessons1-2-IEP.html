@@ -1,0 +1,355 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Topic 2 Catch-Up Day: Lessons 1–2 · IEP</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<style>
+/* Layout: a fixed 1280×720 "slide" on graph paper, scaled to fit any screen; steps reveal one click at a time. */
+:root{
+  /* Bluebonnet Algebra I palette (ALGEBRA-platform/app/globals.css); orange = slope, blue = point stays. */
+  --paper:#f7f7fb; --rule:#e6e8f2; --ink:#16171d; --muted:#5f6272; --card:#ffffff; --line:#e3e4ec;
+  --slope:#c9561f; --point:#3050b8; --leaf:#4f8a3c; --soft:#eaeefb; --ga:#4f8a3c; --gb:#7a4fc4; --gc:#16171d; --ans:#4f8a3c; --ans-bg:#edf5e9; --warn-bg:#fdf3e7;
+  --display:ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --body:ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --math:"STIX Two Text", "Cambria Math", "Times New Roman", serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#111218; --rule:#1f2129; --ink:#eceef6; --muted:#9ea2b3; --card:#1a1c24; --line:#2c2f3b;
+  --slope:#ff9259; --point:#93a9f5; --leaf:#8cc47a; --soft:#232a45; --ga:#8cc47a; --gb:#b79cff; --gc:#eceef6; --ans:#8cc47a; --ans-bg:#1f2a1b; --warn-bg:#2e2418; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#111218; --rule:#1f2129; --ink:#eceef6; --muted:#9ea2b3; --card:#1a1c24; --line:#2c2f3b;
+  --slope:#ff9259; --point:#93a9f5; --leaf:#8cc47a; --soft:#232a45; --ga:#8cc47a; --gb:#b79cff; --gc:#eceef6; --ans:#8cc47a; --ans-bg:#1f2a1b; --warn-bg:#2e2418; color-scheme:dark}
+
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);overflow:hidden;
+  background-image:linear-gradient(var(--rule) 1px,transparent 1px),linear-gradient(90deg,var(--rule) 1px,transparent 1px);
+  background-size:32px 32px}
+#stage{position:absolute;left:50%;top:calc(50% - 22px);width:1280px;height:720px;transform-origin:center;cursor:pointer;touch-action:manipulation}
+.slide{position:absolute;inset:0;padding:48px 72px 40px;display:none;flex-direction:column;gap:18px;font-size:26px;line-height:1.4}
+.slide.on{display:flex;animation:slideIn .35s ease}
+@keyframes slideIn{from{opacity:0}to{opacity:1}}
+
+.eyebrow{font-size:16px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--point)}
+h1,h2{font-family:var(--display);font-weight:800;line-height:1.08;letter-spacing:-.02em;text-wrap:balance;margin:0}
+h1{font-size:76px}
+h2{font-size:46px}
+h3{font-family:var(--display);font-weight:600;font-size:28px;margin:0}
+p{margin:0}
+.muted{color:var(--muted)}
+.small{font-size:21px}
+.row{display:flex;gap:36px;align-items:flex-start}
+.col{display:flex;flex-direction:column;gap:14px;flex:1;min-width:0}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 22px;display:flex;flex-direction:column;gap:10px}
+
+/* math */
+.eq,.mt{font-family:var(--math);font-weight:500}
+.eq{font-size:38px;line-height:1.5}
+.eq.big{font-size:60px}
+.eq.sm{font-size:31px}
+.eq i,.mt i{font-style:italic}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.78em;line-height:1.15;margin:0 .1em}
+.fr>span:first-child{border-bottom:.07em solid currentColor;padding:0 .2em}
+.cm{color:var(--slope);font-weight:600}
+.cp{color:var(--point);font-weight:600}
+
+.ans{background:var(--ans-bg);border-radius:8px;padding:8px 18px;align-self:flex-start}
+.ans::before{content:"Answer";margin-right:14px;vertical-align:.25em;font-family:var(--body);font-size:15px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ans)}
+.warn{background:var(--warn-bg);border-radius:8px;padding:10px 18px;font-size:22px;align-self:flex-start}
+.think{border:2px dashed var(--point);border-radius:24px;padding:16px 26px;font-size:25px;align-self:flex-start;max-width:760px}
+
+table.tbl{border-collapse:collapse;font-family:var(--math);font-size:30px;text-align:center;font-variant-numeric:tabular-nums}
+table.tbl th,table.tbl td{border:2px solid var(--line);padding:6px 26px;background:var(--card)}
+table.tbl th{font-style:italic;background:var(--rule)}
+table.cmp{border-collapse:collapse;width:100%;font-size:24px}
+table.cmp th,table.cmp td{border-bottom:1px solid var(--line);padding:10px 14px;text-align:left}
+table.cmp th{font-family:var(--display);font-size:26px}
+
+.foot{margin-top:auto;font-size:15px;line-height:1.5;color:var(--muted)}
+.foot strong{color:var(--point)} .foot a{color:var(--point)}
+a.go{color:var(--point);text-decoration:none} a.go:hover{text-decoration:underline}
+
+/* graphs: drawn from data-g by graphSVG(); make_pptx.py draws the same spec */
+.graph{flex:none}
+.graph svg{display:block;max-width:100%;height:auto}
+.g-bg{fill:var(--card);stroke:var(--line)}
+.g-grid{stroke:var(--rule);stroke-width:1}
+.g-axis{stroke:var(--muted);stroke-width:1.5}
+.g-line{stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+.g-pt{fill:var(--point)}
+.g-line.ga{stroke:var(--ga)} .g-line.gb{stroke:var(--gb)} .g-line.gc{stroke:var(--gc)}
+.ga{color:var(--ga);font-weight:600} .gb{color:var(--gb);font-weight:600} .gc{color:var(--gc);font-weight:600}
+.g-tick{fill:var(--muted);font:13px var(--body)}
+.g-plab{fill:var(--point);font:600 15px var(--body)}
+.g-llab{fill:var(--ink);font:italic 17px var(--math)}
+.divider{justify-content:center}
+.divider h1{font-size:110px}
+
+/* step reveal: space is reserved, like PowerPoint "Appear" */
+.step{opacity:0;visibility:hidden}
+.step.shown{opacity:1;visibility:visible;animation:rise .45s cubic-bezier(.2,.8,.2,1)}
+.step.wipe.shown{animation:wipe .7s ease-out}
+.step.pop.shown{animation:pop .4s cubic-bezier(.3,1.6,.5,1)}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes wipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes pop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.slide.on,.step.shown{animation:none!important}}
+
+/* controls */
+#bar{position:fixed;left:0;right:0;bottom:0;height:44px;padding:0 16px env(safe-area-inset-bottom,0px);display:flex;align-items:center;gap:10px;
+  background:var(--card);border-top:1px solid var(--line);font-size:14px;color:var(--muted);z-index:2}
+#bar button{font:inherit;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:6px;padding:5px 12px;cursor:pointer}
+#bar button:hover{background:var(--soft)}
+#bar button:focus-visible{outline:2px solid var(--point);outline-offset:2px}
+#prog{flex:1;height:4px;background:var(--rule);border-radius:2px;overflow:hidden}
+#prog>div{height:100%;width:0;background:var(--point);transition:width .3s}
+#count{font-variant-numeric:tabular-nums;min-width:64px;text-align:right}
+#brand{display:flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none;font-size:15px;white-space:nowrap}
+#brand strong{color:var(--point)}
+#home{color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:5px 12px;white-space:nowrap}
+#home:hover{background:var(--soft)}
+@media (max-width:900px){#hint{display:none}}
+@media (max-width:560px){#brand,#fs{display:none} #bar{gap:8px;padding:0 10px} #count{min-width:0}}
+#bar button{touch-action:manipulation}
+/* Portrait (phones, iPad upright): a 760px-wide slide whose height fit() matches to the screen; columns stack. */
+@media (orientation:portrait){
+  #stage{width:760px}
+  .slide{padding:40px 36px 32px;overflow-y:auto}
+  .row{flex-direction:column;gap:20px}
+  .grid3{grid-template-columns:1fr}
+  h1{font-size:60px} .divider h1{font-size:84px} .eq.big{font-size:48px}
+}
+.slide aside.notes{display:none}
+#notes{position:fixed;left:0;right:0;bottom:44px;max-height:34vh;overflow:auto;z-index:2;padding:14px 20px;
+  background:var(--card);border-top:2px solid var(--point);font-size:17px;line-height:1.5}
+#notes b{display:block;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--point)}
+/* table cells revealed one at a time keep their border; only the text is hidden */
+table td.step{opacity:1;visibility:visible}
+table td.step:not(.shown){color:transparent}
+</style>
+
+<div id="stage">
+<section class="slide">
+  <p class="eyebrow">Catch-Up Day · Monday, October 26 · Topic 2 Lessons 1–2 · IEP Version</p>
+  <h2>Today: the essentials of Lessons 1 and 2</h2>
+  <table class="tbl" style="font-size:26px;margin-top:8px"><tr><td style="white-space:nowrap"><b>5 min</b></td><td>Bell work while you take attendance (Lesson 2, Day 1)</td></tr><tr><td style="white-space:nowrap"><b>10 min</b></td><td>Lesson 1: parallel lines (1.2) and vertical dilations (1.3) ★</td></tr><tr><td style="white-space:nowrap"><b>7 min</b></td><td>Lesson 1: both at once, <span class="mt"><i>g</i>(<i>x</i>) = <i>a</i> · <i>f</i>(<i>x</i>) + <i>d</i></span> (1.4) ★</td></tr><tr><td style="white-space:nowrap"><b>15 min</b></td><td>Lesson 2: horizontal translations and dilations, inside vs. outside (2.1–2.3) ★</td></tr><tr><td style="white-space:nowrap"><b>8 min</b></td><td>Exit check, then homework</td></tr></table><p style="font-size:22px;margin-top:14px">★ = essential in the 150-day pacing guide. Lesson 3 starts tomorrow; the Topic 2 test is Tuesday, November 3.</p>
+  <aside class="notes">Added for the catch-up day; not from the textbook. The class finished Activity 1.1, so this one class covers only the starred activities left in Lessons 1 and 2. Skip Activity 1.5 and both Talk the Talks; they are not on the test. Keep each part to its time: show the slide, do one example together, move on. The homework tonight practices the same skills in the test's style.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Catch-Up · Lesson 2 · Day 1 · Bell Work · Review</p>
+  <h2>Warm up: work these on your own</h2>
+  <div class="row" style="gap:24px"><div class="col"><div class="card" style="padding:10px 18px;gap:4px"><p class="small"><b>1.</b> <span class="mt"><i>f</i>(<i>x</i>) = <i>x</i></span> and <span class="mt"><i>g</i>(<i>x</i>) = <i>f</i>(<i>x</i>) − 3</span>. How does the graph move?</p><p class="small" style="color:var(--point)"><b>Formula:</b> outside: + moves up, − moves down</p><div class="step pop ans" style="font-size:19px;line-height:1.35;padding:6px 14px"><b>Down 3 units</b><br><b>1.</b> The <span class="mt">−3</span> is outside <span class="mt"><i>f</i>(<i>x</i>)</span>, so the graph moves up or down.<br><b>2.</b> Minus means down: down 3 units.</div></div><div class="card" style="padding:10px 18px;gap:4px"><p class="small"><b>2.</b> What is the slope of <span class="mt"><i>g</i>(<i>x</i>) = 3<i>x</i> − 8</span>?</p><p class="small" style="color:var(--point)"><b>Formula:</b> <span class="mt"><i>y</i> = <i>m</i><i>x</i> + <i>b</i></span>, slope <span class="mt"><i>m</i></span></p><div class="step pop ans" style="font-size:19px;line-height:1.35;padding:6px 14px"><b><span class="mt">3</span></b><br><b>1.</b> Match <span class="mt"><i>g</i>(<i>x</i>) = 3<i>x</i> − 8</span> to <span class="mt"><i>y</i> = <i>m</i><i>x</i> + <i>b</i></span>.<br><b>2.</b> <span class="mt"><i>m</i> = 3</span>, so the slope is 3.</div></div></div><div class="col"><div class="card" style="padding:10px 18px;gap:4px"><p class="small"><b>3.</b> What is the <span class="mt"><i>x</i></span>-intercept of <span class="mt"><i>g</i>(<i>x</i>) = 3<i>x</i> − 8</span>?</p><p class="small" style="color:var(--point)"><b>Formula:</b> <span class="mt"><i>x</i></span>-intercept: set <span class="mt"><i>g</i>(<i>x</i>) = 0</span> and solve</p><div class="step pop ans" style="font-size:19px;line-height:1.35;padding:6px 14px"><b><span class="mt">(8/3, 0)</span></b><br><b>1.</b> <span class="mt">3<i>x</i> − 8 = 0</span>.<br><b>2.</b> Add 8 to both sides: <span class="mt">3<i>x</i> = 8</span>.<br><b>3.</b> Divide both sides by 3: <span class="mt"><i>x</i> = 8/3</span>. The point is <span class="mt">(8/3, 0)</span>.</div></div><div class="card" style="padding:10px 18px;gap:4px"><p class="small"><b>4.</b> Let <span class="mt"><i>f</i>(<i>x</i>) = <i>x</i></span> and <span class="mt"><i>g</i>(<i>x</i>) = 2<i>f</i>(<i>x</i>) − 3</span>. Which is <span class="mt"><i>g</i>(<i>x</i>)</span> in slope-intercept form?</p><p class="small" style="color:var(--point)"><b>Formula:</b> replace <span class="mt"><i>f</i>(<i>x</i>)</span> with <span class="mt"><i>x</i></span></p><div class="step pop ans" style="font-size:19px;line-height:1.35;padding:6px 14px"><b><span class="mt"><i>g</i>(<i>x</i>) = 2<i>x</i> − 3</span></b><br><b>1.</b> <span class="mt"><i>g</i>(<i>x</i>) = 2<i>f</i>(<i>x</i>) − 3</span>.<br><b>2.</b> Put in <span class="mt"><i>x</i></span> for <span class="mt"><i>f</i>(<i>x</i>)</span>: <span class="mt"><i>g</i>(<i>x</i>) = 2<i>x</i> − 3</span>.<br><b>3.</b> Slope 2 (dilation by 2), <span class="mt"><i>y</i></span>-intercept <span class="mt">−3</span> (down 3).</div></div></div></div>
+  <aside class="notes">Have this up as students walk in (about 5 minutes). The same 4 questions are on the online IEP Day 1 bell work, which shows the same formula under each question and these steps after each answer. Click to reveal one answer at a time; read each step aloud and point to where the formula is used.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Catch-Up · Lesson 1 · Topic 2 Lesson 1 · Steps</p>
+  <h2>How to read <i>g</i>(<i>x</i>) = <i>a</i> · <i>f</i>(<i>x</i>) + <i>d</i></h2>
+  <p><b>1.</b> Start with <i>f</i>(<i>x</i>) = <i>x</i>: slope 1, through (0, 0).</p><p><b>2.</b> <b class="cm"><i>a</i></b> is the new slope. A negative <i>a</i> flips the line.</p><p><b>3.</b> <b class="cp"><i>d</i></b> moves the line up (+) or down (−). The <i>y</i>-intercept is (0, <i>d</i>).</p><p><b>4.</b> Plot (0, <i>d</i>), then count the slope <i>a</i>.</p>
+  <aside class="notes">Leave this slide up, or give students a printed copy, while they work.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Catch-Up · Lesson 1 · I do · Stretch · ★ Essential</p>
+  <h2>Multiply <i>f</i>(<i>x</i>) = <i>x</i> by 4</h2>
+  <div class="row" style="gap:40px"><div class="col"><p>Multiply every output by 4.</p><div class="step pop eq sm ans"><i>a</i>(<i>x</i>) = 4<i>x</i></div><p>The slope is now <b class="cm">4</b>: steeper.</p><p>With −4, the line also <b>flips</b>:</p><div class="step pop eq sm ans"><i>c</i>(<i>x</i>) = −4<i>x</i></div></div><div class="col"><div class="graph" data-g='{"w": 340, "h": 340, "x": [-4, 4], "y": [-8, 8], "gx": [1, 1], "gy": [1, 2], "lines": [{"p": [[0, 0], [1, 1]], "label": "f(x)"}, {"p": [[0, 0], [1, 4]], "label": "4x", "step": true}, {"p": [[0, 0], [1, -4]], "label": "−4x", "c": "b", "step": true}], "pts": [], "alt": "f(x) = x, 4x and −4x"}'></div></div></div>
+  <aside class="notes">All three lines pass through (0, 0): multiplying 0 gives 0.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Catch-Up · Lesson 1 · We do · Parallel line · ★ Essential</p>
+  <h2>Parallel to <i>y</i> = −3<i>x</i> − 1, through (−1, 5)</h2>
+  <p>Step 1: same slope. &nbsp;<i>m</i> = ____</p><div class="step pop eq sm ans"><i>m</i> = −3</div><p>Step 2: 5 = −3(−1) + <i>b</i>, so <i>b</i> = ____</p><div class="step pop eq sm ans"><i>b</i> = 2</div><p>Step 3: write it.</p><div class="step pop eq sm ans"><i>y</i> = −3<i>x</i> + 2</div>
+  <aside class="notes">Parallel lines have the same slope; only b changes.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Catch-Up · Lesson 1 · Check it · Step by step · ★ Essential</p>
+  <h2>Parallel to <i>y</i> = 2<i>x</i></h2>
+  <div class="row" style="gap:24px"><div class="col"><div class="card"><h3>1. Through (0, 4)</h3><p class="step small"><b>Step 1.</b> Parallel means the <b>same slope</b>: <i>m</i> = 2.</p><p class="step small"><b>Step 2.</b> Put <i>x</i> = 0 and <i>y</i> = 4 into <i>y</i> = <i>mx</i> + <i>b</i>: 4 = 2(0) + <i>b</i>.</p><p class="step small"><b>Step 3.</b> 2(0) = 0, so 4 = <i>b</i>.</p><p class="step small"><b>Step 4.</b> Write the slope and <i>b</i>: <i>y</i> = 2<i>x</i> + 4.</p><div class="step pop eq sm ans"><i>y</i> = 2<i>x</i> + 4</div></div></div><div class="col"><div class="card"><h3>2. Through (2, 0)</h3><p class="step small"><b>Step 1.</b> Same slope: <i>m</i> = 2.</p><p class="step small"><b>Step 2.</b> Put <i>x</i> = 2 and <i>y</i> = 0 into <i>y</i> = <i>mx</i> + <i>b</i>: 0 = 2(2) + <i>b</i>.</p><p class="step small"><b>Step 3.</b> Multiply: 0 = 4 + <i>b</i>.</p><p class="step small"><b>Step 4.</b> Subtract 4 from both sides: −4 = <i>b</i>.</p><div class="step pop eq sm ans"><i>y</i> = 2<i>x</i> − 4</div></div></div></div>
+  <aside class="notes">For the teacher or assistant: click once for each step. Read the step aloud, and before each click ask the student what to do next. Students check their own paper and fix any mistake in a different color.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Catch-Up · Lesson 2 · Topic 2 Lesson 2 · Steps</p>
+  <h2>Which way does it move?</h2>
+  <p><b>1.</b> Look for the number. Is it <b>inside</b> the parentheses with <i>x</i>, or <b>outside</b>?</p><p><b>2.</b> Outside: + is up, − is down.</p><p><b>3.</b> Inside: − is right, + is left (the sign flips).</p><p><b>4.</b> To simplify, put the inside into the rule and distribute.</p>
+  <aside class="notes">Leave this slide up, or give students a printed copy, while they work.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Catch-Up · Lesson 2 · I do · Watch me · ★ Essential</p>
+  <h2><i>f</i>(<i>x</i> − 7) and <i>f</i>(<i>x</i>) − 4</h2>
+  <div class="row" style="gap:40px"><div class="col"><div class="card"><h3><i>f</i>(<i>x</i> − 7)</h3><p class="small">Inside, minus → <b>right 7</b>: each point moves 7 to the right.</p><div class="graph" data-g='{"w": 330, "h": 250, "x": [-2, 10], "y": [-3, 4], "gx": [1, 2], "gy": [1, 1], "lines": [{"p": [[0, 0], [1, 1]], "label": "f(x)"}, {"p": [[0, 0], [7, 0]], "seg": true, "dash": true, "step": true, "dot": true, "c": "b", "label": "+7 →"}, {"p": [[2, 2], [9, 2]], "seg": true, "dash": true, "step": true, "dot": true, "c": "b", "label": "+7 →"}, {"p": [[7, 0], [8, 1]], "label": "g(x)", "c": "b", "step": true}], "pts": [[0, 0, ""], [2, 2, ""]], "alt": "f(x) = x with (0, 0) and (2, 2) moved right 7"}'></div><div class="step pop eq sm ans"><i>g</i>(<i>x</i>) = <i>x</i> − 7</div></div></div><div class="col"><div class="card"><h3><i>f</i>(<i>x</i>) − 4</h3><p class="small">Outside, minus → <b>down 4</b>: each point moves 4 down.</p><div class="graph" data-g='{"w": 330, "h": 250, "x": [-4, 4], "y": [-7, 4], "gx": [1, 2], "gy": [1, 2], "lines": [{"p": [[0, 0], [1, 1]], "label": "f(x)"}, {"p": [[-2, -2], [-2, -6]], "seg": true, "dash": true, "step": true, "dot": true, "c": "b", "label": "−4 ↓"}, {"p": [[0, 0], [0, -4]], "seg": true, "dash": true, "step": true, "dot": true, "c": "b", "label": "−4 ↓"}, {"p": [[2, 2], [2, -2]], "seg": true, "dash": true, "step": true, "dot": true, "c": "b", "label": "−4 ↓"}, {"p": [[0, -4], [1, -3]], "label": "g(x)", "c": "b", "step": true}], "pts": [[-2, -2, ""], [0, 0, ""], [2, 2, ""]], "alt": "f(x) = x with three points moved down 4"}'></div><div class="step pop eq sm ans"><i>g</i>(<i>x</i>) = <i>x</i> − 4</div></div></div></div>
+  <aside class="notes">Think aloud about inside versus outside before naming the direction. Each click moves one point: right 7 on the left graph, down 4 on the right. For f(x) = x both give a line parallel to f(x).</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Catch-Up · Lesson 2 · You do · Try it · ★ Essential</p>
+  <h2>Which way, and how far?</h2>
+  <div class="row" style="gap:40px"><div class="col"><div class="card"><p>1. <i>f</i>(<i>x</i> + 5)</p><div class="step pop eq sm ans">left 5</div></div></div><div class="col"><div class="card"><p>2. <i>f</i>(<i>x</i>) + 2</p><div class="step pop eq sm ans">up 2</div></div></div><div class="col"><div class="card"><p>3. <i>f</i>(<i>x</i> − 3)</p><div class="step pop eq sm ans">right 3</div></div></div></div>
+</section>
+<section class="slide">
+  <p class="eyebrow">Catch-Up · Lesson 2 · Check it · Step by step · ★ Essential</p>
+  <h2>Which way, and how far?</h2>
+  <div class="row" style="gap:24px"><div class="col"><div class="card"><h3>1. <i>f</i>(<i>x</i> + 5)</h3><p class="step small"><b>Step 1.</b> The 5 is <b>inside</b> the parentheses with <i>x</i>, so the graph moves left or right.</p><p class="step small"><b>Step 2.</b> Inside, the sign flips: <b>plus</b> means <b>left</b>.</p><div class="step pop eq sm ans">left 5</div></div></div><div class="col"><div class="card"><h3>2. <i>f</i>(<i>x</i>) + 2</h3><p class="step small"><b>Step 1.</b> The 2 is <b>outside</b> the parentheses, so the graph moves up or down.</p><p class="step small"><b>Step 2.</b> Outside, no flip: <b>plus</b> means <b>up</b>.</p><div class="step pop eq sm ans">up 2</div></div></div><div class="col"><div class="card"><h3>3. <i>f</i>(<i>x</i> − 3)</h3><p class="step small"><b>Step 1.</b> The 3 is <b>inside</b>, so left or right.</p><p class="step small"><b>Step 2.</b> Inside, the sign flips: <b>minus</b> means <b>right</b>.</p><div class="step pop eq sm ans">right 3</div></div></div></div>
+  <aside class="notes">For the teacher or assistant: click once for each step. Read the step aloud, and before each click ask the student what to do next. Students check their own paper and fix any mistake in a different color.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Catch-Up · Lesson 2 · We do · Simplify · ★ Essential</p>
+  <h2><i>j</i>(<i>x</i>) = 2<i>x</i> − 1. Simplify <i>j</i>(<i>x</i> + 4).</h2>
+  <p>Put (<i>x</i> + 4) in for <i>x</i>: 2(____) − 1</p><div class="step pop eq sm ans">2(<i>x</i> + 4) − 1</div><p>Distribute: ____ − 1</p><div class="step pop eq sm ans">2<i>x</i> + 8 − 1</div><p>Combine:</p><div class="step pop eq sm ans">2<i>x</i> + 7</div>
+  <aside class="notes">Compare with j(x) + 4 = 2x + 3: left 4 and up 4 are not the same for this line.</aside>
+</section>
+<section class="slide">
+  <p class="eyebrow">Catch-Up · Lesson 2 · I do · Stretch inside · ★ Essential</p>
+  <h2>For <i>f</i>(<i>x</i>) = <i>x</i>: <i>f</i>(2<i>x</i>) and 2<i>f</i>(<i>x</i>)</h2>
+  <div class="row" style="gap:40px"><div class="col"><p><i>f</i>(2<i>x</i>) = 2<i>x</i></p><p>2 · <i>f</i>(<i>x</i>) = 2<i>x</i></p><div class="step pop eq sm ans">The same line: <i>y</i> = 2<i>x</i></div><p class="small">This only works for <i>f</i>(<i>x</i>) = <i>x</i>.</p></div><div class="col"><div class="graph" data-g='{"w": 320, "h": 320, "x": [-4, 4], "y": [-5, 5], "gx": [1, 1], "gy": [1, 1], "lines": [{"p": [[0, 0], [1, 1]], "label": "f(x)"}, {"p": [[0, 0], [1, 2]], "label": "y = 2x", "step": true}], "pts": [], "alt": "f(x) = x and y = 2x"}'></div></div></div>
+</section>
+<section class="slide">
+  <p class="eyebrow">Catch-Up Day · Exit Check</p>
+  <h2>Show what you know</h2>
+  <div class="col" style="gap:12px"><div class="card"><p class="small"><b>1.</b> <span class="mt"><i>f</i>(<i>x</i>) = <i>x</i></span> and <span class="mt"><i>g</i>(<i>x</i>) = 2<i>f</i>(<i>x</i>) − 3</span>. Describe the transformations and write <span class="mt"><i>g</i>(<i>x</i>)</span>.</p><div class="step pop ans" style="font-size:20px">Vertical dilation by 2, then down 3: <span class="mt"><i>g</i>(<i>x</i>) = 2<i>x</i> − 3</span></div></div><div class="card"><p class="small"><b>2.</b> Write the line parallel to <span class="mt"><i>y</i> = 3<i>x</i> + 1</span> through <span class="mt">(2, 4)</span>.</p><div class="step pop ans" style="font-size:20px">Same slope 3: <span class="mt">4 = 3(2) + <i>b</i></span>, <span class="mt"><i>b</i> = −2</span>. <span class="mt"><i>y</i> = 3<i>x</i> − 2</span></div></div><div class="card"><p class="small"><b>3.</b> <span class="mt"><i>f</i>(<i>x</i>) = <i>x</i></span> and <span class="mt"><i>h</i>(<i>x</i>) = <i>f</i>(<i>x</i> + 4)</span>. Which way does the graph move?</p><div class="step pop ans" style="font-size:20px">Inside: the opposite way. Left 4, the same as up 4: <span class="mt"><i>h</i>(<i>x</i>) = <i>x</i> + 4</span></div></div></div>
+  <aside class="notes">Students answer on paper, then click to reveal each answer. Anyone who misses question 3 needs the inside/outside rule again tomorrow during bell work.</aside>
+</section>
+<section class="slide divider">
+  <p class="eyebrow">Catch-Up Day · Tonight</p>
+  <h2>Homework: practice for the test</h2>
+  <p style="font-size:28px"><a class="go" href="t2-lesson1-homework-IEP.html" target="_blank" onclick="event.stopPropagation()">Lesson 1 homework →</a> &nbsp; · &nbsp; <a class="go" href="t2-lesson2-homework-IEP.html" target="_blank" onclick="event.stopPropagation()">Lesson 2 homework →</a></p><p style="font-size:24px">Questions 11–14 on each are written like the End of Topic 2 Assessment.</p><p style="font-size:24px">Tomorrow: Lesson 3, Determining Slopes of Perpendicular Lines.</p>
+  <aside class="notes">Both homework pages grade themselves and explain each answer.</aside>
+</section>
+
+</div>
+
+<nav id="bar" aria-label="Slide controls">
+  <a id="home" href="../index.html">⌂ Home</a>
+  <span id="brand"><svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#3050b8"/><g fill="#fff"><circle cx="16" cy="7.5" r="2.3"/><circle cx="12.8" cy="11.8" r="2.5" opacity=".92"/><circle cx="19.2" cy="11.8" r="2.5" opacity=".92"/><circle cx="16" cy="14.6" r="2.6"/><circle cx="11.8" cy="17.6" r="2.7" opacity=".82"/><circle cx="20.2" cy="17.6" r="2.7" opacity=".82"/></g><rect x="15.2" y="20.5" width="1.6" height="6.5" rx=".8" fill="#9fd18b"/></svg><span>Bluebonnet <strong>Algebra I</strong></span></span>
+  <button id="prev" type="button" aria-label="Previous step">← Back</button>
+  <button id="next" type="button" aria-label="Next step">Next →</button>
+  <div id="prog"><div></div></div>
+  <span id="hint">→ / Space next · ← back · N notes · F full screen</span>
+  <span id="count"></span>
+  <button id="nb" type="button" aria-pressed="false">Notes</button>
+  <button id="fs" type="button">Full screen</button>
+</nav>
+<div id="notes" hidden><b>Speaker notes</b><p id="notesText"></p></div>
+
+<script>
+const stage = document.getElementById('stage');
+// {{a|b}} → stacked fraction
+stage.innerHTML = stage.innerHTML.replace(/\{\{(.+?)\|(.+?)\}\}/g, '<span class="fr"><span>$1</span><span>$2</span></span>');
+
+// Graph spec (data-g): w,h px; x,y = [min,max]; gx,gy = [grid step, label step];
+// lines: [{p:[[x,y],[x,y]], label, c:'a'|'b'|'c' (pool color), dash, step (appears on its own click), seg (just this segment)}] extended to the window; pts: [[x,y,label]].
+// ptsStep: each point appears on its own click, in order, before the lines.
+// Keep in step with draw_graph() in make_pptx.py.
+const GM = {L: 34, R: 12, T: 12, B: 26};
+function clipLine([[ax, ay], [bx, by]], [x0, x1], [y0, y1]) {
+  const dx = bx - ax, dy = by - ay; let lo = -Infinity, hi = Infinity;
+  for (const [p, q] of [[-dx, ax - x0], [dx, x1 - ax], [-dy, ay - y0], [dy, y1 - ay]]) {
+    if (p === 0) { if (q < 0) return null; continue; }
+    const r = q / p; if (p < 0) lo = Math.max(lo, r); else hi = Math.min(hi, r);
+  }
+  return lo > hi ? null : [[ax + lo * dx, ay + lo * dy], [ax + hi * dx, ay + hi * dy]];
+}
+function graphSVG(g) {
+  const {w: W, h: H} = g, [x0, x1] = g.x, [y0, y1] = g.y;
+  const X = v => (GM.L + (v - x0) / (x1 - x0) * (W - GM.L - GM.R)).toFixed(1);
+  const Y = v => (GM.T + (y1 - v) / (y1 - y0) * (H - GM.T - GM.B)).toFixed(1);
+  const ticks = (a, b, t) => { const o = []; for (let v = Math.ceil(a / t - 1e-9) * t; v <= b + 1e-9; v += t) o.push(+v.toFixed(6)); return o; };
+  const num = v => String(v).replace('-', '−');
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${g.alt || 'graph'}">`;
+  s += `<rect class="g-bg" x=".5" y=".5" width="${W - 1}" height="${H - 1}" rx="8"/>`;
+  for (const v of ticks(x0, x1, g.gx[0])) s += `<line class="g-grid" x1="${X(v)}" y1="${GM.T}" x2="${X(v)}" y2="${H - GM.B}"/>`;
+  for (const v of ticks(y0, y1, g.gy[0])) s += `<line class="g-grid" x1="${GM.L}" y1="${Y(v)}" x2="${W - GM.R}" y2="${Y(v)}"/>`;
+  const ax = x0 <= 0 && 0 <= x1 ? 0 : x0, ay = y0 <= 0 && 0 <= y1 ? 0 : y0;
+  s += `<line class="g-axis" x1="${X(ax)}" y1="${GM.T}" x2="${X(ax)}" y2="${H - GM.B}"/>`;
+  s += `<line class="g-axis" x1="${GM.L}" y1="${Y(ay)}" x2="${W - GM.R}" y2="${Y(ay)}"/>`;
+  for (const v of ticks(x0, x1, g.gx[1])) s += `<text class="g-tick" x="${X(v)}" y="${H - GM.B + 17}" text-anchor="middle">${num(v)}</text>`;
+  for (const v of ticks(y0, y1, g.gy[1])) s += `<text class="g-tick" x="${GM.L - 6}" y="${+Y(v) + 4}" text-anchor="end">${num(v)}</text>`;
+  const ptsSVG = () => (g.pts || []).map(([px, py, lab]) => (g.ptsStep ? '<g class="step">' : '') +
+    `<circle class="g-pt" cx="${X(px)}" cy="${Y(py)}" r="5.5"/>` +
+    (lab ? `<text class="g-plab" x="${+X(px) + 9}" y="${+Y(py) - 8}">${lab}</text>` : '') +
+    (g.ptsStep ? '</g>' : '')).join('');
+  if (g.ptsStep) s += ptsSVG();
+  for (const ln of g.lines || []) {
+    const c = ln.seg ? ln.p : clipLine(ln.p, g.x, g.y); if (!c) continue;
+    if (ln.step) s += '<g class="step">';
+    s += `<line class="g-line${ln.c ? ' g' + ln.c : ''}"${ln.dash ? ' stroke-dasharray="10 7"' : ''} x1="${X(c[0][0])}" y1="${Y(c[0][1])}" x2="${X(c[1][0])}" y2="${Y(c[1][1])}"/>`;
+    if (ln.label) { const e = c[0][1] > c[1][1] ? c[0] : c[1];
+      const right = +X(e[0]) > W / 2;
+      s += `<text class="g-llab" x="${+X(e[0]) + (right ? -12 : 8)}" y="${+Y(e[1]) + 16}" text-anchor="${right ? 'end' : 'start'}">${ln.label}</text>`; }
+    if (ln.dot) s += `<circle class="g-pt" cx="${X(c[1][0])}" cy="${Y(c[1][1])}" r="5.5"/>`;
+    if (ln.step) s += '</g>';
+  }
+  if (!g.ptsStep) s += ptsSVG();
+  return s + '</svg>';
+}
+stage.querySelectorAll('.graph').forEach(el => { el.innerHTML = graphSVG(JSON.parse(el.dataset.g)); });
+
+const slides = [...stage.querySelectorAll('.slide')];
+const steps = slides.map(s => [...s.querySelectorAll('.step')]);
+let i = 0, k = 0;
+
+function readHash(){ const m = /^#s(\d+)$/.exec(location.hash); return m ? Math.min(Math.max(+m[1] - 1, 0), slides.length - 1) : 0; }
+
+function show(n, revealAll){
+  slides[i].classList.remove('on');
+  i = n;
+  k = revealAll ? steps[i].length : 0;
+  steps[i].forEach((el, j) => el.classList.toggle('shown', j < k));
+  slides[i].classList.add('on');
+  update();
+}
+function next(){
+  if (k < steps[i].length) { steps[i][k++].classList.add('shown'); update(); }
+  else if (i < slides.length - 1) show(i + 1, false);
+}
+function prev(){
+  if (k > 0) { steps[i][--k].classList.remove('shown'); update(); }
+  else if (i > 0) show(i - 1, true);
+}
+function update(){
+  document.getElementById('count').textContent = (i + 1) + ' / ' + slides.length;
+  document.querySelector('#prog>div').style.width = ((i + 1) / slides.length * 100) + '%';
+  history.replaceState(null, '', '#s' + (i + 1));
+  const a = slides[i].querySelector('aside.notes');
+  document.getElementById('notesText').textContent = a ? a.textContent : '';
+}
+function fit(){
+  // Bar height varies (iPhone safe-area padding), so center the slide in whatever space is left above it.
+  const bar = document.getElementById('bar').offsetHeight, W = innerWidth, H = innerHeight - bar, portrait = matchMedia('(orientation:portrait)').matches;
+  const s = portrait ? W / 760 : Math.min(W / 1280, H / 720);
+  stage.style.height = portrait ? H / s + 'px' : '';
+  stage.style.top = H / 2 + 'px';
+  document.getElementById('notes').style.bottom = bar + 'px';
+  stage.style.transform = `translate(-50%,-50%) scale(${s})`;
+}
+function fullscreen(){
+  try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen().catch(() => {}); } catch (e) {}
+}
+
+stage.addEventListener('click', next);
+// Swipe left = next, swipe right = back (taps still advance via click).
+let tx = 0, ty = 0;
+stage.addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, {passive: true});
+stage.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) dx < 0 ? next() : prev();
+}, {passive: true});
+document.getElementById('next').addEventListener('click', next);
+document.getElementById('prev').addEventListener('click', prev);
+document.getElementById('fs').addEventListener('click', fullscreen);
+function toggleNotes(){
+  const n = document.getElementById('notes'); n.hidden = !n.hidden;
+  document.getElementById('nb').setAttribute('aria-pressed', String(!n.hidden));
+}
+document.getElementById('nb').addEventListener('click', toggleNotes);
+addEventListener('keydown', e => {
+  if (e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
+  if (['ArrowRight','ArrowDown',' ','PageDown','Enter'].includes(e.key)) { e.preventDefault(); next(); }
+  else if (['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
+  else if (e.key === 'Home') show(0, false);
+  else if (e.key === 'End') show(slides.length - 1, true);
+  else if (e.key === 'f' || e.key === 'F') fullscreen();
+  else if (e.key === 'n' || e.key === 'N') toggleNotes();
+});
+addEventListener('resize', fit);
+fit();
+slides[0].classList.add('on');
+show(readHash(), false);
+</script>

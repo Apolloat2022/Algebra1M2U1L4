@@ -27,21 +27,22 @@ BLOCKS = [
   "Graphing with the intercepts is a fast check on the transformed graphs in Activity 1.4."),
  (2, 5, "L5", [26, 28, 30], [12, 13], "Slope and y-intercept from any form",
   "Lesson 2 rewrites f(x − c) in slope-intercept form, so you must read the slope and intercept from any form."),
- (2, 6, "L6", [5, 7, 11], [4, 5, 6, 7], "Linear or nonlinear?",
+ (2, 105, "L6", [5, 7, 11], [4, 5, 6, 7], "Linear or nonlinear?",
   "A transformation of a linear function is still linear: the rate of change stays constant."),
- (3, 7, "L6", [14, 15, 16, 17], [8, 9], "Write, evaluate and solve a function in context",
+ (3, 6, "L6", [14, 15, 16, 17], [8, 9], "Write, evaluate and solve a function in context",
   "Lesson 3 evaluates slopes and points; this practices using function notation in a story."),
- (3, 8, "L6", [18, 19, 20], [10], "Changing the situation changes the function",
+ (3, 7, "L6", [18, 19, 20], [10], "Changing the situation changes the function",
   "Giving away 3 T-shirts shifts the function: the same idea as a Topic 2 translation."),
- (4, 9, "L6", [21, 22, 23], [11], "General form and factored form",
+ (4, 8, "L6", [21, 22, 23], [11], "General form and factored form",
   "Lesson 4 compares functions in different forms; general and factored form are two more forms."),
  (4, 11, "L6", [26, 27, 30], [12], "Three ways to write a function; four views",
   "Lesson 4 compares tables, graphs, equations and descriptions: the same four views."),
 ]
 PRACTICE = {"L5": "lesson5", "L6": "lesson6"}
-# expected dates on the pacing calendar (Topic 2 starts Mon Oct 19, 2026; the district test date is Tue Nov 3, day 10)
-DATES = {1: "Mon, Oct 19", 2: "Tue, Oct 20", 3: "Wed, Oct 21", 5: "Mon, Oct 26", 6: "Tue, Oct 27", 7: "Wed, Oct 28",
-         8: "Thu, Oct 29", 9: "Mon, Nov 2", 11: "Wed, Nov 4"}
+# expected dates on the pacing calendar (Topic 2 starts Mon Oct 19, 2026; the district test date is Tue Nov 3, day 10).
+# Mon Oct 26 (day 5) is the catch-up day (make_t2_cram.py), so the Lesson 2 deck's second day (105) is only an extra day.
+DATES = {1: "Mon, Oct 19", 2: "Tue, Oct 20", 3: "Wed, Oct 21", 5: "Mon, Oct 26", 105: "extra day", 6: "Tue, Oct 27",
+         7: "Wed, Oct 28", 8: "Thu, Oct 29", 11: "Wed, Nov 4"}
 
 sections = lambda s: re.findall(r'<section[^>]*>.*?</section>', s, re.S)
 
@@ -85,17 +86,18 @@ def back(n):
 
 
 LONG = {1: "Monday, October 19", 2: "Tuesday, October 20", 3: "Wednesday, October 21", 5: "Monday, October 26",
-        6: "Tuesday, October 27", 7: "Wednesday, October 28", 8: "Thursday, October 29", 9: "Monday, November 2",
+        105: "an extra Lesson 2 day", 6: "Tuesday, October 27", 7: "Wednesday, October 28", 8: "Thursday, October 29",
         11: "Wednesday, November 4"}
 # what the next class is after each lesson's last day (from topic2-pacing-150.html)
 AFTER = {3: "Next class: Thursday, October 22. Skills Practice day: Lesson 1 quiz and Topic 1 Lesson 5 homework. "
             "Then Lesson 2 starts Monday, October 26.",
-         6: "Next class: Wednesday, October 28. Lesson 3 starts: open the Lesson 3 deck. "
-            "Tonight: the Lesson 2 quiz as homework.",
-         8: "Next class: Monday, November 2. Topic 2 Review: Lesson 4 in brief, then the online practice test. "
+         5: "Next class: Tuesday, October 27. Lesson 3 starts: open the Lesson 3 deck. "
+            "(Monday is the Catch-Up Day deck; use the next slide only if you get an extra Lesson 2 day.)",
+         105: "Next class: Lesson 3. Open the Lesson 3 deck.",
+         7: "Next class: Thursday, October 29. Lesson 4 in one day: open the Lesson 4 deck. "
             "Tonight: the Lesson 3 quiz as homework.",
-         9: "Next class: Tuesday, November 3. End of Topic 2 Assessment. "
-            "Tonight: finish the Topic 2 Review practice test.",
+         8: "Next class: Monday, November 2. Topic 2 Review and the online practice test. "
+            "Then the End of Topic 2 Assessment on Tuesday, November 3.",
          11: "Next class: Thursday, November 5. End of Topic 1 Assessment."}
 # IEP decks are not split by day: which content slides belong to each lesson day
 IEP_DAYS = {1: [[4, 5, 6, 7], [11, 12, 13, 8], [9, 10, 14]], 2: [[3, 4, 5, 6, 7, 8, 9, 10], [11, 12]],
