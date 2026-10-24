@@ -101,7 +101,7 @@ AFTER = {3: "Next class: Thursday, October 22. Skills Practice day: Lesson 1 qui
          11: "Next class: Thursday, November 5. End of Topic 1 Assessment."}
 # IEP decks are not split by day: which content slides belong to each lesson day
 IEP_DAYS = {1: [[4, 5, 6, 7], [11, 12, 13, 8], [9, 10, 14]], 2: [[3, 4, 5, 6, 7, 8, 9, 10], [11, 12]],
-            3: [[3, 4, 5, 6, 7], [8, 9, 10, 11, 12]], 4: [[3, 4, 5, 6, 7, 8], [9, 10, 11, 12]]}
+            3: [[3, 4, 5, 6, 7, 8, 9, 10], [11, 12, 13, 14, 15]], 4: [[3, 4, 5, 6, 7, 8], [9, 10, 11, 12]]}
 
 
 def start(n, k, total, d, topic, eq=""):

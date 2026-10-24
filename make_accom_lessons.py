@@ -678,6 +678,26 @@ def iep_t2_3():
         ("2. −{{4|5}}", ["Flip it: −{{5|4}}.", "Change the sign: − becomes +, so {{5|4}}.",
                          "Check: −{{4|5}} · {{5|4}} = −1 ✓"], "{{5|4}}"),
         ("3. {{1|2}}", ["Flip it: {{2|1}} = 2.", "Change the sign: −2.", "Check: {{1|2}} · (−2) = −1 ✓"], "−2")))
+    # Day 1 (Getting Started and Activity 3.1): why perpendicular slopes are negative reciprocals, then test pairs
+    s.append(sec("We do · Rotate it", "Turn a segment 90° and compare the slopes", row(
+        '<p>Segment from (0, 0) to <b class="cp">(4, 2)</b>. Slope:</p>' + ans('{{2|4}} = {{1|2}}')
+        + '<p>Turn 90°: (<i>x</i>, <i>y</i>) → (−<i>y</i>, <i>x</i>). (4, 2) goes to</p>' + ans('(−2, 4)')
+        + '<p>New slope, then multiply:</p>' + ans('{{4|−2}} = −2.&nbsp; Then {{1|2}} · (−2) = −1: ⊥'),
+        graph(320, 320, [-4, 5], [-1, 5], [1, 1], [1, 1],
+              [dict(p=[[0, 0], [4, 2]], seg=True), dict(p=[[0, 0], [-2, 4]], seg=True, c="b", step=True)],
+              [[4, 2, "(4, 2)"], [-2, 4, "(−2, 4)"]], "Segment to (4, 2) and its 90° turn to (−2, 4)", pts_step=True)),
+        "Getting Started and Activity 3.1 in one example. Turning a line 90° makes a square corner, and the slopes become "
+        "negative reciprocals: flip and change the sign. Have students say the rule out loud before the next slide."))
+    s.append(sec("You do · Perpendicular or not?", "Multiply the slopes. Is the product −1?", row(
+        '<div class="card"><p>1. 2 and −{{1|2}}</p>' + ans('Yes: 2 · (−{{1|2}}) = −1') + '</div>',
+        '<div class="card"><p>2. 3 and −3</p>' + ans('No: 3 · (−3) = −9') + '</div>',
+        '<div class="card"><p>3. {{3|4}} and −{{4|3}}</p>' + ans('Yes: {{3|4}} · (−{{4|3}}) = −1') + '</div>'),
+        "Only the product −1 means perpendicular. Pair 2 has opposite signs but is not flipped, the most common mistake."))
+    s.append(walk("Perpendicular or not?",
+        ("1. 2 and −{{1|2}}", ["Write 2 as {{2|1}}.", "Multiply: {{2|1}} · (−{{1|2}}) = −{{2|2}} = −1.", "The product is −1, so yes."], "Perpendicular"),
+        ("2. 3 and −3", ["Multiply: 3 · (−3) = −9.", "−9 is not −1, so no.", "The signs are opposite, but 3 was not flipped."], "Not perpendicular"),
+        ("3. {{3|4}} and −{{4|3}}", ["Multiply the tops: 3 · 4 = 12. Multiply the bottoms: 4 · 3 = 12.", "{{12|12}} = 1, and the sign is −: −1.",
+                                     "The product is −1, so yes."], "Perpendicular")))
     s.append(sec("We do · Flat and straight-up lines", "Through (2, −1)", row(
         '<p>Horizontal: <i>y</i> = ____</p>' + ans('<i>y</i> = −1') + '<p>Vertical: <i>x</i> = ____</p>' + ans('<i>x</i> = 2')
         + '<p class="small">A horizontal line and a vertical line are always perpendicular.</p>',
