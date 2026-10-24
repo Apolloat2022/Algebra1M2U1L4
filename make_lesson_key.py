@@ -538,7 +538,40 @@ def add_clicks(x, ids):
     return x[:end] + clicks(ids, start) + x[end:]
 
 
-def annotate(src, out, ans, notes, corrections, after, se=None, stars=()):
+def space_after(x, gaps):
+    """Open room for answers under lettered parts: gaps are (text shape #, paragraph #, points of space after it).
+    Shape and paragraph numbers count <p:sp> and <a:p> in the slide XML; only the spacing changes, never the words."""
+    want = {}
+    for i, j, pts in gaps:
+        want.setdefault(i, {})[j] = pts
+    out, last = [], 0
+    for i, m in enumerate(re.finditer(r"<p:sp>.*?</p:sp>", x, re.S)):
+        if i not in want:
+            continue
+        sp, parts, plast = m.group(0), [], 0
+        for j, pm in enumerate(re.finditer(r"<a:p>.*?</a:p>", sp, re.S)):
+            if j not in want[i]:
+                continue
+            sa = f'<a:spcAft><a:spcPts val="{round(want[i][j] * 100)}"/></a:spcAft>'
+            q = re.sub(r"<a:spcAft>.*?</a:spcAft>", "", pm.group(0), flags=re.S)
+            ppr = re.match(r"<a:p>(<a:pPr[^>]*?)(/>|>(.*?)</a:pPr>)", q, re.S)
+            if not ppr:
+                q = "<a:p><a:pPr>" + sa + "</a:pPr>" + q[5:]
+            elif ppr.group(2) == "/>":
+                q = "<a:p>" + ppr.group(1) + ">" + sa + "</a:pPr>" + q[ppr.end():]
+            else:
+                kids = ppr.group(3)
+                at = max(kids.find("</a:spcBef>") + len("</a:spcBef>") if "</a:spcBef>" in kids else -1,
+                         kids.find("</a:lnSpc>") + len("</a:lnSpc>") if "</a:lnSpc>" in kids else -1, 0)
+                q = "<a:p>" + ppr.group(1) + ">" + kids[:at] + sa + kids[at:] + "</a:pPr>" + q[ppr.end():]
+            parts += [sp[plast:pm.start()], q]
+            plast = pm.end()
+        out += [x[last:m.start()], "".join(parts) + sp[plast:]]
+        last = m.end()
+    return "".join(out) + x[last:]
+
+
+def annotate(src, out, ans, notes, corrections, after, se=None, stars=(), gaps=None):
     """se: {slide: Student Edition page}; stars: (first, last) slide ranges of the activities the 150-day pacing guide
     stars as essential. Each labeled slide gets "SE p. N" (and "★ Essential") left of the page number; the first
     slide of a starred range (the activity divider) also gets a large badge in its empty top band."""
@@ -558,6 +591,8 @@ def annotate(src, out, ans, notes, corrections, after, se=None, stars=()):
     page = lambda sid, k: mp.num_xml(sid, k, 1790 * PX, 1040 * PX, 110 * PX, 32 * PX)  # bottom-right page number
     for k, path in enumerate(order, 1):
         x, boxes = text(path), ans.get(k, [])
+        if gaps and k in gaps:
+            x = space_after(x, gaps[k])
         top = max(map(int, re.findall(r'<p:cNvPr id="(\d+)"', x)))
         x = x.replace("</p:spTree>", page(top + 1000, k + (k > after)) + "</p:spTree>", 1)
         star = any(lo <= k <= hi for lo, hi in stars)
@@ -813,22 +848,22 @@ ANS_T2_1 = {
     19: [*cells(1407, 685, "3", "4", "5", "6", "7"),
          (1026, 990, 860, 60, 18, "Graph p(x): the line through (0, 5), parallel to f(x)")],
     20: [(122, 420, 1700, 130, 24, "Slope: 1;  y-intercept: (0, 5)\np(x) = x + 5")],
-    21: [(122, 770, 1700, 130, 24, "f(2) = 2 and p(2) = 7.\nThe vertical translation increased the value at x = 2 "
+    21: [(122, 826, 1700, 133, 24, "f(2) = 2 and p(2) = 7.\nThe vertical translation increased the value at x = 2 "
                                    "by 5.")],
-    22: [(1490, 420, 410, 300, 22, "q(x) = j(x) + 4\nGraph: the line through (0, 3), parallel to j(x)")],
-    23: [(526, 386, 1370, 50, 20, "a. r(x) = j(x) − 4  (graph: the line through (0, −5), parallel to j(x))"),  # each under its letter
-         (526, 508, 1370, 50, 20, "b. q(x) = 2x + 3;  r(x) = 2x − 5"),
-         (526, 690, 1370, 110, 20, "c. All three have slope 2 but different y-intercepts: (0, −1), (0, 3), (0, −5). "
+    22: [(1514, 420, 386, 231, 22, "q(x) = j(x) + 4\nGraph: the line through (0, 3), parallel to j(x)")],
+    23: [(600, 466, 1283, 57, 20, "b. r(x) = j(x) − 4  (graph: the line through (0, −5), parallel to j(x))"),  # each under its letter
+         (600, 600, 1283, 57, 20, "c. q(x) = 2x + 3;  r(x) = 2x − 5"),
+         (600, 801, 1283, 106, 20, "d. All three have slope 2 but different y-intercepts: (0, −1), (0, 3), (0, −5). "
                                    "The lines are parallel, so they never intersect.")],
     29: [(122, 500, 1700, 130, 24, "No. Both lines have slope 2 and stay 4 units apart, so they are parallel.")],
-    31: [(160, 395, 1600, 70, 24, "A′(x1, y1 + a)  and  B′(x2, y2 + a)"),
-         (160, 570, 1600, 70, 24, "m = (y2 − y1) / (x2 − x1)"),
-         (160, 750, 1600, 120, 24, "m = ((y2 + a) − (y1 + a)) / (x2 − x1) = (y2 − y1) / (x2 − x1)")],
-    32: [(542, 400, 1350, 60, 22, "The slopes are the same."),
-         (542, 640, 1350, 90, 22, "The graphs are parallel lines.")],
-    34: [(122, 400, 1700, 130, 22, "Answers will vary. Catalina translates the given line up 5; James uses the "
+    31: [(211, 397, 1531, 67, 24, "A′(x1, y1 + a)  and  B′(x2, y2 + a)"),
+         (211, 540, 1531, 67, 24, "m = (y2 − y1) / (x2 − x1)"),
+         (211, 683, 1531, 67, 24, "m = ((y2 + a) − (y1 + a)) / (x2 − x1) = (y2 − y1) / (x2 − x1)")],
+    32: [(616, 398, 1249, 62, 22, "The slopes are the same."),
+         (616, 604, 1249, 62, 22, "The graphs are parallel lines.")],
+    34: [(211, 329, 1455, 115, 22, "Answers will vary. Catalina translates the given line up 5; James uses the "
                                    "slope formula with the point (2, 9). Both get y = (1/2)x + 8."),
-         (122, 680, 1700, 200, 24, "y = −3x + 2\nParallel, so the slope is −3: 5 = −3(−1) + b, so b = 2.")],
+         (211, 589, 1455, 131, 24, "y = −3x + 2\nParallel, so the slope is −3: 5 = −3(−1) + b, so b = 2.")],
     38: [*cells(1252, 776, "−8", "−4", "0", "4", "8"),
          (1400, 640, 480, 130, 20, "Graph a(x): through (0, 0) and (1, 4)")],
     39: [(122, 420, 1700, 130, 24, "Slope: 4;  y-intercept: (0, 0)\na(x) = 4x")],
@@ -838,42 +873,41 @@ ANS_T2_1 = {
     42: [*cells(1252, 732, "8", "4", "0", "−4", "−8"),
          (1400, 590, 480, 130, 20, "Graph c(x): through (0, 0) and (1, −4)")],
     43: [(122, 420, 1700, 130, 24, "Slope: −4;  y-intercept: (0, 0)\nc(x) = −4x")],
-    44: [(122, 830, 1700, 130, 24, "f(−1) = −1 and c(−1) = 4.\nThe vertical dilation multiplied the value at x = −1 "
+    44: [(122, 884, 1700, 120, 22, "f(−1) = −1 and c(−1) = 4.\nThe vertical dilation multiplied the value at x = −1 "
                                    "by −4.")],
-    50: [(705, 590, 320, 410, 18, "a. g(x) = 2x + 7\nVertical stretch by a factor of 2, then up 7. "
+    50: [(729, 590, 296, 280, 18, "a. g(x) = 2x + 7\nVertical stretch by a factor of 2, then up 7. "
                                    "Graph: through (0, 7), slope 2."),
-         (1440, 590, 460, 410, 18, "b. g(x) = 3x − 1\nVertical stretch by a factor of 3, then down 1. "
+         (1464, 590, 436, 192, 18, "b. g(x) = 3x − 1\nVertical stretch by a factor of 3, then down 1. "
                                    "Graph: through (0, −1), slope 3.")],
     51: [(120, 840, 760, 220, 18, "g(x) = (1/3)x + 2\nVertical compression by a factor of 1/3, then up 2. "
                                   "Graph: through (0, 2), slope 1/3."),
-         (860, 840, 900, 220, 18, "g(x) = (1/2)x − 3\nVertical compression by a factor of 1/2, then down 3. "
+         (884, 840, 876, 148, 18, "g(x) = (1/2)x − 3\nVertical compression by a factor of 1/2, then down 3. "
                                   "Graph: through (0, −3), slope 1/2.")],
     52: [(120, 830, 760, 230, 18, "g(x) = −x − 4\nReflection across the x-axis, then down 4. "
                                   "Graph: through (0, −4), slope −1."),
          (860, 830, 900, 230, 18, "g(x) = −(2/3)x + 5\nReflection across the x-axis and vertical compression by "
                                   "a factor of 2/3, then up 5. Graph: through (0, 5), slope −2/3.")],
-    53: [(216, 640, 1540, 85, 18, "a. a changes the slope (for f(x) = x the slope becomes a: |a| > 1 steeper, "
+    53: [(290, 682, 1515, 96, 18, "a. a changes the slope (for f(x) = x the slope becomes a: |a| > 1 steeper, "
                                   "0 < |a| < 1 less steep, a < 0 reflected). It does not change the y-intercept."),
-         (216, 845, 1540, 95, 18, "b. d does not change the slope. It changes the y-intercept to (0, d): d > 0 moves "
+         (290, 923, 1515, 96, 18, "b. d does not change the slope. It changes the y-intercept to (0, d): d > 0 moves "
                                    "the line up, d < 0 moves it down.")],
-    59: [(546, 450, 1340, 120, 20, "Sample: a = 0 with d = 6, 4, 1 and −3: horizontal lines through each target "
+    59: [(623, 468, 1048, 106, 20, "Sample: a = 0 with d = 6, 4, 1 and −3: horizontal lines through each target "
                                    "(move the cannon to (0, d))."),
-         (546, 700, 1340, 300, 18, "The cannon shoots in only one direction. Targets in Quadrant II (left of the "
+         (623, 718, 1048, 96, 18, "The cannon shoots in only one direction. Targets in Quadrant II (left of the "
                                    "y-axis): domain x ≤ 0. Targets in Quadrants I and IV: domain x ≥ 0.")],
-    60: [(122, 895, 870, 180, 16, "Version B (a = 1 or −1; move d), clockwise from top left:\n"
-                                  "a = −1, d = 2 (x ≤ 0);  a = 1, d = −1 (x ≥ 0);\n"
-                                  "a = −1, d = −2 (x ≥ 0);  a = −1, d = −4 (x ≤ 0)"),
-         (1010, 895, 880, 180, 16, "Version C (d = 0; change a), clockwise from top left:\n"
-                                   "a = −3/2 (x ≤ 0);  a = 4/5 (x ≥ 0);\na = −3 (x ≥ 0);  a = −1/5 (x ≤ 0)")],
+    60: [(122, 920, 870, 100, 16, "B (a = ±1, move d), clockwise from top left: a = −1, d = 2 (x ≤ 0);  a = 1, d = −1 (x ≥ 0);  "
+                                  "a = −1, d = −2 (x ≥ 0);  a = −1, d = −4 (x ≤ 0)"),  # below question 3
+         (1010, 920, 880, 100, 16, "C (d = 0, change a), clockwise from top left: a = −3/2 (x ≤ 0);  a = 4/5 (x ≥ 0);  "
+                                   "a = −3 (x ≥ 0);  a = −1/5 (x ≤ 0)")],
     65: [(1225, 418, 480, 56, 24, "f(x) + 8"),
-         (540, 690, 1340, 60, 18, "k(x): f(x) translated up 8 units.", WITH),
-         (1225, 484, 480, 56, 24, "2 · f(x)"),
+         (540, 694, 1340, 54, 18, "k(x): f(x) translated up 8 units.", WITH),
+         (1225, 488, 480, 69, 24, "2 · f(x)"),
          (540, 755, 1340, 60, 18, "h(x): f(x) stretched vertically by a factor of 2 (through the origin, steeper).",
           WITH),
-         (1225, 550, 480, 56, 24, "(1/3) · f(x)"),
+         (1225, 558, 480, 69, 24, "(1/3) · f(x)"),
          (540, 820, 1340, 60, 18, "g(x): f(x) compressed vertically by a factor of 1/3 (through the origin, less "
                                   "steep).", WITH),
-         (1225, 616, 480, 56, 24, "f(x) − 7"),
+         (1225, 628, 480, 69, 24, "f(x) − 7"),
          (540, 885, 1340, 60, 18, "j(x): f(x) translated down 7 units.", WITH)],
     69: [(163, 985, 700, 80, 24, "f(x) = (2/3)x − 14/3"), (1125, 985, 700, 80, 24, "g(x) = −(1/4)x + 2")],
 }
@@ -914,42 +948,42 @@ ANS_T2_2 = {
     6: [(1600, 540, 300, 100, 18, "Domain:\nall real numbers"), (1600, 650, 300, 100, 18, "Range:\nall real numbers"),
         *blanks(800, [584, 652], "(8/3, 0)", "(0, −8)", w=170), *blanks(650, [720], "3", w=150),
         *blanks(770, [850], "Increasing", w=200, size=20),
-        (1600, 400, 300, 130, 18, "Graph g(x): through (0, −8) and (3, 1)")],
+        (1600, 396, 300, 142, 18, "Graph g(x): through (0, −8) and (3, 1)")],
     7: [(1590, 400, 310, 100, 18, "Domain:\nall real numbers"), (1590, 510, 310, 100, 18, "Range:\nall real numbers"),
         *blanks(800, [502, 570], "(7.5, 0)", "(0, 5)", w=160), *blanks(650, [638], "−2/3", w=150),
-        *blanks(765, [772], "Decreasing", w=190, size=20),
+        *blanks(645, [772], "Decreasing", w=310, size=20),
         (1590, 280, 310, 110, 18, "Graph h(x): through (0, 5) and (3, 3)")],
     13: [*cells(1196, 734, "−5", "−4", "−3", "−2", "−1"), *cells(1312, 734, "−2", "−1", "0", "1", "2", more=True),
          (1450, 734, 440, 150, 20, "Graph t(x): through (−3, 0) and (0, 3)")],
     14: [*cells(1452, 659, "−2", "−1", "0", "1", "2"), *cells(1568, 659, "1", "2", "3", "4", "5", more=True),
          (82, 420, 380, 300, 20, "Graph w(x): through (0, 3) and (−3, 0). It is the same line as t(x).")],
-    15: [(122, 380, 1700, 90, 20, "The input values. The output values stay the same."),
-         (122, 558, 1700, 90, 20, "The output values. The input values stay the same."),
-         (122, 736, 1700, 120, 20, "The graphs of t(x) and w(x) are the same line, y = x + 3, but their tables of "
+    15: [(186, 349, 1596, 57, 20, "The input values. The output values stay the same."),
+         (186, 502, 1596, 57, 20, "The output values. The input values stay the same."),
+         (186, 611, 1596, 57, 20, "The graphs of t(x) and w(x) are the same line, y = x + 3, but their tables of "
                                    "values are different.")],
-    16: [(122, 400, 1700, 130, 20, "Horizontal translations, y = f(x − c). The output values of the corresponding "
+    16: [(211, 363, 1648, 57, 20, "Horizontal translations, y = f(x − c). The output values of the corresponding "
                                    "points stay the same."),
-         (122, 636, 1700, 130, 20, "Vertical translations, y = f(x) + d. The input values of the corresponding "
+         (211, 515, 1648, 57, 20, "Vertical translations, y = f(x) + d. The input values of the corresponding "
                                    "points stay the same.")],
-    17: [(122, 400, 1700, 80, 22, "A vertical translation down n units."),
-         (122, 636, 1700, 80, 22, "A horizontal translation left n units.")],
+    17: [(211, 363, 1641, 62, 22, "A vertical translation down n units."),
+         (211, 520, 1641, 62, 22, "A horizontal translation left n units.")],
     20: [(122, 960, 860, 60, 18, "a. Graph q(x): through (0, 3), slope 2"),  # sketches below; b and d just past their lines
-         (310, 494, 700, 50, 22, "q(x) = j(x) + 4"),
+         (310, 890, 700, 64, 22, "q(x) = j(x) + 4"),
          (990, 960, 900, 60, 18, "c. Graph r(x): through (0, 7), slope 2"),
-         (490, 740, 600, 50, 22, "r(x) = j(x + 4)")],
-    21: [(122, 336, 1700, 70, 20, "The graphs are not the same. They are parallel lines with different y-intercepts."),
-         (800, 560, 1080, 260, 20, "r(x) = j(x + 4) = 2(x + 4) − 1 = 2x + 8 − 1\nr(x) = 2x + 7\n"
+         (490, 696, 600, 64, 22, "r(x) = j(x + 4)")],
+    21: [(122, 688, 1700, 59, 20, "The graphs are not the same. They are parallel lines with different y-intercepts."),
+         (800, 748, 1080, 168, 20, "r(x) = j(x + 4) = 2(x + 4) − 1 = 2x + 8 − 1\nr(x) = 2x + 7\n"
                                    "The equations for q(x) and r(x) are not the same.")],
     22: [(1130, 450, 760, 200, 20, "Graph b(x): through (0, −5) and (2.5, 0), slope 2"),
          (1150, 915, 740, 60, 24, "b(x) = j(x − 2)")],
     23: [(1130, 450, 760, 200, 20, "Graph v(x): through (0, −3) and (1.5, 0), slope 2"),
          (1150, 915, 740, 60, 24, "v(x) = j(x) − 2")],
-    24: [(122, 345, 1700, 60, 18, "The graphs are not the same. They are parallel lines with different y-intercepts."),
-         (122, 600, 1700, 200, 22, "b(x) = j(x − 2) = 2(x − 2) − 1 = 2x − 5\nv(x) = j(x) − 2 = 2x − 1 − 2 = 2x − 3\n"
+    24: [(211, 311, 1571, 52, 18, "The graphs are not the same. They are parallel lines with different y-intercepts."),
+         (211, 415, 1571, 181, 22, "b(x) = j(x − 2) = 2(x − 2) − 1 = 2x − 5\nv(x) = j(x) − 2 = 2x − 1 − 2 = 2x − 3\n"
                                    "The equations for b(x) and v(x) are not the same.")],
-    25: [(122, 395, 1700, 110, 20, "No. It is true only for f(x) = x. For j(x) = 2x − 1, right 2 gives 2x − 5 but "
+    25: [(211, 355, 1571, 57, 20, "No. It is true only for f(x) = x. For j(x) = 2x − 1, right 2 gives 2x − 5 but "
                                    "down 2 gives 2x − 3."),
-         (122, 630, 1700, 110, 20, "No. For j(x) = 2x − 1, left 4 gives r(x) = 2x + 7 but up 4 gives "
+         (211, 508, 1571, 57, 20, "No. For j(x) = 2x − 1, left 4 gives r(x) = 2x + 7 but up 4 gives "
                                    "q(x) = 2x + 3.")],
     29: [(122, 620, 1690, 380, 20,
           "When f(x) is replaced by a·f(b(x − c)) + d, b and c affect the input values (horizontal "
@@ -969,7 +1003,7 @@ ANS_T2_2 = {
          (1430, 660, 460, 150, 20, "Graph d(x): through (0, 0) and (5, 4), the same line as c(x)")],
     36: [(122, 380, 1700, 110, 22, "The graphs of c(x) and d(x) are the same line, y = (4/5)x, but their tables of "
                                    "values are different.")],
-    37: [(122, 440, 1700, 70, 22, "A factor of 1/n."), (122, 680, 1700, 70, 22, "A factor of 1/n.")],
+    37: [(211, 467, 1455, 62, 22, "A factor of 1/n."), (211, 741, 1455, 62, 22, "A factor of 1/n.")],
     41: [(780, 470, 1110, 580, 20,
           "No. It is true only for the parent function f(x) = x.\n"
           "Counterexample: m(x) = 2x − 1.\n"
@@ -1028,12 +1062,12 @@ ANS_T2_3 = {
     8: [(616, 420, 1260, 300, 20, "AB and A″B″ (0° and 180°) have equal slopes, 5/8. A′B′ and A‴B‴ (90° and 270°) "
                                   "have equal slopes, −8/5. The two slopes are reciprocals with opposite signs: "
                                   "(5/8)(−8/5) = −1.")],
-    13: [(122, 370, 1250, 150, 18, "Yes. Each line is rotated 90°, so the lines meet at a 90° angle, a right angle. "
+    13: [(211, 398, 1023, 96, 18, "Yes. Each line is rotated 90°, so the lines meet at a 90° angle, a right angle. "
                                    "Lines that form right angles are perpendicular."),
-         (122, 620, 1280, 400, 20, "A: y = x;   A′: y = −x\nB: y = (1/3)x + 5;   B′: y = −3x + 5\n"
+         (211, 650, 1023, 221, 20, "A: y = x;   A′: y = −x\nB: y = (1/3)x + 5;   B′: y = −3x + 5\n"
                                    "C: y = −(2/3)x + 9;   C′: y = (3/2)x − 4\n"
                                    "The slopes of each pair are reciprocals with opposite signs.")],
-    17: [(122, 590, 1180, 470, 18, "Rotating R(a, b) 90° clockwise about O maps it onto line q at D(b, −a).\n"
+    17: [(122, 690, 1180, 204, 18, "Rotating R(a, b) 90° clockwise about O maps it onto line q at D(b, −a).\n"
                                    "Slope of p: m1 = b/a.   Slope of q: m2 = −a/b.\n"
                                    "−1/m2 = −1 ÷ (−a/b) = −1 · (b/−a) = b/a = m1, so m1 = −1/m2.\n"
                                    "The slopes are negative reciprocals.")],
@@ -1043,29 +1077,29 @@ ANS_T2_3 = {
                                    "is −1). Any vertical line is perpendicular to any horizontal line.")],
     24: [(880, 600, 1000, 300, 22, "Line p is the vertical line x = 4.\nLines q, r and s are the horizontal lines "
                                    "y = 4, y = 8 and y = 12.")],
-    25: [(122, 430, 1700, 60, 22, "The value of y does not change: it changes by 0 units."),
-         (122, 650, 1700, 150, 20, "The slope of any horizontal line is 0. The value of y stays the same, so "
+    25: [(211, 465, 1478, 62, 22, "The value of y does not change: it changes by 0 units."),
+         (211, 671, 1478, 106, 20, "The slope of any horizontal line is 0. The value of y stays the same, so "
                                    "m = (y2 − y1)/(x2 − x1) = 0/(x2 − x1) = 0.")],
-    26: [(122, 380, 1700, 60, 22, "The value of x does not change: it changes by 0 units."),
-         (122, 600, 1700, 150, 20, "The slope of any vertical line is undefined. The value of x stays the same, so "
+    26: [(211, 397, 1478, 62, 22, "The value of x does not change: it changes by 0 units."),
+         (211, 534, 1478, 106, 20, "The slope of any vertical line is undefined. The value of x stays the same, so "
                                    "m = (y2 − y1)/(x2 − x1) = (y2 − y1)/0, which is undefined.")],
-    27: [(1010, 410, 880, 100, 18, "Always. All vertical lines have an undefined slope, so they are parallel."),
-         (1010, 532, 880, 100, 18, "Always. All horizontal lines have slope 0, so they are parallel."),
-         (122, 790, 1700, 80, 22, "Any vertical line and any horizontal line are always perpendicular.")],
-    28: [(122, 372, 1700, 60, 22, "Horizontal line: y = −1;   vertical line: x = 2"),
-         (122, 562, 1700, 60, 22, "y = 0  (a horizontal line through (1, 0))"),
-         (122, 752, 1700, 60, 22, "x = 5  (a vertical line through (5, 6))")],
-    32: [(540, 720, 1300, 340, 20, "The perpendicular slope is −1/2.\ny − 2 = −(1/2)(x − 6)\ny − 2 = −(1/2)x + 3\n"
+    27: [(1034, 410, 856, 98, 18, "Always. All vertical lines have an undefined slope, so they are parallel."),
+         (1034, 532, 856, 98, 18, "Always. All horizontal lines have slope 0, so they are parallel."),
+         (122, 846, 1700, 64, 22, "Any vertical line and any horizontal line are always perpendicular.")],
+    28: [(211, 399, 1455, 62, 22, "Horizontal line: y = −1;   vertical line: x = 2"),
+         (211, 606, 1455, 62, 22, "y = 0  (a horizontal line through (1, 0))"),
+         (211, 812, 1455, 62, 22, "x = 5  (a vertical line through (5, 6))")],
+    32: [(540, 784, 1300, 223, 20, "The perpendicular slope is −1/2.\ny − 2 = −(1/2)(x − 6)\ny − 2 = −(1/2)x + 3\n"
                                    "y = −(1/2)x + 5")],
     33: [(140, 420, 1700, 200, 20, "The perpendicular slope is 4/3.\ny − (−8) = (4/3)(x − 3);   y + 8 = (4/3)x − 4;   "
                                    "y = (4/3)x − 12"),
          (140, 820, 1700, 240, 20, "m = (−9 − 3)/(−1 − (−5)) = −12/4 = −3, so the perpendicular slope is 1/3.\n"
                                    "y − 2 = (1/3)(x − 6);   y − 2 = (1/3)x − 2;   y = (1/3)x")],
-    34: [(122, 430, 1700, 140, 20, "m = (4 − 1)/(0 − (−6)) = 3/6 = 1/2, so the perpendicular slope is −2.\n"
+    34: [(211, 468, 1455, 112, 20, "m = (4 − 1)/(0 − (−6)) = 3/6 = 1/2, so the perpendicular slope is −2.\n"
                                    "y − 7 = −2(x − (−2));   y − 7 = −2x − 4;   y = −2x + 3"),
-         (122, 720, 1700, 200, 20, "m = (4 − 9)/(−4 − 5) = −5/−9 = 5/9, so the perpendicular slope is −9/5.\n"
+         (211, 792, 1455, 112, 20, "m = (4 − 9)/(−4 − 5) = −5/−9 = 5/9, so the perpendicular slope is −9/5.\n"
                                    "y − 9 = −(9/5)(x − 5);   y − 9 = −(9/5)x + 9;   y = −(9/5)x + 18")],
-    39: [(520, 740, 1060, 290, 18, "Jackson is correct. The axes have different scales. Lines a, b and c all have "
+    39: [(520, 800, 1060, 225, 18, "Jackson is correct. The axes have different scales. Lines a, b and c all have "
                                    "slope 1, so they are parallel. Lines d, e and f all have slope −1/4. Since "
                                    "1 · (−1/4) ≠ −1, the slopes are not negative reciprocals, so the lines are not "
                                    "perpendicular.")],
@@ -1106,14 +1140,14 @@ ANS_T2_4 = {
     12: [(122, 400, 800, 150, 18, "c. The slope is 1/4. Neither parallel nor perpendicular to y = 4x − 3."),
          (1040, 800, 840, 150, 18, "d. The slope is 1/4. Neither parallel nor perpendicular to y = 4x − 3.")],
     13: [(212, 820, 700, 150, 18, "e. The slope is −1/4. Perpendicular to y = 4x − 3, since 4 · (−1/4) = −1."),
-         (970, 420, 880, 150, 18, "f. The slope is 4 (dozen cookies per hour). Parallel to y = 4x − 3.")],
-    18: [(122, 370, 1700, 70, 18, "Table and graph: x = weight of cardboard (tons); y = payout amount (dollars)."),
-         (200, 715, 390, 100, 22, "a. w(0.5) < j(0.5)\n7.50 < 10"),  # each under its own statement
-         (590, 715, 345, 100, 22, "b. w(1) < j(1)\n15 < 20"),
-         (935, 715, 360, 100, 22, "c. w(3) < j(3)\n45 < 60"),
-         (122, 840, 1700, 60, 18, "Travis pays $15 per ton and Hays pays $20 per ton, so Hays pays more for every weight.")],
-    19: [(540, 420, 1340, 120, 18, "Both y-intercepts are 0: each center pays $0 for 0 tons of cardboard."),
-         (540, 660, 1340, 150, 18, "Hays County: it pays $20 per ton, while Travis County pays only $15 per ton, "
+         (970, 464, 880, 98, 18, "f. The slope is 4 (dozen cookies per hour). Parallel to y = 4x − 3.")],
+    18: [(210, 463, 1650, 52, 18, "Table and graph: x = weight of cardboard (tons); y = payout amount (dollars)."),
+         (200, 864, 390, 112, 20, "a. w(0.5) < j(0.5)\n7.50 < 10"),  # each under its own statement
+         (590, 864, 345, 112, 20, "b. w(1) < j(1)\n15 < 20"),
+         (935, 864, 360, 112, 20, "c. w(3) < j(3)\n45 < 60"),
+         (203, 978, 1658, 47, 16, "Travis pays $15 per ton and Hays pays $20 per ton, so Hays pays more for every weight.")],
+    19: [(616, 463, 1167, 52, 18, "Both y-intercepts are 0: each center pays $0 for 0 tons of cardboard."),
+         (616, 659, 1167, 96, 18, "Hays County: it pays $20 per ton, while Travis County pays only $15 per ton, "
                                    "so Hays pays more for any weight.")],
     23: [(122, 420, 1690, 420, 20,
           "Every representation (equation, table, graph or verbal description) shows the same key features: the "
@@ -1121,25 +1155,25 @@ ANS_T2_4 = {
           "form: equal slopes mean parallel lines, slopes with a product of −1 mean perpendicular lines, and the "
           "quantities and units tell what the slope and y-intercept mean in the situation.")],
     26: [(860, 760, 1000, 100, 18, "Joey's table columns: degrees Fahrenheit (left), degrees Celsius (right)")],
-    27: [(122, 440, 1300, 120, 17, "Xavier's equation: x is degrees Celsius and J(x) is degrees Fahrenheit, so Xavier "
+    27: [(211, 468, 1179, 91, 17, "Xavier's equation: x is degrees Celsius and J(x) is degrees Fahrenheit, so Xavier "
                                    "converts °C to °F. Joey's table converts °F to °C (50°F = 10°C)."),
-         (213, 755, 1230, 85, 17, "a. Joey's slope is about 5/9: each 9°F increase is about a 5°C increase. "
+         (210, 784, 1180, 91, 17, "a. Joey's slope is about 5/9: each 9°F increase is about a 5°C increase. "
                                   "Xavier's slope is 9/5: each 5°C increase is a 9°F increase."),
-         (213, 845, 1230, 85, 17, "b. Joey's y-intercept is about −17.8: 0°F is about −17.8°C. Xavier's "
+         (210, 877, 1180, 91, 17, "b. Joey's y-intercept is about −17.8: 0°F is about −17.8°C. Xavier's "
                                   "y-intercept is 32: 0°C is 32°F.")],
-    32: [(490, 420, 1380, 140, 17, "Miguel saves the same amount each month and has $80 after 4 months, so the "
+    32: [(567, 443, 1216, 132, 17, "Miguel saves the same amount each month and has $80 after 4 months, so the "
                                    "x-axis ticks are 1 month each and the y-axis ticks are $20 each. The origin is "
                                    "(0 months, $0 saved)."),
-         (570, 755, 1300, 85, 17, "a. Miguel's slope is 20: he saves $20 each month. Lauren's slope is 25: she "
+         (566, 812, 1217, 91, 17, "a. Miguel's slope is 20: he saves $20 each month. Lauren's slope is 25: she "
                                   "saves $25 each month."),
-         (570, 845, 1300, 85, 17, "b. Miguel's y-intercept is 0: he started with $0. Lauren's y-intercept is 25: "
+         (566, 905, 1217, 91, 17, "b. Miguel's y-intercept is 0: he started with $0. Lauren's y-intercept is 25: "
                                    "she started with $25.")],
-    36: [(140, 650, 1700, 100, 18, "Sample: Alejandra has read 2.5 pages of a book and reads 2.5 more pages every "
+    36: [(140, 762, 1700, 98, 18, "Sample: Alejandra has read 2.5 pages of a book and reads 2.5 more pages every "
                                    "10 minutes (x = minutes from now, y = pages read). The slope is 1/4."),
          (140, 860, 1700, 70, 20, "Sample: y = 0.2x + 30 (slope 0.2 < 0.25)")],
-    37: [(122, 450, 1050, 200, 17, "Sample: the graphed line has slope 1/3 ≈ 0.333 (through (0, −4) and (3, −3)). "
+    37: [(210, 468, 903, 132, 17, "Sample: the graphed line has slope 1/3 ≈ 0.333 (through (0, −4) and (3, −3)). "
                                    "It is steeper than the table (1/4) and my equation (0.2)."),
-         (122, 670, 1050, 200, 17, "Answers will vary: for example, finding the rate of change from two points and "
+         (210, 813, 903, 91, 17, "Answers will vary: for example, finding the rate of change from two points and "
                                    "comparing the absolute values of the slopes.")],
     41: [(700, 395, 400, 60, 24, "x = 24"), (700, 559, 400, 60, 24, "x = 7.7"), (700, 705, 400, 60, 24, "x = 7.5"),
          (700, 855, 400, 60, 24, "x = 13")],
@@ -1184,6 +1218,13 @@ STARS_T2 = {1: ((6, 14), (15, 25), (28, 36), (37, 46), (49, 55)),  # Getting Sta
             2: ((5, 9), (10, 27), (30, 43), (44, 52)),  # Getting Started, 2.1-2.3
             3: ((11, 20), (23, 30), (31, 36)),  # 3.1-3.3 (not Getting Started)
             4: ()}
+GAPS_T2 = {  # lesson -> {slide: [(shape #, paragraph #, points)]}: room under lettered parts for their answers
+ 1: {23: [(2, 0, 32.4), (2, 1, 32.4), (2, 2, 56.8)], 31: [(1, 0, 37.3), (1, 1, 37.3), (1, 2, 37.3)], 32: [(2, 0, 34.8), (2, 1, 34.8)], 34: [(1, 0, 61.7), (1, 1, 69.6)], 53: [(1, 2, 51.9), (1, 3, 51.9)], 59: [(2, 0, 56.8), (2, 1, 51.9)]},
+ 2: {15: [(1, 0, 32.4), (1, 1, 32.4), (1, 2, 32.4)], 16: [(1, 0, 32.4), (1, 1, 32.4)], 17: [(1, 0, 34.8), (1, 1, 34.8)], 24: [(1, 0, 30.0), (1, 1, 94.5)], 25: [(1, 0, 32.4), (1, 1, 32.4)], 37: [(1, 0, 34.8), (1, 1, 34.8)]},
+ 3: {13: [(1, 0, 51.9), (1, 1, 114.6)], 25: [(1, 0, 34.8), (1, 1, 56.8)], 26: [(1, 0, 34.8), (1, 1, 56.8)], 28: [(1, 0, 34.8), (1, 1, 34.8), (1, 2, 34.8)], 34: [(1, 0, 59.8), (1, 1, 59.8)]},
+ 4: {18: [(1, 0, 30.0), (1, 3, 84.3)], 19: [(2, 0, 30.0), (2, 1, 51.9)], 27: [(1, 0, 49.5), (1, 2, 96.0)], 32: [(2, 0, 70.2), (2, 2, 96.0)], 37: [(1, 0, 70.2), (1, 1, 49.5)]},
+}
+
 PPTX_T2 = {1: (ANS_T2_1, NOTES_T2_1, CORRECTIONS_T2_1, 67),
            2: (ANS_T2_2, NOTES_T2_2, CORRECTIONS_T2_2, 57),
            3: (ANS_T2_3, NOTES_T2_3, CORRECTIONS_T2_3, 41),
@@ -1195,7 +1236,8 @@ if __name__ == "__main__":
         if arg.startswith("2."):  # Topic 2 lessons: python make_lesson_key.py 2.1
             src = TOPIC2 / f"BLMathematics_AlgI_M2_T2_L{arg[2:]}_LessonSlides_ENG_2025.pptx"
             n = int(arg[2:])
-            annotate(src, src.with_name(src.name.replace("2025", "with_answers")), *PPTX_T2[n], se=SE_T2[n], stars=STARS_T2[n])
+            annotate(src, src.with_name(src.name.replace("2025", "with_answers")), *PPTX_T2[n], se=SE_T2[n], stars=STARS_T2[n],
+                     gaps=GAPS_T2.get(n))
             continue
         lesson = int(arg)
         if lesson == 4:
