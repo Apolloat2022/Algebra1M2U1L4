@@ -30,6 +30,7 @@ CHROME = [r"C:\Program Files\Google\Chrome\Application\chrome.exe",
           r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"]
 PX = 6350  # EMU per px: answer boxes are placed on a 1920 x 1080 grid over the 16:9 slide
 RED = "FF0000"
+SE_GREEN = "2E7D3C"  # the publisher's title green, for the Student Edition page labels and stars
 
 # page -> [(x, y, w, h, size_pt, text)], placed in the slide's empty space
 ANS4 = {
@@ -223,11 +224,11 @@ def render(pdf, out):
     return sorted(out.glob("p*.jpg"))
 
 
-def text_box(sid, x, y, w, h, size, text, color=RED, bold=False, font="Arial", center=False):
+def text_box(sid, x, y, w, h, size, text, color=RED, bold=False, font="Arial", center=False, right=False):
     b = ' b="1"' if bold else ""
     face = f'<a:latin typeface="{font}"/><a:cs typeface="{font}"/>' if font else ""  # None: the deck's theme font
     paras = "".join(
-        f'<a:p><a:pPr marL="0" indent="0" algn="{"ctr" if center else "l"}"><a:spcBef><a:spcPts val="0"/></a:spcBef><a:spcAft><a:spcPts val="300"/>'
+        f'<a:p><a:pPr marL="0" indent="0" algn="{"ctr" if center else "r" if right else "l"}"><a:spcBef><a:spcPts val="0"/></a:spcBef><a:spcAft><a:spcPts val="300"/>'
         f'</a:spcAft><a:buNone/></a:pPr><a:r><a:rPr lang="en-US" sz="{size * 100}"'
         f'{b} dirty="0"><a:solidFill><a:srgbClr val="{color}"/></a:solidFill>'
         f'{face}</a:rPr><a:t>{mp.esc(t)}</a:t></a:r></a:p>'
@@ -537,7 +538,10 @@ def add_clicks(x, ids):
     return x[:end] + clicks(ids, start) + x[end:]
 
 
-def annotate(src, out, ans, notes, corrections, after):
+def annotate(src, out, ans, notes, corrections, after, se=None, stars=()):
+    """se: {slide: Student Edition page}; stars: (first, last) slide ranges of the activities the 150-day pacing guide
+    stars as essential. Each labeled slide gets "SE p. N" (and "★ Essential") left of the page number; the first
+    slide of a starred range (the activity divider) also gets a large badge in its empty top band."""
     files = {}
     with zipfile.ZipFile(src) as z:
         for n in z.namelist():
@@ -556,6 +560,16 @@ def annotate(src, out, ans, notes, corrections, after):
         x, boxes = text(path), ans.get(k, [])
         top = max(map(int, re.findall(r'<p:cNvPr id="(\d+)"', x)))
         x = x.replace("</p:spTree>", page(top + 1000, k + (k > after)) + "</p:spTree>", 1)
+        star = any(lo <= k <= hi for lo, hi in stars)
+        words = " ".join(re.findall(r"<a:t>([^<]*)</a:t>", x)).strip()
+        divider = re.fullmatch(r"(Activity \d\.\d|Getting Started|Talk the Talk|Prepare)[\s\d.–-]*", words)
+        if se and k in se and not divider:  # a divider's corner holds the publisher's timer
+            label = ("★ Essential · " if star else "") + f"SE p. {se[k]}"
+            x = x.replace("</p:spTree>", text_box(top + 1001, 1180, 1030, 600, 44, 16, label, color=SE_GREEN, bold=True,
+                                                  font=None, right=True) + "</p:spTree>", 1)
+        if any(lo == k for lo, hi in stars):
+            x = x.replace("</p:spTree>", text_box(top + 1002, 160, 150, 1600, 120, 44, "★ Essential activity: do not skip",
+                                                  color=SE_GREEN, bold=True, font=None, center=True) + "</p:spTree>", 1)
         files[path] = x.encode("utf-8")
         if boxes:
             base = max(map(int, re.findall(r'<p:cNvPr id="(\d+)"', x))) + 1
@@ -802,9 +816,9 @@ ANS_T2_1 = {
     21: [(122, 770, 1700, 130, 24, "f(2) = 2 and p(2) = 7.\nThe vertical translation increased the value at x = 2 "
                                    "by 5.")],
     22: [(1490, 420, 410, 300, 22, "q(x) = j(x) + 4\nGraph: the line through (0, 3), parallel to j(x)")],
-    23: [(526, 770, 1370, 55, 20, "a. r(x) = j(x) − 4  (graph: the line through (0, −5), parallel to j(x))"),
-         (526, 830, 1370, 55, 20, "b. q(x) = 2x + 3;  r(x) = 2x − 5"),
-         (526, 890, 1370, 110, 20, "c. All three have slope 2 but different y-intercepts: (0, −1), (0, 3), (0, −5). "
+    23: [(526, 386, 1370, 50, 20, "a. r(x) = j(x) − 4  (graph: the line through (0, −5), parallel to j(x))"),  # each under its letter
+         (526, 508, 1370, 50, 20, "b. q(x) = 2x + 3;  r(x) = 2x − 5"),
+         (526, 690, 1370, 110, 20, "c. All three have slope 2 but different y-intercepts: (0, −1), (0, 3), (0, −5). "
                                    "The lines are parallel, so they never intersect.")],
     29: [(122, 500, 1700, 130, 24, "No. Both lines have slope 2 and stay 4 units apart, so they are parallel.")],
     31: [(160, 395, 1600, 70, 24, "A′(x1, y1 + a)  and  B′(x2, y2 + a)"),
@@ -826,9 +840,9 @@ ANS_T2_1 = {
     43: [(122, 420, 1700, 130, 24, "Slope: −4;  y-intercept: (0, 0)\nc(x) = −4x")],
     44: [(122, 830, 1700, 130, 24, "f(−1) = −1 and c(−1) = 4.\nThe vertical dilation multiplied the value at x = −1 "
                                    "by −4.")],
-    50: [(1450, 470, 450, 280, 18, "a. g(x) = 2x + 7\nVertical stretch by a factor of 2, then up 7. "
+    50: [(705, 590, 320, 410, 18, "a. g(x) = 2x + 7\nVertical stretch by a factor of 2, then up 7. "
                                    "Graph: through (0, 7), slope 2."),
-         (1450, 770, 450, 280, 18, "b. g(x) = 3x − 1\nVertical stretch by a factor of 3, then down 1. "
+         (1440, 590, 460, 410, 18, "b. g(x) = 3x − 1\nVertical stretch by a factor of 3, then down 1. "
                                    "Graph: through (0, −1), slope 3.")],
     51: [(120, 840, 760, 220, 18, "g(x) = (1/3)x + 2\nVertical compression by a factor of 1/3, then up 2. "
                                   "Graph: through (0, 2), slope 1/3."),
@@ -838,9 +852,9 @@ ANS_T2_1 = {
                                   "Graph: through (0, −4), slope −1."),
          (860, 830, 900, 230, 18, "g(x) = −(2/3)x + 5\nReflection across the x-axis and vertical compression by "
                                   "a factor of 2/3, then up 5. Graph: through (0, 5), slope −2/3.")],
-    53: [(216, 840, 1540, 95, 18, "a. a changes the slope (for f(x) = x the slope becomes a: |a| > 1 steeper, "
+    53: [(216, 640, 1540, 85, 18, "a. a changes the slope (for f(x) = x the slope becomes a: |a| > 1 steeper, "
                                   "0 < |a| < 1 less steep, a < 0 reflected). It does not change the y-intercept."),
-         (216, 945, 1540, 95, 18, "b. d does not change the slope. It changes the y-intercept to (0, d): d > 0 moves "
+         (216, 845, 1540, 95, 18, "b. d does not change the slope. It changes the y-intercept to (0, d): d > 0 moves "
                                    "the line up, d < 0 moves it down.")],
     59: [(546, 450, 1340, 120, 20, "Sample: a = 0 with d = 6, 4, 1 and −3: horizontal lines through each target "
                                    "(move the cannon to (0, d))."),
@@ -919,8 +933,10 @@ ANS_T2_2 = {
                                    "points stay the same.")],
     17: [(122, 400, 1700, 80, 22, "A vertical translation down n units."),
          (122, 636, 1700, 80, 22, "A horizontal translation left n units.")],
-    20: [(122, 945, 860, 130, 18, "b. q(x) = j(x) + 4\nGraph q(x): through (0, 3), slope 2"),
-         (990, 945, 900, 130, 18, "d. r(x) = j(x + 4)\nGraph r(x): through (0, 7), slope 2")],
+    20: [(122, 960, 860, 60, 18, "a. Graph q(x): through (0, 3), slope 2"),  # sketches below; b and d just past their lines
+         (310, 494, 700, 50, 22, "q(x) = j(x) + 4"),
+         (990, 960, 900, 60, 18, "c. Graph r(x): through (0, 7), slope 2"),
+         (490, 740, 600, 50, 22, "r(x) = j(x + 4)")],
     21: [(122, 336, 1700, 70, 20, "The graphs are not the same. They are parallel lines with different y-intercepts."),
          (800, 560, 1080, 260, 20, "r(x) = j(x + 4) = 2(x + 4) − 1 = 2x + 8 − 1\nr(x) = 2x + 7\n"
                                    "The equations for q(x) and r(x) are not the same.")],
@@ -1092,9 +1108,10 @@ ANS_T2_4 = {
     13: [(212, 820, 700, 150, 18, "e. The slope is −1/4. Perpendicular to y = 4x − 3, since 4 · (−1/4) = −1."),
          (970, 420, 880, 150, 18, "f. The slope is 4 (dozen cookies per hour). Parallel to y = 4x − 3.")],
     18: [(122, 370, 1700, 70, 18, "Table and graph: x = weight of cardboard (tons); y = payout amount (dollars)."),
-         (122, 720, 1700, 55, 24, "a. w(0.5) < j(0.5)     b. w(1) < j(1)     c. w(3) < j(3)"),
-         (122, 790, 1700, 90, 18, "Travis pays $15 per ton: w(0.5) = 7.50, w(1) = 15, w(3) = 45. Hays pays $20 per "
-                                  "ton: j(0.5) = 10, j(1) = 20, j(3) = 60.")],
+         (200, 715, 390, 100, 22, "a. w(0.5) < j(0.5)\n7.50 < 10"),  # each under its own statement
+         (590, 715, 345, 100, 22, "b. w(1) < j(1)\n15 < 20"),
+         (935, 715, 360, 100, 22, "c. w(3) < j(3)\n45 < 60"),
+         (122, 840, 1700, 60, 18, "Travis pays $15 per ton and Hays pays $20 per ton, so Hays pays more for every weight.")],
     19: [(540, 420, 1340, 120, 18, "Both y-intercepts are 0: each center pays $0 for 0 tons of cardboard."),
          (540, 660, 1340, 150, 18, "Hays County: it pays $20 per ton, while Travis County pays only $15 per ton, "
                                    "so Hays pays more for any weight.")],
@@ -1106,16 +1123,16 @@ ANS_T2_4 = {
     26: [(860, 760, 1000, 100, 18, "Joey's table columns: degrees Fahrenheit (left), degrees Celsius (right)")],
     27: [(122, 440, 1300, 120, 17, "Xavier's equation: x is degrees Celsius and J(x) is degrees Fahrenheit, so Xavier "
                                    "converts °C to °F. Joey's table converts °F to °C (50°F = 10°C)."),
-         (122, 760, 620, 300, 16, "a. Joey's slope is about 5/9: each 9°F increase is about a 5°C increase. "
+         (213, 755, 1230, 85, 17, "a. Joey's slope is about 5/9: each 9°F increase is about a 5°C increase. "
                                   "Xavier's slope is 9/5: each 5°C increase is a 9°F increase."),
-         (760, 760, 640, 300, 16, "b. Joey's y-intercept is about −17.8: 0°F is about −17.8°C. Xavier's "
+         (213, 845, 1230, 85, 17, "b. Joey's y-intercept is about −17.8: 0°F is about −17.8°C. Xavier's "
                                   "y-intercept is 32: 0°C is 32°F.")],
     32: [(490, 420, 1380, 140, 17, "Miguel saves the same amount each month and has $80 after 4 months, so the "
                                    "x-axis ticks are 1 month each and the y-axis ticks are $20 each. The origin is "
                                    "(0 months, $0 saved)."),
-         (560, 760, 640, 300, 16, "a. Miguel's slope is 20: he saves $20 each month. Lauren's slope is 25: she "
+         (570, 755, 1300, 85, 17, "a. Miguel's slope is 20: he saves $20 each month. Lauren's slope is 25: she "
                                   "saves $25 each month."),
-         (1220, 760, 640, 300, 16, "b. Miguel's y-intercept is 0: he started with $0. Lauren's y-intercept is 25: "
+         (570, 845, 1300, 85, 17, "b. Miguel's y-intercept is 0: he started with $0. Lauren's y-intercept is 25: "
                                    "she started with $25.")],
     36: [(140, 650, 1700, 100, 18, "Sample: Alejandra has read 2.5 pages of a book and reads 2.5 more pages every "
                                    "10 minutes (x = minutes from now, y = pages read). The slope is 1/4."),
@@ -1145,6 +1162,28 @@ CORRECTIONS_T2_4 = [
 ]
 
 TOPIC2 = HERE / "Module 2 topic 2"
+
+# Student Edition page of each publisher slide (slide text matched to the SE pages, then checked by hand).
+def pages(*runs):  # (first slide, last slide, page) runs -> {slide: page}
+    return {k: p for a, b, p in runs for k in range(a, b + 1)}
+
+
+SE_T2 = {1: pages((2, 2, 269), (3, 3, 272), (4, 4, 269), (6, 9, 270), (10, 14, 271), (15, 18, 272), (19, 21, 273), (22, 25, 274),
+                  (27, 27, 269), (28, 31, 275), (32, 36, 276), (37, 43, 277), (44, 46, 279), (48, 48, 269), (49, 52, 280),
+                  (53, 55, 281), (56, 59, 282), (60, 62, 283), (63, 67, 284), (68, 69, 286)),
+         2: pages((2, 3, 287), (5, 9, 288), (10, 12, 289), (13, 14, 290), (15, 17, 291), (18, 20, 292), (21, 22, 293),
+                  (23, 27, 294), (29, 29, 287), (30, 36, 295), (37, 37, 296), (38, 43, 297), (44, 46, 298), (47, 48, 299),
+                  (49, 52, 300), (53, 57, 301), (58, 59, 304)),
+         3: pages((2, 3, 305), (5, 10, 306), (11, 13, 307), (14, 16, 308), (17, 20, 309), (22, 22, 305), (23, 26, 310),
+                  (27, 30, 311), (31, 33, 312), (34, 36, 313), (37, 41, 314), (42, 43, 317)),
+         4: pages((2, 3, 319), (5, 9, 320), (10, 15, 321), (16, 21, 322), (23, 23, 319), (24, 29, 323), (30, 34, 324),
+                  (35, 39, 325), (40, 41, 330))}
+# Activities starred in the 150-day pacing guide (materials/Algebra I Math 150-day Topic Pacing Guides.pdf, p. 3 of
+# Module 2 Topic 2): divider slide through the activity's last slide. Lesson 4 is "omit" there, so it has none.
+STARS_T2 = {1: ((6, 14), (15, 25), (28, 36), (37, 46), (49, 55)),  # Getting Started, 1.1-1.4 (not 1.5 or Talk the Talk)
+            2: ((5, 9), (10, 27), (30, 43), (44, 52)),  # Getting Started, 2.1-2.3
+            3: ((11, 20), (23, 30), (31, 36)),  # 3.1-3.3 (not Getting Started)
+            4: ()}
 PPTX_T2 = {1: (ANS_T2_1, NOTES_T2_1, CORRECTIONS_T2_1, 67),
            2: (ANS_T2_2, NOTES_T2_2, CORRECTIONS_T2_2, 57),
            3: (ANS_T2_3, NOTES_T2_3, CORRECTIONS_T2_3, 41),
@@ -1155,7 +1194,8 @@ if __name__ == "__main__":
     for arg in sys.argv[1:] or ["4", *map(str, PPTX), *(f"2.{n}" for n in PPTX_T2)]:
         if arg.startswith("2."):  # Topic 2 lessons: python make_lesson_key.py 2.1
             src = TOPIC2 / f"BLMathematics_AlgI_M2_T2_L{arg[2:]}_LessonSlides_ENG_2025.pptx"
-            annotate(src, src.with_name(src.name.replace("2025", "with_answers")), *PPTX_T2[int(arg[2:])])
+            n = int(arg[2:])
+            annotate(src, src.with_name(src.name.replace("2025", "with_answers")), *PPTX_T2[n], se=SE_T2[n], stars=STARS_T2[n])
             continue
         lesson = int(arg)
         if lesson == 4:

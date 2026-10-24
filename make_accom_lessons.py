@@ -223,39 +223,39 @@ BELL = {
  ("2.1", 1): [(SLOPE, ["Label the points: [[(x₁, y₁) = (1, 2)]] and [[(x₂, y₂) = (4, 11)]].", "Subtract the [[y]]-values: [[11 − 2 = 9]]. Subtract the [[x]]-values: [[4 − 1 = 3]].", "Divide: [[9 ÷ 3 = 3]]."]),
               ("[[y = mx + b]], [[y]]-intercept [[(0, b)]]", ["Match [[y = 3x − 7]] to [[y = mx + b]]: [[m = 3]] and [[b = −7]].", "The [[y]]-intercept is [[(0, b) = (0, −7)]]."]),
               ("put the number in for [[x]]", ["Replace [[x]] with [[(−3)]]: [[f(−3) = 2(−3) + 1]].", "Multiply: [[2(−3) = −6]].", "Add: [[−6 + 1 = −5]]."]),
-              ("parallel lines have the same slope", ["The slope of [[y = 3x + 1]] is 3, the number with [[x]].", "Find the choice with slope 3: [[y = 3x − 5]]."])],
+              ("parallel: same slope · [[y = mx + b]]", ["Parallel to [[y = 3x + 1]] means the same slope: [[m = 3]].", "Put in the point [[(1, 5)]]: [[5 = 3(1) + b]].", "[[5 = 3 + b]], so [[b = 2]]: [[y = 3x + 2]]."])],
  ("2.1", 2): [("up [[d]]: [[g(x) = f(x) + d]]", ["Up 4 means add 4 to every output: [[g(x) = f(x) + 4]].", "Replace [[f(x)]] with [[x]]: [[g(x) = x + 4]]."]),
               ("down [[d]]: [[(x, y) → (x, y − d)]]", ["[[x]] stays the same: [[x = 2]].", "Down 3, so subtract 3 from [[y]]: [[5 − 3 = 2]].", "The new point is [[(2, 2)]]."]),
               ("moving up or down does not change the slope", ["[[g(x) = 2x − 1 + 6 = 2x + 5]].", "The number with [[x]] is still 2, so the slope is 2."]),
-              ("[[y = mx + b]], [[y]]-intercept [[(0, b)]]", ["[[g(x) = 2x − 1 + 6]].", "Combine: [[−1 + 6 = 5]], so [[g(x) = 2x + 5]].", "[[b = 5]], so the [[y]]-intercept is [[(0, 5)]]: [[(0, −1)]] moved up 6."])],
+              ("outside: + moves up, − moves down", ["The [[− 2]] is outside [[f(x)]]: it changes every output ([[y]]-value).", "Minus means down: a translation down 2 units."])],
  ("2.1", 3): [("for [[f(x) = x]], [[a · f(x) = ax]] has slope [[a]]", ["Replace [[f(x)]] with [[x]]: [[g(x) = 3x]].", "The number with [[x]] is 3, so the slope is 3."]),
               ("[[a · f(x)]]: [[|a| > 1]] stretches, [[a < 0]] flips", ["[[a = −2]]. The size, 2, is more than 1: stretched by 2.", "The sign is negative: reflected (flipped) across the [[x]]-axis."]),
               ("[[a · f(x)]]: [[0 < a < 1]] compresses", ["Look for a number between 0 and 1 in front of [[f(x)]].", "[[½]] is between 0 and 1, so [[g(x) = ½f(x)]] compresses."]),
-              ("[[a · f(x) + d]] has [[y]]-intercept [[(0, d)]]", ["Replace [[f(x)]] with [[x]]: [[g(x) = 2x − 5]].", "[[d = −5]], so the [[y]]-intercept is [[(0, −5)]]."])],
+              ("[[a · f(x)]]: [[a < 0]] reflects, [[|a| > 1]] stretches", ["Reflect: [[a]] is negative. Factor of 2: [[|a| = 2]].", "So [[a = −2]] and [[g(x) = −2x]]."])],
  ("2.2", 1): [("outside: + moves up, − moves down", ["The [[−3]] is outside [[f(x)]], so the graph moves up or down.", "Minus means down: down 3 units."]),
               ("[[y = mx + b]], slope [[m]]", ["Match [[g(x) = 3x − 8]] to [[y = mx + b]].", "[[m = 3]], so the slope is 3."]),
               ("[[x]]-intercept: set [[g(x) = 0]] and solve", ["[[3x − 8 = 0]].", "Add 8 to both sides: [[3x = 8]].", "Divide both sides by 3: [[x = 8/3]]. The point is [[(8/3, 0)]]."]),
-              ("slope + rises, slope − falls", ["The slope is [[−⅔]], the number with [[x]].", "It is negative, so the line falls from left to right: decreasing."])],
+              ("replace [[f(x)]] with [[x]]", ["[[g(x) = 2f(x) − 3]].", "Put in [[x]] for [[f(x)]]: [[g(x) = 2x − 3]].", "Slope 2 (dilation by 2), [[y]]-intercept [[−3]] (down 3)."])],
  ("2.2", 2): [("right [[c]]: [[g(x) = f(x − c)]]", ["Right 5 means subtract 5 inside: [[f(x − 5)]].", "For [[f(x) = x]]: [[f(x − 5) = x − 5]]."]),
               ("for [[f(x) = x]] only: right [[n]] = down [[n]]", ["Right 5: [[f(x − 5) = x − 5]].", "Down 5: [[f(x) − 5 = x − 5]].", "Same equation, so the same graph: down 5."]),
               ("put [[(x + 4)]] in for [[x]], then distribute", ["[[r(x) = 2(x + 4) − 1]].", "Distribute: [[2 · x + 2 · 4 = 2x + 8]].", "Combine: [[2x + 8 − 1 = 2x + 7]]."]),
-              ("inside: [[f(2x)]] · outside: [[2f(x)]]", ["[[f(2x)]]: put [[2x]] in for [[x]], so [[2x]].", "[[2f(x)]]: multiply [[x]] by 2, so [[2x]].", "Both are [[y = 2x]]: yes, the same graph."])],
+              ("right [[c]]: [[f(x − c)]], then distribute", ["Right 2: [[g(x) = f(x − 2) = 3(x − 2)]].", "Distribute: [[3 · x − 3 · 2 = 3x − 6]].", "[[g(x) = 3x − 6]]."])],
  ("2.3", 1): [("reciprocal: flip the fraction", ["[[⅔]] has 2 on top and 3 on the bottom. Flip them: [[3/2]].", "Check: [[⅔ · 3/2 = 1]]."]),
               ("90° counterclockwise: [[(x, y) → (−y, x)]]", ["[[x = 8]] and [[y = 5]].", "[[(−y, x) = (−5, 8)]]."]),
               (SLOPE, ["Subtract the [[y]]-values: [[5 − 0 = 5]].", "Subtract the [[x]]-values: [[8 − 0 = 8]].", "Divide: [[5 ÷ 8 = 5/8]]."]),
-              ("[[y = mx + b]], slope [[m]]", ["Match [[y = −3x + 5]] to [[y = mx + b]]: [[m = −3]] and [[b = 5]].", "The slope is [[−3]]."])],
+              (SLOPE, ["Label the points: [[(x₁, y₁) = (−1, 4)]] and [[(x₂, y₂) = (2, −2)]].", "Subtract the [[y]]-values: [[−2 − 4 = −6]]. Subtract the [[x]]-values: [[2 − (−1) = 3]].", "Divide: [[−6 ÷ 3 = −2]]."])],
  ("2.3", 2): [("perpendicular: flip and change the sign", ["Flip [[⅔]]: [[3/2]].", "Change the sign: [[−3/2]].", "Check: [[⅔ · (−3/2) = −1]]."]),
               ("slope = rise ÷ run", ["A horizontal line is flat: it never goes up or down, so the rise is 0.", "[[0 ÷ run = 0]]. The slope is 0."]),
               ("vertical line: [[x =]] a number", ["On a vertical line, [[x]] never changes.", "The point has [[x = 2]], so the line is [[x = 2]]."]),
-              ("[[m₁ · m₂ = −1]]", ["Example: slopes [[2]] and [[−½]] are perpendicular.", "[[2 · (−½) = −1]]. The product is always [[−1]]."])],
+              ("perpendicular: flip and change the sign · [[y = mx + b]]", ["Slope of [[y = 2x + 3]] is 2. Flip and change the sign: [[−½]].", "Put in [[(4, 1)]]: [[1 = −½(4) + b = −2 + b]].", "[[b = 3]]: [[y = −½x + 3]]."])],
  ("2.4", 1): [(SLOPE, ["Subtract the [[y]]-values: [[4 − (−6) = 4 + 6 = 10]].", "Subtract the [[x]]-values: [[0 − (−2.5) = 2.5]].", "Divide: [[10 ÷ 2.5 = 4]]."]),
               ("parallel lines have the same slope", ["The slope of [[y = 4x − 3]] is 4, the number with [[x]].", "A parallel line has the same slope: 4."]),
               ("perpendicular: flip and change the sign", ["[[4 = 4/1]]. Flip it: [[1/4]].", "Change the sign: [[−¼]].", "Check: [[4 · (−¼) = −1]]."]),
-              ("slope = change in [[y]] ÷ change in [[x]]", ["[[1 : 1]] means 1 tenth-grader for every 1 ninth-grader.", "[[1 ÷ 1 = 1]], so [[y = x]] and the slope is 1."])],
+              (SLOPE, ["Slope of [[p]]: [[(4 − 1) ÷ (4 − 0) = 3/4 = 0.75]].", "Compare each slope with 0.75: [[1]], [[0.5]], [[0.75]] ([[3x − 4y = 8]] is [[y = ¾x − 2]]), [[0.7]].", "Only 1 is greater: [[y = x − 2]]."])],
  ("2.4", 2): [("total = rate × amount", ["Rate: $15 per ton. Amount: 3 tons.", "[[15 · 3 = 45]], so $45."]),
               (SLOPE, ["Change in [[y]]: [[20 − 0 = 20]]. Change in [[x]]: [[1 − 0 = 1]].", "[[20 ÷ 1 = 20]], so $20 per ton."]),
               ("put the number in for [[x]]", ["[[J(10) = 9/5 · 10 + 32]].", "Multiply: [[9/5 · 10 = 90 ÷ 5 = 18]].", "Add: [[18 + 32 = 50]]. 10°C is 50°F."]),
-              ("rate = change in amount ÷ change in time", ["Change in money: [[80 − 0 = 80]] dollars.", "Change in time: 4 months.", "[[80 ÷ 4 = 20]], so $20 per month."])]}
+              ("range = the outputs", ["The output is [[w(t)]], the gallons left.", "Most: 200 gallons at the start. Least: 0 gallons, when [[200 − 10t = 0]] at [[t = 20]].", "Range: [[0 ≤ w(t) ≤ 200]]."])]}
 
 
 def exit_and_practice(n, qs):
@@ -795,9 +795,11 @@ REF = {
          "<b><i>y</i>-intercept:</b> the output when <i>x</i> = 0, the starting amount.",
          "<b>Units:</b> the slope is output units per input unit, for example dollars per ton."]}
 KEEP = {"homework": {4: [0, 2, 5, 6, 7, 8], 5: [0, 1, 2, 3, 4, 5], 6: [0, 1, 5, 7, 8, 9],
-                     "2.1": [0, 1, 3, 6, 7, 8], "2.2": [0, 2, 3, 6, 8, 9], "2.3": [0, 1, 2, 4, 5, 9], "2.4": [0, 1, 3, 5, 6, 8]},
+                     "2.1": [0, 1, 3, 6, 7, 8, 10, 13], "2.2": [0, 2, 3, 6, 8, 9, 11, 12], "2.3": [0, 1, 2, 4, 5, 9, 11, 12],
+                     "2.4": [0, 1, 3, 5, 6, 8, 10, 13]},  # Topic 2: the last two are test-style items (questions 11-14 on the general page)
         "quiz": {4: [0, 1, 3, 6, 7, 8], 5: [0, 1, 4, 5, 6, 9], 6: [0, 1, 4, 5, 6, 8],
-                 "2.1": [0, 2, 3, 4, 6, 8], "2.2": [0, 1, 2, 5, 7, 9], "2.3": [0, 2, 6, 7, 8, 9], "2.4": [1, 2, 3, 5, 6, 8]}}
+                 "2.1": [0, 2, 3, 4, 6, 8, 10, 13], "2.2": [0, 1, 2, 5, 7, 9, 11, 12], "2.3": [0, 2, 6, 7, 8, 9, 10, 12],
+                 "2.4": [1, 2, 3, 5, 6, 8, 10, 13]}}
 
 
 def src(n):  # folder, file prefix and name of lesson n's general pages ("2.1" = Topic 2 Lesson 1)
@@ -821,7 +823,8 @@ def practice_pages(n, kind, folder):
             page = f.stem.split("-")[-1]
             if page in KEEP:
                 accom["keep"] = KEEP[page][n]
-                s = s.replace("Answer all 10 questions", f"Answer all {len(accom['keep'])} questions")
+                s = re.sub(r"Answer all \d+ questions", f"Answer all {len(accom['keep'])} questions", s)
+                s = s.replace("Questions 11–14 are written", "The last two questions are written")
             elif (n, int(page[-1])) in BELL:  # bell work: a formula under each question, worked steps after it
                 accom["add"] = [{"extra": f'<p class="formula" style="margin:8px 0 2px;padding:6px 12px;border-left:4px solid #2f6fdd;'
                                           f'background:rgba(47,111,221,.08);border-radius:4px"><b>Formula:</b> {mt(q["formula"])}</p>',

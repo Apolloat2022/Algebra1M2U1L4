@@ -106,7 +106,9 @@ a.go{color:var(--point);text-decoration:none} a.go:hover{text-decoration:underli
 #prog>div{height:100%;width:0;background:var(--point);transition:width .3s}
 #count{font-variant-numeric:tabular-nums;min-width:64px;text-align:right}
 #brand{display:flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none;font-size:15px;white-space:nowrap}
-#brand strong{color:var(--point)}#home{color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:5px 12px;white-space:nowrap}#home:hover{background:var(--soft)}
+#brand strong{color:var(--point)}
+#home{color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:5px 12px;white-space:nowrap}
+#home:hover{background:var(--soft)}
 @media (max-width:900px){#hint{display:none}}
 @media (max-width:560px){#brand,#fs{display:none} #bar{gap:8px;padding:0 10px} #count{min-width:0}}
 #bar button{touch-action:manipulation}
@@ -152,11 +154,11 @@ table td.step:not(.shown){color:transparent}
     <div class="col">
       <p>3. What slope does a line perpendicular to <span class="mt"><i>y</i> = 4<i>x</i> − 3</span> have? <span class="muted" style="font-size:21px">(SE p. 321)</span></p>
       <div class="step pop eq sm ans"><span class="mt">−¼</span></div>
-      <p style="margin-top:14px">4. The ratio of 9th-graders to 10th-graders is <span class="mt">1 : 1</span>. What is the slope of this relationship? <span class="muted" style="font-size:21px">(SE p. 320)</span></p>
-      <div class="step pop eq sm ans"><span class="mt">1</span></div>
+      <p style="margin-top:14px">4. Function <span class="mt"><i>p</i></span> passes through <span class="mt">(0, 1)</span> and <span class="mt">(4, 4)</span>. Which function has a greater rate of change than function <span class="mt"><i>p</i></span>? <span class="muted" style="font-size:21px">(SE p. 325)</span></p>
+      <div class="step pop eq sm ans"><span class="mt"><i>y</i> = <i>x</i> − 2</span></div>
     </div>
   </div>
-  <aside class="notes">Added for this deck; not from the textbook. Have this up as students walk in; they work silently while you take attendance (about 5 minutes). The same 4 questions are on the online Day 1 bell work. Reveal the answers one at a time. Answer key: 1. Slope = (4 − (−6)) ÷ (0 − (−2.5)) = 10 ÷ 2.5 = 4. 2. Parallel lines have equal slopes. 3. The negative reciprocal of 4 is −¼. 4. Equal numbers of each grade: y = x, slope 1.</aside>
+  <aside class="notes">Added for this deck; not from the textbook. Have this up as students walk in; they work silently while you take attendance (about 5 minutes). The same 4 questions are on the online Day 1 bell work. Reveal the answers one at a time. Answer key: 1. Slope = (4 − (−6)) ÷ (0 − (−2.5)) = 10 ÷ 2.5 = 4. 2. Parallel lines have equal slopes. 3. The negative reciprocal of 4 is −¼. 4. p has slope (4 − 1) ÷ 4 = ¾ = 0.75. y = x − 2 has slope 1, which is greater. (3x − 4y = 8 is y = ¾x − 2: equal, not greater.)</aside>
 </section>
 
 <section class="slide">
@@ -221,11 +223,11 @@ table td.step:not(.shown){color:transparent}
     <div class="col">
       <p>3. <span class="mt"><i>J</i>(<i>x</i>) = 9/5<i>x</i> + 32</span> converts °C to °F. What is <span class="mt"><i>J</i>(10)</span>? <span class="muted" style="font-size:21px">(SE p. 323)</span></p>
       <div class="step pop eq sm ans"><span class="mt">50</span></div>
-      <p style="margin-top:14px">4. Miguel started with $0 and had $80 after 4 months. How much did he save each month? <span class="muted" style="font-size:21px">(SE p. 324)</span></p>
-      <div class="step pop eq sm ans">$20</div>
+      <p style="margin-top:14px">4. A 200-gallon tank drains 10 gallons each minute: <span class="mt"><i>w</i>(<i>t</i>) = 200 − 10<i>t</i></span>. What is the range of the function for this situation? <span class="muted" style="font-size:21px">(SE p. 325)</span></p>
+      <div class="step pop eq sm ans"><span class="mt">0 ≤ <i>w</i>(<i>t</i>) ≤ 200</span></div>
     </div>
   </div>
-  <aside class="notes">Added for this deck; not from the textbook. Have this up as students walk in; they work silently while you take attendance (about 5 minutes). The same 4 questions are on the online Day 2 bell work. Reveal the answers one at a time. Answer key: 1. 15 · 3 = 45. 2. Slope = 20 ÷ 1 = 20 dollars per ton. 3. 9/5 · 10 + 32 = 18 + 32 = 50, so 10°C is 50°F. 4. 80 ÷ 4 = 20 dollars per month.</aside>
+  <aside class="notes">Added for this deck; not from the textbook. Have this up as students walk in; they work silently while you take attendance (about 5 minutes). The same 4 questions are on the online Day 2 bell work. Reveal the answers one at a time. Answer key: 1. 15 · 3 = 45. 2. Slope = 20 ÷ 1 = 20 dollars per ton. 3. 9/5 · 10 + 32 = 18 + 32 = 50, so 10°C is 50°F. 4. Range = the outputs, the gallons left: 200 at the start, down to 0 when t = 20.</aside>
 </section>
 
 <section class="slide">
@@ -281,7 +283,8 @@ table td.step:not(.shown){color:transparent}
 </div>
 
 <nav id="bar" aria-label="Slide controls">
-  <a id="home" href="../index.html">⌂ Home</a> <span id="brand"><svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#3050b8"/><g fill="#fff"><circle cx="16" cy="7.5" r="2.3"/><circle cx="12.8" cy="11.8" r="2.5" opacity=".92"/><circle cx="19.2" cy="11.8" r="2.5" opacity=".92"/><circle cx="16" cy="14.6" r="2.6"/><circle cx="11.8" cy="17.6" r="2.7" opacity=".82"/><circle cx="20.2" cy="17.6" r="2.7" opacity=".82"/></g><rect x="15.2" y="20.5" width="1.6" height="6.5" rx=".8" fill="#9fd18b"/></svg><span>Bluebonnet <strong>Algebra I</strong></span></span>
+  <a id="home" href="../index.html">⌂ Home</a>
+  <span id="brand"><svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#3050b8"/><g fill="#fff"><circle cx="16" cy="7.5" r="2.3"/><circle cx="12.8" cy="11.8" r="2.5" opacity=".92"/><circle cx="19.2" cy="11.8" r="2.5" opacity=".92"/><circle cx="16" cy="14.6" r="2.6"/><circle cx="11.8" cy="17.6" r="2.7" opacity=".82"/><circle cx="20.2" cy="17.6" r="2.7" opacity=".82"/></g><rect x="15.2" y="20.5" width="1.6" height="6.5" rx=".8" fill="#9fd18b"/></svg><span>Bluebonnet <strong>Algebra I</strong></span></span>
   <button id="prev" type="button" aria-label="Previous step">← Back</button>
   <button id="next" type="button" aria-label="Next step">Next →</button>
   <div id="prog"><div></div></div>

@@ -51,7 +51,11 @@ deck's own font.
 **Placement rules: answers go in empty space only.**
 - Never on top of a printed blank line (`k(x) = ______`), a table border, a graph or question text.
   Put the answer just past the end of the blank (same row), or in clear space beside or below the item.
+- Lettered parts (a., b., c.): each answer goes under (or just past the end of) its own letter, not
+  grouped together after the last part.
 - Fill-in tables: centre the answer inside the empty cell (`"center"`).
+- Every content slide also gets "SE p. N" (its Student Edition page) left of the page number, and
+  activities the 150-day pacing guide stars get "★ Essential" there plus a badge on their divider slide.
 - Graph answers: describe the graph in words beside the picture ("Graph p(x): the line through
   (0, 5), parallel to f(x)") rather than writing on the grid.
 - To find where text ends, measure it: the deck text is usually Calibri; at 28 pt a character run's

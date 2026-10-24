@@ -1,6 +1,6 @@
 // Multiple-choice engine shared by the bell work, homework and quiz pages.
-// Each page sets window.MC = {mode: "homework" | "quiz", questions: [{q, choices, why, se?, extra?}]};
-// `extra` is optional HTML (such as a data table) shown under the question.
+// Each page sets window.MC = {mode: "homework" | "quiz", questions: [{q, choices, why, se?, extra?, letters?}]};
+// `extra` is optional HTML (such as a data table) shown under the question; `letters` (such as "FGHJ") replaces "ABCD".
 // The first choice is always the correct one; choices are shuffled on screen.
 // Math goes inside [[ ]] and gets the math font, with every letter (always a variable) italic.
 // Optional `accom` (IEP / 504 pages): {keep: [question indices], choices: n (drop trailing distractors),
@@ -24,7 +24,7 @@
       return `<li class="card"><fieldset>
         <legend>${math(item.q)}${item.se ? ` <span class="se">(SE p. ${item.se})</span>` : ""}</legend>${item.extra || ""}
         ${order.map((c, k) => `<label class="choice" data-c="${c}"><input type="radio" name="q${n}" value="${c}">
-          <span class="letter">${"ABCD"[k]}</span><span>${math(item.choices[c])}</span></label>`).join("")}
+          <span class="letter">${(item.letters || "ABCD")[k]}</span><span>${math(item.choices[c])}</span></label>`).join("")}
         <p class="why" hidden></p></fieldset>${accom.readAloud ? '<button type="button" class="ghost say">Read aloud</button>' : ""}</li>`;
     }).join("");
     result.hidden = true;

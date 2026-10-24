@@ -10,7 +10,7 @@
 <div class="wrap big">
   <p class="eyebrow">Module 2 · Topic 2 · Lesson 2 · Quiz · IEP Version</p>
   <h1>Vertical and Horizontal Transformations Quiz</h1>
-  <p class="muted">Answer all 6 questions, then submit. You'll see your score and the correct answers after you submit.</p>
+  <p class="muted">Answer all 8 questions, then submit. You'll see your score and the correct answers after you submit. The last two questions are written like the End of Topic 2 Assessment.</p>
   <div class="card ref"><p>Each question has 3 choices. Use the reminders below, and press <b>Read aloud</b> to hear a question.</p><p><b>Inside the parentheses</b> changes the input (horizontal). <b>Outside</b> changes the output (vertical).</p><p><b><i>f</i>(<i>x</i> − <i>c</i>)</b> moves right <i>c</i>. <b><i>f</i>(<i>x</i> + <i>c</i>)</b> moves left <i>c</i>. The sign flips.</p><p><b><i>f</i>(<i>bx</i>)</b> compresses horizontally when |<i>b</i>| &gt; 1 and stretches when 0 &lt; |<i>b</i>| &lt; 1.</p><p><b>Only for <i>f</i>(<i>x</i>) = <i>x</i>:</b> right <i>n</i> = down <i>n</i>, and a vertical dilation by <i>n</i> = a horizontal dilation by 1/<i>n</i>.</p></div>
   <label class="name">Your name <input id="name" autocomplete="name"></label>
   <ol id="questions"></ol>
@@ -32,7 +32,11 @@ window.MC = { mode: "quiz", questions: [
   {"se": 292, "q": "[[j(x) = 2x − 1]]. Simplify [[j(x + 4)]].", "choices": ["[[2x + 7]]", "[[2x + 3]]", "[[2x + 4]]", "[[8x − 1]]"], "why": "[[2(x + 4) − 1 = 2x + 7]]."},
   {"se": 297, "q": "For [[f(x) = x]], a vertical dilation by [[⅘]] gives the same graph as a horizontal dilation by which factor?", "choices": ["[[5/4]]", "[[⅘]]", "[[−⅘]]", "[[1]]"], "why": "A vertical dilation by [[n]] matches a horizontal dilation by [[1/n]]."},
   {"se": 304, "q": "What is the reciprocal of [[−⅘]]?", "choices": ["[[−5/4]]", "[[5/4]]", "[[⅘]]", "[[−1]]"], "why": "[[−⅘ · (−5/4) = 1]]."},
+  {"se": 291, "q": "Let [[f(x) = x]] and [[h(x) = f(x + 9)]]. Which describes the horizontal translation and the vertical translation that produces the same graph?", "choices": ["Left 9 units; the same as up 9 units", "Right 9 units; the same as down 9 units", "Left 9 units; the same as down 9 units", "Right 9 units; the same as up 9 units"], "why": "[[x + 9]] inside moves the graph left 9. [[h(x) = x + 9]] is also [[f(x)]] up 9."},
+  {"se": 293, "q": "The graph of [[f(x) = 5x]] is translated right 1 unit. Which function represents the new graph?", "choices": ["[[g(x) = 5x − 5]]", "[[g(x) = 5x − 1]]", "[[g(x) = 5x + 5]]", "[[g(x) = 5x + 1]]"], "why": "Right 1 means [[f(x − 1) = 5(x − 1) = 5x − 5]].", "letters": "FGHJ"},
+  {"se": 293, "q": "The graph of [[f(x) = ½x]] is translated left 4 units. Which function represents the new graph?", "choices": ["[[g(x) = ½x + 2]]", "[[g(x) = ½x + 4]]", "[[g(x) = ½x − 2]]", "[[g(x) = ½x − 4]]"], "why": "Left 4 means [[f(x + 4) = ½(x + 4) = ½x + 2]]."},
+  {"se": 294, "q": "Let [[f(x) = 3x]]. Do [[f(x − 2)]] and [[f(x) − 2]] produce the same graph?", "choices": ["No: [[3x − 6]] and [[3x − 2]] are parallel", "Yes: both are [[3x − 6]]", "Yes: both are [[3x − 2]]", "No: they are perpendicular"], "why": "[[f(x − 2) = 3(x − 2) = 3x − 6]], but [[f(x) − 2 = 3x − 2]]. Right [[n]] = down [[n]] works only for [[f(x) = x]].", "letters": "FGHJ"},
 ] };
-window.MC.accom = {"readAloud": true, "choices": 3, "keep": [0, 1, 2, 5, 7, 9]};
+window.MC.accom = {"readAloud": true, "choices": 3, "keep": [0, 1, 2, 5, 7, 9, 11, 12]};
 </script>
 <script src="../mc.js"></script>

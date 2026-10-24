@@ -106,7 +106,9 @@ a.go{color:var(--point);text-decoration:none} a.go:hover{text-decoration:underli
 #prog>div{height:100%;width:0;background:var(--point);transition:width .3s}
 #count{font-variant-numeric:tabular-nums;min-width:64px;text-align:right}
 #brand{display:flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none;font-size:15px;white-space:nowrap}
-#brand strong{color:var(--point)}#home{color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:5px 12px;white-space:nowrap}#home:hover{background:var(--soft)}
+#brand strong{color:var(--point)}
+#home{color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:5px 12px;white-space:nowrap}
+#home:hover{background:var(--soft)}
 @media (max-width:900px){#hint{display:none}}
 @media (max-width:560px){#brand,#fs{display:none} #bar{gap:8px;padding:0 10px} #count{min-width:0}}
 #bar button{touch-action:manipulation}
@@ -158,11 +160,11 @@ table td.step:not(.shown){color:transparent}
     <div class="col">
       <p>3. What is the slope of the segment from <span class="mt">(0, 0)</span> to <span class="mt">(8, 5)</span>? <span class="muted" style="font-size:21px">(SE p. 306)</span></p>
       <div class="step pop eq sm ans"><span class="mt">5/8</span></div>
-      <p style="margin-top:14px">4. What is the slope of <span class="mt"><i>y</i> = −3<i>x</i> + 5</span>?</p>
-      <div class="step pop eq sm ans"><span class="mt">−3</span></div>
+      <p style="margin-top:14px">4. A line passes through the points <span class="mt">(−1, 4)</span> and <span class="mt">(2, −2)</span>. What is the slope of the line?</p>
+      <div class="step pop eq sm ans"><span class="mt">−2</span></div>
     </div>
   </div>
-  <aside class="notes">Added for this deck; not from the textbook. Have this up as students walk in; they work silently while you take attendance (about 5 minutes). The same 4 questions are on the online Day 1 bell work. Reveal the answers one at a time. Answer key: 1. Flip the fraction: ⅔ · 3/2 = 1. 2. A 90° counterclockwise rotation maps (x, y) to (−y, x). 3. Slope = (5 − 0) ÷ (8 − 0) = 5/8. 4. In y = mx + b, m = −3.</aside>
+  <aside class="notes">Added for this deck; not from the textbook. Have this up as students walk in; they work silently while you take attendance (about 5 minutes). The same 4 questions are on the online Day 1 bell work. Reveal the answers one at a time. Answer key: 1. Flip the fraction: ⅔ · 3/2 = 1. 2. A 90° counterclockwise rotation maps (x, y) to (−y, x). 3. Slope = (5 − 0) ÷ (8 − 0) = 5/8. 4. Slope = (−2 − 4) ÷ (2 − (−1)) = −6 ÷ 3 = −2.</aside>
 </section>
 <section class="slide divider">
   <p class="eyebrow">Topic 1 Catch-Up · Thu, Oct 29 · about 15 minutes</p>
@@ -313,11 +315,11 @@ table td.step:not(.shown){color:transparent}
     <div class="col">
       <p>3. Which is the equation of the vertical line through <span class="mt">(2, −1)</span>? <span class="muted" style="font-size:21px">(SE p. 311)</span></p>
       <div class="step pop eq sm ans"><span class="mt"><i>x</i> = 2</span></div>
-      <p style="margin-top:14px">4. What is the product of the slopes of two perpendicular lines (neither vertical)? <span class="muted" style="font-size:21px">(SE p. 308)</span></p>
-      <div class="step pop eq sm ans"><span class="mt">−1</span></div>
+      <p style="margin-top:14px">4. Which equation represents a line perpendicular to <span class="mt"><i>y</i> = 2<i>x</i> + 3</span> that passes through the point <span class="mt">(4, 1)</span>? <span class="muted" style="font-size:21px">(SE p. 312)</span></p>
+      <div class="step pop eq sm ans"><span class="mt"><i>y</i> = −½<i>x</i> + 3</span></div>
     </div>
   </div>
-  <aside class="notes">Added for this deck; not from the textbook. Have this up as students walk in; they work silently while you take attendance (about 5 minutes). The same 4 questions are on the online Day 2 bell work. Reveal the answers one at a time. Answer key: 1. Perpendicular slopes are negative reciprocals: ⅔ · (−3/2) = −1. 2. On a horizontal line y never changes, so the rise is 0. 3. Every point on a vertical line has the same x-value, here 2. 4. Negative reciprocals multiply to −1.</aside>
+  <aside class="notes">Added for this deck; not from the textbook. Have this up as students walk in; they work silently while you take attendance (about 5 minutes). The same 4 questions are on the online Day 2 bell work. Reveal the answers one at a time. Answer key: 1. Perpendicular slopes are negative reciprocals: ⅔ · (−3/2) = −1. 2. On a horizontal line y never changes, so the rise is 0. 3. Every point on a vertical line has the same x-value, here 2. 4. Perpendicular slope: −½. Put in the point: 1 = −½(4) + b = −2 + b, so b = 3.</aside>
 </section>
 <section class="slide divider">
   <p class="eyebrow">Topic 1 Catch-Up · Mon, Nov 2 · about 15 minutes</p>
@@ -446,7 +448,8 @@ table td.step:not(.shown){color:transparent}
 </div>
 
 <nav id="bar" aria-label="Slide controls">
-  <a id="home" href="../index.html">⌂ Home</a> <span id="brand"><svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#3050b8"/><g fill="#fff"><circle cx="16" cy="7.5" r="2.3"/><circle cx="12.8" cy="11.8" r="2.5" opacity=".92"/><circle cx="19.2" cy="11.8" r="2.5" opacity=".92"/><circle cx="16" cy="14.6" r="2.6"/><circle cx="11.8" cy="17.6" r="2.7" opacity=".82"/><circle cx="20.2" cy="17.6" r="2.7" opacity=".82"/></g><rect x="15.2" y="20.5" width="1.6" height="6.5" rx=".8" fill="#9fd18b"/></svg><span>Bluebonnet <strong>Algebra I</strong></span></span>
+  <a id="home" href="../index.html">⌂ Home</a>
+  <span id="brand"><svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#3050b8"/><g fill="#fff"><circle cx="16" cy="7.5" r="2.3"/><circle cx="12.8" cy="11.8" r="2.5" opacity=".92"/><circle cx="19.2" cy="11.8" r="2.5" opacity=".92"/><circle cx="16" cy="14.6" r="2.6"/><circle cx="11.8" cy="17.6" r="2.7" opacity=".82"/><circle cx="20.2" cy="17.6" r="2.7" opacity=".82"/></g><rect x="15.2" y="20.5" width="1.6" height="6.5" rx=".8" fill="#9fd18b"/></svg><span>Bluebonnet <strong>Algebra I</strong></span></span>
   <button id="prev" type="button" aria-label="Previous step">← Back</button>
   <button id="next" type="button" aria-label="Next step">Next →</button>
   <div id="prog"><div></div></div>
