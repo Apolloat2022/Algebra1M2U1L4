@@ -917,8 +917,9 @@ ANS_T2_1 = {
     29: [(122, 500, 1700, 130, 24, "No. Both lines have slope 2 and stay 4 units apart, so they are parallel.")],
     31: [(211, 397, 1531, 67, 24, "A′(x1, y1 + a)  and  B′(x2, y2 + a)"),
          (211, 540, 1531, 67, 24, "m = (y2 − y1) / (x2 − x1)"),
-         (211, 683, 1531, 67, 24, "m = ((y2 + a) − (y1 + a)) / (x2 − x1) = (y2 − y1) / (x2 − x1)")],
-    32: [(616, 398, 1249, 62, 22, "The slopes are the same."),
+         ],
+    32: [(527, 200, 1351, 50, 20, "p. 275 c.  m = ((y2 + a) − (y1 + a)) / (x2 − x1) = (y2 − y1) / (x2 − x1)"),  # no room on 31
+         (616, 398, 1249, 62, 22, "The slopes are the same."),
          (616, 604, 1249, 62, 22, "The graphs are parallel lines.")],
     34: [(211, 329, 1455, 115, 22, "Answers will vary. Catalina translates the given line up 5; James uses the "
                                    "slope formula with the point (2, 9). Both get y = (1/2)x + 8."),
@@ -947,8 +948,9 @@ ANS_T2_1 = {
          (860, 830, 900, 230, 18, "g(x) = −(2/3)x + 5\nReflection across the x-axis and vertical compression by "
                                   "a factor of 2/3, then up 5. Graph: through (0, 5), slope −2/3.")],
     53: [(290, 0, 1515, 50, 16, "a. a changes the slope (|a| > 1 steeper, 0 < |a| < 1 less steep, a < 0 reflects). "
-                                "It does not change the y-intercept."),  # inside the text box, under its letter
-         (290, 0, 1515, 50, 16, "b. d does not change the slope. It moves the y-intercept to (0, d): up if d > 0, down if d < 0.")],
+                                "It does not change the y-intercept.")],  # inside the text box, under its letter
+    54: [(122, 200, 1700, 50, 20, "p. 281 b.  d does not change the slope. It moves the y-intercept to (0, d): "
+                                  "up if d > 0, down if d < 0.")],  # no room under b. on 53
     59: [(623, 468, 1048, 106, 20, "Sample: a = 0 with d = 6, 4, 1 and −3: horizontal lines through each target "
                                    "(move the cannon to (0, d))."),
          (623, 718, 1048, 96, 18, "The cannon shoots in only one direction. Targets in Quadrant II (left of the "
@@ -1269,9 +1271,9 @@ STARS_T2 = {1: ((6, 14), (15, 25), (28, 36), (37, 46), (49, 55)),  # Getting Sta
             4: ()}
 INLINE_T2 = {  # lesson -> {slide: [(shape #, paragraph #, [answer #, ...])]}: answers inside the question's text box
  1: {10: [(1, 0, [0])], 18: [(1, 0, [0])], 20: [(1, 0, [0])], 21: [(1, 1, [0])],
-     23: [(2, 0, [0]), (2, 1, [1]), (2, 2, [2])], 29: [(1, 1, [0])], 31: [(1, 0, [0]), (1, 1, [1]), (1, 2, [2])],
-     32: [(2, 0, [0]), (2, 1, [1])], 34: [(1, 0, [0]), (1, 1, [1])], 39: [(1, 0, [0])], 41: [(1, 0, [0])],
-     43: [(1, 0, [0])], 44: [(1, 1, [0])], 53: [(1, 2, [0]), (1, 3, [1])], 59: [(2, 0, [0]), (2, 1, [1])],
+     23: [(2, 0, [0]), (2, 1, [1]), (2, 2, [2])], 29: [(1, 1, [0])], 31: [(1, 0, [0]), (1, 1, [1])],
+     32: [(2, 0, [1]), (2, 1, [2])], 34: [(1, 0, [0]), (1, 1, [1])], 39: [(1, 0, [0])], 41: [(1, 0, [0])],
+     43: [(1, 0, [0])], 44: [(1, 1, [0])], 53: [(1, 2, [0])], 59: [(2, 0, [0]), (2, 1, [1])],
      60: [(4, 0, [0, 1])], 65: [(2, 1, [0]), (2, 2, [1]), (2, 3, [2]), (2, 4, [3])]},
  2: {14: [(1, 0, [10])], 15: [(1, 0, [0]), (1, 1, [1]), (1, 2, [2])], 16: [(1, 0, [0]), (1, 1, [1])],
      17: [(1, 0, [0]), (1, 1, [1])], 20: [(1, 2, [1]), (1, 4, [3])],
