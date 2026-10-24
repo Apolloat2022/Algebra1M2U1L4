@@ -140,7 +140,7 @@ DIR504 = ('<p><b>Directions:</b> Read each question carefully. You may use a cal
 DIRIEP = ('<p><b>Directions:</b> Read each question carefully. You may use a calculator and the reference sheet. '
           'For multiple choice, choose <b>one</b> answer. Use the steps and tips. Fill in each blank.</p>'
           '<p>One question is on each slide. Take your time. Ask your teacher if you need a break or a question read aloud.</p>')
-NGEN = ("End of Topic 2 Assessment, Day 13 (Nov 9) on the 150-day calendar. Original items: the publisher's Assessments book has no "
+NGEN = ("End of Topic 2 Assessment, Day 10 (Tue Nov 3, the district test date); review Nov 2, retakes Nov 4. Original items: the publisher's Assessments book has no "
         "Topic 2 test, so these 14 items cover the TE Assessment Summary TEKS (A.2A, A.2C, A.2E, A.2F, A.2G, A.3C, A.3E): "
         "Q1-4 Lesson 1, Q5-6 Lesson 2, Q7-10 Lesson 3, Q11-14 Lesson 4.")
 N504 = ("Section 504 version: the same 14 items, wording and answer choices as the general test, so it is graded with the same key. "

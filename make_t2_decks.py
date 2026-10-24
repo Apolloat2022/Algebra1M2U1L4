@@ -6,6 +6,22 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 from make_t2_practice import BELL  # the bell work questions, shown on the deck's bell work slides too
 
+# Activities starred (essential) in the 150-day pacing guide, materials/Algebra I Math 150-day Topic Pacing Guides.pdf.
+# Lesson 4 is "omit" there but still taught (the test covers it), so it has no stars.
+STARS = {1: {"Getting Started", "1.1", "1.2", "1.3", "1.4"}, 2: {"Getting Started", "2.1", "2.2", "2.3"},
+         3: {"3.1", "3.2", "3.3"}, 4: set()}
+ESSENTIAL = "★ Essential"
+
+
+def starred(n, text):  # does a "Day 1 · Getting Started ..." / "Activity 1.2: ..." label name a starred activity?
+    m = re.match(r"(?:Day \d · )?(Getting Started|Activity (\d\.\d))", text)
+    return bool(m) and (m.group(2) or m.group(1)) in STARS[n]
+
+
+def star_eyebrows(n, s):
+    return re.sub(r'<p class="eyebrow">([^<]*)</p>', lambda m: f'<p class="eyebrow">{m.group(1)} · {ESSENTIAL}</p>'
+                  if starred(n, m.group(1)) else m.group(0), s)
+
 ROOT = Path(__file__).parent
 SRC = (ROOT / "lesson6/making-sense-of-representations-lesson6.html").read_text(encoding="utf-8")
 HEAD = SRC.split('<div id="stage">', 1)[0]
@@ -491,8 +507,9 @@ def lesson3():
 def lesson4():
     s = [title(4, "319–330", "Comparing Linear Functions in Different Forms", "table · graph · equation · description", 2,
                "Students compare linear functions given as tables, graphs, equations and verbal descriptions: slope (parallel or perpendicular), "
-               "y-intercept, and the units and scales in context. Two days on the 150-day calendar: Day 1 Getting Started, Activities 4.1 and 4.2; Day 2 "
-               "Activities 4.3, 4.4 and Talk the Talk.")]
+               "y-intercept, and the units and scales in context. The 150-day guide omits this lesson, but the End of Topic 2 Assessment covers it "
+               "(questions 11–14). On the class calendar: Day 1 (Mon Nov 2, review day) Getting Started, Activities 4.1 and 4.2, then the online "
+               "Topic 2 Review practice test; Day 2 (Wed Nov 4, after the test, for students not retaking) Activities 4.3, 4.4 and Talk the Talk.")]
     s.append(bell(4, 1, "Review"))
     s.append(today(4, 319, ["Compare linear functions represented algebraically, graphically, in tables, or with verbal descriptions.",
                             "Choose and interpret appropriate units to represent independent and dependent quantities in situations modeled by linear functions.",
@@ -570,7 +587,7 @@ DECKS = {1: ("t2-lesson1-transforming-linear-functions", "Transforming Linear Fu
 
 if __name__ == "__main__":
     for n, (stem, name, build) in DECKS.items():
-        secs = build()
+        secs = [star_eyebrows(n, x) for x in build()]
         head = re.sub(r"<title>.*?</title>", f"<title>{name} · Bluebonnet Algebra I</title>", HEAD, count=1)
         out = ROOT / "Module 2 topic 2" / f"{stem}.html"
         out.write_text(head + '<div id="stage">\n\n' + "\n".join(secs) + TAIL, encoding="utf-8")

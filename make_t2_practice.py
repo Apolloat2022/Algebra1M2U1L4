@@ -534,6 +534,10 @@ TEST_QUIZ = {
 for _l in HOMEWORK:
     HOMEWORK[_l] += TEST_HW[_l]
     QUIZ[_l] += TEST_QUIZ[_l]
+# Topic 2 Review (review day, Mon Nov 2): one test-style item per test question, in the test's order, with the test's
+# A-D / F-J letters (odd / even questions). The items are the ones at the end of the homework and quizzes.
+REVIEW = [{k: v for k, v in q.items() if k != "letters"} | ({"letters": "FGHJ"} if i % 2 else {})
+          for i, q in enumerate([*TEST_QUIZ[1], *TEST_QUIZ[2][:2], *TEST_HW[3], *TEST_QUIZ[4]])]
 
 
 if __name__ == "__main__":
@@ -552,7 +556,11 @@ if __name__ == "__main__":
              f"Answer all {len(qs)} questions, then submit. You'll see your score and the correct answers after you submit. "
              "Questions 11–14 are written like the End of Topic 2 Assessment.", "quiz", qs)
 
-    for qs in [*BELL.values(), *HOMEWORK.values(), *QUIZ.values()]:  # every question: 4 distinct choices
+    page("t2-review.html", "Topic 2 Review · Practice Test", "Module 2 · Topic 2 · Review Day", "Topic 2 Review: Practice Test",
+         "14 questions in the same order and style as the End of Topic 2 Assessment: questions 1–4 are Lesson 1, 5–6 Lesson 2, "
+         "7–10 Lesson 3 and 11–14 Lesson 4. Pick an answer to see right away whether it's correct, and why.", "homework", REVIEW)
+
+    for qs in [*BELL.values(), *HOMEWORK.values(), *QUIZ.values(), REVIEW]:  # every question: 4 distinct choices
         for q in qs:
             assert len(q["choices"]) == 4 and len(set(q["choices"])) == 4, q["q"]
     print(len(BELL), "bell work,", len(HOMEWORK), "homework,", len(QUIZ), "quizzes")

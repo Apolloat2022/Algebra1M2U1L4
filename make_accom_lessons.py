@@ -16,6 +16,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from make_t2_decks import ESSENTIAL, STARS, starred  # the 150-day pacing guide's essential activities
+
 HERE = Path(__file__).parent
 LESSONS = {4: "lesson4/point-slope-form-lesson4.html", 5: "lesson5/using-linear-equations-lesson5.html",
            6: "lesson6/making-sense-of-representations-lesson6.html"}
@@ -162,7 +164,7 @@ def build_504(n, sections):
         m = re.search(r"Day (\d) · Bell Work", s)
         if m:
             d = int(m.group(1))
-            out.append(sec(f"Day {d} · Today's Plan", "Today's plan", checklist(*a["plans"][d]),
+            out.append(sec(f"Day {d} · Today's Plan", "Today's plan", checklist(*[f"{p} {ESSENTIAL}" if isinstance(n, str) and starred(int(n[2:]), p) else p for p in a["plans"][d]]),
                            "Section 504 support: chunked directions. Check off each part as the class finishes it."))
     return out
 
@@ -815,9 +817,14 @@ def practice_pages(n, kind, folder):
     card = (f'<div class="card ref"><p>{HELP[kind]}</p>' + "".join(f"<p>{r}</p>" for r in REF[n]) + "</div>")
     d, pre, _ = src(n)
     pages = sorted(d.glob(f"{pre}-bellwork-day*.html")) + [d / f"{pre}-{p}.html" for p in ("homework", "quiz")]
+    if n == "2.4":  # the Topic 2 Review practice test goes with the last lesson; its card reminds of all four lessons
+        pages.append(d / "t2-review.html")
     for f in pages:
         accom = {"readAloud": True}
         s = f.read_text(encoding="utf-8")
+        if f.stem == "t2-review":
+            card = (f'<div class="card ref"><p>{HELP[kind]}</p>'
+                    + "".join(f"<p>{r}</p>" for k in ("2.1", "2.2", "2.3", "2.4") for r in REF[k][:2]) + "</div>")
         if kind == "IEP":
             accom["choices"] = 3
             page = f.stem.split("-")[-1]
@@ -825,7 +832,7 @@ def practice_pages(n, kind, folder):
                 accom["keep"] = KEEP[page][n]
                 s = re.sub(r"Answer all \d+ questions", f"Answer all {len(accom['keep'])} questions", s)
                 s = s.replace("Questions 11–14 are written", "The last two questions are written")
-            elif (n, int(page[-1])) in BELL:  # bell work: a formula under each question, worked steps after it
+            elif page.startswith("day") and (n, int(page[-1])) in BELL:  # bell work: a formula under each question, worked steps after it
                 accom["add"] = [{"extra": f'<p class="formula" style="margin:8px 0 2px;padding:6px 12px;border-left:4px solid #2f6fdd;'
                                           f'background:rgba(47,111,221,.08);border-radius:4px"><b>Formula:</b> {mt(q["formula"])}</p>',
                                  "why": "Here is how:" + "".join(f"<br><b>{j}.</b> {t}" for j, t in enumerate(q["steps"], 1))}
@@ -950,6 +957,9 @@ def main(lessons=(4, 5, 6)):
                 secs = build_504(n, sections)
             else:  # the general deck's bell work slides go right after the title, one per day
                 secs = IEP[n]()
+                if isinstance(n, str) and STARS[int(n[2:])]:  # Topic 2 Lessons 1-3 teach only starred activities
+                    secs = [re.sub(r'(<p class="eyebrow">(?:I do|We do|You do|Check it)[^<]*)', lambda m: f"{m.group(1)} · {ESSENTIAL}", x, count=1)
+                            for x in secs]
                 secs[1:1] = bell_slides(n) if (n, 1) in BELL else [s for s in sections if re.search(r"Day \d · Bell Work", s)]
                 tail = tail.replace(GRAPH_JS, DOT_JS + GRAPH_JS, 1)
                 assert DOT_JS in tail or not isinstance(n, str), n
