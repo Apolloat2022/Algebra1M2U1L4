@@ -2,157 +2,146 @@
 <html lang="en">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Algebra I · Module 2</title>
+<title>Algebra I · Mr. Pandey</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="mc.css">
 <style>
-  .lessons{display:flex;flex-direction:column;gap:16px;margin-top:20px}
-  .card h2{margin:2px 0 12px;font-size:22px}
-  a{color:var(--point);font-weight:600;text-decoration:none} a:hover{text-decoration:underline}
-  /* version switch: only the chosen version's links show */
-  .seg{display:inline-flex;gap:4px;margin-top:18px;padding:4px;border:1px solid var(--line);border-radius:999px;background:var(--card)}
-  .seg label{padding:6px 16px;border-radius:999px;cursor:pointer;font-weight:600;color:var(--muted)}
-  .seg input{position:absolute;opacity:0;pointer-events:none}
-  .seg label:has(input:checked){background:var(--point);color:#fff}
-  .seg label:has(input:focus-visible){outline:2px solid var(--point);outline-offset:2px}
-  .links{display:none;flex-wrap:wrap;align-items:center;gap:8px}
-  .links a{padding:5px 12px;border:1px solid var(--line);border-radius:8px}
-  .links a:hover{background:var(--soft);text-decoration:none}
-  .grp{display:inline-flex;align-items:center;gap:6px;color:var(--muted);margin:0 4px}
-  .grp a{padding:5px 10px}
-  /* topic sections: a header band and a jump list */
-  .jump{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-  .jump a{padding:6px 14px;border:1px solid var(--line);border-radius:999px;background:var(--card)}
-  .topic{margin-top:36px;padding:16px 20px;border-radius:10px;background:var(--point);color:#fff;scroll-margin-top:16px}
-  .topic .eyebrow{color:#fff;opacity:.85}
-  .topic h2{margin:4px 0 2px;font-size:28px}
-  .topic p{margin:0;opacity:.95}
-  .topic a{color:#fff;text-decoration:underline}
-  @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .topic{color:#111218} :root:not([data-theme="light"]) .topic a{color:#111218}}
-  body:has(#v-gen:checked) .v-gen, body:has(#v-iep:checked) .v-iep, body:has(#v-504:checked) .v-504{display:flex}
-  body:has(#v-gen:checked) .acc{display:none}
-  body:not(:has(#v-gen:checked)) .gen{display:none}
-  .feature{border:2px solid var(--point);box-shadow:0 2px 10px rgba(48,80,184,.12);scroll-margin-top:16px}
-  .links a.start{background:var(--point);color:#fff;border-color:var(--point)}
-  .links a.start:hover{background:var(--point);opacity:.9}
-  .sched{border-collapse:collapse;width:100%;font-size:16px} .sched td{padding:6px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-  .sched td:first-child{white-space:nowrap;color:var(--muted);width:1%}
-  h3.sub{margin:32px 0 4px;font-size:20px;scroll-margin-top:16px}
+  .top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+  h1{margin:6px 0 4px}
+  .sub{color:var(--muted);margin:0}
+  .test{display:inline-block;margin-top:14px;padding:6px 14px;border-radius:999px;background:var(--soft);color:var(--point);font-weight:700}
+  .ver{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--muted)}
+  .ver select{font:inherit;font-size:14px;padding:4px 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
+  h2{font-size:20px;margin:36px 0 12px}
+  .week{display:flex;gap:6px;flex-wrap:wrap}
+  .day{flex:1 1 76px;padding:8px 6px;border:1px solid var(--line);border-radius:10px;background:var(--card);text-align:center;font-size:14px;line-height:1.3}
+  .day b{display:block;font-size:15px}
+  .day.now{border:2px solid var(--point);background:var(--soft)}
+  .day.done{opacity:.55}
+  .day.big b{color:var(--bad)}
+  .today{border:2px solid var(--point);margin-top:12px}
+  .today .eyebrow{margin-bottom:4px}
+  .today h3{margin:0 0 6px;font-size:24px;line-height:1.2}
+  .btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:10px;border:1px solid var(--line);background:var(--card);
+       color:var(--point);font-weight:700;text-decoration:none;min-height:44px}
+  .btn:hover{background:var(--soft)}
+  .btn.go{background:var(--point);border-color:var(--point);color:#fff}
+  .btn.go:hover{opacity:.9;background:var(--point)}
+  .lessons{display:flex;flex-direction:column;gap:12px}
+  .lesson{display:grid;grid-template-columns:48px 1fr;gap:4px 14px;align-items:start}
+  .num{grid-row:span 3;width:48px;height:48px;border-radius:12px;background:var(--soft);color:var(--point);font-weight:800;font-size:22px;
+       display:flex;align-items:center;justify-content:center}
+  .lesson h3{margin:2px 0 0;font-size:19px;line-height:1.25}
+  .lesson p{color:var(--muted);font-size:16px}
+  .lesson .btns{margin-top:6px}
+  .lesson .btn{padding:8px 14px;min-height:40px;font-size:16px}
+  .tip{color:var(--muted);font-size:16px;margin-top:10px}
+  footer{margin-top:40px;font-size:13px;color:var(--muted)}
+  footer a{color:var(--muted)}
+  @media (max-width:520px){.lesson{grid-template-columns:1fr}.num{grid-row:auto;width:40px;height:40px;font-size:18px}}
 </style>
 <div class="wrap">
-  <p class="eyebrow">Bluebonnet Algebra I · Module 2</p>
-  <h1>Exploring Constant Change</h1>
-  <p class="muted" style="margin:6px 0 0">Prepared by <strong>Mr. Pandey</strong></p>
-  <p class="muted">Each lesson has slides, a PowerPoint copy, daily bell work, homework and a quiz. Day numbers follow 150-day pacing on the Anna ISD Monday–Thursday calendar and restart with each topic. Choose a version:</p>
-  <div class="seg" role="radiogroup" aria-label="Version">
-    <label><input type="radio" name="v" id="v-gen" checked>General</label>
-    <label><input type="radio" name="v" id="v-iep">IEP</label>
-    <label><input type="radio" name="v" id="v-504">Section 504</label>
+  <div class="top">
+    <div>
+      <p class="eyebrow">Algebra I · Mr. Pandey</p>
+      <h1>Topic 2: Moving and Comparing Lines</h1>
+      <p class="sub">Transforming and Comparing Linear Functions</p>
+    </div>
+    <label class="ver">My version
+      <select id="ver"><option value="gen">General</option><option value="iep">IEP</option><option value="504">504</option></select>
+    </label>
   </div>
-  <nav class="jump" aria-label="Topics"><a href="#catchup">▶ Mon Oct 26: Catch-Up, Lessons 1–2</a><a href="#topic2">Topic 2 · Transforming and Comparing Linear Functions</a><a href="#full12">Lessons 1–2 full</a><a href="#topic1">Topic 1 · Linear Functions</a></nav>
-  <header class="topic" id="topic2">
-    <p class="eyebrow">Topic 2 · Now teaching</p>
-    <h2>Transforming and Comparing Linear Functions</h2>
-    <p>Oct 19 – Nov 5 · test Tue Nov 3 · <a href="Module%202%20topic%202/topic2-pacing-150.html">Pacing calendar</a> · <a href="Module%202%20topic%202/t2-edia-homework-picks.html">Edia homework picks</a> · <a href="Module%202%20topic%202/videos/T2-Lesson1-Transformations.mp4">Lesson 1 video (4 min)</a> · <a href="Module%202%20topic%202/videos/T2-Lesson2-Horizontal-Transformations.mp4">Lesson 2 video (4 min)</a> · <a href="Module%202%20topic%202/videos/T2-Lesson3-Perpendicular-Lines.mp4">Lesson 3 video (3 min)</a> · <a href="Module%202%20topic%202/videos/T2-Lesson4-Comparing-Functions.mp4">Lesson 4 video (4 min)</a> · <a href="Module%202%20topic%202/Topic2-Lessons1-3-Posters.pdf">Posters, Lessons 1–3</a> · <a href="Module%202%20topic%202/Topic2-Lesson4-Posters.pdf">Posters, Lesson 4</a></p>
-  </header>
-  <div class="lessons">
-    <section class="card feature" id="catchup">
-      <p class="eyebrow">Mon Oct 26 · Catch-Up Day · Lessons 1 and 2 · SE pp. 275–300</p>
-      <h2>Catch Up: the essentials of Lessons 1 and 2 in one class</h2>
-      <p class="muted" style="margin:-4px 0 12px">Starred activities only: 1.2 parallel lines · 1.3 vertical dilations · 1.4 <i>a</i> · <i>f</i>(<i>x</i>) + <i>d</i> · 2.1–2.3 horizontal translations and dilations (inside vs. outside). Timed plan on slide 1; exit check and homework at the end.</p>
-      <div class="links v-gen"><a class="start" href="Module%202%20topic%202/t2-catchup-day-lessons1-2.html">▶ Start: Catch-Up slides</a><a href="Module%202%20topic%202/t2-catchup-day-lessons1-2.pptx">PowerPoint</a><a href="Module%202%20topic%202/t2-lesson2-bellwork-day1.html">Bell work</a><span class="grp">Tonight's homework <a href="Module%202%20topic%202/t2-lesson1-homework.html">Lesson 1</a> <a href="Module%202%20topic%202/t2-lesson2-homework.html">Lesson 2</a></span><span class="grp">Quizzes (homework Tue, Wed) <a href="Module%202%20topic%202/t2-lesson1-quiz.html">Lesson 1</a> <a href="Module%202%20topic%202/t2-lesson2-quiz.html">Lesson 2</a></span><a href="Module%202%20topic%202/BLMathematics_AlgI_M2_T2_L1_LessonSlides_ENG_with_answers.pptx">L1 slides with answers</a><a href="Module%202%20topic%202/BLMathematics_AlgI_M2_T2_L2_LessonSlides_ENG_with_answers.pptx">L2 slides with answers</a><a href="Module%202%20topic%202/t2-lesson1-transforming-linear-functions.html">Full Lesson 1 slides</a><a href="Module%202%20topic%202/t2-lesson2-vertical-horizontal-transformations.html">Full Lesson 2 slides</a></div>
-      <div class="links v-iep"><a class="start" href="IEP/t2-catchup-day-lessons1-2-IEP.html">▶ Start: Catch-Up slides</a><a href="IEP/t2-catchup-day-lessons1-2-IEP.pptx">PowerPoint</a><a href="IEP/t2-lesson2-bellwork-day1-IEP.html">Bell work</a><span class="grp">Tonight's homework <a href="IEP/t2-lesson1-homework-IEP.html">Lesson 1</a> <a href="IEP/t2-lesson1-homework-IEP-ANSWER-KEY.pptx">key</a> <a href="IEP/t2-lesson2-homework-IEP.html">Lesson 2</a> <a href="IEP/t2-lesson2-homework-IEP-ANSWER-KEY.pptx">key</a></span><span class="grp">Quizzes (homework Tue, Wed) <a href="IEP/t2-lesson1-quiz-IEP.html">Lesson 1</a> <a href="IEP/t2-lesson1-quiz-IEP-ANSWER-KEY.pptx">key</a> <a href="IEP/t2-lesson2-quiz-IEP.html">Lesson 2</a> <a href="IEP/t2-lesson2-quiz-IEP-ANSWER-KEY.pptx">key</a></span><a href="Module%202%20topic%202/BLMathematics_AlgI_M2_T2_L1_LessonSlides_ENG_with_answers.pptx">L1 slides with answers</a><a href="Module%202%20topic%202/BLMathematics_AlgI_M2_T2_L2_LessonSlides_ENG_with_answers.pptx">L2 slides with answers</a><a href="IEP/t2-lesson1-transforming-linear-functions-IEP.html">Full Lesson 1 slides</a><a href="IEP/t2-lesson2-vertical-horizontal-transformations-IEP.html">Full Lesson 2 slides</a></div>
-      <div class="links v-504"><a class="start" href="Section%20504/t2-catchup-day-lessons1-2-504.html">▶ Start: Catch-Up slides</a><a href="Section%20504/t2-catchup-day-lessons1-2-504.pptx">PowerPoint</a><a href="Section%20504/t2-lesson2-bellwork-day1-504.html">Bell work</a><span class="grp">Tonight's homework <a href="Section%20504/t2-lesson1-homework-504.html">Lesson 1</a> <a href="Section%20504/t2-lesson1-homework-504-ANSWER-KEY.pptx">key</a> <a href="Section%20504/t2-lesson2-homework-504.html">Lesson 2</a> <a href="Section%20504/t2-lesson2-homework-504-ANSWER-KEY.pptx">key</a></span><span class="grp">Quizzes (homework Tue, Wed) <a href="Section%20504/t2-lesson1-quiz-504.html">Lesson 1</a> <a href="Section%20504/t2-lesson1-quiz-504-ANSWER-KEY.pptx">key</a> <a href="Section%20504/t2-lesson2-quiz-504.html">Lesson 2</a> <a href="Section%20504/t2-lesson2-quiz-504-ANSWER-KEY.pptx">key</a></span><a href="Module%202%20topic%202/BLMathematics_AlgI_M2_T2_L1_LessonSlides_ENG_with_answers.pptx">L1 slides with answers</a><a href="Module%202%20topic%202/BLMathematics_AlgI_M2_T2_L2_LessonSlides_ENG_with_answers.pptx">L2 slides with answers</a><a href="Section%20504/t2-lesson1-transforming-linear-functions-504.html">Full Lesson 1 slides</a><a href="Section%20504/t2-lesson2-vertical-horizontal-transformations-504.html">Full Lesson 2 slides</a></div>
-    </section>
-    <section class="card">
-      <p class="eyebrow">Coming up · the test date is fixed: Tue Nov 3</p>
-      <h2>The rest of Topic 2</h2>
-      <table class="sched"><tr><td>Tue Oct 27 – Wed Oct 28</td><td>Lesson 3 · Slopes of perpendicular lines</td></tr><tr><td>Thu Oct 29</td><td>Lesson 4 in one day · Comparing linear functions</td></tr><tr><td>Mon Nov 2</td><td>Review: practice test in class</td></tr><tr><td><b>Tue Nov 3</b></td><td><b>End of Topic 2 Assessment</b></td></tr><tr><td>Wed Nov 4</td><td>Retakes · others finish Lesson 4</td></tr><tr><td>Thu Nov 5</td><td>End of Topic 1 Assessment</td></tr></table>
-      <p style="margin:10px 0 0"><a href="Module%202%20topic%202/topic2-pacing-150.html">Day-by-day pacing calendar →</a></p>
-    </section>
-    <section class="card">
-      <p class="eyebrow">Lesson 3 · Days 6–7 · Oct 27–28 · SE pp. 305–318</p>
-      <h2>Determining Slopes of Perpendicular Lines</h2>
-      <div class="links v-gen"><a href="Module%202%20topic%202/t2-lesson3-perpendicular-slopes.html">Slides</a><a href="Module%202%20topic%202/t2-lesson3-perpendicular-slopes.pptx">PowerPoint</a><a href="Module%202%20topic%202/t2-lesson3-perpendicular-slopes-catchup.html">Slides + Topic 1 catch-up</a><a href="Module%202%20topic%202/t2-lesson3-perpendicular-slopes-catchup.pptx">PowerPoint + catch-up</a><a href="Module%202%20topic%202/BLMathematics_AlgI_M2_T2_L3_LessonSlides_ENG_with_answers.pptx">Lesson slides with answers</a><span class="grp">Bell work <a href="Module%202%20topic%202/t2-lesson3-bellwork-day1.html">1</a> <a href="Module%202%20topic%202/t2-lesson3-bellwork-day2.html">2</a></span><a href="Module%202%20topic%202/t2-lesson3-homework.html">Homework</a><a href="Module%202%20topic%202/t2-lesson3-quiz.html">Quiz</a></div>
-      <div class="links v-iep"><a href="IEP/t2-lesson3-perpendicular-slopes-IEP.html">Slides</a><a href="IEP/t2-lesson3-perpendicular-slopes-IEP.pptx">PowerPoint</a><a href="IEP/t2-lesson3-perpendicular-slopes-IEP-catchup.html">Slides + Topic 1 catch-up</a><a href="IEP/t2-lesson3-perpendicular-slopes-IEP-catchup.pptx">PowerPoint + catch-up</a><a href="Module%202%20topic%202/BLMathematics_AlgI_M2_T2_L3_LessonSlides_ENG_with_answers.pptx">Lesson slides with answers</a><span class="grp">Bell work <a href="IEP/t2-lesson3-bellwork-day1-IEP.html">1</a> <a href="IEP/t2-lesson3-bellwork-day2-IEP.html">2</a></span><a href="IEP/t2-lesson3-bellwork-IEP-ANSWER-KEY.pptx">Bell work key</a><a href="IEP/t2-lesson3-homework-IEP.html">Homework</a><a href="IEP/t2-lesson3-homework-IEP-ANSWER-KEY.pptx">Homework key</a><a href="IEP/t2-lesson3-quiz-IEP.html">Quiz</a><a href="IEP/t2-lesson3-quiz-IEP-ANSWER-KEY.pptx">Quiz key</a><a href="IEP/t2-lesson3-exit-ticket-IEP-ANSWER-KEY.pptx">Exit ticket key</a></div>
-      <div class="links v-504"><a href="Section%20504/t2-lesson3-perpendicular-slopes-504.html">Slides</a><a href="Section%20504/t2-lesson3-perpendicular-slopes-504.pptx">PowerPoint</a><a href="Section%20504/t2-lesson3-perpendicular-slopes-504-catchup.html">Slides + Topic 1 catch-up</a><a href="Section%20504/t2-lesson3-perpendicular-slopes-504-catchup.pptx">PowerPoint + catch-up</a><a href="Module%202%20topic%202/BLMathematics_AlgI_M2_T2_L3_LessonSlides_ENG_with_answers.pptx">Lesson slides with answers</a><span class="grp">Bell work <a href="Section%20504/t2-lesson3-bellwork-day1-504.html">1</a> <a href="Section%20504/t2-lesson3-bellwork-day2-504.html">2</a></span><a href="Section%20504/t2-lesson3-bellwork-504-ANSWER-KEY.pptx">Bell work key</a><a href="Section%20504/t2-lesson3-homework-504.html">Homework</a><a href="Section%20504/t2-lesson3-homework-504-ANSWER-KEY.pptx">Homework key</a><a href="Section%20504/t2-lesson3-quiz-504.html">Quiz</a><a href="Section%20504/t2-lesson3-quiz-504-ANSWER-KEY.pptx">Quiz key</a><a href="Section%20504/t2-lesson3-exit-ticket-504-ANSWER-KEY.pptx">Exit ticket key</a></div>
-    </section>
-    <section class="card">
-      <p class="eyebrow">Lesson 4 · Day 8 and Day 11 · Oct 29 and Nov 4 · SE pp. 319–330</p>
-      <h2>Comparing Linear Functions in Different Forms</h2>
-      <div class="links v-gen"><a href="Module%202%20topic%202/t2-lesson4-comparing-linear-functions.html">Slides</a><a href="Module%202%20topic%202/t2-lesson4-comparing-linear-functions.pptx">PowerPoint</a><a href="Module%202%20topic%202/t2-lesson4-comparing-linear-functions-catchup.html">Slides + Topic 1 catch-up</a><a href="Module%202%20topic%202/t2-lesson4-comparing-linear-functions-catchup.pptx">PowerPoint + catch-up</a><a href="Module%202%20topic%202/BLMathematics_AlgI_M2_T2_L4_LessonSlides_ENG_with_answers.pptx">Lesson slides with answers</a><span class="grp">Bell work <a href="Module%202%20topic%202/t2-lesson4-bellwork-day1.html">1</a> <a href="Module%202%20topic%202/t2-lesson4-bellwork-day2.html">2</a></span><a href="Module%202%20topic%202/t2-lesson4-homework.html">Homework</a><a href="Module%202%20topic%202/t2-lesson4-quiz.html">Quiz</a></div>
-      <div class="links v-iep"><a href="IEP/t2-lesson4-comparing-linear-functions-IEP.html">Slides</a><a href="IEP/t2-lesson4-comparing-linear-functions-IEP.pptx">PowerPoint</a><a href="IEP/t2-lesson4-comparing-linear-functions-IEP-catchup.html">Slides + Topic 1 catch-up</a><a href="IEP/t2-lesson4-comparing-linear-functions-IEP-catchup.pptx">PowerPoint + catch-up</a><a href="Module%202%20topic%202/BLMathematics_AlgI_M2_T2_L4_LessonSlides_ENG_with_answers.pptx">Lesson slides with answers</a><span class="grp">Bell work <a href="IEP/t2-lesson4-bellwork-day1-IEP.html">1</a> <a href="IEP/t2-lesson4-bellwork-day2-IEP.html">2</a></span><a href="IEP/t2-lesson4-bellwork-IEP-ANSWER-KEY.pptx">Bell work key</a><a href="IEP/t2-lesson4-homework-IEP.html">Homework</a><a href="IEP/t2-lesson4-homework-IEP-ANSWER-KEY.pptx">Homework key</a><a href="IEP/t2-lesson4-quiz-IEP.html">Quiz</a><a href="IEP/t2-lesson4-quiz-IEP-ANSWER-KEY.pptx">Quiz key</a><a href="IEP/t2-lesson4-exit-ticket-IEP-ANSWER-KEY.pptx">Exit ticket key</a></div>
-      <div class="links v-504"><a href="Section%20504/t2-lesson4-comparing-linear-functions-504.html">Slides</a><a href="Section%20504/t2-lesson4-comparing-linear-functions-504.pptx">PowerPoint</a><a href="Section%20504/t2-lesson4-comparing-linear-functions-504-catchup.html">Slides + Topic 1 catch-up</a><a href="Section%20504/t2-lesson4-comparing-linear-functions-504-catchup.pptx">PowerPoint + catch-up</a><a href="Module%202%20topic%202/BLMathematics_AlgI_M2_T2_L4_LessonSlides_ENG_with_answers.pptx">Lesson slides with answers</a><span class="grp">Bell work <a href="Section%20504/t2-lesson4-bellwork-day1-504.html">1</a> <a href="Section%20504/t2-lesson4-bellwork-day2-504.html">2</a></span><a href="Section%20504/t2-lesson4-bellwork-504-ANSWER-KEY.pptx">Bell work key</a><a href="Section%20504/t2-lesson4-homework-504.html">Homework</a><a href="Section%20504/t2-lesson4-homework-504-ANSWER-KEY.pptx">Homework key</a><a href="Section%20504/t2-lesson4-quiz-504.html">Quiz</a><a href="Section%20504/t2-lesson4-quiz-504-ANSWER-KEY.pptx">Quiz key</a><a href="Section%20504/t2-lesson4-exit-ticket-504-ANSWER-KEY.pptx">Exit ticket key</a></div>
-    </section>
-    <section class="card">
-      <p class="eyebrow">Day 10 · Tue Nov 3 · Covers Lessons 1–4 · Review Nov 2 · Retakes Wed Nov 4</p>
-      <h2>End of Topic 2 Assessment</h2>
-      <div class="links v-gen"><a href="Module%202%20topic%202/t2-review.html">Review practice test</a><a href="Module%202%20topic%202/Topic2-Assessment.pptx">PowerPoint</a><a href="Module%202%20topic%202/Topic2-Assessment-ANSWER-KEY.pptx">Answer key</a><a href="Module%202%20topic%202/Topic2-Retake.pptx">Retake (Nov 4)</a><a href="Module%202%20topic%202/Topic2-Retake-ANSWER-KEY.pptx">Retake key</a></div>
-      <div class="links v-iep"><a href="IEP/t2-review-IEP.html">Review practice test</a><a href="IEP/Topic2-Assessment-IEP.pptx">PowerPoint</a><a href="IEP/Topic2-Assessment-IEP-ANSWER-KEY.pptx">Answer key</a><a href="IEP/Topic2-Retake-IEP.pptx">Retake (Nov 4)</a><a href="IEP/Topic2-Retake-IEP-ANSWER-KEY.pptx">Retake key</a></div>
-      <div class="links v-504"><a href="Section%20504/t2-review-504.html">Review practice test</a><a href="Section%20504/Topic2-Assessment-504.pptx">PowerPoint</a><a href="Section%20504/Topic2-Assessment-504-ANSWER-KEY.pptx">Answer key</a><a href="Section%20504/Topic2-Retake-504.pptx">Retake (Nov 4)</a><a href="Section%20504/Topic2-Retake-504-ANSWER-KEY.pptx">Retake key</a></div>
-    </section>
-  </div>
-  <h3 class="sub" id="full12">Lessons 1 and 2: full lessons (reference)</h3>
-  <p class="muted" style="margin:0">Every slide, bell work day and practice page. On Monday, teach from the Catch-Up slides above.</p>
-  <div class="lessons">
-    <section class="card">
-      <p class="eyebrow">Full lesson · Lesson 1 · Days 1–3 · Oct 19–21 · SE pp. 269–286</p>
-      <h2>Transforming Linear Functions</h2>
-      <div class="links v-gen"><a href="Module%202%20topic%202/t2-lesson1-transforming-linear-functions.html">Slides</a><a href="Module%202%20topic%202/t2-lesson1-transforming-linear-functions.pptx">PowerPoint</a><a href="Module%202%20topic%202/t2-lesson1-transforming-linear-functions-catchup.html">Slides + Topic 1 catch-up</a><a href="Module%202%20topic%202/t2-lesson1-transforming-linear-functions-catchup.pptx">PowerPoint + catch-up</a><a href="Module%202%20topic%202/BLMathematics_AlgI_M2_T2_L1_LessonSlides_ENG_with_answers.pptx">Lesson slides with answers</a><span class="grp">Bell work <a href="Module%202%20topic%202/t2-lesson1-bellwork-day1.html">1</a> <a href="Module%202%20topic%202/t2-lesson1-bellwork-day2.html">2</a> <a href="Module%202%20topic%202/t2-lesson1-bellwork-day3.html">3</a></span><a href="Module%202%20topic%202/t2-lesson1-homework.html">Homework</a><a href="Module%202%20topic%202/t2-lesson1-quiz.html">Quiz</a></div>
-      <div class="links v-iep"><a href="IEP/t2-lesson1-transforming-linear-functions-IEP.html">Slides</a><a href="IEP/t2-lesson1-transforming-linear-functions-IEP.pptx">PowerPoint</a><a href="IEP/t2-lesson1-transforming-linear-functions-IEP-catchup.html">Slides + Topic 1 catch-up</a><a href="IEP/t2-lesson1-transforming-linear-functions-IEP-catchup.pptx">PowerPoint + catch-up</a><a href="Module%202%20topic%202/BLMathematics_AlgI_M2_T2_L1_LessonSlides_ENG_with_answers.pptx">Lesson slides with answers</a><span class="grp">Bell work <a href="IEP/t2-lesson1-bellwork-day1-IEP.html">1</a> <a href="IEP/t2-lesson1-bellwork-day2-IEP.html">2</a> <a href="IEP/t2-lesson1-bellwork-day3-IEP.html">3</a></span><a href="IEP/t2-lesson1-bellwork-IEP-ANSWER-KEY.pptx">Bell work key</a><a href="IEP/t2-lesson1-homework-IEP.html">Homework</a><a href="IEP/t2-lesson1-homework-IEP-ANSWER-KEY.pptx">Homework key</a><a href="IEP/t2-lesson1-quiz-IEP.html">Quiz</a><a href="IEP/t2-lesson1-quiz-IEP-ANSWER-KEY.pptx">Quiz key</a><a href="IEP/t2-lesson1-exit-ticket-IEP-ANSWER-KEY.pptx">Exit ticket key</a></div>
-      <div class="links v-504"><a href="Section%20504/t2-lesson1-transforming-linear-functions-504.html">Slides</a><a href="Section%20504/t2-lesson1-transforming-linear-functions-504.pptx">PowerPoint</a><a href="Section%20504/t2-lesson1-transforming-linear-functions-504-catchup.html">Slides + Topic 1 catch-up</a><a href="Section%20504/t2-lesson1-transforming-linear-functions-504-catchup.pptx">PowerPoint + catch-up</a><a href="Module%202%20topic%202/BLMathematics_AlgI_M2_T2_L1_LessonSlides_ENG_with_answers.pptx">Lesson slides with answers</a><span class="grp">Bell work <a href="Section%20504/t2-lesson1-bellwork-day1-504.html">1</a> <a href="Section%20504/t2-lesson1-bellwork-day2-504.html">2</a> <a href="Section%20504/t2-lesson1-bellwork-day3-504.html">3</a></span><a href="Section%20504/t2-lesson1-bellwork-504-ANSWER-KEY.pptx">Bell work key</a><a href="Section%20504/t2-lesson1-homework-504.html">Homework</a><a href="Section%20504/t2-lesson1-homework-504-ANSWER-KEY.pptx">Homework key</a><a href="Section%20504/t2-lesson1-quiz-504.html">Quiz</a><a href="Section%20504/t2-lesson1-quiz-504-ANSWER-KEY.pptx">Quiz key</a><a href="Section%20504/t2-lesson1-exit-ticket-504-ANSWER-KEY.pptx">Exit ticket key</a></div>
-    </section>
-    <section class="card">
-      <p class="eyebrow">Full lesson · Lesson 2 · SE pp. 287–304</p>
-      <h2>Vertical and Horizontal Transformations of Linear Functions</h2>
-      <div class="links v-gen"><a href="Module%202%20topic%202/t2-lesson2-vertical-horizontal-transformations.html">Slides</a><a href="Module%202%20topic%202/t2-lesson2-vertical-horizontal-transformations.pptx">PowerPoint</a><a href="Module%202%20topic%202/t2-lesson2-vertical-horizontal-transformations-catchup.html">Slides + Topic 1 catch-up</a><a href="Module%202%20topic%202/t2-lesson2-vertical-horizontal-transformations-catchup.pptx">PowerPoint + catch-up</a><a href="Module%202%20topic%202/BLMathematics_AlgI_M2_T2_L2_LessonSlides_ENG_with_answers.pptx">Lesson slides with answers</a><span class="grp">Bell work <a href="Module%202%20topic%202/t2-lesson2-bellwork-day1.html">1</a> <a href="Module%202%20topic%202/t2-lesson2-bellwork-day2.html">2</a></span><a href="Module%202%20topic%202/t2-lesson2-homework.html">Homework</a><a href="Module%202%20topic%202/t2-lesson2-quiz.html">Quiz</a></div>
-      <div class="links v-iep"><a href="IEP/t2-lesson2-vertical-horizontal-transformations-IEP.html">Slides</a><a href="IEP/t2-lesson2-vertical-horizontal-transformations-IEP.pptx">PowerPoint</a><a href="IEP/t2-lesson2-vertical-horizontal-transformations-IEP-catchup.html">Slides + Topic 1 catch-up</a><a href="IEP/t2-lesson2-vertical-horizontal-transformations-IEP-catchup.pptx">PowerPoint + catch-up</a><a href="Module%202%20topic%202/BLMathematics_AlgI_M2_T2_L2_LessonSlides_ENG_with_answers.pptx">Lesson slides with answers</a><span class="grp">Bell work <a href="IEP/t2-lesson2-bellwork-day1-IEP.html">1</a> <a href="IEP/t2-lesson2-bellwork-day2-IEP.html">2</a></span><a href="IEP/t2-lesson2-bellwork-IEP-ANSWER-KEY.pptx">Bell work key</a><a href="IEP/t2-lesson2-homework-IEP.html">Homework</a><a href="IEP/t2-lesson2-homework-IEP-ANSWER-KEY.pptx">Homework key</a><a href="IEP/t2-lesson2-quiz-IEP.html">Quiz</a><a href="IEP/t2-lesson2-quiz-IEP-ANSWER-KEY.pptx">Quiz key</a><a href="IEP/t2-lesson2-exit-ticket-IEP-ANSWER-KEY.pptx">Exit ticket key</a></div>
-      <div class="links v-504"><a href="Section%20504/t2-lesson2-vertical-horizontal-transformations-504.html">Slides</a><a href="Section%20504/t2-lesson2-vertical-horizontal-transformations-504.pptx">PowerPoint</a><a href="Section%20504/t2-lesson2-vertical-horizontal-transformations-504-catchup.html">Slides + Topic 1 catch-up</a><a href="Section%20504/t2-lesson2-vertical-horizontal-transformations-504-catchup.pptx">PowerPoint + catch-up</a><a href="Module%202%20topic%202/BLMathematics_AlgI_M2_T2_L2_LessonSlides_ENG_with_answers.pptx">Lesson slides with answers</a><span class="grp">Bell work <a href="Section%20504/t2-lesson2-bellwork-day1-504.html">1</a> <a href="Section%20504/t2-lesson2-bellwork-day2-504.html">2</a></span><a href="Section%20504/t2-lesson2-bellwork-504-ANSWER-KEY.pptx">Bell work key</a><a href="Section%20504/t2-lesson2-homework-504.html">Homework</a><a href="Section%20504/t2-lesson2-homework-504-ANSWER-KEY.pptx">Homework key</a><a href="Section%20504/t2-lesson2-quiz-504.html">Quiz</a><a href="Section%20504/t2-lesson2-quiz-504-ANSWER-KEY.pptx">Quiz key</a><a href="Section%20504/t2-lesson2-exit-ticket-504-ANSWER-KEY.pptx">Exit ticket key</a></div>
-    </section>
-  </div>
-  <header class="topic" id="topic1">
-    <p class="eyebrow">Topic 1 · Lessons 4–6, the topic test and the retest</p>
-    <h2>Linear Functions</h2>
-    <p>20 days on the 150-day calendar</p>
-  </header>
-  <div class="lessons">
-    <section class="card">
-      <p class="eyebrow">Lesson 4 · Days 10–11 · SE pp. 201–216</p>
-      <h2>Point-Slope Form of a Line</h2>
-      <div class="links v-gen"><a href="lesson4/point-slope-form-lesson4.html">Slides</a><a href="lesson4/point-slope-form-lesson4.pptx">PowerPoint</a><a href="lesson4/BLMathematics_AlgI_M2_T1_L4_LessonSlides_ENG_with_answers.pptx">Lesson slides with answers</a><span class="grp">Bell work <a href="lesson4/lesson4-bellwork-day1.html">1</a> <a href="lesson4/lesson4-bellwork-day2.html">2</a></span><a href="lesson4/lesson4-homework.html">Homework</a><a href="lesson4/lesson4-quiz.html">Quiz</a></div>
-      <div class="links v-iep"><a href="IEP/lesson4-point-slope-form-IEP.html">Slides</a><a href="IEP/lesson4-point-slope-form-IEP.pptx">PowerPoint</a><span class="grp">Bell work <a href="IEP/lesson4-bellwork-day1-IEP.html">1</a> <a href="IEP/lesson4-bellwork-day2-IEP.html">2</a></span><a href="IEP/lesson4-bellwork-IEP-ANSWER-KEY.pptx">Bell work key</a><a href="IEP/lesson4-homework-IEP.html">Homework</a><a href="IEP/lesson4-homework-IEP-ANSWER-KEY.pptx">Homework key</a><a href="IEP/lesson4-quiz-IEP.html">Quiz</a><a href="IEP/lesson4-quiz-IEP-ANSWER-KEY.pptx">Quiz key</a><a href="IEP/lesson4-exit-ticket-IEP-ANSWER-KEY.pptx">Exit ticket key</a></div>
-      <div class="links v-504"><a href="Section%20504/lesson4-point-slope-form-504.html">Slides</a><a href="Section%20504/lesson4-point-slope-form-504.pptx">PowerPoint</a><span class="grp">Bell work <a href="Section%20504/lesson4-bellwork-day1-504.html">1</a> <a href="Section%20504/lesson4-bellwork-day2-504.html">2</a></span><a href="Section%20504/lesson4-bellwork-504-ANSWER-KEY.pptx">Bell work key</a><a href="Section%20504/lesson4-homework-504.html">Homework</a><a href="Section%20504/lesson4-homework-504-ANSWER-KEY.pptx">Homework key</a><a href="Section%20504/lesson4-quiz-504.html">Quiz</a><a href="Section%20504/lesson4-quiz-504-ANSWER-KEY.pptx">Quiz key</a><a href="Section%20504/lesson4-exit-ticket-504-ANSWER-KEY.pptx">Exit ticket key</a></div>
-    </section>
-    <section class="card">
-      <p class="eyebrow">Lesson 5 · Days 12–14 · SE pp. 217–237</p>
-      <h2>Using Linear Equations</h2>
-      <div class="links v-gen"><a href="lesson5/using-linear-equations-lesson5.html">Slides</a><a href="lesson5/using-linear-equations-lesson5.pptx">PowerPoint</a><a href="lesson5/BLMathematics_AlgI_M2_T1_L5_LessonSlides_ENG_with_answers.pptx">Lesson slides with answers</a><span class="grp">Bell work <a href="lesson5/lesson5-bellwork-day1.html">1</a> <a href="lesson5/lesson5-bellwork-day2.html">2</a> <a href="lesson5/lesson5-bellwork-day3.html">3</a></span><a href="lesson5/lesson5-homework.html">Homework</a><a href="lesson5/lesson5-quiz.html">Quiz</a></div>
-      <div class="links v-iep"><a href="IEP/lesson5-using-linear-equations-IEP.html">Slides</a><a href="IEP/lesson5-using-linear-equations-IEP.pptx">PowerPoint</a><span class="grp">Bell work <a href="IEP/lesson5-bellwork-day1-IEP.html">1</a> <a href="IEP/lesson5-bellwork-day2-IEP.html">2</a> <a href="IEP/lesson5-bellwork-day3-IEP.html">3</a></span><a href="IEP/lesson5-bellwork-IEP-ANSWER-KEY.pptx">Bell work key</a><a href="IEP/lesson5-homework-IEP.html">Homework</a><a href="IEP/lesson5-homework-IEP-ANSWER-KEY.pptx">Homework key</a><a href="IEP/lesson5-quiz-IEP.html">Quiz</a><a href="IEP/lesson5-quiz-IEP-ANSWER-KEY.pptx">Quiz key</a><a href="IEP/lesson5-exit-ticket-IEP-ANSWER-KEY.pptx">Exit ticket key</a></div>
-      <div class="links v-504"><a href="Section%20504/lesson5-using-linear-equations-504.html">Slides</a><a href="Section%20504/lesson5-using-linear-equations-504.pptx">PowerPoint</a><span class="grp">Bell work <a href="Section%20504/lesson5-bellwork-day1-504.html">1</a> <a href="Section%20504/lesson5-bellwork-day2-504.html">2</a> <a href="Section%20504/lesson5-bellwork-day3-504.html">3</a></span><a href="Section%20504/lesson5-bellwork-504-ANSWER-KEY.pptx">Bell work key</a><a href="Section%20504/lesson5-homework-504.html">Homework</a><a href="Section%20504/lesson5-homework-504-ANSWER-KEY.pptx">Homework key</a><a href="Section%20504/lesson5-quiz-504.html">Quiz</a><a href="Section%20504/lesson5-quiz-504-ANSWER-KEY.pptx">Quiz key</a><a href="Section%20504/lesson5-exit-ticket-504-ANSWER-KEY.pptx">Exit ticket key</a></div>
-    </section>
-    <section class="card">
-      <p class="eyebrow">Lesson 6 · Days 16–18 · SE pp. 239–256</p>
-      <h2>Making Sense of Different Representations of a Linear Function</h2>
-      <div class="links v-gen"><a href="lesson6/making-sense-of-representations-lesson6.html">Slides</a><a href="lesson6/making-sense-of-representations-lesson6.pptx">PowerPoint</a><a href="lesson6/BLMathematics_AlgI_M2_T1_L6_LessonSlides_ENG_with_answers.pptx">Lesson slides with answers</a><span class="grp">Bell work <a href="lesson6/lesson6-bellwork-day1.html">1</a> <a href="lesson6/lesson6-bellwork-day2.html">2</a> <a href="lesson6/lesson6-bellwork-day3.html">3</a></span><a href="lesson6/lesson6-homework.html">Homework</a><a href="lesson6/lesson6-quiz.html">Quiz</a></div>
-      <div class="links v-iep"><a href="IEP/lesson6-representations-IEP.html">Slides</a><a href="IEP/lesson6-representations-IEP.pptx">PowerPoint</a><span class="grp">Bell work <a href="IEP/lesson6-bellwork-day1-IEP.html">1</a> <a href="IEP/lesson6-bellwork-day2-IEP.html">2</a> <a href="IEP/lesson6-bellwork-day3-IEP.html">3</a></span><a href="IEP/lesson6-bellwork-IEP-ANSWER-KEY.pptx">Bell work key</a><a href="IEP/lesson6-homework-IEP.html">Homework</a><a href="IEP/lesson6-homework-IEP-ANSWER-KEY.pptx">Homework key</a><a href="IEP/lesson6-quiz-IEP.html">Quiz</a><a href="IEP/lesson6-quiz-IEP-ANSWER-KEY.pptx">Quiz key</a><a href="IEP/lesson6-exit-ticket-IEP-ANSWER-KEY.pptx">Exit ticket key</a></div>
-      <div class="links v-504"><a href="Section%20504/lesson6-representations-504.html">Slides</a><a href="Section%20504/lesson6-representations-504.pptx">PowerPoint</a><span class="grp">Bell work <a href="Section%20504/lesson6-bellwork-day1-504.html">1</a> <a href="Section%20504/lesson6-bellwork-day2-504.html">2</a> <a href="Section%20504/lesson6-bellwork-day3-504.html">3</a></span><a href="Section%20504/lesson6-bellwork-504-ANSWER-KEY.pptx">Bell work key</a><a href="Section%20504/lesson6-homework-504.html">Homework</a><a href="Section%20504/lesson6-homework-504-ANSWER-KEY.pptx">Homework key</a><a href="Section%20504/lesson6-quiz-504.html">Quiz</a><a href="Section%20504/lesson6-quiz-504-ANSWER-KEY.pptx">Quiz key</a><a href="Section%20504/lesson6-exit-ticket-504-ANSWER-KEY.pptx">Exit ticket key</a></div>
-    </section>
-    <section class="card acc">
-      <p class="eyebrow">Day 20 · Covers Lessons 1–6</p>
-      <h2>End of Topic 1 Assessment</h2>
-      <div class="links v-iep"><a href="IEP/Topic1-Assessment-IEP.pptx">PowerPoint</a><a href="IEP/Topic1-Assessment-IEP-ANSWER-KEY.pptx">Answer key</a></div>
-      <div class="links v-504"><a href="Section%20504/Topic1-Assessment-504.pptx">PowerPoint</a><a href="Section%20504/Topic1-Assessment-504-ANSWER-KEY.pptx">Answer key</a></div>
-    </section>
-    <section class="card">
-      <p class="eyebrow">Retest-Alg1M2T1 · Forms A, B, C · 4 questions each</p>
-      <h2>Topic 1 Retest</h2>
-      <div class="links v-gen v-iep v-504"><a href="assessment/Retest-Alg1M2T1-online.html">Take it online</a><a href="assessment/Retest-Alg1M2T1.pdf">PDF</a><a href="assessment/Retest-Alg1M2T1.pptx">PowerPoint</a><a href="assessment/Retest-Alg1M2T1.html">Print page</a><a href="assessment/Retest-Alg1M2T1-ANSWER-KEY.pdf">Answer key PDF</a><a href="assessment/Retest-Alg1M2T1-ANSWER-KEY.pptx">Answer key PowerPoint</a><a href="assessment/retest-results.html">Student scores (teacher)</a></div>
-    </section>
-  </div>
-  <p class="muted" style="margin-top:24px;font-size:14px">Based on Bluebonnet Learning Secondary Mathematics, Algebra I (©2024–2025 Texas Education Agency, portions ©2021 Carnegie Learning, Inc.), licensed <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a>. A private site for Algebra I teachers.</p>
+  <span class="test" id="countdown">Test: Tue Nov 3</span>
+
+  <h2>This week</h2>
+  <div class="week" id="week"></div>
+  <section class="card today" id="today"></section>
+
+  <h2>Lessons</h2>
+  <div class="lessons" id="lessons"></div>
+  <p class="tip">Stuck? Watch the video first, then try the homework. You can retry homework as many times as you want.</p>
+
+  <h2>Get ready for the test</h2>
+  <section class="card">
+    <p>The Topic 2 test is <b>Tuesday, November 3</b>. Retakes are Wednesday, November 4.</p>
+    <div class="btns" id="prep"></div>
+  </section>
+
+  <footer>Based on Bluebonnet Learning Secondary Mathematics, Algebra I (©2024–2025 Texas Education Agency, portions ©2021 Carnegie Learning, Inc.),
+    <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a>. · <a href="teacher.html">Teacher page</a></footer>
 </div>
 <script>
-  // remember the chosen version for this browser
-  try { const pick = document.getElementById(localStorage.getItem("version")); if (pick) pick.checked = true; } catch {}
-  document.querySelectorAll(".seg input").forEach(i => i.addEventListener("change", () => { try { localStorage.setItem("version", i.id); } catch {} }));
+  // Every practice page comes in three versions: Module 2 topic 2/<name>.html, IEP/<name>-IEP.html, Section 504/<name>-504.html
+  const DIR = { gen: ["Module%202%20topic%202/", ""], iep: ["IEP/", "-IEP"], "504": ["Section%20504/", "-504"] };
+  const VID = "Module%202%20topic%202/videos/";
+  const LESSONS = [
+    { n: 1, title: "Slide and stretch a line", learn: "What f(x) + d and a · f(x) do to a graph.",
+      slides: "t2-lesson1-transforming-linear-functions", video: "T2-Lesson1-Transformations.mp4", min: 4 },
+    { n: 2, title: "Inside vs. outside", learn: "Moving a line left and right: f(x − h) and f(bx).",
+      slides: "t2-lesson2-vertical-horizontal-transformations", video: "T2-Lesson2-Horizontal-Transformations.mp4", min: 4 },
+    { n: 3, title: "Perpendicular lines", learn: "Turn a line 90° and the slope flips: negative reciprocals.",
+      slides: "t2-lesson3-perpendicular-slopes", video: "T2-Lesson3-Perpendicular-Lines.mp4", min: 3 },
+    { n: 4, title: "Comparing functions", learn: "Equation, table, graph or story: which grows faster, which starts higher?",
+      slides: "t2-lesson4-comparing-linear-functions", video: "T2-Lesson4-Comparing-Functions.mp4", min: 4 },
+  ];
+  // class days (Monday–Thursday); "lessons" are the lessons that day covers
+  const DAYS = [
+    { d: "2026-10-26", short: "Mon 10/26", what: "Catch-up day: Lessons 1 and 2", lessons: [1, 2], slides: "t2-catchup-day-lessons1-2" },
+    { d: "2026-10-27", short: "Tue 10/27", what: "Lesson 3: Perpendicular lines", lessons: [3] },
+    { d: "2026-10-28", short: "Wed 10/28", what: "Lesson 3: Perpendicular lines, day 2", lessons: [3] },
+    { d: "2026-10-29", short: "Thu 10/29", what: "Lesson 4: Comparing functions", lessons: [4] },
+    { d: "2026-11-02", short: "Mon 11/2", what: "Review day: practice test", review: true },
+    { d: "2026-11-03", short: "Tue 11/3", what: "Topic 2 test", test: true },
+    { d: "2026-11-04", short: "Wed 11/4", what: "Retakes", review: true },
+  ];
+
+  const sel = document.getElementById("ver");
+  try { const v = localStorage.getItem("myVersion"); if (DIR[v]) sel.value = v; } catch {}
+  const page = name => DIR[sel.value][0] + name + DIR[sel.value][1] + ".html";
+  const btn = (href, text, go) => `<a class="btn${go ? " go" : ""}" href="${href}">${text}</a>`;
+  const lessonBtns = L => [
+    btn(VID + L.video, `▶ Watch (${L.min} min)`, true),
+    btn(page(L.slides), "Slides"),
+    btn(page(`t2-lesson${L.n}-homework`), "Homework"),
+    btn(page(`t2-lesson${L.n}-quiz`), "Quiz"),
+  ].join("");
+
+  function render() {
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const date = s => new Date(s + "T00:00:00");
+    let i = DAYS.findIndex(x => date(x.d) >= today);
+    if (i < 0) i = DAYS.length - 1;
+    const isToday = +date(DAYS[i].d) === +today;
+
+    document.getElementById("week").innerHTML = DAYS.map((x, j) =>
+      `<div class="day${j === i ? " now" : ""}${date(x.d) < today ? " done" : ""}${x.test ? " big" : ""}"><b>${x.short}</b>${
+        x.test ? "Test" : x.lessons ? "Lesson " + x.lessons.join(" & ") : x.what.split(":")[0]}</div>`).join("");
+
+    const D = DAYS[i];
+    let body = "";
+    if (D.lessons) {
+      const Ls = D.lessons.map(n => LESSONS[n - 1]);
+      body = `<div class="btns">${Ls.map(L => btn(VID + L.video, `▶ Watch Lesson ${L.n} (${L.min} min)`, true)).join("")}
+        ${btn(page(D.slides || Ls[0].slides), "Today's slides")}
+        ${Ls.map(L => btn(page(`t2-lesson${L.n}-homework`), Ls.length > 1 ? `Homework ${L.n}` : "Homework")).join("")}</div>`;
+    } else {
+      body = `<div class="btns">${btn(page("t2-review"), "Practice test", true)}</div>
+        <p class="tip">Watch any lesson video below to review.</p>`;
+    }
+    document.getElementById("today").innerHTML =
+      `<p class="eyebrow">${isToday ? "Today" : "Next class"} · ${D.short}</p><h3>${D.what}</h3>${body}`;
+
+    document.getElementById("lessons").innerHTML = LESSONS.map(L =>
+      `<section class="card lesson"><div class="num">${L.n}</div><h3>${L.title}</h3><p>${L.learn}</p><div class="btns">${lessonBtns(L)}</div></section>`).join("");
+
+    document.getElementById("prep").innerHTML = btn(page("t2-review"), "Practice test", true) +
+      LESSONS.map(L => btn(VID + L.video, `▶ Lesson ${L.n} video`)).join("");
+
+    const left = Math.round((date("2026-11-03") - today) / 864e5);
+    document.getElementById("countdown").textContent =
+      left > 1 ? `Test: Tue Nov 3 · ${left} days to go` : left === 1 ? "Test is tomorrow!" : left === 0 ? "Test day: you've got this!" : "Topic 2 test: Tue Nov 3";
+  }
+  sel.addEventListener("change", () => { try { localStorage.setItem("myVersion", sel.value); } catch {} render(); });
+  render();
 </script>
