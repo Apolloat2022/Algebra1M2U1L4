@@ -106,7 +106,7 @@
     btn(VID + L.video, `▶ Watch (${L.min} min)`, true),
     btn(page(L.slides), "Slides"),
     btn(page(L.slides, ".pptx"), "PowerPoint"),
-    btn(BOOK(L.n), "Book slides"),
+    btn(BOOK(L.n), `Lesson ${L.n} with answers`),
     btn(page(`t2-lesson${L.n}-homework`), "Homework"),
     btn(page(`t2-lesson${L.n}-quiz`), "Quiz"),
   ].join("");
@@ -129,7 +129,7 @@
       body = `<div class="btns">${Ls.map(L => btn(VID + L.video, `▶ Watch Lesson ${L.n} (${L.min} min)`, true)).join("")}
         ${btn(page(D.slides || Ls[0].slides), "Today's slides")}
         ${btn(page(D.slides || Ls[0].slides, ".pptx"), "PowerPoint")}
-        ${Ls.map(L => btn(BOOK(L.n), Ls.length > 1 ? `Book slides ${L.n}` : "Book slides")).join("")}
+        ${Ls.map(L => btn(BOOK(L.n), `Lesson ${L.n} with answers`)).join("")}
         ${Ls.map(L => btn(page(`t2-lesson${L.n}-homework`), Ls.length > 1 ? `Homework ${L.n}` : "Homework")).join("")}</div>`;
     } else {
       body = `<div class="btns">${btn(page("t2-review"), "Practice test", true)}</div>
