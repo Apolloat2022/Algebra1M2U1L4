@@ -88,8 +88,8 @@
   // class days (Monday–Thursday); "lessons" are the lessons that day covers
   const DAYS = [
     { d: "2026-10-26", short: "Mon 10/26", what: "Catch-up day: Lessons 1 and 2", lessons: [1, 2], slides: "t2-catchup-day-lessons1-2" },
-    { d: "2026-10-27", short: "Tue 10/27", what: "Lesson 3: Perpendicular lines", lessons: [3] },
-    { d: "2026-10-28", short: "Wed 10/28", what: "Lesson 3: Perpendicular lines, day 2", lessons: [3] },
+    { d: "2026-10-27", short: "Tue 10/27", what: "Lessons 1 and 2: Slide, stretch and move lines", lessons: [1, 2], slides: "t2-catchup-day-lessons1-2" },
+    { d: "2026-10-28", short: "Wed 10/28", what: "Lesson 3: Perpendicular lines", lessons: [3] },
     { d: "2026-10-29", short: "Thu 10/29", what: "Lesson 4: Comparing functions", lessons: [4] },
     { d: "2026-11-02", short: "Mon 11/2", what: "Review day: practice test", review: true },
     { d: "2026-11-03", short: "Tue 11/3", what: "Topic 2 test", test: true },
@@ -98,11 +98,12 @@
 
   const sel = document.getElementById("ver");
   try { const v = localStorage.getItem("myVersion"); if (DIR[v]) sel.value = v; } catch {}
-  const page = name => DIR[sel.value][0] + name + DIR[sel.value][1] + ".html";
+  const page = (name, ext = ".html") => DIR[sel.value][0] + name + DIR[sel.value][1] + ext;
   const btn = (href, text, go) => `<a class="btn${go ? " go" : ""}" href="${href}">${text}</a>`;
   const lessonBtns = L => [
     btn(VID + L.video, `▶ Watch (${L.min} min)`, true),
     btn(page(L.slides), "Slides"),
+    btn(page(L.slides, ".pptx"), "PowerPoint"),
     btn(page(`t2-lesson${L.n}-homework`), "Homework"),
     btn(page(`t2-lesson${L.n}-quiz`), "Quiz"),
   ].join("");
@@ -124,6 +125,7 @@
       const Ls = D.lessons.map(n => LESSONS[n - 1]);
       body = `<div class="btns">${Ls.map(L => btn(VID + L.video, `▶ Watch Lesson ${L.n} (${L.min} min)`, true)).join("")}
         ${btn(page(D.slides || Ls[0].slides), "Today's slides")}
+        ${btn(page(D.slides || Ls[0].slides, ".pptx"), "PowerPoint")}
         ${Ls.map(L => btn(page(`t2-lesson${L.n}-homework`), Ls.length > 1 ? `Homework ${L.n}` : "Homework")).join("")}</div>`;
     } else {
       body = `<div class="btns">${btn(page("t2-review"), "Practice test", true)}</div>
