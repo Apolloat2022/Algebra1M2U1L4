@@ -14,8 +14,9 @@
   .ver select{font:inherit;font-size:14px;padding:4px 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
   h2{font-size:20px;margin:36px 0 12px}
   .week{display:flex;gap:6px;flex-wrap:wrap}
-  .day{flex:1 1 76px;padding:8px 6px;border:1px solid var(--line);border-radius:10px;background:var(--card);text-align:center;font-size:14px;line-height:1.3}
+  .day{font:inherit;color:inherit;cursor:pointer;flex:1 1 76px;padding:8px 6px;border:1px solid var(--line);border-radius:10px;background:var(--card);text-align:center;font-size:14px;line-height:1.3}
   .day b{display:block;font-size:15px}
+  .day:hover{border-color:var(--point)}
   .day.now{border:2px solid var(--point);background:var(--soft)}
   .day.done{opacity:.55}
   .day.big b{color:var(--bad)}
@@ -84,15 +85,13 @@
       slides: "t2-lesson2-vertical-horizontal-transformations", video: "T2-Lesson2-Horizontal-Transformations.mp4", min: 4 },
     { n: 3, title: "Perpendicular lines", learn: "Turn a line 90° and the slope flips: negative reciprocals.",
       slides: "t2-lesson3-perpendicular-slopes", video: "T2-Lesson3-Perpendicular-Lines.mp4", min: 3 },
-    { n: 4, title: "Comparing functions", learn: "Equation, table, graph or story: which grows faster, which starts higher?",
-      slides: "t2-lesson4-comparing-linear-functions", video: "T2-Lesson4-Comparing-Functions.mp4", min: 4 },
   ];
   // class days (Monday–Thursday); "lessons" are the lessons that day covers
   const DAYS = [
     { d: "2026-10-26", short: "Mon 10/26", what: "Catch-up day: Lessons 1 and 2", lessons: [1, 2], slides: "t2-catchup-day-lessons1-2" },
     { d: "2026-10-27", short: "Tue 10/27", what: "Lessons 1 and 2: Slide, stretch and move lines", lessons: [1, 2], slides: "t2-catchup-day-lessons1-2" },
-    { d: "2026-10-28", short: "Wed 10/28", what: "Lesson 3: Perpendicular lines", lessons: [3] },
-    { d: "2026-10-29", short: "Thu 10/29", what: "Lesson 4: Comparing functions", lessons: [4] },
+    { d: "2026-10-28", short: "Wed 10/28", what: "Lesson 3: Perpendicular lines, day 1", lessons: [3] },
+    { d: "2026-10-29", short: "Thu 10/29", what: "Lesson 3: Perpendicular lines, day 2", lessons: [3] },
     { d: "2026-11-02", short: "Mon 11/2", what: "Review day: practice test", review: true },
     { d: "2026-11-03", short: "Tue 11/3", what: "Topic 2 test", test: true },
     { d: "2026-11-04", short: "Wed 11/4", what: "Retakes", review: true },
@@ -111,16 +110,18 @@
     btn(page(`t2-lesson${L.n}-quiz`), "Quiz"),
   ].join("");
 
+  let pick = null;  // a day chip the student clicked; null = today or the next class
   function render() {
     const today = new Date(); today.setHours(0, 0, 0, 0);
     const date = s => new Date(s + "T00:00:00");
     let i = DAYS.findIndex(x => date(x.d) >= today);
     if (i < 0) i = DAYS.length - 1;
-    const isToday = +date(DAYS[i].d) === +today;
+    if (pick !== null) i = pick;
+    const when = +date(DAYS[i].d) === +today ? "Today" : date(DAYS[i].d) < today ? "Earlier class" : "Coming up";
 
     document.getElementById("week").innerHTML = DAYS.map((x, j) =>
-      `<div class="day${j === i ? " now" : ""}${date(x.d) < today ? " done" : ""}${x.test ? " big" : ""}"><b>${x.short}</b>${
-        x.test ? "Test" : x.lessons ? "Lesson " + x.lessons.join(" & ") : x.what.split(":")[0]}</div>`).join("");
+      `<button type="button" class="day${j === i ? " now" : ""}${date(x.d) < today ? " done" : ""}${x.test ? " big" : ""}" data-j="${j}" aria-pressed="${j === i}"><b>${x.short}</b>${
+        x.test ? "Test" : x.lessons ? "Lesson " + x.lessons.join(" & ") : x.what.split(":")[0]}</button>`).join("");
 
     const D = DAYS[i];
     let body = "";
@@ -136,7 +137,7 @@
         <p class="tip">Watch any lesson video below to review.</p>`;
     }
     document.getElementById("today").innerHTML =
-      `<p class="eyebrow">${isToday ? "Today" : "Next class"} · ${D.short}</p><h3>${D.what}</h3>${body}`;
+      `<p class="eyebrow">${when} · ${D.short}</p><h3>${D.what}</h3>${body}`;
 
     document.getElementById("lessons").innerHTML = LESSONS.map(L =>
       `<section class="card lesson"><div class="num">${L.n}</div><h3>${L.title}</h3><p>${L.learn}</p><div class="btns">${lessonBtns(L)}</div></section>`).join("");
@@ -148,6 +149,10 @@
     document.getElementById("countdown").textContent =
       left > 1 ? `Test: Tue Nov 3 · ${left} days to go` : left === 1 ? "Test is tomorrow!" : left === 0 ? "Test day: you've got this!" : "Topic 2 test: Tue Nov 3";
   }
+  document.getElementById("week").addEventListener("click", e => {
+    const b = e.target.closest(".day"); if (!b) return;
+    pick = +b.dataset.j; render();
+  });
   sel.addEventListener("change", () => { try { localStorage.setItem("myVersion", sel.value); } catch {} render(); });
   render();
 </script>
