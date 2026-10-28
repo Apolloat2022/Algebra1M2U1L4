@@ -1304,9 +1304,9 @@ PPTX_T2 = {1: (ANS_T2_1, NOTES_T2_1, CORRECTIONS_T2_1, 67),
 if __name__ == "__main__":
     for arg in sys.argv[1:] or ["4", *map(str, PPTX), *(f"2.{n}" for n in PPTX_T2)]:
         if arg.startswith("2."):  # Topic 2 lessons: python make_lesson_key.py 2.1
-            src = TOPIC2 / f"BLMathematics_AlgI_M2_T2_L{arg[2:]}_LessonSlides_ENG_2025.pptx"
+            src = TOPIC2 / "BOOK SLIDES (original)" / f"BLMathematics_AlgI_M2_T2_L{arg[2:]}_LessonSlides_ENG_2025.pptx"
             n = int(arg[2:])
-            annotate(src, src.with_name(src.name.replace("2025", "with_answers")), *PPTX_T2[n], se=SE_T2[n], stars=STARS_T2[n],
+            annotate(src, TOPIC2 / src.name.replace("2025", "with_answers"), *PPTX_T2[n], se=SE_T2[n], stars=STARS_T2[n],
                      gaps=GAPS_T2.get(n), inline=INLINE_T2.get(n))
             continue
         lesson = int(arg)
