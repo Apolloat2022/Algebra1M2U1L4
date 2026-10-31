@@ -40,7 +40,7 @@
   h3.sub{margin:32px 0 4px;font-size:20px;scroll-margin-top:16px}
 </style>
 <div class="wrap">
-  <p class="eyebrow">Bluebonnet Algebra I · Modules 2–3 · Teacher page · <a href="index.html">Student home →</a> · <a href="archive.html">Materials archive →</a></p>
+  <p class="eyebrow">Bluebonnet Algebra I · Module 3 · Teacher page · <a href="index.html">Student home →</a> · <a href="archive.html">Materials archive →</a></p>
   <h1>Exploring Constant Change</h1>
   <p class="muted" style="margin:6px 0 0">Prepared by <strong>Mr. Pandey</strong></p>
   <p class="muted">Each lesson has slides, a PowerPoint copy, daily bell work, homework and a quiz. Day numbers follow 150-day pacing on the Anna ISD Monday–Thursday calendar and restart with each topic. Choose a version:</p>
@@ -49,7 +49,7 @@
     <label><input type="radio" name="v" id="v-iep">IEP</label>
     <label><input type="radio" name="v" id="v-504">Section 504</label>
   </div>
-  <nav class="jump" aria-label="Topics"><a href="#m3t1">Module 3 Topic 1 · from Nov 5</a><a href="#catchup">▶ Mon Oct 26: Catch-Up, Lessons 1–2</a><a href="#topic2">Topic 2 · Transforming and Comparing Linear Functions</a><a href="#full12">Lessons 1–2 full</a><a href="#topic1">Topic 1 · Linear Functions</a></nav>
+  <nav class="jump" aria-label="Topics"><a href="#m3t1">Module 3 Topic 1 · from Nov 5</a><a href="#catchup" class="m2">▶ Mon Oct 26: Catch-Up, Lessons 1–2</a><a href="#topic2" class="m2">Topic 2 · Transforming and Comparing Linear Functions</a><a href="#full12" class="m2">Lessons 1–2 full</a><a href="#topic1" class="m2">Topic 1 · Linear Functions</a></nav>
   <header class="topic" id="m3t1">
     <p class="eyebrow">Module 3 · Topic 1 · Starts Thu Nov 5</p>
     <h2>Linear Equations and Inequalities</h2>
@@ -83,6 +83,7 @@
       <div class="links"><a href="Module%203%20topic%201/LESSON%20PLANS/T1-Lesson-Plan-Tue-11-17.pdf">Review plan</a><a href="Module%203%20topic%201/LESSON%20PLANS/T1-Lesson-Plan-Wed-11-18.pdf">Test day plan</a><a href="Module%203%20topic%201/LESSON%20PLANS/T1-Lesson-Plan-Thu-11-19.pdf">Retake day plan</a></div>
     </section>
   </div>
+  <div id="m2">
   <header class="topic" id="topic2">
     <p class="eyebrow">Topic 2 · Now teaching</p>
     <h2>Transforming and Comparing Linear Functions</h2>
@@ -182,10 +183,14 @@
       <div class="links v-gen v-iep v-504"><a href="assessment/Retest-Alg1M2T1-online.html">Take it online</a><a href="assessment/RETEST/Retest-Alg1M2T1-practice.html">Practice (self-check)</a><a href="assessment/Retest-Alg1M2T1.pdf">PDF</a><a href="assessment/Retest-Alg1M2T1.pptx">PowerPoint</a><a href="assessment/Retest-Alg1M2T1.html">Print page</a><a href="assessment/Retest-Alg1M2T1-ANSWER-KEY.pdf">Answer key PDF</a><a href="assessment/Retest-Alg1M2T1-ANSWER-KEY.pptx">Answer key PowerPoint</a><a href="assessment/retest-results.html">Student scores (teacher)</a></div>
     </section>
   </div>
+  </div>
+  <p class="muted" id="m2-moved" hidden>Module 2 (Topics 1–2) is archived for next year: <a href="archive-module2.html">Module 2 teacher page</a> · <a href="archive.html">Materials archive</a>.</p>
   <p class="muted" style="margin-top:24px;font-size:14px">Based on Bluebonnet Learning Secondary Mathematics, Algebra I (©2024–2025 Texas Education Agency, portions ©2021 Carnegie Learning, Inc.), licensed <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a>. A private site for Algebra I teachers.</p>
 </div>
 <script>
   // remember the chosen version for this browser
   try { const pick = document.getElementById(localStorage.getItem("version")); if (pick) pick.checked = true; } catch {}
   document.querySelectorAll(".seg input").forEach(i => i.addEventListener("change", () => { try { localStorage.setItem("version", i.id); } catch {} }));
+  // Module 2 leaves this page after the Nov 4 retakes; it stays on archive-module2.html
+  if (new Date() >= new Date(2026, 10, 5)) { document.getElementById("m2").hidden = true; document.querySelectorAll(".jump .m2").forEach(a => a.remove()); document.getElementById("m2-moved").hidden = false; }
 </script>

@@ -9,7 +9,7 @@ from urllib.parse import quote
 ROOT = Path(__file__).parent
 EXTS = {".html": "Page", ".pdf": "PDF", ".pptx": "PowerPoint", ".mp4": "Video"}
 SKIP_TOP = {"graft", "api", "skill", "materials"}
-SKIP_FILES = {"index.html", "teacher.html", "archive.html"}
+SKIP_FILES = {"index.html", "teacher.html", "archive.html", "archive-module2.html"}
 
 files = subprocess.run(["git", "ls-files", "--cached", "--others", "--exclude-standard"],
                        cwd=ROOT, capture_output=True, text=True, check=True).stdout.splitlines()
@@ -46,7 +46,9 @@ ul{{columns:2 320px;margin:0;padding-left:18px}} li{{break-inside:avoid;margin:2
 </style></head><body>
 <p class="sub"><a href="teacher.html">← Teacher page</a> · <a href="index.html">Student home</a></p>
 <h1>Algebra I Materials Archive</h1>
-<p class="sub">{total} files from 2026–27, grouped by folder, to reuse next year. Rebuild with <code>python make_archive.py</code>.</p>
+<p class="sub">{total} files from 2026–27, grouped by folder, to reuse next year.</p>
+<p><strong><a href="archive-module2.html">Module 2 teacher page (Topics 1–2, organized by lesson and day) →</a></strong></p>
+<p class="sub">Rebuild with <code>python make_archive.py</code>.</p>
 <input id="q" type="search" placeholder="Filter, e.g. lesson3, quiz, IEP, answer key" aria-label="Filter materials">
 {''.join(sections)}
 <script>
