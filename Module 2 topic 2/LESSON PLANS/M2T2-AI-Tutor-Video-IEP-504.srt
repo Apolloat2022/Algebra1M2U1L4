@@ -1,0 +1,143 @@
+1
+00:00:00,000 --> 00:00:09,212
+Hi! This video shows you how to use the MagicSchool AI Tutor to study for the Topic 2 test.
+
+2
+00:00:09,512 --> 00:00:15,532
+Grab your handout. It has every question in this video.
+
+3
+00:00:15,832 --> 00:00:23,348
+You can pause this video any time, and watch it again as many times as you want.
+
+4
+00:00:23,648 --> 00:00:28,468
+The AI tutor is like a helper who is always ready.
+
+5
+00:00:28,768 --> 00:00:34,236
+It can explain an idea, give you a hint, or check your work.
+
+6
+00:00:34,536 --> 00:00:42,436
+It is not for copying answers. The goal is for you to understand the math.
+
+7
+00:00:42,736 --> 00:00:49,836
+Step 1. Open the MagicSchool link your teacher posted in Schoology.
+
+8
+00:00:50,136 --> 00:00:59,372
+Step 2. Pick one question from your handout. Type it in, or copy and paste it.
+
+9
+00:00:59,672 --> 00:01:04,804
+Step 3. Read the answer slowly.
+
+10
+00:01:05,104 --> 00:01:12,108
+Step 4. Try a problem yourself, and ask the tutor to check it.
+
+11
+00:01:12,408 --> 00:01:16,948
+Then check the box on your handout.
+
+12
+00:01:17,248 --> 00:01:24,828
+If an answer is too long or confusing, that's okay. Use a helper phrase.
+
+13
+00:01:25,128 --> 00:01:32,684
+Type: Explain it in shorter steps. Or: Use simpler words, please.
+
+14
+00:01:32,984 --> 00:01:39,316
+You can ask for an example first, or ask for a hint instead of the answer.
+
+15
+00:01:39,616 --> 00:01:45,404
+The tutor will try again, as many times as you need.
+
+16
+00:01:45,704 --> 00:01:53,476
+Lesson 1 is about transforming linear functions, like multiplying f of x by a number.
+
+17
+00:01:53,776 --> 00:02:05,004
+Try asking: If f(x) = x and g(x) = 3·f(x), what happens to the graph? Show me with a table.
+
+18
+00:02:05,304 --> 00:02:16,100
+Or ask: What's the difference between g(x) = 2f(x) and g(x) = f(2x) when f(x) = x?
+
+19
+00:02:16,400 --> 00:02:22,668
+This one is tricky, so ask the tutor to show both graphs.
+
+20
+00:02:22,968 --> 00:02:29,156
+Lesson 2 is about sliding a graph up, down, left, or right.
+
+21
+00:02:29,456 --> 00:02:36,004
+Try asking: Why does f(x − 2) move the graph right and not left?
+
+22
+00:02:36,304 --> 00:02:43,620
+Or ask: What's the difference between f(x) + 4 and f(x + 4)?
+
+23
+00:02:43,920 --> 00:02:50,956
+Remember: a change inside the parentheses moves the graph left or right.
+
+24
+00:02:51,256 --> 00:02:56,628
+Lesson 3 is about parallel and perpendicular lines.
+
+25
+00:02:56,928 --> 00:03:05,708
+Try asking: How do I find the slope of a line perpendicular to y = (3/4)x − 2?
+
+26
+00:03:06,008 --> 00:03:13,612
+Or ask: What does negative reciprocal mean? Give me 3 examples to try.
+
+27
+00:03:13,912 --> 00:03:23,660
+You can also ask: Why is the slope of x = 5 undefined, but the slope of y = 5 is zero?
+
+28
+00:03:23,960 --> 00:03:27,916
+When you're ready, let the tutor quiz you.
+
+29
+00:03:28,216 --> 00:03:37,452
+Type: Quiz me with 5 questions like the Topic 2 test. Give me one at a time and wait for my answer.
+
+30
+00:03:37,752 --> 00:03:44,116
+Take your time on each one. There is no timer.
+
+31
+00:03:44,416 --> 00:03:48,420
+Getting a problem wrong is part of learning.
+
+32
+00:03:48,720 --> 00:03:55,724
+Paste the problem and type: Don't give me the answer. Give me a hint first.
+
+33
+00:03:56,024 --> 00:04:00,108
+Then try again with the hint.
+
+34
+00:04:00,408 --> 00:04:06,212
+Remember: one question at a time, and take a break when you need one.
+
+35
+00:04:06,512 --> 00:04:12,220
+At the end, write one thing you learned and one question you still have.
+
+36
+00:04:12,520 --> 00:04:18,740
+Bring your questions to class. You've got this!
