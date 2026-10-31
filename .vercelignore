@@ -8,3 +8,4 @@ graft/
 !**/EXIT TICKET/*.pdf
 !assessment/**/Topic*-*.pdf
 !assessment/**/Retest-*.pdf
+!**/REVIEW/T1-Review*.pdf

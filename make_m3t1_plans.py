@@ -161,24 +161,28 @@ DAYS = [
        "Solve and graph linear inequalities, including context problems."],
   teks=["<b>A.5A</b>, <b>A.5B</b>, <b>A.2C</b>, <b>A.3A</b>, A.2B, A.12E"],
   terms="solution · no solution · infinite solutions · literal equation · linear inequality",
-  mat=["Review problems below (project or copy)", "Topic 1 Summary SE pp. 389–390", "Students' Self-Reflections (SE pp. 387–388)", "Whiteboards"],
+  mat=["Topic 1 Review (REVIEW/T1-Review.pdf) + answer key · IEP and 504 versions",
+       "Online self-check: m3t1-review.html (IEP/504 versions in IEP/ and Section 504/)",
+       "Topic 1 Summary SE pp. 389–390 · Self-Reflections SE pp. 387–388 · whiteboards"],
   bell=[("Self-Reflection: rate yourself 1–4 on Lessons 1, 2, 3", "use to seat review groups"), ("5x − 2 = 5x + 7", "no solution"),
         ("Solve A = ℓw for ℓ", "ℓ = A/w"), ("−x ≥ 3", "x ≤ −3")],
-  rows=[("0–5", "Bell work", "Collect ratings; seat 1–2s near you."),
-   ("5–20", "Round 1 · Lesson 1 (whiteboards, I do / we do / you do)",
-    "1. 4(x − 1) = 2x + 6 " + A("x = 5") + " 2. 3(2x + 1) = 6x + 3 " + A("infinite") + " 3. 7x − 1 = 7x + 4 " + A("no solution") +
-    "<br>Name a property for each step in #1."),
-   ("20–35", "Round 2 · Lesson 2",
-    "4. 2x + 5y = 20 in slope-intercept; intercepts " + A("y = −⅖x + 4; (10, 0), (0, 4)") + "<br>5. y + 3 = 2(x − 1) in standard form " +
-    A("2x − y = 5") + " 6. A = ½bh for h; A = 30, b = 12 " + A("h = 2A/b = 5")),
-   ("35–50", "Round 3 · Lesson 3",
-    "7. 3x − 4 > 11 " + A("x > 5") + " 8. −5x + 2 ≤ 17 " + A("x ≥ −3") + " 9. 2(x − 3) ≥ 4x + 2 " + A("x ≤ −4") +
-    "<br>10. Phone plan: $30 + $0.10 per text, budget at most $45. " + A("30 + 0.10t ≤ 45 → t ≤ 150 texts") + "<br>Graph 7–9."),
-   ("50–58", "Independent check", "Students redo the problem type they rated lowest without notes. Check answers at the door. " + IEP),
-   ("58–60", "Wrap up", "Test tomorrow. Study: Topic 1 Summary SE pp. 389–390 and Lesson 1–3 homework.")],
-  cfu=["Whiteboards every problem; re-teach any item under 70% right away.", "Thumbs on the flip rule before Round 3."],
+  rows=[("0–5", "Bell work", "Collect ratings; seat 1–2s near you. Hand out the Topic 1 Review."),
+   ("5–15", "I do · Q1–3 (multiple choice, like test Q1–3)",
+    "Model on the board: Q1 " + A("B. y = 15x + 40") + " Q2 " + A("J. No solution") + " Q3 " + A("D. t < −3 (flip!)") +
+    "<br>Say the test's order out loud: Lesson 3 → Lesson 1 → Lesson 3."),
+   ("15–35", "We do · Q4–8 (pairs, whiteboards up after each)",
+    "Q4 " + A("x = 2") + " Q5 " + A("infinite: both sides 4x + 10") + " Q6 " + A("y = 1.20x + 7.00") +
+    " Q7 " + A("y = −2/5x + 3") + " Q8 " + A("h = V/(ℓw)") + "<br>Re-teach any item under 70% on the spot."),
+   ("35–50", "You do · Q9–11 (silent, test conditions)",
+    "Q9 " + A("m < −6, open circle, shade left") + " Q10 " + A("y = 3x + 10") + " Q11 " + A("n = 5 (both areas 45)") +
+    "<br>Students check with the online page; you pull the 1–2s for a small group."),
+   ("50–58", "Part 2 · extra practice (Q12–15)",
+    "Q12 " + A("F") + " Q13 " + A("C. x ≤ −3") + " Q14 " + A("w = (P − 2ℓ)/2") + " Q15 " + A("25 + 8c ≤ 90 → at most 8 classes") +
+    " Early finishers redo their lowest-rated lesson. " + IEP),
+   ("58–60", "Wrap up", "Test tomorrow, same order as today. Study: Topic 1 Summary SE pp. 389–390 and today's review.")],
+  cfu=["Whiteboards on Q4–8; re-teach any item under 70% right away.", "Thumbs on the flip rule before Q9."],
   after=["Note who still misses the flip rule or no/infinite solutions; give them a test-day reminder card.", "Re-teach list for Thursday retakes."],
-  note="No publisher M3T1 test is in materials/ yet; these review problems follow the TEKS for Lessons 1–3."),
+  note="Questions 1–11 mirror the End of Topic 1 Assessment one for one (same skill, format and order; new numbers)."),
 
  dict(file="Wed-11-18", date="Wednesday, November 18", lesson="Topic 1 End of Topic Assessment",
   obj=["Show mastery of Topic 1: linear equations, literal equations, linear inequalities."],
@@ -190,7 +194,7 @@ DAYS = [
    ("55–60", "Collect", "Collect tests and scratch paper. Retakes tomorrow for scores below the district cut.")],
   cfu=["Walk the room; note common errors for tomorrow's re-teach."],
   after=["Score by question; group by lesson (1, 2, 3) for Thursday re-teach.", "Make a retake list."],
-  note="Test date is fixed by the district. Test copies are not in this repo yet; add them to assessment/ once you have them."),
+  note="Test date is fixed by the district. The test is in materials/ (Module 3 Topic 1 Assessment Student Edition): 11 items."),
 
  dict(file="Thu-11-19", date="Thursday, November 19", lesson="Topic 1 Retakes + Re-teach",
   obj=["Fix the errors from the Topic 1 test.", "Retake for students below the cut; enrichment for everyone else."],
