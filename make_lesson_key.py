@@ -629,10 +629,11 @@ def build_list(x, spids):  # paragraph reveals need a build entry per text box
     return x.replace("</p:tnLst>", "</p:tnLst><p:bldLst>" + entries + "</p:bldLst>", 1)
 
 
-def annotate(src, out, ans, notes, corrections, after, se=None, stars=(), gaps=None, inline=None):
+def annotate(src, out, ans, notes, corrections, after, se=None, stars=(), gaps=None, inline=None, skips=()):
     """se: {slide: Student Edition page}; stars: (first, last) slide ranges of the activities the 150-day pacing guide
     stars as essential. Each labeled slide gets "SE p. N" (and "★ Essential") left of the page number; the first
-    slide of a starred range (the activity divider) also gets a large badge in its empty top band."""
+    slide of a starred range (the activity divider) also gets a large badge in its empty top band.
+    skips: (first, last, badge, label) ranges the class skips or treats as optional: label before "SE p. N", badge on the first slide."""
     files = {}
     with zipfile.ZipFile(src) as z:
         for n in z.namelist():
@@ -656,8 +657,12 @@ def annotate(src, out, ans, notes, corrections, after, se=None, stars=(), gaps=N
         star = any(lo <= k <= hi for lo, hi in stars)
         words = " ".join(re.findall(r"<a:t>([^<]*)</a:t>", x)).strip()
         divider = re.fullmatch(r"(Activity \d\.\d|Getting Started|Talk the Talk|Prepare)[\s\d.–-]*", words)
+        skip = next((s for s in skips if s[0] <= k <= s[1]), None)
+        if skip and skip[0] == k:
+            x = x.replace("</p:spTree>", text_box(top + 1003, 160, 150, 1600, 120, 40, skip[2], color="8A1C1C", bold=True,
+                                                  font=None, center=True) + "</p:spTree>", 1)
         if se and k in se and not divider:  # a divider's corner holds the publisher's timer
-            label = ("★ Essential · " if star else "") + f"SE p. {se[k]}"
+            label = ("★ Essential · " if star else f"{skip[3]} · " if skip else "") + f"SE p. {se[k]}"
             x = x.replace("</p:spTree>", text_box(top + 1001, 1180, 1030, 600, 44, 16, label, color=SE_GREEN, bold=True,
                                                   font=None, right=True) + "</p:spTree>", 1)
         if any(lo == k for lo, hi in stars):

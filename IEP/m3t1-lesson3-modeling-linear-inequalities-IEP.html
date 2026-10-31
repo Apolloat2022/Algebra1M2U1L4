@@ -1,0 +1,498 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modeling Linear Inequalities · Bluebonnet Algebra I · IEP</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<style>
+/* Layout: a fixed 1280×720 "slide" on graph paper, scaled to fit any screen; steps reveal one click at a time. */
+:root{
+  /* Bluebonnet Algebra I palette (ALGEBRA-platform/app/globals.css); orange = slope, blue = point stays. */
+  --paper:#f7f7fb; --rule:#e6e8f2; --ink:#16171d; --muted:#5f6272; --card:#ffffff; --line:#e3e4ec;
+  --slope:#c9561f; --point:#3050b8; --leaf:#4f8a3c; --soft:#eaeefb; --ga:#4f8a3c; --gb:#7a4fc4; --gc:#16171d; --ans:#4f8a3c; --ans-bg:#edf5e9; --warn-bg:#fdf3e7;
+  --display:ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --body:ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --math:"STIX Two Text", "Cambria Math", "Times New Roman", serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#111218; --rule:#1f2129; --ink:#eceef6; --muted:#9ea2b3; --card:#1a1c24; --line:#2c2f3b;
+  --slope:#ff9259; --point:#93a9f5; --leaf:#8cc47a; --soft:#232a45; --ga:#8cc47a; --gb:#b79cff; --gc:#eceef6; --ans:#8cc47a; --ans-bg:#1f2a1b; --warn-bg:#2e2418; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#111218; --rule:#1f2129; --ink:#eceef6; --muted:#9ea2b3; --card:#1a1c24; --line:#2c2f3b;
+  --slope:#ff9259; --point:#93a9f5; --leaf:#8cc47a; --soft:#232a45; --ga:#8cc47a; --gb:#b79cff; --gc:#eceef6; --ans:#8cc47a; --ans-bg:#1f2a1b; --warn-bg:#2e2418; color-scheme:dark}
+
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);overflow:hidden;
+  background-image:linear-gradient(var(--rule) 1px,transparent 1px),linear-gradient(90deg,var(--rule) 1px,transparent 1px);
+  background-size:32px 32px}
+#stage{position:absolute;left:50%;top:calc(50% - 22px);width:1280px;height:720px;transform-origin:center;cursor:pointer;touch-action:manipulation}
+.slide{position:absolute;inset:0;padding:48px 72px 40px;display:none;flex-direction:column;gap:18px;font-size:26px;line-height:1.4}
+.slide.on{display:flex;animation:slideIn .35s ease}
+@keyframes slideIn{from{opacity:0}to{opacity:1}}
+
+.eyebrow{font-size:16px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--point)}
+h1,h2{font-family:var(--display);font-weight:800;line-height:1.08;letter-spacing:-.02em;text-wrap:balance;margin:0}
+h1{font-size:76px}
+h2{font-size:46px}
+h3{font-family:var(--display);font-weight:600;font-size:28px;margin:0}
+p{margin:0}
+.muted{color:var(--muted)}
+.small{font-size:21px}
+.row{display:flex;gap:36px;align-items:flex-start}
+.col{display:flex;flex-direction:column;gap:14px;flex:1;min-width:0}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 22px;display:flex;flex-direction:column;gap:10px}
+
+/* math */
+.eq,.mt{font-family:var(--math);font-weight:500}
+.eq{font-size:38px;line-height:1.5}
+.eq.big{font-size:60px}
+.eq.sm{font-size:31px}
+.eq i,.mt i{font-style:italic}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.78em;line-height:1.15;margin:0 .1em}
+.fr>span:first-child{border-bottom:.07em solid currentColor;padding:0 .2em}
+.cm{color:var(--slope);font-weight:600}
+.cp{color:var(--point);font-weight:600}
+
+.ans{background:var(--ans-bg);border-radius:8px;padding:8px 18px;align-self:flex-start}
+.ans::before{content:"Answer";margin-right:14px;vertical-align:.25em;font-family:var(--body);font-size:15px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ans)}
+.warn{background:var(--warn-bg);border-radius:8px;padding:10px 18px;font-size:22px;align-self:flex-start}
+.think{border:2px dashed var(--point);border-radius:24px;padding:16px 26px;font-size:25px;align-self:flex-start;max-width:760px}
+
+table.tbl{border-collapse:collapse;font-family:var(--math);font-size:30px;text-align:center;font-variant-numeric:tabular-nums}
+table.tbl th,table.tbl td{border:2px solid var(--line);padding:6px 26px;background:var(--card)}
+table.tbl th{font-style:italic;background:var(--rule)}
+table.cmp{border-collapse:collapse;width:100%;font-size:24px}
+table.cmp th,table.cmp td{border-bottom:1px solid var(--line);padding:10px 14px;text-align:left}
+table.cmp th{font-family:var(--display);font-size:26px}
+
+.foot{margin-top:auto;font-size:15px;line-height:1.5;color:var(--muted)}
+.foot strong{color:var(--point)} .foot a{color:var(--point)}
+a.go{color:var(--point);text-decoration:none} a.go:hover{text-decoration:underline}
+
+/* graphs: drawn from data-g by graphSVG(); make_pptx.py draws the same spec */
+.graph{flex:none}
+.graph svg{display:block;max-width:100%;height:auto}
+.g-bg{fill:var(--card);stroke:var(--line)}
+.g-grid{stroke:var(--rule);stroke-width:1}
+.g-axis{stroke:var(--muted);stroke-width:1.5}
+.g-line{stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+.g-pt{fill:var(--point)}
+.g-line.ga{stroke:var(--ga)} .g-line.gb{stroke:var(--gb)} .g-line.gc{stroke:var(--gc)}
+.ga{color:var(--ga);font-weight:600} .gb{color:var(--gb);font-weight:600} .gc{color:var(--gc);font-weight:600}
+.g-tick{fill:var(--muted);font:13px var(--body)}
+.g-plab{fill:var(--point);font:600 15px var(--body)}
+.g-llab{fill:var(--ink);font:italic 17px var(--math)}
+.divider{justify-content:center}
+.divider h1{font-size:110px}
+
+/* step reveal: space is reserved, like PowerPoint "Appear" */
+.step{opacity:0;visibility:hidden}
+.step.shown{opacity:1;visibility:visible;animation:rise .45s cubic-bezier(.2,.8,.2,1)}
+.step.wipe.shown{animation:wipe .7s ease-out}
+.step.pop.shown{animation:pop .4s cubic-bezier(.3,1.6,.5,1)}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes wipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes pop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.slide.on,.step.shown{animation:none!important}}
+
+/* controls */
+#bar{position:fixed;left:0;right:0;bottom:0;height:44px;padding:0 16px env(safe-area-inset-bottom,0px);display:flex;align-items:center;gap:10px;
+  background:var(--card);border-top:1px solid var(--line);font-size:14px;color:var(--muted);z-index:2}
+#bar button{font:inherit;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:6px;padding:5px 12px;cursor:pointer}
+#bar button:hover{background:var(--soft)}
+#bar button:focus-visible{outline:2px solid var(--point);outline-offset:2px}
+#prog{flex:1;height:4px;background:var(--rule);border-radius:2px;overflow:hidden}
+#prog>div{height:100%;width:0;background:var(--point);transition:width .3s}
+#count{font-variant-numeric:tabular-nums;min-width:64px;text-align:right}
+#brand{display:flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none;font-size:15px;white-space:nowrap}
+#brand strong{color:var(--point)}
+#home{color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:5px 12px;white-space:nowrap}
+#home:hover{background:var(--soft)}
+@media (max-width:900px){#hint{display:none}}
+@media (max-width:560px){#brand,#fs{display:none} #bar{gap:8px;padding:0 10px} #count{min-width:0}}
+#bar button{touch-action:manipulation}
+/* Portrait (phones, iPad upright): a 760px-wide slide whose height fit() matches to the screen; columns stack. */
+@media (orientation:portrait){
+  #stage{width:760px}
+  .slide{padding:40px 36px 32px;overflow-y:auto}
+  .row{flex-direction:column;gap:20px}
+  .grid3{grid-template-columns:1fr}
+  h1{font-size:60px} .divider h1{font-size:84px} .eq.big{font-size:48px}
+}
+.slide aside.notes{display:none}
+#notes{position:fixed;left:0;right:0;bottom:44px;max-height:34vh;overflow:auto;z-index:2;padding:14px 20px;
+  background:var(--card);border-top:2px solid var(--point);font-size:17px;line-height:1.5}
+#notes b{display:block;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--point)}
+/* table cells revealed one at a time keep their border; only the text is hidden */
+table td.step{opacity:1;visibility:visible}
+table td.step:not(.shown){color:transparent}
+</style>
+
+<div id="stage">
+
+<section class="slide">
+  <p class="eyebrow">Bluebonnet Algebra I · Module 3 · Topic 1 · Lesson 3 · IEP Version</p>
+  <h1 style="margin-top:10px;font-size:60px">Modeling Linear Inequalities</h1>
+  <h3 style="margin-top:8px">I can…</h3><p>✓ &nbsp;write an inequality from words</p><p>✓ &nbsp;solve an inequality and flip the sign when I divide by a negative</p><p>✓ &nbsp;graph the answer on a number line</p>
+  <p style="font-size:24px;margin-top:6px">Bell work: <b><a class="go" href="m3t1-lesson3-bellwork-day1-IEP.html" target="_blank" onclick="event.stopPropagation()">Day 1 →</a></b> · <b><a class="go" href="m3t1-lesson3-bellwork-day2-IEP.html" target="_blank" onclick="event.stopPropagation()">Day 2 →</a></b> · <b><a class="go" href="m3t1-lesson3-bellwork-day3-IEP.html" target="_blank" onclick="event.stopPropagation()">Day 3 →</a></b></p>
+  <p class="foot">Based on Bluebonnet Learning Secondary Mathematics, Algebra I (©2024–2025 Texas Education Agency, portions ©2021 Carnegie Learning, Inc.), licensed CC BY-NC 4.0. A private site for Algebra I teachers.</p>
+  <aside class="notes">IEP version of Lesson 3: a modified lesson that keeps the core skills (the starred activities) and cuts the number of items. Each skill follows I do, We do (sentence frames), You do. Apply each student's IEP accommodations too: extended time, read-aloud, breaks, calculator, small group.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Lesson 3 · Key Vocabulary</p>
+  <h2>Key vocabulary</h2>
+  <div class="grid3"><div class="card"><h3>Linear inequality</h3><p class="small">A comparison with <, ≤, >, or ≥ instead of =.</p><div class="eq sm">3.75b + 25 ≥ 1100</div></div><div class="card"><h3>At least / no less than</h3><p class="small">This much or more: ≥.</p><div class="eq sm">at least 5 → x ≥ 5</div></div><div class="card"><h3>At most / no more than</h3><p class="small">This much or less: ≤.</p><div class="eq sm">at most 5 → x ≤ 5</div></div><div class="card"><h3>Open circle ○</h3><p class="small">The number is NOT included: < or >.</p><div class="eq sm">x > 2</div></div><div class="card"><h3>Closed circle ●</h3><p class="small">The number IS included: ≤ or ≥.</p><div class="eq sm">x ≥ 2</div></div><div class="card"><h3>Flip the sign</h3><p class="small">Multiply or divide by a negative → reverse the sign.</p><div class="eq sm">−2x < 6 → x > −3</div></div></div>
+  <aside class="notes">Preview the key terms. Leave up or print as a reference card.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 1 · Bell Work · Review</p>
+  <h2>Warm up: work these on your own</h2>
+  <div class="row" style="gap:24px"><div class="col" style="gap:10px"><div class="card" style="padding:10px 18px;gap:4px"><p class="small"><b>1.</b> Elijah starts with a $25 credit and earns $3.75 for each box he sells. Which equation gives his total sales, <span class="mt"><i>y</i></span>, after selling <span class="mt"><i>x</i></span> boxes?</p><p class="small" style="color:var(--point)"><b>Formula:</b> <span class="mt"><i>y</i> = <i>m</i><i>x</i> + <i>b</i></span>: <span class="mt"><i>m</i></span> = rate, <span class="mt"><i>b</i></span> = start</p><div class="step pop ans" style="font-size:19px;line-height:1.35;padding:6px 14px"><b><span class="mt"><i>y</i> = 3.75<i>x</i> + 25</span></b><br><b>1.</b> Start: <span class="mt"><i>b</i> = 25</span>.<br><b>2.</b> Rate: <span class="mt"><i>m</i> = 3.75</span>.<br><b>3.</b> <span class="mt"><i>y</i> = 3.75<i>x</i> + 25</span>.</div></div><div class="card" style="padding:10px 18px;gap:4px"><p class="small"><b>2.</b> Which symbol means "at least"?</p><p class="small" style="color:var(--point)"><b>Formula:</b> at least = this much or more</p><div class="step pop ans" style="font-size:19px;line-height:1.35;padding:6px 14px"><b><span class="mt">≥</span></b><br><b>1.</b> "At least 5" allows 5.<br><b>2.</b> It also allows more than 5.<br><b>3.</b> Greater than or equal: <span class="mt">≥</span>.</div></div></div><div class="col" style="gap:10px"><div class="card" style="padding:10px 18px;gap:4px"><p class="small"><b>3.</b> Which symbol means "no more than"?</p><p class="small" style="color:var(--point)"><b>Formula:</b> no more than = this much or less</p><div class="step pop ans" style="font-size:19px;line-height:1.35;padding:6px 14px"><b><span class="mt">≤</span></b><br><b>1.</b> "No more than 5" allows 5.<br><b>2.</b> It also allows less than 5.<br><b>3.</b> Less than or equal: <span class="mt">≤</span>.</div></div><div class="card" style="padding:10px 18px;gap:4px"><p class="small"><b>4.</b> What value of <span class="mt"><i>b</i></span> makes <span class="mt">3.75<i>b</i> + 25 = 400</span> true?</p><p class="small" style="color:var(--point)"><b>Formula:</b> subtract the start, then divide by the rate</p><div class="step pop ans" style="font-size:19px;line-height:1.35;padding:6px 14px"><b><span class="mt">100</span></b><br><b>1.</b> Subtract 25: <span class="mt">3.75<i>b</i> = 375</span>.<br><b>2.</b> Divide by 3.75: <span class="mt"><i>b</i> = 100</span>.</div></div></div></div>
+  <aside class="notes">Same 4 questions as the online IEP Day 1 bell work (3 answer choices there). Click to reveal one answer at a time; read each step aloud.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Lesson 3 · Steps Chart</p>
+  <h2>Steps to follow</h2>
+  <p><b>1.</b> Write the inequality (match the words to the symbol).</p><p><b>2.</b> Distribute if there are parentheses.</p><p><b>3.</b> Move x-terms to one side.</p><p><b>4.</b> Undo + or −.</p><p><b>5.</b> Undo × or ÷. Negative number? FLIP the sign.</p><p><b>6.</b> Graph: ○ or ●, then shade.</p>
+  <aside class="notes">Anchor chart: students keep this out for every problem.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 1 · I do · ★ Essential · Words to inequalities</p>
+  <h2>Watch: Sales of at least $1100: 3.75b + 25 ___ 1100</h2>
+  <p><b>1.</b> At least = this much or more</p><p><b>2.</b> Symbol ≥</p><div class="step pop eq ans">3.75b + 25 ≥ 1100</div>
+  <aside class="notes">I do: model every step aloud. Students copy the steps into their notes.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 1 · We do · Words to inequalities</p>
+  <h2>Together: Sales of at most $700: 3.75b + 25 ___ 700</h2>
+  <p class="step">At most = this much or ___</p><p class="step">Symbol ___</p><div class="step pop eq ans">3.75b + 25 ≤ 700</div>
+  <aside class="notes">We do: students fill in each blank on whiteboards before you click. Use the sentence frames.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 1 · You do · Words to inequalities</p>
+  <h2>Your turn: More than $500: 3.75b + 25 ___ 500</h2>
+  <p class="muted">Use the steps chart. Then check.</p><div class="step pop eq ans">3.75b + 25 > 500</div>
+  <aside class="notes">You do: give 2–3 minutes, then reveal. Students fix mistakes in a different color.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 1 · I do · ★ Essential · Graph on a number line</p>
+  <h2>Watch: x ≥ 4</h2>
+  <p><b>1.</b> ≥ includes 4: closed ●</p><p><b>2.</b> Greater: shade right</p><div class="step pop eq ans">● at 4, shade right</div>
+  <aside class="notes">I do: model every step aloud. Students copy the steps into their notes.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 1 · We do · Graph on a number line</p>
+  <h2>Together: x < 2</h2>
+  <p class="step">< does not include 2: ___ circle</p><p class="step">Less: shade ___</p><div class="step pop eq ans">○ at 2, shade left</div>
+  <aside class="notes">We do: students fill in each blank on whiteboards before you click. Use the sentence frames.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 1 · You do · Graph on a number line</p>
+  <h2>Your turn: x ≤ −1</h2>
+  <p class="muted">Use the steps chart. Then check.</p><div class="step pop eq ans">● at −1, shade left</div>
+  <aside class="notes">You do: give 2–3 minutes, then reveal. Students fix mistakes in a different color.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 1 · Exit Ticket</p>
+  <h2>Show what you know</h2>
+  <div class="row" style="gap:18px"><div class="col" style="gap:10px"><div class="card"><p>1. Maya has $40 and earns $12 per hour. Which equation gives the total, <span class="mt"><i>y</i></span>, she has after working <span class="mt"><i>x</i></span> hours?</p><p class="small muted">Tip: Rate goes with x. The start is b.</p><p class="small"><span class="mt"><i>y</i> = 12<i>x</i> + 40</span> · <span class="mt"><i>y</i> = 40<i>x</i> + 12</span> · <span class="mt"><i>y</i> = −12<i>x</i> + 40</span></p><div class="step pop eq sm ans"><span class="mt"><i>y</i> = 12<i>x</i> + 40</span></div></div></div><div class="col" style="gap:10px"><div class="card"><p>2. 4 notebooks at $1.75, pens at $0.90. Equation for <span class="mt"><i>x</i></span> pens?</p><p class="small muted">Tip: Find the fixed cost first: 4 notebooks × $1.75.</p><p class="step small">Fixed cost: 4 × 1.75 = ______</p><p class="step small">y = ______x + ______</p><div class="step pop eq sm ans"><span class="mt"><i>y</i> = 0.90<i>x</i> + 7</span></div></div></div><div class="col" style="gap:10px"><div class="card"><p>3. Sales of at most $1150: inequality for <span class="mt"><i>b</i></span>?</p><p class="small muted">Tip: At most → ≤. ≤ gets a closed circle.</p><p class="step small">3.75b + 25 ______ 1150</p><p class="step small">b ______ ______</p><p class="step small">Circle: open / closed. Shade: left / right</p><div class="step pop eq sm ans"><span class="mt"><i>b</i> ≤ 300</span>, closed circle at 300, shaded left</div></div></div></div>
+  <aside class="notes">IEP exit ticket: the first 3 items of the printed exit ticket (EXIT TICKET/T1-Exit-Ticket-Wed-11-11-IEP.pdf), with a tip, 3 answer choices on multiple choice, and step frames. Students may use the steps chart and notes.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 1 · Notes to Keep</p>
+  <h2>Notes to keep: Day 1</h2>
+  <div class="grid3"><div class="card"><h3>Words → symbols</h3><p class='small'>at least ≥ · at most ≤ · more than > · fewer than <</p></div><div class="card"><h3>Circles</h3><p class='small'>○ for < and >.<br>● for ≤ and ≥.</p></div><div class="card"><h3>Shade</h3><p class='small'>x > or x ≥: shade right.<br>x < or x ≤: shade left.</p></div></div><p class="small muted">Copy these into your notes, or ask your teacher for a printed copy.</p>
+  <aside class="notes">Give a printed copy of the notes.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 2 · Bell Work · Review</p>
+  <h2>Warm up: work these on your own</h2>
+  <div class="row" style="gap:24px"><div class="col" style="gap:10px"><div class="card" style="padding:10px 18px;gap:4px"><p class="small"><b>1.</b> What value of <span class="mt"><i>x</i></span> makes <span class="mt">2<i>x</i> + 5 = 17</span> true?</p><p class="small" style="color:var(--point)"><b>Formula:</b> undo + with −, undo × with ÷</p><div class="step pop ans" style="font-size:19px;line-height:1.35;padding:6px 14px"><b><span class="mt">6</span></b><br><b>1.</b> Subtract 5: <span class="mt">2<i>x</i> = 12</span>.<br><b>2.</b> Divide by 2: <span class="mt"><i>x</i> = 6</span>.</div></div><div class="card" style="padding:10px 18px;gap:4px"><p class="small"><b>2.</b> Which describes the graph of <span class="mt"><i>x</i> ≥ 2</span> on a number line?</p><p class="small" style="color:var(--point)"><b>Formula:</b> ≥ or ≤: closed circle · > or <: open circle</p><div class="step pop ans" style="font-size:19px;line-height:1.35;padding:6px 14px"><b>closed circle at 2, shaded right</b><br><b>1.</b> <span class="mt">≥</span> includes 2: closed circle.<br><b>2.</b> Greater than: shade right.</div></div></div><div class="col" style="gap:10px"><div class="card" style="padding:10px 18px;gap:4px"><p class="small"><b>3.</b> Is <span class="mt"><i>x</i> = −5</span> a solution of <span class="mt">−<i>x</i> > 4</span>?</p><p class="small" style="color:var(--point)"><b>Formula:</b> put the number in for <span class="mt"><i>x</i></span></p><div class="step pop ans" style="font-size:19px;line-height:1.35;padding:6px 14px"><b>Yes, because <span class="mt">5 > 4</span></b><br><b>1.</b> <span class="mt">−(−5) = 5</span>.<br><b>2.</b> <span class="mt">5 > 4</span> is true, so yes.</div></div><div class="card" style="padding:10px 18px;gap:4px"><p class="small"><b>4.</b> Chloe buys 2 muffins for $1.50 each and some juices for $2.25 each. Which equation gives the total cost, <span class="mt"><i>y</i></span>, for <span class="mt"><i>x</i></span> juices?</p><p class="small" style="color:var(--point)"><b>Formula:</b> <span class="mt"><i>y</i> = <i>m</i><i>x</i> + <i>b</i></span>: rate × amount + fixed cost</p><div class="step pop ans" style="font-size:19px;line-height:1.35;padding:6px 14px"><b><span class="mt"><i>y</i> = 2.25<i>x</i> + 3</span></b><br><b>1.</b> Fixed cost: <span class="mt">2 · 1.50 = 3</span>.<br><b>2.</b> Rate: $2.25 per juice.<br><b>3.</b> <span class="mt"><i>y</i> = 2.25<i>x</i> + 3</span>.</div></div></div></div>
+  <aside class="notes">Same 4 questions as the online IEP Day 2 bell work (3 answer choices there). Click to reveal one answer at a time; read each step aloud.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Lesson 3 · Steps Chart</p>
+  <h2>Steps to follow</h2>
+  <p><b>1.</b> Write the inequality (match the words to the symbol).</p><p><b>2.</b> Distribute if there are parentheses.</p><p><b>3.</b> Move x-terms to one side.</p><p><b>4.</b> Undo + or −.</p><p><b>5.</b> Undo × or ÷. Negative number? FLIP the sign.</p><p><b>6.</b> Graph: ○ or ●, then shade.</p>
+  <aside class="notes">Anchor chart: students keep this out for every problem.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 2 · I do · ★ Essential · Solve two-step inequalities</p>
+  <h2>Watch: 2x + 5 > 11</h2>
+  <p><b>1.</b> Subtract 5: 2x > 6</p><p><b>2.</b> Divide by 2 (positive: no flip)</p><div class="step pop eq ans">x > 3</div>
+  <aside class="notes">I do: model every step aloud. Students copy the steps into their notes.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 2 · We do · Solve two-step inequalities</p>
+  <h2>Together: 3x − 4 ≤ 8</h2>
+  <p class="step">Add 4: 3x ≤ ___</p><p class="step">Divide by 3: x ≤ ___</p><div class="step pop eq ans">x ≤ 4</div>
+  <aside class="notes">We do: students fill in each blank on whiteboards before you click. Use the sentence frames.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 2 · You do · Solve two-step inequalities</p>
+  <h2>Your turn: 4x + 1 ≥ 9</h2>
+  <p class="muted">Use the steps chart. Then check.</p><div class="step pop eq ans">x ≥ 2</div>
+  <aside class="notes">You do: give 2–3 minutes, then reveal. Students fix mistakes in a different color.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 2 · I do · ★ Essential · Flip when dividing by a negative</p>
+  <h2>Watch: −2x < 6</h2>
+  <p><b>1.</b> Divide by −2</p><p><b>2.</b> Negative: FLIP < to ></p><div class="step pop eq ans">x > −3</div>
+  <aside class="notes">I do: model every step aloud. Students copy the steps into their notes.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 2 · We do · Flip when dividing by a negative</p>
+  <h2>Together: −3x ≥ 12</h2>
+  <p class="step">Divide by ___</p><p class="step">Flip ≥ to ___: x ___ −4</p><div class="step pop eq ans">x ≤ −4</div>
+  <aside class="notes">We do: students fill in each blank on whiteboards before you click. Use the sentence frames.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 2 · You do · Flip when dividing by a negative</p>
+  <h2>Your turn: 5 − x > 7</h2>
+  <p class="muted">Use the steps chart. Then check.</p><div class="step pop eq ans">x < −2</div>
+  <aside class="notes">You do: give 2–3 minutes, then reveal. Students fix mistakes in a different color.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 2 · Exit Ticket</p>
+  <h2>Show what you know</h2>
+  <div class="row" style="gap:18px"><div class="col" style="gap:10px"><div class="card"><p>1. What is the solution set for <span class="mt">−3<i>x</i> + 4 ≥ 19</span>?</p><p class="small muted">Tip: Dividing by a negative flips the sign.</p><p class="small"><span class="mt"><i>x</i> ≤ −5</span> · <span class="mt"><i>x</i> ≥ −5</span> · <span class="mt"><i>x</i> ≤ 5</span></p><div class="step pop eq sm ans"><span class="mt"><i>x</i> ≤ −5</span></div></div></div><div class="col" style="gap:10px"><div class="card"><p>2. Solve and graph: <span class="mt">5 − 2<i>x</i> < 11</span></p><p class="small muted">Tip: Subtract 5, then divide by −2 and flip.</p><p class="step small">Subtract 5: −2x < ______</p><p class="step small">Divide by −2 and flip: x ______ ______</p><div class="step pop eq sm ans"><span class="mt"><i>x</i> > −3</span>, open circle at −3, shaded right</div></div></div><div class="col" style="gap:10px"><div class="card"><p>3. Tire: 26 psi, −0.1 psi/min, stay ≥ 22. Solve for <span class="mt"><i>t</i></span>.</p><p class="small muted">Tip: At or above → ≥. Divide by −0.1 and flip.</p><p class="step small">26 − 0.1t ______ 22</p><p class="step small">−0.1t ≥ ______</p><p class="step small">t ______ ______</p><div class="step pop eq sm ans"><span class="mt"><i>t</i> ≤ 40</span> minutes</div></div></div></div>
+  <aside class="notes">IEP exit ticket: the first 3 items of the printed exit ticket (EXIT TICKET/T1-Exit-Ticket-Thu-11-12-IEP.pdf), with a tip, 3 answer choices on multiple choice, and step frames. Students may use the steps chart and notes.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 2 · Notes to Keep</p>
+  <h2>Notes to keep: Day 2</h2>
+  <div class="grid3"><div class="card"><h3>Solve like an equation</h3><p class='small'>Undo + and −, then × and ÷.</p></div><div class="card"><h3>Flip!</h3><p class='small'>Multiply or divide by a negative → reverse the sign.</p></div><div class="card"><h3>Round in context</h3><p class='small'>At least → round up. At most → round down.</p></div></div><p class="small muted">Copy these into your notes, or ask your teacher for a printed copy.</p>
+  <aside class="notes">Give a printed copy of the notes.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 3 · Bell Work · Review</p>
+  <h2>Warm up: work these on your own</h2>
+  <div class="row" style="gap:24px"><div class="col" style="gap:10px"><div class="card" style="padding:10px 18px;gap:4px"><p class="small"><b>1.</b> What is the solution set of <span class="mt">−4<i>x</i> > 12</span>?</p><p class="small" style="color:var(--point)"><b>Formula:</b> ÷ by a negative → flip the sign</p><div class="step pop ans" style="font-size:19px;line-height:1.35;padding:6px 14px"><b><span class="mt"><i>x</i> < −3</span></b><br><b>1.</b> Divide by <span class="mt">−4</span>: <span class="mt">12 ÷ −4 = −3</span>.<br><b>2.</b> Negative divisor: flip <span class="mt">></span> to <span class="mt"><</span>.<br><b>3.</b> <span class="mt"><i>x</i> < −3</span>.</div></div><div class="card" style="padding:10px 18px;gap:4px"><p class="small"><b>2.</b> What is the solution set of <span class="mt">2<i>x</i> + 3 ≤ <i>x</i> − 1</span>?</p><p class="small" style="color:var(--point)"><b>Formula:</b> get <span class="mt"><i>x</i></span> on one side, like an equation</p><div class="step pop ans" style="font-size:19px;line-height:1.35;padding:6px 14px"><b><span class="mt"><i>x</i> ≤ −4</span></b><br><b>1.</b> Subtract <span class="mt"><i>x</i></span>: <span class="mt"><i>x</i> + 3 ≤ −1</span>.<br><b>2.</b> Subtract 3: <span class="mt"><i>x</i> ≤ −4</span>.</div></div></div><div class="col" style="gap:10px"><div class="card" style="padding:10px 18px;gap:4px"><p class="small"><b>3.</b> Which inequality means the same as <span class="mt">−6 ≤ <i>x</i></span>?</p><p class="small" style="color:var(--point)"><b>Formula:</b> switch sides → the sign points the other way</p><div class="step pop ans" style="font-size:19px;line-height:1.35;padding:6px 14px"><b><span class="mt"><i>x</i> ≥ −6</span></b><br><b>1.</b> <span class="mt">−6 ≤ <i>x</i></span>: <span class="mt">−6</span> is less than or equal to <span class="mt"><i>x</i></span>.<br><b>2.</b> So <span class="mt"><i>x</i></span> is greater than or equal to <span class="mt">−6</span>: <span class="mt"><i>x</i> ≥ −6</span>.</div></div><div class="card" style="padding:10px 18px;gap:4px"><p class="small"><b>4.</b> What value of <span class="mt"><i>x</i></span> makes <span class="mt">3(<i>x</i> − 2) = 9</span> true?</p><p class="small" style="color:var(--point)"><b>Formula:</b> distribute, then undo + and ×</p><div class="step pop ans" style="font-size:19px;line-height:1.35;padding:6px 14px"><b><span class="mt">5</span></b><br><b>1.</b> Distribute: <span class="mt">3<i>x</i> − 6 = 9</span>.<br><b>2.</b> Add 6: <span class="mt">3<i>x</i> = 15</span>.<br><b>3.</b> Divide by 3: <span class="mt"><i>x</i> = 5</span>.</div></div></div></div>
+  <aside class="notes">Same 4 questions as the online IEP Day 3 bell work (3 answer choices there). Click to reveal one answer at a time; read each step aloud.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Lesson 3 · Steps Chart</p>
+  <h2>Steps to follow</h2>
+  <p><b>1.</b> Write the inequality (match the words to the symbol).</p><p><b>2.</b> Distribute if there are parentheses.</p><p><b>3.</b> Move x-terms to one side.</p><p><b>4.</b> Undo + or −.</p><p><b>5.</b> Undo × or ÷. Negative number? FLIP the sign.</p><p><b>6.</b> Graph: ○ or ●, then shade.</p>
+  <aside class="notes">Anchor chart: students keep this out for every problem.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 3 · I do · ★ Essential · Variables on both sides</p>
+  <h2>Watch: 5x + 2 ≥ 3x − 10</h2>
+  <p><b>1.</b> Subtract 3x: 2x + 2 ≥ −10</p><p><b>2.</b> Subtract 2: 2x ≥ −12</p><p><b>3.</b> Divide by 2</p><div class="step pop eq ans">x ≥ −6</div>
+  <aside class="notes">I do: model every step aloud. Students copy the steps into their notes.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 3 · We do · Variables on both sides</p>
+  <h2>Together: 4x − 1 < 2x + 7</h2>
+  <p class="step">Subtract 2x: ___ − 1 < 7</p><p class="step">Add 1: 2x < ___</p><p class="step">Divide by 2: x < ___</p><div class="step pop eq ans">x < 4</div>
+  <aside class="notes">We do: students fill in each blank on whiteboards before you click. Use the sentence frames.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 3 · You do · Variables on both sides</p>
+  <h2>Your turn: 6x + 3 ≤ 4x + 9</h2>
+  <p class="muted">Use the steps chart. Then check.</p><div class="step pop eq ans">x ≤ 3</div>
+  <aside class="notes">You do: give 2–3 minutes, then reveal. Students fix mistakes in a different color.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 3 · I do · ★ Essential · Distribute first</p>
+  <h2>Watch: −2(x + 1) ≥ 8</h2>
+  <p><b>1.</b> Distribute: −2x − 2 ≥ 8</p><p><b>2.</b> Add 2: −2x ≥ 10</p><p><b>3.</b> Divide by −2: FLIP</p><div class="step pop eq ans">x ≤ −5</div>
+  <aside class="notes">I do: model every step aloud. Students copy the steps into their notes.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 3 · We do · Distribute first</p>
+  <h2>Together: 3(x − 2) < 9</h2>
+  <p class="step">Distribute: ___ < 9</p><p class="step">Add 6: 3x < ___</p><p class="step">Divide by 3: x < ___</p><div class="step pop eq ans">x < 5</div>
+  <aside class="notes">We do: students fill in each blank on whiteboards before you click. Use the sentence frames.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 3 · You do · Distribute first</p>
+  <h2>Your turn: −4(x − 6) < 22</h2>
+  <p class="muted">Use the steps chart. Then check.</p><div class="step pop eq ans">x > ½</div>
+  <aside class="notes">You do: give 2–3 minutes, then reveal. Students fix mistakes in a different color.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 3 · Exit Ticket</p>
+  <h2>Show what you know</h2>
+  <div class="row" style="gap:18px"><div class="col" style="gap:10px"><div class="card"><p>1. What is the solution set for <span class="mt">3(4 − <i>x</i>) > −2<i>x</i> + 10</span>?</p><p class="small muted">Tip: Distribute, move the x-terms, and flip if you divide by a negative.</p><p class="small"><span class="mt"><i>x</i> < 2</span> · <span class="mt"><i>x</i> > 2</span> · <span class="mt"><i>x</i> ≤ −2</span></p><div class="step pop eq sm ans"><span class="mt"><i>x</i> < 2</span></div></div></div><div class="col" style="gap:10px"><div class="card"><p>2. Solve and graph: <span class="mt">1.5<i>m</i> + 4 ≥ −2(<i>m</i> − 9)</span></p><p class="small muted">Tip: Distribute the −2 to both terms.</p><p class="step small">Distribute: 1.5m + 4 ≥ ______</p><p class="step small">Add 2m, subtract 4: ______ ≥ ______</p><p class="step small">m ______ ______</p><div class="step pop eq sm ans"><span class="mt"><i>m</i> ≥ 4</span>, closed circle at 4, shaded right</div></div></div><div class="col" style="gap:10px"><div class="card"><p>3. Solve: <span class="mt">−2(<i>x</i> + 1) ≥ 8</span></p><p class="small muted">Tip: Divide by −2 at the end: flip.</p><p class="step small">Distribute: ______ ≥ 8</p><p class="step small">Add 2: −2x ≥ ______</p><p class="step small">Divide by −2 and flip: x ______ ______</p><div class="step pop eq sm ans"><span class="mt"><i>x</i> ≤ −5</span></div></div></div></div>
+  <aside class="notes">IEP exit ticket: the first 3 items of the printed exit ticket (EXIT TICKET/T1-Exit-Ticket-Mon-11-16-IEP.pdf), with a tip, 3 answer choices on multiple choice, and step frames. Students may use the steps chart and notes.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Day 3 · Notes to Keep</p>
+  <h2>Notes to keep: Day 3</h2>
+  <div class="grid3"><div class="card"><h3>Both sides</h3><p class='small'>Move x to the side with the bigger number in front: no flip needed.</p></div><div class="card"><h3>Distribute first</h3><p class='small'>−2(x + 1) = −2x − 2</p></div><div class="card"><h3>Read it from x</h3><p class='small'>−6 ≤ x is the same as x ≥ −6.</p></div></div><p class="small muted">Copy these into your notes, or ask your teacher for a printed copy.</p>
+  <aside class="notes">Give a printed copy of the notes.</aside>
+</section>
+
+</div>
+
+<nav id="bar" aria-label="Slide controls">
+  <a id="home" href="../index.html">⌂ Home</a>
+  <span id="brand"><svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#3050b8"/><g fill="#fff"><circle cx="16" cy="7.5" r="2.3"/><circle cx="12.8" cy="11.8" r="2.5" opacity=".92"/><circle cx="19.2" cy="11.8" r="2.5" opacity=".92"/><circle cx="16" cy="14.6" r="2.6"/><circle cx="11.8" cy="17.6" r="2.7" opacity=".82"/><circle cx="20.2" cy="17.6" r="2.7" opacity=".82"/></g><rect x="15.2" y="20.5" width="1.6" height="6.5" rx=".8" fill="#9fd18b"/></svg><span>Bluebonnet <strong>Algebra I</strong></span></span>
+  <button id="prev" type="button" aria-label="Previous step">← Back</button>
+  <button id="next" type="button" aria-label="Next step">Next →</button>
+  <div id="prog"><div></div></div>
+  <span id="hint">→ / Space next · ← back · N notes · F full screen</span>
+  <span id="count"></span>
+  <button id="nb" type="button" aria-pressed="false">Notes</button>
+  <button id="fs" type="button">Full screen</button>
+</nav>
+<div id="notes" hidden><b>Speaker notes</b><p id="notesText"></p></div>
+
+<script>
+const stage = document.getElementById('stage');
+// {{a|b}} → stacked fraction
+stage.innerHTML = stage.innerHTML.replace(/\{\{(.+?)\|(.+?)\}\}/g, '<span class="fr"><span>$1</span><span>$2</span></span>');
+
+// Graph spec (data-g): w,h px; x,y = [min,max]; gx,gy = [grid step, label step];
+// lines: [{p:[[x,y],[x,y]], label, c:'a'|'b'|'c' (pool color), dash, step (appears on its own click), seg (just this segment)}] extended to the window; pts: [[x,y,label]].
+// ptsStep: each point appears on its own click, in order, before the lines.
+// Keep in step with draw_graph() in make_pptx.py.
+const GM = {L: 34, R: 12, T: 12, B: 26};
+function clipLine([[ax, ay], [bx, by]], [x0, x1], [y0, y1]) {
+  const dx = bx - ax, dy = by - ay; let lo = -Infinity, hi = Infinity;
+  for (const [p, q] of [[-dx, ax - x0], [dx, x1 - ax], [-dy, ay - y0], [dy, y1 - ay]]) {
+    if (p === 0) { if (q < 0) return null; continue; }
+    const r = q / p; if (p < 0) lo = Math.max(lo, r); else hi = Math.min(hi, r);
+  }
+  return lo > hi ? null : [[ax + lo * dx, ay + lo * dy], [ax + hi * dx, ay + hi * dy]];
+}
+function graphSVG(g) {
+  const {w: W, h: H} = g, [x0, x1] = g.x, [y0, y1] = g.y;
+  const X = v => (GM.L + (v - x0) / (x1 - x0) * (W - GM.L - GM.R)).toFixed(1);
+  const Y = v => (GM.T + (y1 - v) / (y1 - y0) * (H - GM.T - GM.B)).toFixed(1);
+  const ticks = (a, b, t) => { const o = []; for (let v = Math.ceil(a / t - 1e-9) * t; v <= b + 1e-9; v += t) o.push(+v.toFixed(6)); return o; };
+  const num = v => String(v).replace('-', '−');
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${g.alt || 'graph'}">`;
+  s += `<rect class="g-bg" x=".5" y=".5" width="${W - 1}" height="${H - 1}" rx="8"/>`;
+  for (const v of ticks(x0, x1, g.gx[0])) s += `<line class="g-grid" x1="${X(v)}" y1="${GM.T}" x2="${X(v)}" y2="${H - GM.B}"/>`;
+  for (const v of ticks(y0, y1, g.gy[0])) s += `<line class="g-grid" x1="${GM.L}" y1="${Y(v)}" x2="${W - GM.R}" y2="${Y(v)}"/>`;
+  const ax = x0 <= 0 && 0 <= x1 ? 0 : x0, ay = y0 <= 0 && 0 <= y1 ? 0 : y0;
+  s += `<line class="g-axis" x1="${X(ax)}" y1="${GM.T}" x2="${X(ax)}" y2="${H - GM.B}"/>`;
+  s += `<line class="g-axis" x1="${GM.L}" y1="${Y(ay)}" x2="${W - GM.R}" y2="${Y(ay)}"/>`;
+  for (const v of ticks(x0, x1, g.gx[1])) s += `<text class="g-tick" x="${X(v)}" y="${H - GM.B + 17}" text-anchor="middle">${num(v)}</text>`;
+  for (const v of ticks(y0, y1, g.gy[1])) s += `<text class="g-tick" x="${GM.L - 6}" y="${+Y(v) + 4}" text-anchor="end">${num(v)}</text>`;
+  const ptsSVG = () => (g.pts || []).map(([px, py, lab]) => (g.ptsStep ? '<g class="step">' : '') +
+    `<circle class="g-pt" cx="${X(px)}" cy="${Y(py)}" r="5.5"/>` +
+    (lab ? `<text class="g-plab" x="${+X(px) + 9}" y="${+Y(py) - 8}">${lab}</text>` : '') +
+    (g.ptsStep ? '</g>' : '')).join('');
+  if (g.ptsStep) s += ptsSVG();
+  for (const ln of g.lines || []) {
+    const c = ln.seg ? ln.p : clipLine(ln.p, g.x, g.y); if (!c) continue;
+    if (ln.step) s += '<g class="step">';
+    s += `<line class="g-line${ln.c ? ' g' + ln.c : ''}"${ln.dash ? ' stroke-dasharray="10 7"' : ''} x1="${X(c[0][0])}" y1="${Y(c[0][1])}" x2="${X(c[1][0])}" y2="${Y(c[1][1])}"/>`;
+    if (ln.label) { const e = c[0][1] > c[1][1] ? c[0] : c[1];
+      const right = +X(e[0]) > W / 2;
+      s += `<text class="g-llab" x="${+X(e[0]) + (right ? -12 : 8)}" y="${+Y(e[1]) + 16}" text-anchor="${right ? 'end' : 'start'}">${ln.label}</text>`; }
+    if (ln.step) s += '</g>';
+  }
+  if (!g.ptsStep) s += ptsSVG();
+  return s + '</svg>';
+}
+stage.querySelectorAll('.graph').forEach(el => { el.innerHTML = graphSVG(JSON.parse(el.dataset.g)); });
+
+const slides = [...stage.querySelectorAll('.slide')];
+const steps = slides.map(s => [...s.querySelectorAll('.step')]);
+let i = 0, k = 0;
+
+function readHash(){ const m = /^#s(\d+)$/.exec(location.hash); return m ? Math.min(Math.max(+m[1] - 1, 0), slides.length - 1) : 0; }
+
+function show(n, revealAll){
+  slides[i].classList.remove('on');
+  i = n;
+  k = revealAll ? steps[i].length : 0;
+  steps[i].forEach((el, j) => el.classList.toggle('shown', j < k));
+  slides[i].classList.add('on');
+  update();
+}
+function next(){
+  if (k < steps[i].length) { steps[i][k++].classList.add('shown'); update(); }
+  else if (i < slides.length - 1) show(i + 1, false);
+}
+function prev(){
+  if (k > 0) { steps[i][--k].classList.remove('shown'); update(); }
+  else if (i > 0) show(i - 1, true);
+}
+function update(){
+  document.getElementById('count').textContent = (i + 1) + ' / ' + slides.length;
+  document.querySelector('#prog>div').style.width = ((i + 1) / slides.length * 100) + '%';
+  history.replaceState(null, '', '#s' + (i + 1));
+  const a = slides[i].querySelector('aside.notes');
+  document.getElementById('notesText').textContent = a ? a.textContent : '';
+}
+function fit(){
+  // Bar height varies (iPhone safe-area padding), so center the slide in whatever space is left above it.
+  const bar = document.getElementById('bar').offsetHeight, W = innerWidth, H = innerHeight - bar, portrait = matchMedia('(orientation:portrait)').matches;
+  const s = portrait ? W / 760 : Math.min(W / 1280, H / 720);
+  stage.style.height = portrait ? H / s + 'px' : '';
+  stage.style.top = H / 2 + 'px';
+  document.getElementById('notes').style.bottom = bar + 'px';
+  stage.style.transform = `translate(-50%,-50%) scale(${s})`;
+}
+function fullscreen(){
+  try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen().catch(() => {}); } catch (e) {}
+}
+
+stage.addEventListener('click', next);
+// Swipe left = next, swipe right = back (taps still advance via click).
+let tx = 0, ty = 0;
+stage.addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, {passive: true});
+stage.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) dx < 0 ? next() : prev();
+}, {passive: true});
+document.getElementById('next').addEventListener('click', next);
+document.getElementById('prev').addEventListener('click', prev);
+document.getElementById('fs').addEventListener('click', fullscreen);
+function toggleNotes(){
+  const n = document.getElementById('notes'); n.hidden = !n.hidden;
+  document.getElementById('nb').setAttribute('aria-pressed', String(!n.hidden));
+}
+document.getElementById('nb').addEventListener('click', toggleNotes);
+addEventListener('keydown', e => {
+  if (e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
+  if (['ArrowRight','ArrowDown',' ','PageDown','Enter'].includes(e.key)) { e.preventDefault(); next(); }
+  else if (['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
+  else if (e.key === 'Home') show(0, false);
+  else if (e.key === 'End') show(slides.length - 1, true);
+  else if (e.key === 'f' || e.key === 'F') fullscreen();
+  else if (e.key === 'n' || e.key === 'N') toggleNotes();
+});
+addEventListener('resize', fit);
+fit();
+slides[0].classList.add('on');
+show(readHash(), false);
+</script>

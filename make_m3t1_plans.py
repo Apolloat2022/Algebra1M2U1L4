@@ -234,12 +234,41 @@ def page(d):
 </body></html>"""
 
 
+def materials(d):
+    """Lesson days: bell work and exit ticket come from make_m3t1_lessons.py (the printed and online copies), so the plan,
+    the slides and the handouts always match. Also lists every file for the day."""
+    import re
+    import make_m3t1_lessons as L
+    key = next((k for k, v in L.DATES.items() if v == d["file"]), None)
+    if not key:
+        return d
+    n, day = key
+    plain = lambda s: re.sub(r"\[\[|\]\]", "", s)
+    bell = []
+    for k, q in enumerate(L.BELL[n, day], 1):
+        order = L.print_order(q["choices"], (k + day + n) % 4)
+        bell.append((plain(q["q"]), f"{('FGHJ' if k % 2 == 0 else 'ABCD')[order.index(q['choices'][0])]}. {plain(q['choices'][0])}"))
+    ex = " ".join(f"{k}. {plain(it['short'])} {A(plain(it['answer']))}" for k, it in enumerate(L.EXIT[n, day], 1))
+    rows = [(t, act, f"{ex}<br>{IEP}") if "xit ticket" in act else (t, act, what) for t, act, what in d["rows"]]
+    date, stem = L.DATES[n, day], L.LESSONS[n]["stem"]
+    mat = [f"Slides: {stem} (.html/.pptx) · publisher slides with answers: BLMathematics_AlgI_M3_T1_L{n}_LessonSlides_ENG_with_answers.pptx",
+           f"Bell work: BELL WORK/T1-Bell-Work-{date}.pdf + key (online: m3t1-lesson{n}-bellwork-day{day})",
+           f"Exit ticket: EXIT TICKET/T1-Exit-Ticket-{date}.pdf + key (written like the End of Topic 1 test)",
+           f"Video: videos/{L.VIDEO_NAMES[n]} · IEP and 504 versions of all of these: IEP/, Section 504/, and the -IEP / -504 PDFs"]
+    return dict(d, bell=bell, rows=rows, mat=mat + d["mat"])
+
+
 if __name__ == "__main__":
+    import fitz
     OUT.mkdir(parents=True, exist_ok=True)
     for d in DAYS:
+        d = materials(d)
         src = OUT / f"T1-Lesson-Plan-{d['file']}.html"
-        src.write_text(page(d), encoding="utf-8")
         pdf = src.with_suffix(".pdf")
-        subprocess.run([EDGE, "--headless", "--disable-gpu", "--no-pdf-header-footer", f"--print-to-pdf={pdf}", src.as_uri()],
-                       check=True, capture_output=True)
-        print(pdf.name)
+        for size in ("9.3pt", "8.8pt", "8.3pt"):  # shrink until the plan fits on one page
+            src.write_text(page(d).replace("font-size:9.3pt", f"font-size:{size}"), encoding="utf-8")
+            subprocess.run([EDGE, "--headless", "--disable-gpu", "--no-pdf-header-footer", f"--print-to-pdf={pdf}", src.as_uri()],
+                           check=True, capture_output=True)
+            if len(fitz.open(pdf)) == 1:
+                break
+        print(pdf.name, size)

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Topic 1 Lesson 3 Day 3 Bell Work · Modeling Linear Inequalities · IEP</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<link rel="stylesheet" href="../mc.css">
+<div class="wrap big">
+  <p class="eyebrow">Module 3 · Topic 1 · Lesson 3 · Day 3 Bell Work · IEP Version</p>
+  <h1>Bell Work: Review</h1>
+  <p class="muted">Warm up while attendance is taken. Answer all 4 questions, then submit to see which ones you got right.</p>
+  <div class="card ref"><p>Each question has 3 choices. Use the reminders below, and press <b>Read aloud</b> to hear a question.</p><p><b>Words:</b> at least ≥ · at most ≤ · more than > · fewer than <.</p><p><b>Solve like an equation:</b> undo + and −, then × and ÷.</p><p><b>Flip the sign</b> when you multiply or divide both sides by a negative number.</p><p><b>Graph:</b> ○ for < and >, ● for ≤ and ≥. Shade right for > and ≥, left for < and ≤.</p></div>
+  <label class="name">Your name <input id="name" autocomplete="name"></label>
+  <ol id="questions"></ol>
+  <div class="bar">
+    <button id="submit" disabled>Submit</button>
+    <button id="reset" class="ghost">Start over</button>
+  </div>
+  <p id="result" class="card" style="margin-top:16px" hidden></p>
+</div>
+<script>
+window.MC = { mode: "quiz", questions: [
+  {"q": "What is the solution set of [[−4x > 12]]?", "choices": ["[[x < −3]]", "[[x > −3]]", "[[x < 3]]", "[[x > 3]]"], "why": "Divide by [[−4]] and flip: [[x < −3]]."},
+  {"q": "What is the solution set of [[2x + 3 ≤ x − 1]]?", "choices": ["[[x ≤ −4]]", "[[x ≥ −4]]", "[[x ≤ −2]]", "[[x ≤ 4]]"], "why": "Subtract [[x]]: [[x + 3 ≤ −1]]. Subtract 3: [[x ≤ −4]].", "letters": "FGHJ"},
+  {"q": "Which inequality means the same as [[−6 ≤ x]]?", "choices": ["[[x ≥ −6]]", "[[x ≤ −6]]", "[[x > −6]]", "[[x < 6]]"], "why": "Read it from [[x]]'s side: [[x]] is greater than or equal to [[−6]]."},
+  {"q": "What value of [[x]] makes [[3(x − 2) = 9]] true?", "choices": ["[[5]]", "[[3]]", "[[11/3]]", "[[1]]"], "why": "[[3x − 6 = 9]], [[3x = 15]], [[x = 5]].", "letters": "FGHJ"},
+] };
+window.MC.accom = {"readAloud": true, "choices": 3, "add": [{"extra": "<p class=\"formula\" style=\"margin:8px 0 2px;padding:6px 12px;border-left:4px solid #2f6fdd;background:rgba(47,111,221,.08);border-radius:4px\"><b>Formula:</b> ÷ by a negative → flip the sign</p>", "why": "Here is how:<br><b>1.</b> Divide by [[−4]]: [[12 ÷ −4 = −3]].<br><b>2.</b> Negative divisor: flip [[>]] to [[<]].<br><b>3.</b> [[x < −3]]."}, {"extra": "<p class=\"formula\" style=\"margin:8px 0 2px;padding:6px 12px;border-left:4px solid #2f6fdd;background:rgba(47,111,221,.08);border-radius:4px\"><b>Formula:</b> get <span class=\"mt\"><i>x</i></span> on one side, like an equation</p>", "why": "Here is how:<br><b>1.</b> Subtract [[x]]: [[x + 3 ≤ −1]].<br><b>2.</b> Subtract 3: [[x ≤ −4]]."}, {"extra": "<p class=\"formula\" style=\"margin:8px 0 2px;padding:6px 12px;border-left:4px solid #2f6fdd;background:rgba(47,111,221,.08);border-radius:4px\"><b>Formula:</b> switch sides → the sign points the other way</p>", "why": "Here is how:<br><b>1.</b> [[−6 ≤ x]]: [[−6]] is less than or equal to [[x]].<br><b>2.</b> So [[x]] is greater than or equal to [[−6]]: [[x ≥ −6]]."}, {"extra": "<p class=\"formula\" style=\"margin:8px 0 2px;padding:6px 12px;border-left:4px solid #2f6fdd;background:rgba(47,111,221,.08);border-radius:4px\"><b>Formula:</b> distribute, then undo + and ×</p>", "why": "Here is how:<br><b>1.</b> Distribute: [[3x − 6 = 9]].<br><b>2.</b> Add 6: [[3x = 15]].<br><b>3.</b> Divide by 3: [[x = 5]]."}]};
+</script>
+<script src="../mc.js"></script>

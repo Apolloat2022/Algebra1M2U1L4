@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Topic 1 Lesson 3 Day 2 Bell Work · Modeling Linear Inequalities</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<link rel="stylesheet" href="../mc.css">
+<div class="wrap">
+  <p class="eyebrow">Module 3 · Topic 1 · Lesson 3 · Day 2 Bell Work</p>
+  <h1>Bell Work: Review</h1>
+  <p class="muted">Warm up while attendance is taken. Answer all 4 questions, then submit to see which ones you got right.</p>
+  <label class="name">Your name <input id="name" autocomplete="name"></label>
+  <ol id="questions"></ol>
+  <div class="bar">
+    <button id="submit" disabled>Submit</button>
+    <button id="reset" class="ghost">Start over</button>
+  </div>
+  <p id="result" class="card" style="margin-top:16px" hidden></p>
+</div>
+<script>
+window.MC = { mode: "quiz", questions: [
+  {"q": "What value of [[x]] makes [[2x + 5 = 17]] true?", "choices": ["[[6]]", "[[11]]", "[[8.5]]", "[[12]]"], "why": "Subtract 5: [[2x = 12]]. Divide: [[x = 6]]."},
+  {"q": "Which describes the graph of [[x ≥ 2]] on a number line?", "choices": ["closed circle at 2, shaded right", "open circle at 2, shaded right", "closed circle at 2, shaded left", "open circle at 2, shaded left"], "why": "[[≥]] includes 2 (closed); greater means right.", "letters": "FGHJ"},
+  {"q": "Is [[x = −5]] a solution of [[−x > 4]]?", "choices": ["Yes, because [[5 > 4]]", "No, because [[−5 < 4]]", "Yes, because [[−5 > 4]]", "No, because [[5 < 4]]"], "why": "[[−(−5) = 5]], and [[5 > 4]] is true."},
+  {"q": "Chloe buys 2 muffins for $1.50 each and some juices for $2.25 each. Which equation gives the total cost, [[y]], for [[x]] juices?", "choices": ["[[y = 2.25x + 3]]", "[[y = 1.50x + 4.50]]", "[[y = 3x + 2.25]]", "[[y = 3.75x]]"], "why": "Muffins: [[2 · 1.50 = 3]] (start). Juices: $2.25 each (rate). Like test Q6.", "letters": "FGHJ"},
+] };
+</script>
+<script src="../mc.js"></script>
