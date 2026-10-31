@@ -168,8 +168,7 @@ DAYS = [
         ("Solve A = ℓw for ℓ", "ℓ = A/w"), ("−x ≥ 3", "x ≤ −3")],
   rows=[("0–5", "Bell work", "Collect ratings; seat 1–2s near you. Hand out the Topic 1 Review."),
    ("5–15", "I do · Q1–3 (multiple choice, like test Q1–3)",
-    "Model on the board: Q1 " + A("B. y = 15x + 40") + " Q2 " + A("J. No solution") + " Q3 " + A("D. t < −3 (flip!)") +
-    "<br>Say the test's order out loud: Lesson 3 → Lesson 1 → Lesson 3."),
+    "Model on the board: Q1 " + A("B. y = 15x + 40") + " Q2 " + A("J. No solution") + " Q3 " + A("D. t < −3 (flip!)")),
    ("15–35", "We do · Q4–8 (pairs, whiteboards up after each)",
     "Q4 " + A("x = 2") + " Q5 " + A("infinite: both sides 4x + 10") + " Q6 " + A("y = 1.20x + 7.00") +
     " Q7 " + A("y = −2/5x + 3") + " Q8 " + A("h = V/(ℓw)") + "<br>Re-teach any item under 70% on the spot."),
