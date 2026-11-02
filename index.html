@@ -97,6 +97,7 @@
     { d: "2026-11-02", short: "Mon 11/2", what: "Review day: Topic 2 Test Review", agenda: true },
     { d: "2026-11-03", short: "Tue 11/3", what: "Topic 2 test", test: true },
     { d: "2026-11-04", short: "Wed 11/4", what: "Retake day", retake: true },
+    { d: "2026-11-05", short: "Thu 11/5", what: "Module 3 starts: Lesson 1, Solving Linear Equations", m3: true },
   ];
 
   const sel = document.getElementById("ver");
@@ -142,6 +143,20 @@
           <li><b>Get your calculator and formula sheet.</b></li>
           <li><b>Take the test</b> · 10 questions. Read each one carefully and check your work.</li></ol>
         <p class="hi">Good luck! You've got this! 🍀</p></div>`;
+    } else if (D.m3) {
+      const M3 = { gen: ["Module%203%20topic%201/", ""], iep: ["IEP/", "-IEP"], "504": ["Section%20504/", "-504"] }[sel.value];
+      const m3 = (n, ext = ".html") => M3[0] + n + M3[1] + ext;
+      body = `<div class="agenda"><p class="hi">🚀 Welcome to Module 3!</p>
+        <p class="eyebrow">Today's Agenda</p>
+        <ol><li><b>Bell Work</b> · four warm-ups. Start as soon as you sit down.</li>
+          <li><b>Lesson 1: Solving Linear Equations</b> · Getting Started, then Activities 1.1 and 1.2.</li>
+          <li><b>Finished early?</b> · show your work to <b>Mr. Pandey</b>, then help other students.</li>
+          <li><b>Exit Ticket</b> · four questions to show what you learned.</li></ol>
+        <p class="hi">New module, fresh start. Let's go! 🚀</p></div>
+        <div class="btns">${btn("Module%203%20topic%201/videos/M3T1-Lesson1-Solving-Linear-Equations.mp4", "▶ Watch Lesson 1", true)}
+        ${btn(m3("m3t1-lesson1-solving-linear-equations"), "Lesson 1 slides")}
+        ${btn(m3("m3t1-lesson1-solving-linear-equations", ".pptx"), "PowerPoint")}
+        ${btn(m3("m3t1-lesson1-bellwork-day1"), "Bell work")}</div>`;
     } else if (D.retake) {
       body = `<div class="agenda"><p class="hi">🔁 Retake Day</p>
         <p class="eyebrow">Today's Agenda</p>
@@ -159,6 +174,7 @@
         <p class="eyebrow">Today's Agenda</p>
         <ol><li><b>Bell Work</b> · four test warm-ups. Start as soon as you sit down.</li>
           <li><b>Test Review</b> · work through Review 1. Finished? Do <b>Test Review 2</b>.</li>
+          <li><b>Finished?</b> · show your work to <b>Mr. Pandey</b>, then help other students.</li>
           <li><b>Get ready for tomorrow!</b> · the Topic 2 Test is <b>Tuesday, Nov 3</b>.</li></ol>
         <p class="hi">Let's get busy! 💪</p></div>
         <div class="btns">${btn(page("t2-test-review"), "1 · Test Review", true)}

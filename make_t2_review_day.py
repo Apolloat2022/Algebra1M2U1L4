@@ -252,7 +252,8 @@ def bell_slide():
 def agenda_slide():
     items = [("1", "Bell Work", "Four test warm-ups. Start as soon as you sit down."),
              ("2", "Test Review", "Review 1 together, then on your own. Finished? Grab <b>Test Review 2</b>."),
-             ("3", "Get Ready for Tomorrow!", "Topic 2 Test is <b>Tuesday, Nov 3</b>. Know your 7 skills and test tips.")]
+             ("3", "Finished?", "Show your work to <b>Mr. Pandey</b>, then help other students."),
+             ("4", "Get Ready for Tomorrow!", "Topic 2 Test is <b>Tuesday, Nov 3</b>. Know your 7 skills and test tips.")]
     body = ('<div class="col" style="gap:16px;font-size:28px">' + "".join(
         f'<p style="margin:0"><b style="display:inline-block;width:46px;height:46px;line-height:46px;text-align:center;border-radius:50%;background:#2f6fdd;color:#fff;margin-right:14px">{n}</b>'
         f'<b>{t}</b> · {w}</p>' for n, t, w in items) + '</div><p style="font-size:34px;margin-top:22px;text-align:center"><b>Let’s get busy! 💪</b></p>')
@@ -349,12 +350,12 @@ def deck():
 
 
 # ------------------------------------------------------------------ lesson plan
-def agenda_deck(name, title, eyebrow, h, items, end, color, notes):  # one projector slide
+def agenda_deck(name, title, eyebrow, h, items, end, color, notes, out=OUT):  # one projector slide
     body = ('<div class="col" style="gap:14px;font-size:28px">' + "".join(
         f'<p style="margin:0"><b style="display:inline-block;width:46px;height:46px;line-height:46px;text-align:center;border-radius:50%;background:{color};color:#fff;margin-right:14px">{n}</b>'
         f'<b>{t}</b> · {w}</p>' for n, (t, w) in enumerate(items, 1)) + f'</div><p style="font-size:36px;margin-top:20px;text-align:center"><b>{end}</b></p>')
     head = re.sub(r"<title>.*?</title>", f"<title>{title}</title>", D.HEAD, count=1)
-    path = OUT / f"{name}.html"
+    path = out / f"{name}.html"
     path.write_text(head + '<div id="stage">\n\n' + sec(eyebrow, h, body, notes) + D.TAIL, encoding="utf-8")
     r = subprocess.run([sys.executable, str(ROOT / "make_pptx.py"), path.relative_to(ROOT).as_posix()], capture_output=True, text=True)
     print(name, (r.stdout.strip().splitlines() or ["?"])[-1])
@@ -374,6 +375,16 @@ def retake_day():
                  ("Quiet room", "Work silently so retakers can focus. Raise your hand for help."),
                  ("Done early?", "Take the Lesson 4 quiz.")],
                 "Second chance, best effort! 💪", "#1f8a4c", "Leave this up as students walk in. Same for all 6 periods. Module 3 Topic 1 starts Thu Nov 5.")
+
+
+def thursday():  # Thu Nov 5: first day of Module 3 Topic 1
+    agenda_deck("m3t1-thu-11-05-agenda", "Thursday Agenda", "Thursday, November 5 · Module 3 starts today", "🚀 Welcome to Module 3! Today’s Agenda",
+                [("Bell Work", "Four warm-ups. Start as soon as you sit down."),
+                 ("Lesson 1: Solving Linear Equations", "Getting Started, then Activities 1.1 and 1.2 (SE pp. 345–350)."),
+                 ("Finished early?", "Show your work to <b>Mr. Pandey</b>, then help other students."),
+                 ("Exit Ticket", "Four questions to show what you learned.")],
+                "New module, fresh start. Let’s go! 🚀", "#0b6b3a", "Leave this up as students walk in. Same for all 6 periods.",
+                ROOT / "Module 3 topic 1")
 
 
 def plan():
@@ -420,5 +431,6 @@ if __name__ == "__main__":
     review2()
     test_day()
     retake_day()
+    thursday()
     deck()
     plan()
