@@ -257,7 +257,7 @@ def agenda_slide():
     body = ('<p style="font-size:26px;font-weight:600;margin:0 0 14px;padding:8px 14px;border-radius:10px;background:#eef3fc">📚 Walk in, grab your book, take your seat!</p><div class="col" style="gap:16px;font-size:28px">' + "".join(
         f'<p style="margin:0"><b style="display:inline-block;width:46px;height:46px;line-height:46px;text-align:center;border-radius:50%;background:#2f6fdd;color:#fff;margin-right:14px">{n}</b>'
         f'<b>{t}</b> · {w}</p>' for n, t, w in items) + '</div><p style="font-size:34px;margin-top:22px;text-align:center"><b>Let’s get busy! 💪</b></p>')
-    return sec("Monday, November 2 · Welcome back!", "Welcome back! Today’s Agenda", body,
+    return sec("👋 Welcome back! · Topic 2 Test Review", "📅 Today’s Agenda · Monday, Nov 2", body,
                "Leave this up as students walk in. Same agenda all 6 periods. Point to the bell work, then go.")
 
 
@@ -362,14 +362,14 @@ def agenda_deck(name, title, eyebrow, h, items, end, color, notes, out=OUT, firs
 
 
 def test_day():
-    agenda_deck("t2-test-day-agenda", "Test Day Agenda", "Tuesday, November 3 · Test Day", "📝 Topic 2 Test · Today’s Agenda",
+    agenda_deck("t2-test-day-agenda", "Test Day Agenda", "📝 Test Day · Topic 2 Test", "📅 Today’s Agenda · Tuesday, Nov 3",
                 [("Clear your desk", "Only a pencil stays out."), ("Chromebook ready", "You will enter your answers on it."),
                  ("Calculator + formula sheet", "Get them now."), ("Take the test", "10 questions. Read carefully, check your work.")],
                 "Good luck! You’ve got this! 🍀", "#b00020", "Leave this up as students walk in. Same for all 6 periods. Retakes Wed Nov 4.", first="🪑 Walk in and take your seat quickly.")
 
 
 def retake_day():
-    agenda_deck("t2-retake-day-agenda", "Retake Day Agenda", "Wednesday, November 4 · Retake Day", "🔁 Retake Day · Today’s Agenda",
+    agenda_deck("t2-retake-day-agenda", "Retake Day Agenda", "🔁 Retake Day", "📅 Today’s Agenda · Wednesday, Nov 4",
                 [("Retaking? Get set up", "Clear desk, Chromebook ready, calculator + formula sheet."),
                  ("Not retaking? Lesson 4", "Comparing Linear Functions: slides, then the homework on your Chromebook."),
                  ("Quiet room", "Work silently so retakers can focus. Raise your hand for help."),
@@ -378,7 +378,7 @@ def retake_day():
 
 
 def thursday():  # Thu Nov 5: first day of Module 3 Topic 1
-    agenda_deck("m3t1-thu-11-05-agenda", "Thursday Agenda", "Thursday, November 5 · Module 3 starts today", "🚀 Welcome to Module 3! Today’s Agenda",
+    agenda_deck("m3t1-thu-11-05-agenda", "Thursday Agenda", "🚀 Welcome to Module 3!", "📅 Today’s Agenda · Thursday, Nov 5",
                 [("Bell Work", "Four warm-ups. Start as soon as you sit down."),
                  ("Lesson 1: Solving Linear Equations", "Getting Started, then Activities 1.1 and 1.2 (SE pp. 345–350)."),
                  ("Finished early?", "Show your work to <b>Mr. Pandey</b>, then help other students."),

@@ -22,6 +22,7 @@
   .day.big b{color:var(--bad)}
   .agenda ol{font-size:17px;line-height:1.6;margin:6px 0 10px;padding-left:24px}
   .agenda .hi{font-size:20px;font-weight:700;margin:4px 0}
+  .agenda .ag{font-size:19px;font-weight:700;color:var(--point);margin:8px 0 4px}
   .agenda .first{font-size:18px;font-weight:600;margin:4px 0 2px;padding:6px 10px;border-radius:8px;background:var(--soft)}
   .today{border:2px solid var(--point);margin-top:12px}
   .today .eyebrow{margin-bottom:4px}
@@ -128,6 +129,7 @@
         x.test ? "Test" : x.lessons ? "Lesson " + x.lessons.join(" & ") : x.what.split(":")[0]}</button>`).join("");
 
     const D = DAYS[i];
+    const longDate = date(D.d).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
     let body = "";
     if (D.lessons) {
       const Ls = D.lessons.map(n => LESSONS[n - 1]);
@@ -138,7 +140,7 @@
         ${Ls.map(L => btn(page(`t2-lesson${L.n}-homework`), Ls.length > 1 ? `Homework ${L.n}` : "Homework")).join("")}</div>`;
     } else if (D.test) {
       body = `<div class="agenda"><p class="hi">📝 Test Day: Topic 2 Test</p>
-        <p class="eyebrow">Today's Agenda</p>
+        <p class="ag">📅 Today's Agenda · ${longDate}</p>
         <p class="first">🪑 Walk in and take your seat quickly.</p>
         <ol><li><b>Clear your desk</b> · only a pencil stays out.</li>
           <li><b>Chromebook ready</b> · you will enter your answers on it.</li>
@@ -149,7 +151,7 @@
       const M3 = { gen: ["Module%203%20topic%201/", ""], iep: ["IEP/", "-IEP"], "504": ["Section%20504/", "-504"] }[sel.value];
       const m3 = (n, ext = ".html") => M3[0] + n + M3[1] + ext;
       body = `<div class="agenda"><p class="hi">🚀 Welcome to Module 3!</p>
-        <p class="eyebrow">Today's Agenda</p>
+        <p class="ag">📅 Today's Agenda · ${longDate}</p>
         <p class="first">📚 Walk in, grab your book, take your seat!</p>
         <ol><li><b>Bell Work</b> · four warm-ups. Start as soon as you sit down.</li>
           <li><b>Lesson 1: Solving Linear Equations</b> · Getting Started, then Activities 1.1 and 1.2.</li>
@@ -162,7 +164,7 @@
         ${btn(m3("m3t1-lesson1-bellwork-day1"), "Bell work")}</div>`;
     } else if (D.retake) {
       body = `<div class="agenda"><p class="hi">🔁 Retake Day</p>
-        <p class="eyebrow">Today's Agenda</p>
+        <p class="ag">📅 Today's Agenda · ${longDate}</p>
         <p class="first">📚 Walk in, grab your book, take your seat!</p>
         <ol><li><b>Retaking?</b> · clear your desk, Chromebook ready, calculator and formula sheet out.</li>
           <li><b>Not retaking?</b> · Lesson 4: Comparing Linear Functions. Go through the slides, then do the homework.</li>
@@ -175,7 +177,7 @@
     } else if (D.agenda) {
       const bw = { gen: "", iep: "-IEP", "504": "-504" }[sel.value];
       body = `<div class="agenda"><p class="hi">👋 Welcome back! Happy Monday!</p>
-        <p class="eyebrow">Today's Agenda</p>
+        <p class="ag">📅 Today's Agenda · ${longDate}</p>
         <p class="first">📚 Walk in, grab your book, take your seat!</p>
         <ol><li><b>Bell Work</b> · four test warm-ups. Start as soon as you sit down.</li>
           <li><b>Test Review</b> · work through Review 1.</li>
