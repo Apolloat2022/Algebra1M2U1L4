@@ -11,6 +11,7 @@ from pathlib import Path
 import make_t2_decks as D
 import make_t2_practice as MP
 import make_accom_lessons as A
+import agendas
 
 ROOT = Path(__file__).parent
 OUT = ROOT / "Module 3 topic 1"
@@ -904,12 +905,14 @@ def build(n):
     general = [D.star_eyebrows(f"m3l{n}", s) for day in days for s in day]
     path = OUT / f"{info['stem']}.html"
     path.write_text(doc(f"{info['name']} · Bluebonnet Algebra I", general), encoding="utf-8")
+    agendas.inject(path)  # dated Today's Agenda as slide 2 on agenda days
     print(path.name, len(general), "slides"); pptx(path)
     starred_days = [[D.star_eyebrows(f"m3l{n}", s) for s in day] for day in days]
     link = lambda kind, h: re.sub(r'href="(m3t1-lesson\d-bellwork-day\d)\.html"', rf'href="\1-{kind}.html"', h)
     for kind, slides in (("504", deck_504(n, starred_days)), ("IEP", deck_iep(n))):
         p_ = FOLDER[kind] / f"{info['stem']}-{kind}.html"
         p_.write_text(link(kind, doc(f"{info['name']} · Bluebonnet Algebra I · {LABEL[kind]}", slides)), encoding="utf-8")
+        agendas.inject(p_)
         print(p_.name, len(slides), "slides"); pptx(p_)
     for d in range(1, len(days) + 1):
         bell_pages(n, d)
