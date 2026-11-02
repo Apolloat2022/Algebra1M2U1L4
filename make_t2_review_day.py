@@ -251,8 +251,8 @@ def bell_slide():
 
 def agenda_slide():
     items = [("1", "Bell Work", "Four test warm-ups. Start as soon as you sit down."),
-             ("2", "Test Review", "Review 1 together, then on your own. Finished? Grab <b>Test Review 2</b>."),
-             ("3", "Finished?", "Show your work to <b>Mr. Pandey</b>, then help other students."),
+             ("2", "Test Review", "Review 1 together, then on your own."),
+             ("3", "Finished?", "Show your work to <b>Mr. Pandey</b>, then help other students. Done helping? Do <b>Test Review 2</b>."),
              ("4", "Get Ready for Tomorrow!", "Topic 2 Test is <b>Tuesday, Nov 3</b>. Know your 7 skills and test tips.")]
     body = ('<div class="col" style="gap:16px;font-size:28px">' + "".join(
         f'<p style="margin:0"><b style="display:inline-block;width:46px;height:46px;line-height:46px;text-align:center;border-radius:50%;background:#2f6fdd;color:#fff;margin-right:14px">{n}</b>'
