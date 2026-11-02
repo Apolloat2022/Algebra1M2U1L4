@@ -349,20 +349,31 @@ def deck():
 
 
 # ------------------------------------------------------------------ lesson plan
-def test_day():  # one projector slide for Tue Nov 3
-    items = [("1", "Clear your desk", "Only a pencil stays out."), ("2", "Chromebook ready", "You will enter your answers on it."),
-             ("3", "Calculator + formula sheet", "Get them now."), ("4", "Take the test", "10 questions. Read carefully, check your work.")]
+def agenda_deck(name, title, eyebrow, h, items, end, color, notes):  # one projector slide
     body = ('<div class="col" style="gap:14px;font-size:28px">' + "".join(
-        f'<p style="margin:0"><b style="display:inline-block;width:46px;height:46px;line-height:46px;text-align:center;border-radius:50%;background:#b00020;color:#fff;margin-right:14px">{n}</b>'
-        f'<b>{t}</b> · {w}</p>' for n, t, w in items) + '</div><p style="font-size:36px;margin-top:20px;text-align:center"><b>Good luck! You’ve got this! 🍀</b></p>')
-    slide = sec("Tuesday, November 3 · Test Day", "📝 Topic 2 Test · Today’s Agenda", body,
-                "Leave this up as students walk in. Same for all 6 periods. Retakes Wed Nov 4.")
-    name = "t2-test-day-agenda"
-    head = re.sub(r"<title>.*?</title>", "<title>Test Day Agenda</title>", D.HEAD, count=1)
+        f'<p style="margin:0"><b style="display:inline-block;width:46px;height:46px;line-height:46px;text-align:center;border-radius:50%;background:{color};color:#fff;margin-right:14px">{n}</b>'
+        f'<b>{t}</b> · {w}</p>' for n, (t, w) in enumerate(items, 1)) + f'</div><p style="font-size:36px;margin-top:20px;text-align:center"><b>{end}</b></p>')
+    head = re.sub(r"<title>.*?</title>", f"<title>{title}</title>", D.HEAD, count=1)
     path = OUT / f"{name}.html"
-    path.write_text(head + '<div id="stage">\n\n' + slide + D.TAIL, encoding="utf-8")
+    path.write_text(head + '<div id="stage">\n\n' + sec(eyebrow, h, body, notes) + D.TAIL, encoding="utf-8")
     r = subprocess.run([sys.executable, str(ROOT / "make_pptx.py"), path.relative_to(ROOT).as_posix()], capture_output=True, text=True)
-    print("test day:", (r.stdout.strip().splitlines() or ["?"])[-1])
+    print(name, (r.stdout.strip().splitlines() or ["?"])[-1])
+
+
+def test_day():
+    agenda_deck("t2-test-day-agenda", "Test Day Agenda", "Tuesday, November 3 · Test Day", "📝 Topic 2 Test · Today’s Agenda",
+                [("Clear your desk", "Only a pencil stays out."), ("Chromebook ready", "You will enter your answers on it."),
+                 ("Calculator + formula sheet", "Get them now."), ("Take the test", "10 questions. Read carefully, check your work.")],
+                "Good luck! You’ve got this! 🍀", "#b00020", "Leave this up as students walk in. Same for all 6 periods. Retakes Wed Nov 4.")
+
+
+def retake_day():
+    agenda_deck("t2-retake-day-agenda", "Retake Day Agenda", "Wednesday, November 4 · Retake Day", "🔁 Retake Day · Today’s Agenda",
+                [("Retaking? Get set up", "Clear desk, Chromebook ready, calculator + formula sheet."),
+                 ("Not retaking? Lesson 4", "Comparing Linear Functions: slides, then the homework on your Chromebook."),
+                 ("Quiet room", "Work silently so retakers can focus. Raise your hand for help."),
+                 ("Done early?", "Take the Lesson 4 quiz.")],
+                "Second chance, best effort! 💪", "#1f8a4c", "Leave this up as students walk in. Same for all 6 periods. Module 3 Topic 1 starts Thu Nov 5.")
 
 
 def plan():
@@ -408,5 +419,6 @@ if __name__ == "__main__":
     online()
     review2()
     test_day()
+    retake_day()
     deck()
     plan()

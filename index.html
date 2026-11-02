@@ -96,7 +96,7 @@
     { d: "2026-10-29", short: "Thu 10/29", what: "Lesson 3: Perpendicular lines, day 2", lessons: [3] },
     { d: "2026-11-02", short: "Mon 11/2", what: "Review day: Topic 2 Test Review", agenda: true },
     { d: "2026-11-03", short: "Tue 11/3", what: "Topic 2 test", test: true },
-    { d: "2026-11-04", short: "Wed 11/4", what: "Retakes", review: true },
+    { d: "2026-11-04", short: "Wed 11/4", what: "Retake day", retake: true },
   ];
 
   const sel = document.getElementById("ver");
@@ -142,6 +142,17 @@
           <li><b>Get your calculator and formula sheet.</b></li>
           <li><b>Take the test</b> · 10 questions. Read each one carefully and check your work.</li></ol>
         <p class="hi">Good luck! You've got this! 🍀</p></div>`;
+    } else if (D.retake) {
+      body = `<div class="agenda"><p class="hi">🔁 Retake Day</p>
+        <p class="eyebrow">Today's Agenda</p>
+        <ol><li><b>Retaking?</b> · clear your desk, Chromebook ready, calculator and formula sheet out.</li>
+          <li><b>Not retaking?</b> · Lesson 4: Comparing Linear Functions. Go through the slides, then do the homework.</li>
+          <li><b>Quiet room</b> · work silently so retakers can focus. Raise your hand for help.</li>
+          <li><b>Done early?</b> · take the Lesson 4 quiz.</li></ol>
+        <p class="hi">Second chance, best effort! 💪</p></div>
+        <div class="btns">${btn(page("t2-lesson4-comparing-linear-functions"), "Lesson 4 slides", true)}
+        ${btn(page("t2-lesson4-homework"), "Lesson 4 homework", true)}
+        ${btn(page("t2-lesson4-quiz"), "Lesson 4 quiz")}</div>`;
     } else if (D.agenda) {
       const bw = { gen: "", iep: "-IEP", "504": "-504" }[sel.value];
       body = `<div class="agenda"><p class="hi">👋 Welcome back! Happy Monday!</p>
