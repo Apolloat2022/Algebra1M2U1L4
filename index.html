@@ -20,6 +20,8 @@
   .day.now{border:2px solid var(--point);background:var(--soft)}
   .day.done{opacity:.55}
   .day.big b{color:var(--bad)}
+  .agenda ol{font-size:17px;line-height:1.6;margin:6px 0 10px;padding-left:24px}
+  .agenda .hi{font-size:20px;font-weight:700;margin:4px 0}
   .today{border:2px solid var(--point);margin-top:12px}
   .today .eyebrow{margin-bottom:4px}
   .today h3{margin:0 0 6px;font-size:24px;line-height:1.2}
@@ -92,7 +94,7 @@
     { d: "2026-10-27", short: "Tue 10/27", what: "Lessons 1 and 2: Slide, stretch and move lines", lessons: [1, 2], slides: "t2-catchup-day-lessons1-2" },
     { d: "2026-10-28", short: "Wed 10/28", what: "Lesson 3: Perpendicular lines, day 1", lessons: [3] },
     { d: "2026-10-29", short: "Thu 10/29", what: "Lesson 3: Perpendicular lines, day 2", lessons: [3] },
-    { d: "2026-11-02", short: "Mon 11/2", what: "Review day: practice test", review: true },
+    { d: "2026-11-02", short: "Mon 11/2", what: "Review day: Topic 2 Test Review", agenda: true },
     { d: "2026-11-03", short: "Tue 11/3", what: "Topic 2 test", test: true },
     { d: "2026-11-04", short: "Wed 11/4", what: "Retakes", review: true },
   ];
@@ -132,6 +134,18 @@
         ${btn(page(D.slides || Ls[0].slides, ".pptx"), "PowerPoint")}
         ${Ls.map(L => btn(BOOK(L.n), `Lesson ${L.n} with answers`)).join("")}
         ${Ls.map(L => btn(page(`t2-lesson${L.n}-homework`), Ls.length > 1 ? `Homework ${L.n}` : "Homework")).join("")}</div>`;
+    } else if (D.agenda) {
+      const bw = { gen: "", iep: "-IEP", "504": "-504" }[sel.value];
+      body = `<div class="agenda"><p class="hi">👋 Welcome back! Happy Monday!</p>
+        <p class="eyebrow">Today's Agenda</p>
+        <ol><li><b>Bell Work</b> · four test warm-ups. Start as soon as you sit down.</li>
+          <li><b>Test Review</b> · work through Review 1. Finished? Do <b>Test Review 2</b>.</li>
+          <li><b>Get ready for tomorrow!</b> · the Topic 2 Test is <b>Tuesday, Nov 3</b>.</li></ol>
+        <p class="hi">Let's get busy! 💪</p></div>
+        <div class="btns">${btn(page("t2-test-review"), "1 · Test Review", true)}
+        ${btn(page("t2-test-review-2"), "2 · Test Review 2", true)}
+        ${btn("Module%202%20topic%202/t2-test-review-slides.html", "Review slides")}
+        ${btn(`Module%202%20topic%202/BELL%20WORK/T2-Bell-Work-Mon-11-02${bw}.pdf`, "Bell work")}</div>`;
     } else {
       body = `<div class="btns">${btn(page("t2-review"), "Practice test", true)}</div>
         <p class="tip">Watch any lesson video below to review.</p>`;
@@ -142,7 +156,7 @@
     document.getElementById("lessons").innerHTML = LESSONS.map(L =>
       `<section class="card lesson"><div class="num">${L.n}</div><h3>${L.title}</h3><p>${L.learn}</p><div class="btns">${lessonBtns(L)}</div></section>`).join("");
 
-    document.getElementById("prep").innerHTML = btn(page("t2-review"), "Practice test", true) +
+    document.getElementById("prep").innerHTML = btn(page("t2-test-review"), "Test Review", true) + btn(page("t2-test-review-2"), "Test Review 2", true) + btn(page("t2-review"), "Older practice test") +
       LESSONS.map(L => btn(VID + L.video, `▶ Lesson ${L.n} video`)).join("");
 
     const left = Math.round((date("2026-11-03") - today) / 864e5);

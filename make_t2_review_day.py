@@ -70,7 +70,7 @@ SHEET_CSS = """@page{size:letter;margin:.5in}body{font-family:Segoe UI,Arial,san
 .fr{margin:12px 0 0 10px;line-height:2.1}.ans{color:#b00000;font-weight:600}.why{color:#b00000;font-size:10pt;margin-top:6px}"""
 
 
-def sheet(name, what, items, key, kind):
+def sheet(name, what, items, key, kind, title=None):
     blocks = []
     for k, it in enumerate(items, 1):
         letters = "ABCD" if k % 2 else "FGHJ"
@@ -94,7 +94,7 @@ def sheet(name, what, items, key, kind):
     lab = {"504": " · SECTION 504 VERSION", "IEP": " · IEP VERSION"}.get(kind, "")
     ref = ('<div class="ref"><b>Reminders</b>' + "".join(f"<p>{r}</p>" for r in REF) + "</div>") if kind else ""
     html = (f'<!doctype html><meta charset="utf-8"><title>{name}</title><style>{SHEET_CSS}</style>'
-            f'<div class="hdr"><span>MODULE 2 • TOPIC 2 • REVIEW DAY • {what.upper()}{lab}</span><span>{"ANSWER KEY" if key else ""}</span></div>'
+            f'<div class="hdr"><span>MODULE 2 • TOPIC 2 • REVIEW DAY • {(title or what).upper()}{lab}</span><span>{"ANSWER KEY" if key else ""}</span></div>'
             f'<div class="top"><b>TOPIC 2</b> Transforming and Comparing Linear Functions</div>'
             f'<div class="nm">Name ____________________________ &nbsp; Date __________</div>{ref}'
             f'<div class="{"one big" if kind else "grid"}">{"".join(blocks)}</div>')
@@ -162,27 +162,82 @@ ONLINE = [
 ]
 
 
-def online():
-    data = [{"q": q, "choices": ch, "why": why} | ({"letters": "FGHJ"} if j % 2 else {}) for j, (q, ch, why, _) in enumerate(ONLINE)]
+def online(base="t2-test-review", items=ONLINE, title="Topic 2 Test Review",
+           intro="Questions 1–10 are the same as the printed review, which is written just like Tuesday's test; 11–14 are extra practice. "
+                 "Pick an answer to see if you are right and why."):
+    data = [{"q": q, "choices": ch, "why": why} | ({"letters": "FGHJ"} if j % 2 else {}) for j, (q, ch, why, _) in enumerate(items)]
     MP.OUT = OUT
-    name = "t2-test-review.html"
-    MP.page(name, "Topic 2 Test Review · Self-Check", "Module 2 · Topic 2 · Review Day · Mon Nov 2", "Topic 2 Test Review",
-            "Questions 1–10 are the same as the printed review, which is written just like Tuesday's test; 11–14 are extra practice. "
-            "Pick an answer to see if you are right and why.", "homework", data)
+    name = f"{base}.html"
+    MP.page(name, f"{title} · Self-Check", "Module 2 · Topic 2 · Review Day · Mon Nov 2", title, intro, "homework", data)
     s = (OUT / name).read_text(encoding="utf-8")
     for kind, lab in (("504", "Section 504"), ("IEP", "IEP")):
         accom = {"readAloud": True}
         if kind == "IEP":
             accom["choices"] = 3
             accom["add"] = [{"extra": f'<p style="margin:8px 0 2px;padding:6px 12px;border-left:4px solid #2f6fdd;background:rgba(47,111,221,.08);border-radius:4px"><b>Tip:</b> {tip}</p>'}
-                            for *_, tip in ONLINE]
+                            for *_, tip in items]
         t = s.replace("</title>", f" · {lab}</title>", 1).replace('<div class="wrap">', '<div class="wrap big">', 1)
         t = re.sub(r'(<p class="eyebrow">.*?)</p>', lambda g: f"{g.group(1)} · {lab} Version</p>", t, count=1)
         t = re.sub(r'(<p class="muted">.*?</p>)', lambda g: g.group(1) + f'\n  <div class="card ref"><p>{A.HELP[kind]}</p>' + "".join(f"<p>{r}</p>" for r in REF) + "</div>", t, count=1)
         t = t.replace('</script>\n<script src="../mc.js">', f'window.MC.accom = {json.dumps(accom, ensure_ascii=False)};\n</script>\n<script src="../mc.js">')
         assert "window.MC.accom" in t
-        (FOLDER[kind] / f"t2-test-review-{kind}.html").write_text(t, encoding="utf-8")
-    print("online pages")
+        (FOLDER[kind] / f"{base}-{kind}.html").write_text(t, encoding="utf-8")
+    print("online pages", base)
+
+
+# ------------------------------------------------------------------ Test Review 2: for students who finish Review 1 (same 10 test skills, new numbers + 2 extra)
+# first choice correct; "answer"/"frames" = the item is open response on paper (like the test), multiple choice online
+REVIEW2 = [
+    dict(q="The graph of linear function [[m]] passes through (−4, 6) and (2, −3). Given [[f(x) = x]] and [[m(x) = af(x)]], what is the value of [[a]]?",
+         choices=["−3/2", "−2/3", "3/2", "2/3"], answer="a = −3/2", why="a is the slope: (−3 − 6) ÷ (2 − (−4)) = −9/6 = −3/2.",
+         tip="a is the slope. Use (y₂ − y₁) ÷ (x₂ − x₁).", frames=["Slope = (−3 − 6) ÷ (2 − (−4)) = ____ ÷ ____", "a = ______"]),
+    dict(q="A food truck rents for $120 plus $45 per hour, for at most 6 hours. What is the range for one rental?",
+         choices=["120 ≤ y ≤ 390", "0 ≤ x ≤ 6", "45 ≤ y ≤ 390", "120 ≤ y ≤ 270"], why="Range = costs. 0 hours: $120. 6 hours: 120 + 45(6) = $390.",
+         tip="Range = the y-values (dollars). Find the cost at 0 hours and at 6 hours."),
+    dict(q="A vertical line passes through (8, −3). What are its equation and slope?",
+         choices=["x = 8; slope is undefined", "y = −3; slope is zero", "x = 8; slope is zero", "y = 8; slope is undefined"],
+         why="Vertical: every point has x = 8. Slope = rise ÷ 0: undefined (VUX).", tip="HOY VUX: Vertical → Undefined slope → x = #."),
+    dict(q="Lena graphed [[f(x)]] and [[g(x) = f(x + 4)]]. Which statement describes how the graphs are related?",
+         choices=["translated left 4 units", "translated right 4 units", "translated up 4 units", "translated down 4 units"],
+         why="Inside the parentheses the graph moves opposite the sign: + 4 → left 4.", tip="Inside the parentheses: move the opposite way of the sign."),
+    dict(q="[[f(x)]] has the table (−1, 8), (0, 5), (1, 2), (2, −1). The graph is translated 3 units left. What is the y-intercept of the new function?",
+         choices=["−4", "5", "14", "−1"], answer="−4", why="f(x) = −3x + 5. Left 3: g(x) = f(x + 3) = −3x − 4. Check: the point at x = 3, (3, −4), moves to (0, −4).",
+         tip="Left 3: subtract 3 from each x. Which point lands on x = 0?", frames=["Left 3: g(x) = f(x + 3)", "g(0) = f(____) = ______", "y-intercept = ______"]),
+    dict(q="[[f(x) = x]] and [[g(x) = f(½x)]]. Write the equation for [[g(x)]].",
+         choices=["g(x) = ½x", "g(x) = 2x", "g(x) = x + ½", "g(x) = x − 2"], answer="g(x) = ½x", why="Put ½x in for x: g(x) = ½x, a less steep line through (0, 0).",
+         tip="f(½x): replace x with ½x.", frames=["f(x) = x, so f(½x) = ______", "g(x) = ______"]),
+    dict(q="Write the equation in slope-intercept form of the line that crosses the x-axis at 8 and is perpendicular to [[y = 4x + 1]].",
+         choices=["y = −1/4x + 2", "y = −1/4x − 2", "y = 4x − 32", "y = 1/4x − 2"], answer="y = −1/4x + 2", why="Slope −1/4. Point (8, 0): 0 = −1/4(8) + b → b = 2.",
+         tip="Flip the slope and change the sign. Crosses the x-axis at 8 = the point (8, 0).", frames=["Slope = ______", "0 = ____(8) + b → b = ______", "y = ______x + ______"]),
+    dict(q="Write the equation in slope-intercept form of the line through (−6, 0) that is parallel to [[y = 1.5x − 4]].",
+         choices=["y = 1.5x + 9", "y = 1.5x − 9", "y = −1.5x − 9", "y = 1.5x − 4"], answer="y = 1.5x + 9", why="Same slope 1.5. 0 = 1.5(−6) + b → b = 9.",
+         tip="Parallel → same slope. Then put in the point and solve for b.", frames=["Slope = ______", "0 = 1.5(−6) + b → b = ______", "y = ______x + ______"]),
+    dict(q="A line passes through (1, −2) and (4, 7). Write an equation of the line in point-slope form.",
+         choices=["y − 7 = 3(x − 4)", "y + 7 = 3(x + 4)", "y − 7 = 3(x + 4)", "y − 7 = ⅓(x − 4)"], answer="y − 7 = 3(x − 4)  (or y + 2 = 3(x − 1))",
+         why="Slope = (7 − (−2)) ÷ (4 − 1) = 9 ÷ 3 = 3. With (4, 7): y − 7 = 3(x − 4).", tip="Find the slope, then use y − y₁ = m(x − x₁).",
+         frames=["Slope = (7 − (−2)) ÷ (4 − 1) = ______", "y − 7 = ____(x − 4)"]),
+    dict(q="A line passes through (0, 6) and (3, 0). Which statement is true?",
+         choices=["It is decreasing and its zero is 3.", "It is decreasing and its zero is 6.", "It is increasing and its zero is 3.", "Its slope is −1/2 and its zero is 3."],
+         why="It falls left to right (slope −6/3 = −2). It crosses the x-axis at 3. The y-intercept is 6.", tip="Zero = x-intercept. Decreasing = goes down left to right."),
+    dict(q="Which pair of equations represents perpendicular lines?",
+         choices=["y = 2/3x − 1 and y = −3/2x + 4", "y = 2/3x + 1 and y = 2/3x − 4", "y = 2/3x and y = 3/2x + 2", "y = −2/3x + 1 and y = −3/2x"],
+         why="2/3 × (−3/2) = −1. (The second pair is parallel.)", tip="Multiply the slopes: −1 means perpendicular."),
+    dict(q="A phone is at 80% battery and loses 4% per hour until it is empty. What is the domain?",
+         choices=["0 ≤ x ≤ 20", "0 ≤ x ≤ 80", "0 ≤ y ≤ 80", "4 ≤ x ≤ 80"], why="Domain = hours. 80 ÷ 4 = 20 hours.", tip="Domain = x-values (hours). How long until 0%?"),
+]
+
+
+def review2():
+    paper = [{k: v for k, v in it.items() if k != "choices"} if it.get("answer") else it for it in REVIEW2]
+    (OUT / "REVIEW").mkdir(exist_ok=True)
+    for kind in (None, "504", "IEP"):
+        sfx = f"-{kind}" if kind else ""
+        for key in (False, True):
+            sheet(f"T2-Review-2{sfx}{'-ANSWER-KEY' if key else ''}", "REVIEW", paper, key, kind, title="Test Review 2")
+    print("review 2 PDFs")
+    online("t2-test-review-2", [(it["q"], it["choices"], it["why"], it["tip"]) for it in REVIEW2], "Topic 2 Test Review 2",
+           "Finished Review 1? Try this one. Questions 1–10 are written like Tuesday's test with new numbers; 11–12 are extra practice. "
+           "Pick an answer to see if you are right and why.")
 
 
 # ------------------------------------------------------------------ slides
@@ -192,6 +247,17 @@ def bell_slide():
     return sec("Mon Nov 2 · Bell Work · Test Warm-Up", "Warm up: work these on your own", f'<div class="col" style="gap:4px;font-size:24px">{items}</div>',
                "Printed copy: BELL WORK/T2-Bell-Work-Mon-11-02.pdf (IEP and 504 versions too). About 5 minutes while you take attendance. "
                + " ".join(f"{k}. {q['why']}" for k, q in enumerate(BELL, 1)))
+
+
+def agenda_slide():
+    items = [("1", "Bell Work", "Four test warm-ups. Start as soon as you sit down."),
+             ("2", "Test Review", "Review 1 together, then on your own. Finished? Grab <b>Test Review 2</b>."),
+             ("3", "Get Ready for Tomorrow!", "Topic 2 Test is <b>Tuesday, Nov 3</b>. Know your 7 skills and test tips.")]
+    body = ('<div class="col" style="gap:16px;font-size:28px">' + "".join(
+        f'<p style="margin:0"><b style="display:inline-block;width:46px;height:46px;line-height:46px;text-align:center;border-radius:50%;background:#2f6fdd;color:#fff;margin-right:14px">{n}</b>'
+        f'<b>{t}</b> · {w}</p>' for n, t, w in items) + '</div><p style="font-size:34px;margin-top:22px;text-align:center"><b>Let’s get busy! 💪</b></p>')
+    return sec("Monday, November 2 · Welcome back!", "Welcome back! Today’s Agenda", body,
+               "Leave this up as students walk in. Same agenda all 6 periods. Point to the bell work, then go.")
 
 
 def g8(lines, pts=(), alt=""):
@@ -206,10 +272,10 @@ def deck():
          f'  <p class="muted small">Click, or press → / Space, to reveal each step. ← goes back. F = full screen.</p>\n  {D.FOOT}\n'
          '  <aside class="notes">Review for the publisher End of Topic 2 Assessment (10 questions). Students have the printed Topic 2 Review Test '
          '(assessment/M2 TOPIC 2/Topic2-Review-Test.pdf): questions 1–10 are written just like the test, in the same order. These slides work through 1–10.</aside>\n</section>\n',
-         bell_slide()]
+         agenda_slide(), bell_slide()]
     s.append(sec("Today", "Plan for the review", '<div class="col" style="gap:10px;font-size:26px">' + "".join(
         f'<p class="step">{t}</p>' for t in ["1. Bell work: four test warm-ups", "2. Review questions 1–3 together (I do)", "3. Questions 4–8 in pairs, whiteboards up (we do)",
-                                              "4. Questions 9–10 alone, like the test (you do)", "5. Extra practice 11–14 or the online self-check", "6. Exit ticket"]) + "</div>",
+                                              "4. Questions 9–10 alone, like the test (you do)", "5. Finished? Test Review 2 (printed or online)", "6. Exit ticket"]) + "</div>",
         "Hand out the printed review now. The test tomorrow has 10 questions in this same order."))
     s.append(sec("The 7 skills on the test", "What tomorrow's test asks", row(
         card("Transformations (A.3E)", p("Q1, 4, 5, 6: a·f(x), f(x − h), f(bx), shifting a table")) + card("Domain and range (A.2A)", p("Q2: costs are the range")),
@@ -293,14 +359,15 @@ def plan():
              mat=["Topic 2 Review Test: assessment/M2 TOPIC 2/Topic2-Review-Test.pdf + key (IEP and 504 versions)",
                   "Slides: Module 2 topic 2/t2-test-review-slides (.html/.pptx) · online self-check: t2-test-review.html",
                   f"Bell work and exit ticket: BELL WORK/T2-Bell-Work-{DATE}.pdf, EXIT TICKET/T2-Exit-Ticket-{DATE}.pdf + keys (IEP/504 too)",
+                  "Test Review 2 for early finishers: REVIEW/T2-Review-2.pdf + key (IEP/504), online t2-test-review-2.html",
                   "Whiteboards, index cards (test tips)"],
              bell=[(re.sub(r"\[\[|\]\]", "", q["q"]), f"{letter(BELL, k)}. {q['choices'][0]}") for k, q in enumerate(BELL, 1)],
-             rows=[("0–5", "Bell work", "Four test warm-ups (slide 2). Hand out the printed review."),
+             rows=[("0–5", "Agenda + bell work", "Welcome-back agenda (slide 2) up as they walk in. Four test warm-ups (slide 3). Hand out the printed review."),
                    ("5–15", "I do · Review Q1–3", "Q1 " + A_("a = −2/3") + " Q2 " + A_("C. 75 ≤ y ≤ 175") + " Q3 " + A_("H. y = −20; slope zero") + "<br>Model crossing out the domain choices on Q2."),
                    ("15–32", "We do · Q4–8 (pairs, whiteboards)", "Q4 " + A_("C. right 3") + " Q5 " + A_("−7") + " Q6 " + A_("g(x) = 2x") + " Q7 " + A_("y = −2/3x − 4") + " Q8 " + A_("y = −2.4x + 12")
                     + "<br>Re-teach any item under 70% on the spot."),
                    ("32–45", "You do · Q9–10 (silent, test conditions)", "Q9 " + A_("y − 5 = 2(x − 2)") + " Q10 " + A_("F and J") + "<br>Pull a small group for Q4–6 (transformations)."),
-                   ("45–53", "Extra practice", "Q11–14 on paper, or the online self-check t2-test-review.html. " + PL.IEP),
+                   ("45–53", "Extra practice", "Q11–14, then <b>Test Review 2</b> (REVIEW/T2-Review-2.pdf or t2-test-review-2.html) for anyone finished. " + PL.IEP),
                    ("53–58", "Exit ticket + test tips card", "1. " + A_(f"{letter(EXIT, 1)}. x = −7; slope undefined") + " 2. " + A_("y = 5x + 5") + " 3. " + A_("7")
                     + "<br>Students copy the 6 test tips (last slide) on an index card."),
                    ("58–60", "Wrap up", "Test tomorrow: 10 questions, same order as the review. Bring a pencil and calculator.")],
@@ -323,5 +390,6 @@ def plan():
 if __name__ == "__main__":
     sheets()
     online()
+    review2()
     deck()
     plan()

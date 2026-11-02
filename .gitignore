@@ -13,3 +13,4 @@ __pycache__/
 !assessment/**/Topic*-*.pdf
 !assessment/**/Retest-*.pdf
 !**/REVIEW/T1-Review*.pdf
+!**/REVIEW/T2-Review*.pdf
