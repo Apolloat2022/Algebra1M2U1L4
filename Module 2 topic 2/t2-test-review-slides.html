@@ -1,0 +1,387 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Topic 2 Test Review</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<style>
+/* Layout: a fixed 1280×720 "slide" on graph paper, scaled to fit any screen; steps reveal one click at a time. */
+:root{
+  /* Bluebonnet Algebra I palette (ALGEBRA-platform/app/globals.css); orange = slope, blue = point stays. */
+  --paper:#f7f7fb; --rule:#e6e8f2; --ink:#16171d; --muted:#5f6272; --card:#ffffff; --line:#e3e4ec;
+  --slope:#c9561f; --point:#3050b8; --leaf:#4f8a3c; --soft:#eaeefb; --ga:#4f8a3c; --gb:#7a4fc4; --gc:#16171d; --ans:#4f8a3c; --ans-bg:#edf5e9; --warn-bg:#fdf3e7;
+  --display:ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --body:ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --math:"STIX Two Text", "Cambria Math", "Times New Roman", serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#111218; --rule:#1f2129; --ink:#eceef6; --muted:#9ea2b3; --card:#1a1c24; --line:#2c2f3b;
+  --slope:#ff9259; --point:#93a9f5; --leaf:#8cc47a; --soft:#232a45; --ga:#8cc47a; --gb:#b79cff; --gc:#eceef6; --ans:#8cc47a; --ans-bg:#1f2a1b; --warn-bg:#2e2418; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#111218; --rule:#1f2129; --ink:#eceef6; --muted:#9ea2b3; --card:#1a1c24; --line:#2c2f3b;
+  --slope:#ff9259; --point:#93a9f5; --leaf:#8cc47a; --soft:#232a45; --ga:#8cc47a; --gb:#b79cff; --gc:#eceef6; --ans:#8cc47a; --ans-bg:#1f2a1b; --warn-bg:#2e2418; color-scheme:dark}
+
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);overflow:hidden;
+  background-image:linear-gradient(var(--rule) 1px,transparent 1px),linear-gradient(90deg,var(--rule) 1px,transparent 1px);
+  background-size:32px 32px}
+#stage{position:absolute;left:50%;top:calc(50% - 22px);width:1280px;height:720px;transform-origin:center;cursor:pointer;touch-action:manipulation}
+.slide{position:absolute;inset:0;padding:48px 72px 40px;display:none;flex-direction:column;gap:18px;font-size:26px;line-height:1.4}
+.slide.on{display:flex;animation:slideIn .35s ease}
+@keyframes slideIn{from{opacity:0}to{opacity:1}}
+
+.eyebrow{font-size:16px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--point)}
+h1,h2{font-family:var(--display);font-weight:800;line-height:1.08;letter-spacing:-.02em;text-wrap:balance;margin:0}
+h1{font-size:76px}
+h2{font-size:46px}
+h3{font-family:var(--display);font-weight:600;font-size:28px;margin:0}
+p{margin:0}
+.muted{color:var(--muted)}
+.small{font-size:21px}
+.row{display:flex;gap:36px;align-items:flex-start}
+.col{display:flex;flex-direction:column;gap:14px;flex:1;min-width:0}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 22px;display:flex;flex-direction:column;gap:10px}
+
+/* math */
+.eq,.mt{font-family:var(--math);font-weight:500}
+.eq{font-size:38px;line-height:1.5}
+.eq.big{font-size:60px}
+.eq.sm{font-size:31px}
+.eq i,.mt i{font-style:italic}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.78em;line-height:1.15;margin:0 .1em}
+.fr>span:first-child{border-bottom:.07em solid currentColor;padding:0 .2em}
+.cm{color:var(--slope);font-weight:600}
+.cp{color:var(--point);font-weight:600}
+
+.ans{background:var(--ans-bg);border-radius:8px;padding:8px 18px;align-self:flex-start}
+.ans::before{content:"Answer";margin-right:14px;vertical-align:.25em;font-family:var(--body);font-size:15px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ans)}
+.warn{background:var(--warn-bg);border-radius:8px;padding:10px 18px;font-size:22px;align-self:flex-start}
+.think{border:2px dashed var(--point);border-radius:24px;padding:16px 26px;font-size:25px;align-self:flex-start;max-width:760px}
+
+table.tbl{border-collapse:collapse;font-family:var(--math);font-size:30px;text-align:center;font-variant-numeric:tabular-nums}
+table.tbl th,table.tbl td{border:2px solid var(--line);padding:6px 26px;background:var(--card)}
+table.tbl th{font-style:italic;background:var(--rule)}
+table.cmp{border-collapse:collapse;width:100%;font-size:24px}
+table.cmp th,table.cmp td{border-bottom:1px solid var(--line);padding:10px 14px;text-align:left}
+table.cmp th{font-family:var(--display);font-size:26px}
+
+.foot{margin-top:auto;font-size:15px;line-height:1.5;color:var(--muted)}
+.foot strong{color:var(--point)} .foot a{color:var(--point)}
+a.go{color:var(--point);text-decoration:none} a.go:hover{text-decoration:underline}
+
+/* graphs: drawn from data-g by graphSVG(); make_pptx.py draws the same spec */
+.graph{flex:none}
+.graph svg{display:block;max-width:100%;height:auto}
+.g-bg{fill:var(--card);stroke:var(--line)}
+.g-grid{stroke:var(--rule);stroke-width:1}
+.g-axis{stroke:var(--muted);stroke-width:1.5}
+.g-line{stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+.g-pt{fill:var(--point)}
+.g-line.ga{stroke:var(--ga)} .g-line.gb{stroke:var(--gb)} .g-line.gc{stroke:var(--gc)}
+.ga{color:var(--ga);font-weight:600} .gb{color:var(--gb);font-weight:600} .gc{color:var(--gc);font-weight:600}
+.g-tick{fill:var(--muted);font:13px var(--body)}
+.g-plab{fill:var(--point);font:600 15px var(--body)}
+.g-llab{fill:var(--ink);font:italic 17px var(--math)}
+.divider{justify-content:center}
+.divider h1{font-size:110px}
+
+/* step reveal: space is reserved, like PowerPoint "Appear" */
+.step{opacity:0;visibility:hidden}
+.step.shown{opacity:1;visibility:visible;animation:rise .45s cubic-bezier(.2,.8,.2,1)}
+.step.wipe.shown{animation:wipe .7s ease-out}
+.step.pop.shown{animation:pop .4s cubic-bezier(.3,1.6,.5,1)}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes wipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes pop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.slide.on,.step.shown{animation:none!important}}
+
+/* controls */
+#bar{position:fixed;left:0;right:0;bottom:0;height:44px;padding:0 16px env(safe-area-inset-bottom,0px);display:flex;align-items:center;gap:10px;
+  background:var(--card);border-top:1px solid var(--line);font-size:14px;color:var(--muted);z-index:2}
+#bar button{font:inherit;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:6px;padding:5px 12px;cursor:pointer}
+#bar button:hover{background:var(--soft)}
+#bar button:focus-visible{outline:2px solid var(--point);outline-offset:2px}
+#prog{flex:1;height:4px;background:var(--rule);border-radius:2px;overflow:hidden}
+#prog>div{height:100%;width:0;background:var(--point);transition:width .3s}
+#count{font-variant-numeric:tabular-nums;min-width:64px;text-align:right}
+#brand{display:flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none;font-size:15px;white-space:nowrap}
+#brand strong{color:var(--point)}
+#home{color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:5px 12px;white-space:nowrap}
+#home:hover{background:var(--soft)}
+@media (max-width:900px){#hint{display:none}}
+@media (max-width:560px){#brand,#fs{display:none} #bar{gap:8px;padding:0 10px} #count{min-width:0}}
+#bar button{touch-action:manipulation}
+/* Portrait (phones, iPad upright): a 760px-wide slide whose height fit() matches to the screen; columns stack. */
+@media (orientation:portrait){
+  #stage{width:760px}
+  .slide{padding:40px 36px 32px;overflow-y:auto}
+  .row{flex-direction:column;gap:20px}
+  .grid3{grid-template-columns:1fr}
+  h1{font-size:60px} .divider h1{font-size:84px} .eq.big{font-size:48px}
+}
+.slide aside.notes{display:none}
+#notes{position:fixed;left:0;right:0;bottom:44px;max-height:34vh;overflow:auto;z-index:2;padding:14px 20px;
+  background:var(--card);border-top:2px solid var(--point);font-size:17px;line-height:1.5}
+#notes b{display:block;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--point)}
+/* table cells revealed one at a time keep their border; only the text is hidden */
+table td.step{opacity:1;visibility:visible}
+table td.step:not(.shown){color:transparent}
+</style>
+
+<div id="stage">
+
+<section class="slide">
+  <p class="eyebrow">Bluebonnet Algebra I · Module 2 · Topic 2 · Review · Mon Nov 2 · Test Tue Nov 3</p>
+  <h1 style="margin-top:6px;font-size:56px">Topic 2 Test Review</h1>
+  <div class="eq" style="margin-top:8px;font-size:36px">Transforming and Comparing Linear Functions</div>
+  <p style="font-size:24px;margin-top:6px">Self-check: <b><a class="go" href="t2-test-review.html" target="_blank" onclick="event.stopPropagation()">Topic 2 Test Review →</a></b></p>
+  <p class="muted small">Click, or press → / Space, to reveal each step. ← goes back. F = full screen.</p>
+  <p class="foot"><strong>Bluebonnet Algebra I</strong> · a companion to Bluebonnet Learning Secondary Mathematics, Algebra I, Edition 1<br>This work is based on original works of the Texas Education Agency and Carnegie Learning, Inc. This work is made available under a Creative Commons Attribution-Non-Commercial-4.0 International License. This does not in any way imply endorsement by those authors of this work.<br>©2024–2025 Texas Education Agency, portions ©2021 Carnegie Learning, Inc.<br>Licensed <a href="https://creativecommons.org/licenses/by-nc/4.0/" rel="license" target="_blank" onclick="event.stopPropagation()">CC BY-NC 4.0</a>.<br><strong>This is a private site for Algebra I teachers and is not publicly available.</strong></p>
+  <aside class="notes">Review for the publisher End of Topic 2 Assessment (10 questions). Students have the printed Topic 2 Review Test (assessment/M2 TOPIC 2/Topic2-Review-Test.pdf): questions 1–10 are written just like the test, in the same order. These slides work through 1–10.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Mon Nov 2 · Bell Work · Test Warm-Up</p>
+  <h2>Warm up: work these on your own</h2>
+  <div class="col" style="gap:4px;font-size:24px"><p>1. Kai graphed <span class="mt"><i>f</i>(<i>x</i>)</span> and <span class="mt"><i>g</i>(<i>x</i>) = <i>f</i>(<i>x</i> + 5)</span>. Which statement describes how the graphs are related?</p><div class="step pop eq sm ans"><i>C</i>. <i>t</i><i>r</i><i>a</i><i>n</i><i>s</i><i>l</i><i>a</i><i>t</i><i>e</i><i>d</i> <i>l</i><i>e</i><i>f</i><i>t</i> 5 <i>u</i><i>n</i><i>i</i><i>t</i><i>s</i></div><p style="margin-top:12px">2. A pool rental costs $50 plus $30 per hour, for at most 4 hours. What is the range for one rental?</p><div class="step pop eq sm ans"><i>J</i>. 50 ≤ <i>y</i> ≤ 170</div><p>3. What is the slope of a line perpendicular to <span class="mt"><i>y</i> = −4/5<i>x</i> + 2</span>?</p><div class="step pop eq sm ans"><i>A</i>. 5/4</div><p style="margin-top:12px">4. A line passes through (0, −3) and (6, 0). What is the zero of the function?</p><div class="step pop eq sm ans"><i>G</i>. 6</div></div>
+  <aside class="notes">Printed copy: BELL WORK/T2-Bell-Work-Mon-11-02.pdf (IEP and 504 versions too). About 5 minutes while you take attendance. 1. Inside the parentheses the graph moves opposite the sign: + 5 → left 5. 2. Range = costs. 0 hours: $50. 4 hours: 50 + 30(4) = $170. 3. Flip −4/5 to −5/4 and change the sign: 5/4. Check: (−4/5)(5/4) = −1. 4. The zero is where y = 0: the point (6, 0). −3 is the y-intercept.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Today</p>
+  <h2>Plan for the review</h2>
+  <div class="col" style="gap:10px;font-size:26px"><p class="step">1. Bell work: four test warm-ups</p><p class="step">2. Review questions 1–3 together (I do)</p><p class="step">3. Questions 4–8 in pairs, whiteboards up (we do)</p><p class="step">4. Questions 9–10 alone, like the test (you do)</p><p class="step">5. Extra practice 11–14 or the online self-check</p><p class="step">6. Exit ticket</p></div>
+  <aside class="notes">Hand out the printed review now. The test tomorrow has 10 questions in this same order.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">The 7 skills on the test</p>
+  <h2>What tomorrow's test asks</h2>
+  <div class="row" style="gap:24px"><div class="col" style="gap:10px"><div class="card"><h3>Transformations (A.3E)</h3><p class="small">Q1, 4, 5, 6: a·f(x), f(x − h), f(bx), shifting a table</p></div><div class="card"><h3>Domain and range (A.2A)</h3><p class="small">Q2: costs are the range</p></div></div><div class="col" style="gap:10px"><div class="card"><h3>Lines (A.2E, A.2F, A.2G)</h3><p class="small">Q3, 7, 8: horizontal, perpendicular, parallel</p></div><div class="card"><h3>Equations and features (A.2C, A.3C)</h3><p class="small">Q9, 10: point-slope form, zero, increasing</p></div></div></div>
+  <aside class="notes">Readiness standards (most points on STAAR): A.2C and A.3C.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Review Q1 · like test Q1 · I do</p>
+  <h2>Find <span class="mt"><i>a</i></span> when <span class="mt"><i>m</i>(<i>x</i>) = <i>a</i><i>f</i>(<i>x</i>)</span> and <span class="mt"><i>f</i>(<i>x</i>) = <i>x</i></span></h2>
+  <div class="row" style="gap:40px"><div class="col" style="gap:10px"><p class="step small"><span class="mt"><i>m</i>(<i>x</i>) = <i>a</i> · <i>x</i></span>, so <span class="cm"><span class="mt"><i>a</i></span></span> is the <b>slope</b> of the line.</p><div class="eq sm step"><i>s</i><i>l</i><i>o</i><i>p</i><i>e</i> = (−2 − 4) ÷ (3 − (−6))</div><div class="eq sm step">= −6 ÷ 9 = −2/3</div><div class="step pop eq sm ans"><i>a</i> = −2/3</div><p class="step small">Check: the line falls, so a is negative.</p></div><div class="col" style="gap:10px"><div class="graph" data-g='{"w": 300, "h": 300, "x": [-8, 8], "y": [-8, 8], "gx": [1, 2], "gy": [1, 2], "lines": [{"p": [[-6, 4], [3, -2]]}], "pts": [[-6, 4, "(−6, 4)"], [3, -2, "(3, −2)"]], "alt": "Line through (−6, 4) and (3, −2)"}'></div></div></div>
+  <aside class="notes">Most common error: run over rise (−3/2). Draw the slope triangle between the two labeled points.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Review Q2 · like test Q2 · I do</p>
+  <h2>Bounce house: $75 + $20 per hour, at most 5 hours. Range?</h2>
+  <div class="row" style="gap:40px"><div class="col" style="gap:10px"><p class="step small"><b>Range</b> = the outputs = the <b>costs</b> (y). <b>Domain</b> = the hours (x).</p><div class="eq sm step">0 <i>h</i><i>o</i><i>u</i><i>r</i><i>s</i>: 75 + 20(0) = 75</div><div class="eq sm step">5 <i>h</i><i>o</i><i>u</i><i>r</i><i>s</i>: 75 + 20(5) = 175</div><div class="step pop eq sm ans">C. 75 ≤ y ≤ 175</div></div><div class="col" style="gap:10px"><div class="card"><h3>Cross out</h3><p class="small">Choices about x are the domain, not the range.</p><p class="small">A range must start at the fixed fee.</p></div></div></div>
+  <aside class="notes">Students cross out the two x-choices first. Two choices left, then evaluate at both ends.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Review Q3 · like test Q3 · I do</p>
+  <h2>Equation and slope of the line shown</h2>
+  <div class="row" style="gap:40px"><div class="col" style="gap:10px"><p class="step small">Every point has y-value −20: (−40, −20), (0, −20), (40, −20).</p><div class="step pop eq sm ans"><i>y</i> = −20</div><p class="step small">Rise = 0, so slope = 0.</p><div class="step pop eq sm ans">H. y = −20; slope is zero</div><p class="step small"><b>HOY VUX</b>: Horizontal → 0 slope → y = # · Vertical → Undefined → x = #.</p></div><div class="col" style="gap:10px"><div class="graph" data-g='{"w": 300, "h": 300, "x": [-40, 40], "y": [-40, 40], "gx": [10, 20], "gy": [10, 20], "lines": [{"p": [[-40, -20], [40, -20]]}], "pts": [], "alt": "Horizontal line y = −20"}'></div></div></div>
+  <aside class="notes">The real test uses y = 10. Same idea.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Review Q4 · like test Q4 · We do</p>
+  <h2><span class="mt"><i>g</i>(<i>x</i>) = <i>f</i>(<i>x</i> − 3)</span>. How did the graph move?</h2>
+  <div class="row" style="gap:40px"><div class="col" style="gap:10px"><p class="step small">A change <b>inside</b> the parentheses moves the graph left or right.</p><p class="step small">It moves the <b>opposite</b> way of the sign: <span class="cp"><span class="mt"><i>x</i> − 3</span></span> → right 3.</p><div class="step pop eq sm ans">C. translated right 3 units</div><p class="step small">Outside, f(x) − 3, would be down 3.</p></div><div class="col" style="gap:10px"><div class="card"><h3>Inside vs. outside</h3><p class="small"><span class="mt"><i>f</i>(<i>x</i>) + 3</span>: up 3</p><p class="small"><span class="mt"><i>f</i>(<i>x</i> − 3)</span>: right 3</p><p class="small"><span class="mt"><i>f</i>(<i>x</i> + 3)</span>: left 3</p></div></div></div>
+  <aside class="notes">The real test uses f(x + 1): left 1. Ask: which way does + 1 inside move it?</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Review Q5 · like test Q5 · We do</p>
+  <h2>Translate the table 2 units right. New y-intercept?</h2>
+  <div class="row" style="gap:40px"><div class="col" style="gap:10px"><table class="tbl" style="font-size:24px"><tr><th>x</th><th>f(x)</th><th>x + 2</th><th>new point</th></tr><tr><td>−2</td><td>−7</td><td class="step">0</td><td class="step">(0, −7)</td></tr><tr><td>−1</td><td>−4</td><td class="step">1</td><td class="step">(1, −4)</td></tr><tr><td>0</td><td>−1</td><td class="step">2</td><td class="step">(2, −1)</td></tr></table><div class="step pop eq sm ans"><i>y</i>-<i>i</i><i>n</i><i>t</i><i>e</i><i>r</i><i>c</i><i>e</i><i>p</i><i>t</i> = −7</div></div><div class="col" style="gap:10px"><p class="step small">Right 2: add 2 to every x. The y-values don't change.</p><p class="step small">Find the new point where x = 0: (−2, −7) → (0, −7).</p><p class="step small">Rule check: <span class="mt"><i>f</i>(<i>x</i>) = 3<i>x</i> − 1</span>, <span class="mt"><i>g</i>(<i>x</i>) = 3(<i>x</i> − 2) − 1 = 3<i>x</i> − 7</span>.</p></div></div>
+  <aside class="notes">The real test translates 1 unit right.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Review Q6 · like test Q6 · We do</p>
+  <h2>Graph <span class="mt"><i>g</i>(<i>x</i>) = <i>f</i>(2<i>x</i>)</span> when <span class="mt"><i>f</i>(<i>x</i>) = <i>x</i></span></h2>
+  <div class="row" style="gap:40px"><div class="col" style="gap:10px"><p class="step small">Put 2x in for x: <span class="mt"><i>g</i>(<i>x</i>) = 2<i>x</i></span>.</p><table class="tbl" style="font-size:24px"><tr><th>x</th><th>−2</th><th>−1</th><th>0</th><th>1</th><th>3</th></tr><tr><td>g(x)</td><td class="step">−4</td><td class="step">−2</td><td class="step">0</td><td class="step">2</td><td class="step">6</td></tr></table><p class="step small">Plot and connect: a steeper line through (0, 0).</p></div><div class="col" style="gap:10px"><div class="graph" data-g='{"w": 300, "h": 300, "x": [-8, 8], "y": [-8, 8], "gx": [1, 2], "gy": [1, 2], "lines": [{"p": [[-8, -8], [8, 8]], "label": "f(x)", "dash": true}, {"p": [[-4, -8], [4, 8]], "label": "g(x)", "c": "a", "step": true}], "pts": [[1, 2, "(1, 2)"], [3, 6, "(3, 6)"]], "alt": "f(x) = x dashed and g(x) = 2x"}'></div></div></div>
+  <aside class="notes">The real test uses f(3x). Common error: drawing slope ½.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Review Q7 · like test Q7 · We do</p>
+  <h2>Crosses the x-axis at −6, perpendicular to <span class="mt"><i>y</i> = 3/2<i>x</i> − 1</span></h2>
+  <div class="col" style="gap:8px"><p class="step small">Perpendicular slope: flip and change the sign: <span class="cm"><span class="mt">3/2</span></span> → <span class="cm"><span class="mt">−2/3</span></span>.</p><p class="step small">x-axis at −6 means the point (−6, 0).</p><div class="eq sm step">0 = −2/3(−6) + <i>b</i> → 0 = 4 + <i>b</i> → <i>b</i> = −4</div><div class="step pop eq sm ans"><i>y</i> = −2/3<i>x</i> − 4</div></div>
+  <aside class="notes">Real test: crosses the x-axis at 4, perpendicular to y = −2/3x + 4 (answer y = 3/2x − 6). Don't give that away today.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Review Q8 · like test Q8 · We do</p>
+  <h2>Through (5, 0), parallel to <span class="mt"><i>y</i> = −2.4<i>x</i> + 1.6</span></h2>
+  <div class="col" style="gap:8px"><p class="step small">Parallel: <b>same</b> slope, −2.4.</p><div class="eq sm step">0 = −2.4(5) + <i>b</i> → 0 = −12 + <i>b</i> → <i>b</i> = 12</div><div class="step pop eq sm ans"><i>y</i> = −2.4<i>x</i> + 12</div><p class="step small">Check: −2.4(5) + 12 = 0 ✓</p></div>
+  <aside class="notes">Common error: b = −12 (sign slip).</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Review Q9 · like test Q9 · You do</p>
+  <h2>Write an equation in point-slope form</h2>
+  <div class="row" style="gap:40px"><div class="col" style="gap:10px"><p class="step small">Pick two exact grid points: (−2, −3) and (2, 5).</p><div class="eq sm step"><i>s</i><i>l</i><i>o</i><i>p</i><i>e</i> = (5 − (−3)) ÷ (2 − (−2)) = 8 ÷ 4 = 2</div><div class="step pop eq sm ans"><i>y</i> − 5 = 2(<i>x</i> − 2)</div><p class="step small">Also right: y + 3 = 2(x + 2).</p></div><div class="col" style="gap:10px"><div class="graph" data-g='{"w": 300, "h": 300, "x": [-8, 8], "y": [-8, 8], "gx": [1, 2], "gy": [1, 2], "lines": [{"p": [[-2, -3], [2, 5]]}], "pts": [[-2, -3, "(−2, −3)"], [2, 5, "(2, 5)"]], "alt": "Line through (−2, −3) and (2, 5)"}'></div></div></div>
+  <aside class="notes">On the real test the points are not labeled: find two lattice points first.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Review Q10 · like test Q10 · You do</p>
+  <h2>Select TWO correct statements</h2>
+  <div class="row" style="gap:40px"><div class="col" style="gap:10px"><p class="step small">The line rises left to right: <b>increasing</b>.</p><p class="step small">It crosses the x-axis at −4: the <b>zero</b> is −4.</p><p class="step small">Slope = 2 ÷ 4 = ½ (not 2). y-intercept (0, 2) (not −4).</p><div class="step pop eq sm ans">F and J</div></div><div class="col" style="gap:10px"><div class="graph" data-g='{"w": 300, "h": 300, "x": [-8, 8], "y": [-8, 8], "gx": [1, 2], "gy": [1, 2], "lines": [{"p": [[-4, 0], [0, 2]]}], "pts": [[-4, 0, "(−4, 0)"], [0, 2, "(0, 2)"]], "alt": "Line through (−4, 0) and (0, 2)"}'></div></div></div>
+  <aside class="notes">Select TWO: both must be right for the point. Zero = x-intercept, never the y-intercept.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Test tips</p>
+  <h2>Before tomorrow</h2>
+  <div class="col" style="gap:10px;font-size:26px"><p class="step">Cross out the choices about the wrong variable (domain vs range).</p><p class="step">Inside the parentheses: move opposite the sign.</p><p class="step">Perpendicular: flip and change the sign. Parallel: same slope.</p><p class="step">x-axis at 4 means the point (4, 0).</p><p class="step">Select TWO means exactly two.</p><p class="step">Check every equation with a point.</p></div>
+  <aside class="notes">Students copy these on an index card to read tonight.</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Exit Ticket</p>
+  <h2>Show what you know</h2>
+  <div class="col" style="gap:8px;font-size:24px"><p>1. What are the equation and slope of the vertical line through (−7, 2)?</p><div class="step pop eq sm ans">C. x = −7; slope is undefined</div><p>2. Write the equation in slope-intercept form of the line through (−1, 0) that is parallel to <span class="mt"><i>y</i> = 5<i>x</i> − 2</span>.</p><div class="step pop eq sm ans">y = 5x + 5</div><p>3. <span class="mt"><i>f</i>(<i>x</i>) = 2<i>x</i> + 1</span> is translated 3 units left. What is the y-intercept of the new function?</p><div class="step pop eq sm ans">7</div></div>
+  <aside class="notes">Printed copy: EXIT TICKET/T2-Exit-Ticket-Mon-11-02.pdf. 5 minutes. Anyone who misses 2 or more gets a reminders card for the test. 1. Vertical: every point has x = −7. Slope = rise ÷ 0: undefined (VUX). 2. Same slope 5. 0 = 5(−1) + b → b = 5. 3. g(x) = f(x + 3) = 2(x + 3) + 1 = 2x + 7. y-intercept 7.</aside>
+</section>
+
+</div>
+
+<nav id="bar" aria-label="Slide controls">
+  <a id="home" href="../index.html">⌂ Home</a>
+  <span id="brand"><svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#3050b8"/><g fill="#fff"><circle cx="16" cy="7.5" r="2.3"/><circle cx="12.8" cy="11.8" r="2.5" opacity=".92"/><circle cx="19.2" cy="11.8" r="2.5" opacity=".92"/><circle cx="16" cy="14.6" r="2.6"/><circle cx="11.8" cy="17.6" r="2.7" opacity=".82"/><circle cx="20.2" cy="17.6" r="2.7" opacity=".82"/></g><rect x="15.2" y="20.5" width="1.6" height="6.5" rx=".8" fill="#9fd18b"/></svg><span>Bluebonnet <strong>Algebra I</strong></span></span>
+  <button id="prev" type="button" aria-label="Previous step">← Back</button>
+  <button id="next" type="button" aria-label="Next step">Next →</button>
+  <div id="prog"><div></div></div>
+  <span id="hint">→ / Space next · ← back · N notes · F full screen</span>
+  <span id="count"></span>
+  <button id="nb" type="button" aria-pressed="false">Notes</button>
+  <button id="fs" type="button">Full screen</button>
+</nav>
+<div id="notes" hidden><b>Speaker notes</b><p id="notesText"></p></div>
+
+<script>
+const stage = document.getElementById('stage');
+// {{a|b}} → stacked fraction
+stage.innerHTML = stage.innerHTML.replace(/\{\{(.+?)\|(.+?)\}\}/g, '<span class="fr"><span>$1</span><span>$2</span></span>');
+
+// Graph spec (data-g): w,h px; x,y = [min,max]; gx,gy = [grid step, label step];
+// lines: [{p:[[x,y],[x,y]], label, c:'a'|'b'|'c' (pool color), dash, step (appears on its own click), seg (just this segment)}] extended to the window; pts: [[x,y,label]].
+// ptsStep: each point appears on its own click, in order, before the lines.
+// Keep in step with draw_graph() in make_pptx.py.
+const GM = {L: 34, R: 12, T: 12, B: 26};
+function clipLine([[ax, ay], [bx, by]], [x0, x1], [y0, y1]) {
+  const dx = bx - ax, dy = by - ay; let lo = -Infinity, hi = Infinity;
+  for (const [p, q] of [[-dx, ax - x0], [dx, x1 - ax], [-dy, ay - y0], [dy, y1 - ay]]) {
+    if (p === 0) { if (q < 0) return null; continue; }
+    const r = q / p; if (p < 0) lo = Math.max(lo, r); else hi = Math.min(hi, r);
+  }
+  return lo > hi ? null : [[ax + lo * dx, ay + lo * dy], [ax + hi * dx, ay + hi * dy]];
+}
+function graphSVG(g) {
+  const {w: W, h: H} = g, [x0, x1] = g.x, [y0, y1] = g.y;
+  const X = v => (GM.L + (v - x0) / (x1 - x0) * (W - GM.L - GM.R)).toFixed(1);
+  const Y = v => (GM.T + (y1 - v) / (y1 - y0) * (H - GM.T - GM.B)).toFixed(1);
+  const ticks = (a, b, t) => { const o = []; for (let v = Math.ceil(a / t - 1e-9) * t; v <= b + 1e-9; v += t) o.push(+v.toFixed(6)); return o; };
+  const num = v => String(v).replace('-', '−');
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${g.alt || 'graph'}">`;
+  s += `<rect class="g-bg" x=".5" y=".5" width="${W - 1}" height="${H - 1}" rx="8"/>`;
+  for (const v of ticks(x0, x1, g.gx[0])) s += `<line class="g-grid" x1="${X(v)}" y1="${GM.T}" x2="${X(v)}" y2="${H - GM.B}"/>`;
+  for (const v of ticks(y0, y1, g.gy[0])) s += `<line class="g-grid" x1="${GM.L}" y1="${Y(v)}" x2="${W - GM.R}" y2="${Y(v)}"/>`;
+  const ax = x0 <= 0 && 0 <= x1 ? 0 : x0, ay = y0 <= 0 && 0 <= y1 ? 0 : y0;
+  s += `<line class="g-axis" x1="${X(ax)}" y1="${GM.T}" x2="${X(ax)}" y2="${H - GM.B}"/>`;
+  s += `<line class="g-axis" x1="${GM.L}" y1="${Y(ay)}" x2="${W - GM.R}" y2="${Y(ay)}"/>`;
+  for (const v of ticks(x0, x1, g.gx[1])) s += `<text class="g-tick" x="${X(v)}" y="${H - GM.B + 17}" text-anchor="middle">${num(v)}</text>`;
+  for (const v of ticks(y0, y1, g.gy[1])) s += `<text class="g-tick" x="${GM.L - 6}" y="${+Y(v) + 4}" text-anchor="end">${num(v)}</text>`;
+  const ptsSVG = () => (g.pts || []).map(([px, py, lab]) => (g.ptsStep ? '<g class="step">' : '') +
+    `<circle class="g-pt" cx="${X(px)}" cy="${Y(py)}" r="5.5"/>` +
+    (lab ? `<text class="g-plab" x="${+X(px) + 9}" y="${+Y(py) - 8}">${lab}</text>` : '') +
+    (g.ptsStep ? '</g>' : '')).join('');
+  if (g.ptsStep) s += ptsSVG();
+  for (const ln of g.lines || []) {
+    const c = ln.seg ? ln.p : clipLine(ln.p, g.x, g.y); if (!c) continue;
+    if (ln.step) s += '<g class="step">';
+    s += `<line class="g-line${ln.c ? ' g' + ln.c : ''}"${ln.dash ? ' stroke-dasharray="10 7"' : ''} x1="${X(c[0][0])}" y1="${Y(c[0][1])}" x2="${X(c[1][0])}" y2="${Y(c[1][1])}"/>`;
+    if (ln.label) { const e = c[0][1] > c[1][1] ? c[0] : c[1];
+      const right = +X(e[0]) > W / 2;
+      s += `<text class="g-llab" x="${+X(e[0]) + (right ? -12 : 8)}" y="${+Y(e[1]) + 16}" text-anchor="${right ? 'end' : 'start'}">${ln.label}</text>`; }
+    if (ln.step) s += '</g>';
+  }
+  if (!g.ptsStep) s += ptsSVG();
+  return s + '</svg>';
+}
+stage.querySelectorAll('.graph').forEach(el => { el.innerHTML = graphSVG(JSON.parse(el.dataset.g)); });
+
+const slides = [...stage.querySelectorAll('.slide')];
+const steps = slides.map(s => [...s.querySelectorAll('.step')]);
+let i = 0, k = 0;
+
+function readHash(){ const m = /^#s(\d+)$/.exec(location.hash); return m ? Math.min(Math.max(+m[1] - 1, 0), slides.length - 1) : 0; }
+
+function show(n, revealAll){
+  slides[i].classList.remove('on');
+  i = n;
+  k = revealAll ? steps[i].length : 0;
+  steps[i].forEach((el, j) => el.classList.toggle('shown', j < k));
+  slides[i].classList.add('on');
+  update();
+}
+function next(){
+  if (k < steps[i].length) { steps[i][k++].classList.add('shown'); update(); }
+  else if (i < slides.length - 1) show(i + 1, false);
+}
+function prev(){
+  if (k > 0) { steps[i][--k].classList.remove('shown'); update(); }
+  else if (i > 0) show(i - 1, true);
+}
+function update(){
+  document.getElementById('count').textContent = (i + 1) + ' / ' + slides.length;
+  document.querySelector('#prog>div').style.width = ((i + 1) / slides.length * 100) + '%';
+  history.replaceState(null, '', '#s' + (i + 1));
+  const a = slides[i].querySelector('aside.notes');
+  document.getElementById('notesText').textContent = a ? a.textContent : '';
+}
+function fit(){
+  // Bar height varies (iPhone safe-area padding), so center the slide in whatever space is left above it.
+  const bar = document.getElementById('bar').offsetHeight, W = innerWidth, H = innerHeight - bar, portrait = matchMedia('(orientation:portrait)').matches;
+  const s = portrait ? W / 760 : Math.min(W / 1280, H / 720);
+  stage.style.height = portrait ? H / s + 'px' : '';
+  stage.style.top = H / 2 + 'px';
+  document.getElementById('notes').style.bottom = bar + 'px';
+  stage.style.transform = `translate(-50%,-50%) scale(${s})`;
+}
+function fullscreen(){
+  try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen().catch(() => {}); } catch (e) {}
+}
+
+stage.addEventListener('click', next);
+// Swipe left = next, swipe right = back (taps still advance via click).
+let tx = 0, ty = 0;
+stage.addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, {passive: true});
+stage.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) dx < 0 ? next() : prev();
+}, {passive: true});
+document.getElementById('next').addEventListener('click', next);
+document.getElementById('prev').addEventListener('click', prev);
+document.getElementById('fs').addEventListener('click', fullscreen);
+function toggleNotes(){
+  const n = document.getElementById('notes'); n.hidden = !n.hidden;
+  document.getElementById('nb').setAttribute('aria-pressed', String(!n.hidden));
+}
+document.getElementById('nb').addEventListener('click', toggleNotes);
+addEventListener('keydown', e => {
+  if (e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
+  if (['ArrowRight','ArrowDown',' ','PageDown','Enter'].includes(e.key)) { e.preventDefault(); next(); }
+  else if (['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
+  else if (e.key === 'Home') show(0, false);
+  else if (e.key === 'End') show(slides.length - 1, true);
+  else if (e.key === 'f' || e.key === 'F') fullscreen();
+  else if (e.key === 'n' || e.key === 'N') toggleNotes();
+});
+addEventListener('resize', fit);
+fit();
+slides[0].classList.add('on');
+show(readHash(), false);
+</script>

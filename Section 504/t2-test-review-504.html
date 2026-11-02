@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Topic 2 Test Review · Self-Check · Section 504</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<link rel="stylesheet" href="../mc.css">
+<div class="wrap big">
+  <p class="eyebrow">Module 2 · Topic 2 · Review Day · Mon Nov 2 · Section 504 Version</p>
+  <h1>Topic 2 Test Review</h1>
+  <p class="muted">Questions 1–10 are the same as the printed review, which is written just like Tuesday's test; 11–14 are extra practice. Pick an answer to see if you are right and why.</p>
+  <div class="card ref"><p>Use the reminders below, and press <b>Read aloud</b> to hear a question. Take the time you need.</p><p>Slope = (y₂ − y₁) ÷ (x₂ − x₁) · y = mx + b · point-slope: y − y₁ = m(x − x₁)</p><p>Parallel: same slope · Perpendicular: flip the fraction and change the sign (product −1)</p><p>Outside f(x) + k: up/down · Inside f(x − h): right h, f(x + h): left h (opposite the sign)</p><p>Horizontal: y = #, slope 0 · Vertical: x = #, slope undefined (HOY VUX)</p><p>Domain = inputs (x) · Range = outputs (y) · Zero = x-intercept</p></div>
+  <ol id="questions"></ol>
+  <div class="bar">
+    <p id="result" class="card" hidden></p>
+    <button id="reset" class="ghost">Start over</button>
+  </div>
+</div>
+<script>
+window.MC = { mode: "homework", questions: [
+  {"q": "The graph of linear function [[m]] passes through (−6, 4) and (3, −2). Given [[f(x) = x]] and [[m(x) = af(x)]], what is the value of [[a]]?", "choices": ["−2/3", "−3/2", "2/3", "3/2"], "why": "a is the slope: (−2 − 4) ÷ (3 − (−6)) = −6/9 = −2/3."},
+  {"q": "A bounce house costs $75 plus $20 per hour, for at most 5 hours. What is the range for one day?", "choices": ["75 ≤ y ≤ 175", "0 ≤ x ≤ 5", "20 ≤ y ≤ 175", "0 ≤ x ≤ 7"], "why": "Range = costs: 0 hours $75, 5 hours 75 + 20(5) = $175.", "letters": "FGHJ"},
+  {"q": "A horizontal line passes through (0, −20). What are its equation and slope?", "choices": ["y = −20; slope is zero", "x = −20; slope is undefined", "y = −20; slope is undefined", "x = −20; slope is zero"], "why": "Horizontal: y = number, slope 0 (HOY)."},
+  {"q": "Marcus graphed [[f(x)]] and [[g(x) = f(x − 3)]]. How are the graphs related?", "choices": ["translated right 3 units", "translated left 3 units", "translated up 3 units", "translated down 3 units"], "why": "Inside the parentheses: opposite the sign. x − 3 → right 3.", "letters": "FGHJ"},
+  {"q": "[[f(x)]] has the table (−2, −7), (−1, −4), (0, −1), (1, 2). Translate it 2 units right. What is the new y-intercept?", "choices": ["−7", "−1", "5", "1"], "why": "The point (−2, −7) moves to (0, −7). Or g(x) = 3(x − 2) − 1 = 3x − 7."},
+  {"q": "[[f(x) = x]] and [[g(x) = f(2x)]]. Which equation is [[g(x)]]?", "choices": ["g(x) = 2x", "g(x) = ½x", "g(x) = x + 2", "g(x) = x − 2"], "why": "Put 2x in for x: g(x) = 2x, a steeper line through (0, 0).", "letters": "FGHJ"},
+  {"q": "Which line crosses the x-axis at −6 and is perpendicular to [[y = 3/2x − 1]]?", "choices": ["y = −2/3x − 4", "y = −2/3x + 4", "y = 3/2x + 9", "y = −3/2x − 9"], "why": "Slope −2/3. Point (−6, 0): 0 = −2/3(−6) + b → b = −4."},
+  {"q": "Which line passes through (5, 0) and is parallel to [[y = −2.4x + 1.6]]?", "choices": ["y = −2.4x + 12", "y = −2.4x − 12", "y = −2.4x + 1.6", "y = 2.4x − 12"], "why": "Same slope −2.4. 0 = −2.4(5) + b → b = 12.", "letters": "FGHJ"},
+  {"q": "A line passes through (−2, −3) and (2, 5). Which is an equation in point-slope form?", "choices": ["y − 5 = 2(x − 2)", "y − 5 = 2(x + 2)", "y + 5 = 2(x − 2)", "y − 5 = ½(x − 2)"], "why": "Slope = 8 ÷ 4 = 2. With (2, 5): y − 5 = 2(x − 2)."},
+  {"q": "A line passes through (−4, 0) and (0, 2). Which statement is true?", "choices": ["It is increasing and its zero is −4.", "It is increasing and its zero is 2.", "Its slope is 2 and its zero is −4.", "It is decreasing and its zero is −4."], "why": "It rises left to right (slope ½). It crosses the x-axis at −4. The y-intercept is 2.", "letters": "FGHJ"},
+  {"q": "Let [[f(x) = x − 1]], [[g(x) = f(2x)]] and [[h(x) = 2f(x)]]. Which is true?", "choices": ["Same slope, different y-intercepts", "They are the same function", "Different slopes, same y-intercept", "Different slopes and y-intercepts"], "why": "g(x) = 2x − 1 and h(x) = 2x − 2: slope 2 both, intercepts −1 and −2."},
+  {"q": "Which pair of equations represents perpendicular lines?", "choices": ["y = −1/3x + 4 and y = 3x − 2", "y = 5x + 1 and y = −5x + 2", "y = 4/5x and y = 5/4x − 1", "y = 2x + 3 and y = 2x − 3"], "why": "−1/3 × 3 = −1. (The last pair is parallel.)", "letters": "FGHJ"},
+  {"q": "[[f(x) = 2x + 1]] and [[g(x) = f(x) − 4]]. Which describes [[g]]?", "choices": ["g(x) = 2x − 3; down 4 units", "g(x) = 2x + 5; up 4 units", "g(x) = 2x − 3; right 4 units", "g(x) = 2x − 4; down 4 units"], "why": "Subtract 4 from every output: 2x + 1 − 4 = 2x − 3, down 4."},
+  {"q": "A 300-gallon tank drains 15 gallons per minute until empty. What is the domain?", "choices": ["0 ≤ x ≤ 20", "0 ≤ x ≤ 300", "0 ≤ y ≤ 300", "15 ≤ x ≤ 300"], "why": "Domain = minutes. 300 ÷ 15 = 20 minutes.", "letters": "FGHJ"},
+] };
+window.MC.accom = {"readAloud": true};
+</script>
+<script src="../mc.js"></script>
