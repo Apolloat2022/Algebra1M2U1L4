@@ -294,6 +294,7 @@ if __name__ == "__main__":
         html.write_text(page, encoding="utf-8")
         subprocess.run([EDGE, "--headless", "--disable-gpu", "--no-pdf-header-footer",
                         f"--print-to-pdf={OUT / f'{name}.pdf'}", html.as_uri()], check=True, capture_output=True)
+        html.unlink()  # the PDF is the deliverable
         src = OUT / f"{name}-deck.html"
         src.write_text(deck, encoding="utf-8")
         subprocess.run([sys.executable, str(ROOT / "make_pptx.py"), f"assessment/{src.name}"], cwd=ROOT, check=True)

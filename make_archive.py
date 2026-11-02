@@ -49,7 +49,7 @@ for p in paths:
     f = p.as_posix()
     if p.suffix.lower() not in EXTS or p.parts[0] in SKIP_TOP or f in SKIP_FILES or not (ROOT / f).exists():
         continue
-    if p.suffix.lower() == ".html" and p.with_suffix(".pdf").as_posix() in kept:  # the HTML a PDF was printed from: list the PDF only
+    if p.suffix.lower() == ".html" and p.with_suffix(".pdf").as_posix() in kept and "<script" not in (ROOT / f).read_text(encoding="utf-8", errors="ignore"):  # the HTML a PDF was printed from: list the PDF only
         dupes += 1
         continue
     groups[topic(p)][cat(p)].append(p)

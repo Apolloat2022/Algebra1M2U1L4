@@ -254,7 +254,7 @@ def agenda_slide():
              ("2", "Test Review", "Review 1 together, then on your own."),
              ("3", "Finished?", "Show your work to <b>Mr. Pandey</b>, then help other students. Done helping? Do <b>Test Review 2</b>."),
              ("4", "Get Ready for Tomorrow!", "Topic 2 Test is <b>Tuesday, Nov 3</b>. Know your 7 skills and test tips.")]
-    body = ('<div class="col" style="gap:16px;font-size:28px">' + "".join(
+    body = ('<p style="font-size:26px;font-weight:600;margin:0 0 14px;padding:8px 14px;border-radius:10px;background:#eef3fc">📚 Walk in, grab your book, take your seat!</p><div class="col" style="gap:16px;font-size:28px">' + "".join(
         f'<p style="margin:0"><b style="display:inline-block;width:46px;height:46px;line-height:46px;text-align:center;border-radius:50%;background:#2f6fdd;color:#fff;margin-right:14px">{n}</b>'
         f'<b>{t}</b> · {w}</p>' for n, t, w in items) + '</div><p style="font-size:34px;margin-top:22px;text-align:center"><b>Let’s get busy! 💪</b></p>')
     return sec("Monday, November 2 · Welcome back!", "Welcome back! Today’s Agenda", body,
@@ -350,8 +350,8 @@ def deck():
 
 
 # ------------------------------------------------------------------ lesson plan
-def agenda_deck(name, title, eyebrow, h, items, end, color, notes, out=OUT):  # one projector slide
-    body = ('<div class="col" style="gap:14px;font-size:28px">' + "".join(
+def agenda_deck(name, title, eyebrow, h, items, end, color, notes, out=OUT, first="📚 Walk in, grab your book, take your seat!"):  # one projector slide
+    body = (f'<p style="font-size:26px;font-weight:600;margin:0 0 14px;padding:8px 14px;border-radius:10px;background:#eef3fc">{first}</p><div class="col" style="gap:14px;font-size:28px">' + "".join(
         f'<p style="margin:0"><b style="display:inline-block;width:46px;height:46px;line-height:46px;text-align:center;border-radius:50%;background:{color};color:#fff;margin-right:14px">{n}</b>'
         f'<b>{t}</b> · {w}</p>' for n, (t, w) in enumerate(items, 1)) + f'</div><p style="font-size:36px;margin-top:20px;text-align:center"><b>{end}</b></p>')
     head = re.sub(r"<title>.*?</title>", f"<title>{title}</title>", D.HEAD, count=1)
@@ -365,7 +365,7 @@ def test_day():
     agenda_deck("t2-test-day-agenda", "Test Day Agenda", "Tuesday, November 3 · Test Day", "📝 Topic 2 Test · Today’s Agenda",
                 [("Clear your desk", "Only a pencil stays out."), ("Chromebook ready", "You will enter your answers on it."),
                  ("Calculator + formula sheet", "Get them now."), ("Take the test", "10 questions. Read carefully, check your work.")],
-                "Good luck! You’ve got this! 🍀", "#b00020", "Leave this up as students walk in. Same for all 6 periods. Retakes Wed Nov 4.")
+                "Good luck! You’ve got this! 🍀", "#b00020", "Leave this up as students walk in. Same for all 6 periods. Retakes Wed Nov 4.", first="🪑 Walk in and take your seat quickly.")
 
 
 def retake_day():

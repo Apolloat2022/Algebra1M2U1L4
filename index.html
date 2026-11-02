@@ -22,6 +22,7 @@
   .day.big b{color:var(--bad)}
   .agenda ol{font-size:17px;line-height:1.6;margin:6px 0 10px;padding-left:24px}
   .agenda .hi{font-size:20px;font-weight:700;margin:4px 0}
+  .agenda .first{font-size:18px;font-weight:600;margin:4px 0 2px;padding:6px 10px;border-radius:8px;background:var(--soft)}
   .today{border:2px solid var(--point);margin-top:12px}
   .today .eyebrow{margin-bottom:4px}
   .today h3{margin:0 0 6px;font-size:24px;line-height:1.2}
@@ -138,6 +139,7 @@
     } else if (D.test) {
       body = `<div class="agenda"><p class="hi">📝 Test Day: Topic 2 Test</p>
         <p class="eyebrow">Today's Agenda</p>
+        <p class="first">🪑 Walk in and take your seat quickly.</p>
         <ol><li><b>Clear your desk</b> · only a pencil stays out.</li>
           <li><b>Chromebook ready</b> · you will enter your answers on it.</li>
           <li><b>Get your calculator and formula sheet.</b></li>
@@ -148,6 +150,7 @@
       const m3 = (n, ext = ".html") => M3[0] + n + M3[1] + ext;
       body = `<div class="agenda"><p class="hi">🚀 Welcome to Module 3!</p>
         <p class="eyebrow">Today's Agenda</p>
+        <p class="first">📚 Walk in, grab your book, take your seat!</p>
         <ol><li><b>Bell Work</b> · four warm-ups. Start as soon as you sit down.</li>
           <li><b>Lesson 1: Solving Linear Equations</b> · Getting Started, then Activities 1.1 and 1.2.</li>
           <li><b>Finished early?</b> · show your work to <b>Mr. Pandey</b>, then help other students.</li>
@@ -160,6 +163,7 @@
     } else if (D.retake) {
       body = `<div class="agenda"><p class="hi">🔁 Retake Day</p>
         <p class="eyebrow">Today's Agenda</p>
+        <p class="first">📚 Walk in, grab your book, take your seat!</p>
         <ol><li><b>Retaking?</b> · clear your desk, Chromebook ready, calculator and formula sheet out.</li>
           <li><b>Not retaking?</b> · Lesson 4: Comparing Linear Functions. Go through the slides, then do the homework.</li>
           <li><b>Quiet room</b> · work silently so retakers can focus. Raise your hand for help.</li>
@@ -172,6 +176,7 @@
       const bw = { gen: "", iep: "-IEP", "504": "-504" }[sel.value];
       body = `<div class="agenda"><p class="hi">👋 Welcome back! Happy Monday!</p>
         <p class="eyebrow">Today's Agenda</p>
+        <p class="first">📚 Walk in, grab your book, take your seat!</p>
         <ol><li><b>Bell Work</b> · four test warm-ups. Start as soon as you sit down.</li>
           <li><b>Test Review</b> · work through Review 1.</li>
           <li><b>Finished?</b> · show your work to <b>Mr. Pandey</b>, then help other students. Done helping? Do <b>Test Review 2</b>.</li>

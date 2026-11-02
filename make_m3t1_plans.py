@@ -274,4 +274,5 @@ if __name__ == "__main__":
                            check=True, capture_output=True)
             if len(fitz.open(pdf)) == 1:
                 break
+        src.unlink()  # the PDF is the deliverable
         print(pdf.name, size)

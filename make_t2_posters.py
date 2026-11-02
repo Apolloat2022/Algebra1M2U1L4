@@ -317,4 +317,5 @@ if __name__ == "__main__":
         html.write_text(f'<!doctype html><meta charset="utf-8"><title>{title}</title><style>{CSS}</style><body>{"".join(pages)}</body>', encoding="utf-8")
         subprocess.run([EDGE, "--headless", "--disable-gpu", "--no-pdf-header-footer", f"--print-to-pdf={OUT / f'{name}.pdf'}", html.as_uri()],
                        check=True, capture_output=True)
+        html.unlink()  # the PDF is the deliverable
         print("wrote", OUT / f"{name}.pdf")
