@@ -134,6 +134,14 @@
         ${btn(page(D.slides || Ls[0].slides, ".pptx"), "PowerPoint")}
         ${Ls.map(L => btn(BOOK(L.n), `Lesson ${L.n} with answers`)).join("")}
         ${Ls.map(L => btn(page(`t2-lesson${L.n}-homework`), Ls.length > 1 ? `Homework ${L.n}` : "Homework")).join("")}</div>`;
+    } else if (D.test) {
+      body = `<div class="agenda"><p class="hi">📝 Test Day: Topic 2 Test</p>
+        <p class="eyebrow">Today's Agenda</p>
+        <ol><li><b>Clear your desk</b> · only a pencil stays out.</li>
+          <li><b>Chromebook ready</b> · you will enter your answers on it.</li>
+          <li><b>Get your calculator and formula sheet.</b></li>
+          <li><b>Take the test</b> · 10 questions. Read each one carefully and check your work.</li></ol>
+        <p class="hi">Good luck! You've got this! 🍀</p></div>`;
     } else if (D.agenda) {
       const bw = { gen: "", iep: "-IEP", "504": "-504" }[sel.value];
       body = `<div class="agenda"><p class="hi">👋 Welcome back! Happy Monday!</p>

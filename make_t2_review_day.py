@@ -349,6 +349,22 @@ def deck():
 
 
 # ------------------------------------------------------------------ lesson plan
+def test_day():  # one projector slide for Tue Nov 3
+    items = [("1", "Clear your desk", "Only a pencil stays out."), ("2", "Chromebook ready", "You will enter your answers on it."),
+             ("3", "Calculator + formula sheet", "Get them now."), ("4", "Take the test", "10 questions. Read carefully, check your work.")]
+    body = ('<div class="col" style="gap:14px;font-size:28px">' + "".join(
+        f'<p style="margin:0"><b style="display:inline-block;width:46px;height:46px;line-height:46px;text-align:center;border-radius:50%;background:#b00020;color:#fff;margin-right:14px">{n}</b>'
+        f'<b>{t}</b> · {w}</p>' for n, t, w in items) + '</div><p style="font-size:36px;margin-top:20px;text-align:center"><b>Good luck! You’ve got this! 🍀</b></p>')
+    slide = sec("Tuesday, November 3 · Test Day", "📝 Topic 2 Test · Today’s Agenda", body,
+                "Leave this up as students walk in. Same for all 6 periods. Retakes Wed Nov 4.")
+    name = "t2-test-day-agenda"
+    head = re.sub(r"<title>.*?</title>", "<title>Test Day Agenda</title>", D.HEAD, count=1)
+    path = OUT / f"{name}.html"
+    path.write_text(head + '<div id="stage">\n\n' + slide + D.TAIL, encoding="utf-8")
+    r = subprocess.run([sys.executable, str(ROOT / "make_pptx.py"), path.relative_to(ROOT).as_posix()], capture_output=True, text=True)
+    print("test day:", (r.stdout.strip().splitlines() or ["?"])[-1])
+
+
 def plan():
     A_ = PL.A
     d = dict(file=DATE, date="Monday, November 2", lesson="Topic 2 Review (test Tue Nov 3)",
@@ -391,5 +407,6 @@ if __name__ == "__main__":
     sheets()
     online()
     review2()
+    test_day()
     deck()
     plan()
