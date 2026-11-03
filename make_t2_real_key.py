@@ -8,7 +8,8 @@ import make_t2_review_test as RT
 
 RT.KEY = True
 fr, grid, RED = RT.fr, RT.grid, RT.RED
-OUT = Path(__file__).parent / "assessment" / "M2 TOPIC 2" / "Topic2-End-of-Topic-Assessment-ANSWER-KEY"
+DIR = Path(__file__).parent / "assessment" / "M2 TOPIC 2"
+OUT = DIR / "Topic2-End-of-Topic-Assessment-ANSWER-KEY"
 i = lambda s: f"<i>{s}</i>"
 x, y, f, g, m, a, b = (i(c) for c in "xyfgmab")
 
@@ -129,6 +130,38 @@ ITEMS = [
      grid(-8, 8, 1, 2, [((-8, 8), (8, 0), "#000", False, "")], [(0, 4, "(0, 4)"), (8, 0, "(8, 0)")], size=280)),
 ]
 
+# IEP / 504 keys: same answers (same test), plus short student-friendly steps, key words and a "remember" hint per item.
+# n: (key words, simple steps, remember)
+SIMPLE = {
+    1: ("slope = rise ÷ run", ["m(x) = a·x, so <b>a is the slope</b>.", "Rise: −2 − 3 = −5.", "Run: 4 − (−6) = 10.",
+                                "Slope: −5 ÷ 10 = −½.", "So a = −½."], "The line goes <b>down</b>, so a is negative."),
+    2: ("range = y = money", ["Range is the <b>cost</b> (y).", "Least: 0 hours → $100.", "Most: 6 hours → 100 + 25·6 = $250.",
+                              "Range: 100 ≤ y ≤ 250 → <b>B</b>."], "Cross out C and D first: they use x (domain)."),
+    3: ("horizontal = flat", ["Horizontal line → <b>y = number</b>: y = 10.", "Flat line → slope is <b>0</b>.", "Answer <b>G</b>."],
+        "HOY: Horizontal, 0 slope, y = ."),
+    4: ("inside the ( ) = sideways", ["The + 1 is <b>inside</b> the ( ).", "Inside moves the graph sideways, <b>opposite</b> the sign.",
+                                     "+ 1 → left 1 → <b>D</b>."], "Inside lies: + goes left, − goes right."),
+    5: ("right = add to x", ["Right 1: add 1 to every x. The y-values stay.", "(−1, 5) moves to (0, 5).", "The new y-intercept is <b>5</b>."],
+        "The y-intercept is the point where x = 0."),
+    6: ("table, then graph", ["f(3x) = 3x.", "Table: x = −1 → −3, 0 → 0, 1 → 3, 2 → 6.", "Plot the points and connect: a steeper line."],
+        "It still goes through (0, 0)."),
+    7: ("perpendicular = flip and switch", ["Given slope: −2/3.", "Flip and switch the sign: <b>3/2</b>.", "x-axis at 4 → point (4, 0).",
+                                           "0 = 3/2 · 4 + b → 0 = 6 + b → b = −6.", "y = 3/2 x − 6."], "Check: −2/3 × 3/2 = −1."),
+    8: ("parallel = same slope", ["Same slope: <b>3.2</b>.", "Use the point (−3, 0): 0 = 3.2(−3) + b.", "0 = −9.6 + b → b = 9.6.",
+                                 "y = 3.2x + 9.6."], "Parallel lines never cross: same slope, different b."),
+    9: ("point-slope: y − y₁ = m(x − x₁)", ["Pick two grid points: (−8, 0) and (0, 2).", "Rise 2, run 8 → slope 2/8 = <b>1/4</b>.",
+                                            "Use (0, 2): y − 2 = 1/4(x − 0)."], "Any point on the line works."),
+    10: ("zero = x-intercept", ["(0, 4) is on the y-axis → y-intercept 4 → <b>H</b>.", "(8, 0) is on the x-axis → zero is 8 → <b>K</b>.",
+                                "The line goes down → decreasing, so F and G are false."], "Choose exactly TWO."),
+}
+ACCOM = {
+    "504": ("Section 504", "Same test, same answers, same scoring as the general key. Supports (extended time, read aloud, small group, "
+            "reference box, breaks) change <b>how</b> the student takes the test, not what counts as correct."),
+    "IEP": ("IEP", "Same answers. Follow each student's IEP for scoring: if modified grading is allowed, give credit for each correct "
+            "step in the student-friendly steps (for example 1 pt for the right slope, 1 pt for the final equation), and accept answers "
+            "in any equivalent form, or given aloud. Supports: extended time, read aloud, small group, reference box, calculator."),
+}
+
 CSS = RT.CSS + """
 .q{min-height:0;display:block;border-bottom:none;padding:0;break-inside:auto}
 .item{break-inside:avoid;border:1.5px solid #111;border-radius:8px;padding:8px 12px;margin:0 0 12px}
@@ -139,23 +172,37 @@ h3{font-size:11pt;margin:6px 0 2px;color:#0b4f8a}table.k,table.w,table.ia{border
 .k td,.k th,.w td,.ia td,.ia th{border:1px solid #888;padding:3px 6px;text-align:left;vertical-align:top}.k th,.ia th{background:#eee}
 .k td.a{color:#c8102e;font-weight:bold}.w td:first-child{width:28%;font-weight:bold}.cols{display:flex;gap:14px;align-items:flex-start}
 .small{font-size:10pt;color:#444}.ia td{height:18px}
+.easy{border-left:5px solid #2f6fdd;background:#eef3fc;padding:4px 10px;margin:6px 0;font-size:12.5pt}.easy ol{margin:2px 0 2px 20px}
+.kw{display:inline-block;background:#fff3c4;border:1px solid #c9a400;border-radius:4px;padding:1px 8px;font-weight:bold}
+.acc{border:2px solid #2f6fdd;border-radius:6px;padding:6px 12px;margin:8px 0;font-size:11pt}
+.ref{border:2px solid #111;border-radius:6px;padding:6px 12px;font-size:11pt;margin-bottom:10px}.ref p{margin:3px 0}
 """
 
 
-def page():
+def easy(n):
+    kw, ss, rem = SIMPLE[n]
+    return (f'<h3>Key words</h3><span class="kw">{kw}</span><div class="easy"><b>Student-friendly steps</b><ol>'
+            + "".join(f"<li>{z}</li>" for z in ss) + f"</ol><b>Remember:</b> {rem}</div>")
+
+
+def page(v=""):
     quick = "".join(f'<tr><td>{n}</td><td>{t}</td><td class="a">{ans}</td><td>{teks}</td><td>{les}</td></tr>'
                     for n, t, ans, teks, les, *_ in ITEMS)
-    h = (f"<header><h1>End of Topic 2 Assessment · ANSWER KEY (detailed)</h1>"
+    label = f" · {ACCOM[v][0]}" if v else ""
+    h = (f"<header><h1>End of Topic 2 Assessment{label} · ANSWER KEY (detailed)</h1>"
          "<p class='sub'>Algebra I · Module 2, Topic 2: Transforming and Comparing Linear Functions · publisher test, Assessments book pp. 19–23 · given Tue Nov 3</p></header>"
          "<h3>Quick key</h3><table class='k'><tr><th>#</th><th>Type</th><th>Answer</th><th>TEKS</th><th>Lesson</th></tr>" + quick + "</table>"
          "<p class='small'><b>Suggested scoring</b> (the publisher gives no point values): 10 points per question = 100. Multiple choice and select-two are all or nothing. "
          "Open items (1, 5, 6, 7, 8, 9): full credit for the answer in any equivalent form; half credit as described under each item. "
          "TEKS on this test (TE p. 144D): A.2A, A.2C, A.2E, A.2F, A.2G, A.3C, A.3E. Readiness standards: A.2C, A.3C.</p>")
+    if v:
+        h += (f'<div class="acc"><b>{ACCOM[v][0]} scoring:</b> {ACCOM[v][1]} Each question below adds <b>key words</b>, short '
+              '<b>student-friendly steps</b> to read aloud or hand back on retake day, and a <b>remember</b> hint.</div>' + RT.REF504)
     for n, t, ans, teks, les, prompt, steps, check, wrong, partial, reteach, extra in ITEMS:
         sol = "<ol>" + "".join(f"<li>{s}</li>" for s in steps) + "</ol>"
         body = f'<div class="cols"><div style="flex:1">{sol}</div>{f"<div>{extra}</div>" if extra else ""}</div>'
         h += (f'<div class="item"><h2><span>Question {n} · {t}</span><span class="tag">{teks} · {les}</span></h2>'
-              f'<p class="prompt">{prompt}</p><div class="big">{ans}</div><h3>Solution</h3>{body}'
+              f'<p class="prompt">{prompt}</p><div class="big">{ans}</div>{easy(n) if v else ""}<h3>{"Full solution" if v else "Solution"}</h3>{body}'
               f'<h3>Check</h3><p>{check}</p><h3>If a student chose / wrote…</h3><table class="w">'
               + "".join(f"<tr><td>{w}</td><td>{why}</td></tr>" for w, why in wrong) + "</table>"
               f'<h3>Partial credit</h3><p>{partial}</p><h3>Re-teach (Wed Nov 4 retakes)</h3><p>{reteach}</p></div>')
@@ -178,9 +225,13 @@ def page():
 
 
 if __name__ == "__main__":
-    src = OUT.with_suffix(".html")
-    src.write_text(f"<!doctype html><meta charset='utf-8'><title>{OUT.name}</title><style>{CSS}</style>{page()}", encoding="utf-8")
-    pdf = OUT.with_suffix(".pdf")
-    subprocess.run([RT.EDGE, "--headless", "--disable-gpu", "--no-pdf-header-footer", f"--print-to-pdf={pdf}", src.as_uri()], check=True, capture_output=True)
-    src.unlink()
-    print(pdf)
+    assert set(SIMPLE) == {it[0] for it in ITEMS}
+    for v in ("", "IEP", "504"):
+        out = DIR / f"Topic2-End-of-Topic-Assessment{'-' + v if v else ''}-ANSWER-KEY"
+        src = out.with_suffix(".html")
+        src.write_text(f"<!doctype html><meta charset='utf-8'><title>{out.name}</title><style>{CSS}</style>{page(v)}", encoding="utf-8")
+        pdf = out.with_suffix(".pdf")
+        subprocess.run([RT.EDGE, "--headless", "--disable-gpu", "--no-pdf-header-footer", f"--print-to-pdf={pdf}", src.as_uri()],
+                       check=True, capture_output=True)
+        src.unlink()
+        print(pdf)
