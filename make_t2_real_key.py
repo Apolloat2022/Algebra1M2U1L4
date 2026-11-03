@@ -14,6 +14,8 @@ i = lambda s: f"<i>{s}</i>"
 x, y, f, g, m, a, b = (i(c) for c in "xyfgmab")
 
 # (num, type, answer, TEKS, lesson, prompt, steps, check, wrong answers, partial credit, re-teach, extra html)
+T6 = '<table class="k" style="width:auto;margin:4px 0"><tr><th><i>x</i></th><th><i>f</i>(<i>x</i>) = <i>x</i></th><th>3<i>x</i></th><th><i>g</i>(<i>x</i>) = <i>f</i>(3<i>x</i>)</th><th>Point to plot</th></tr><tr><td>−2</td><td>−2</td><td>3(−2) = −6</td><td class="a">−6</td><td>(−2, −6)</td></tr><tr><td>−1</td><td>−1</td><td>3(−1) = −3</td><td class="a">−3</td><td>(−1, −3)</td></tr><tr><td>0</td><td>0</td><td>3(0) = 0</td><td class="a">0</td><td>(0, 0)</td></tr><tr><td>1</td><td>1</td><td>3(1) = 3</td><td class="a">3</td><td>(1, 3)</td></tr><tr><td>2</td><td>2</td><td>3(2) = 6</td><td class="a">6</td><td>(2, 6)</td></tr></table>'
+
 ITEMS = [
     (1, "Fill in", f"{a} = −{fr(1, 2)}", "A.3E", "Lesson 1 · a·f(x)",
      f"The graph of {m} passes through (−6, 3) and (4, −2). Given {f}({x}) = {x} and {m}({x}) = {a}{f}({x}), find {a}.",
@@ -70,9 +72,12 @@ ITEMS = [
      "Have students rewrite the table with x + 1 in a new column, then find the row where x = 0.", ""),
     (6, "Graph", f"{g}({x}) = 3{x}: line through (0, 0), (1, 3), (2, 6), (−1, −3)", "A.3E", "Lesson 2 · f(bx)",
      f"{f}({x}) = {x} is graphed. Graph {g}({x}) = {f}(3{x}).",
-     [f"{f}(3{x}): replace {x} with 3{x} in {f}({x}) = {x}, so {g}({x}) = 3{x}.",
-      "Table: x = −2 → −6, x = −1 → −3, x = 0 → 0, x = 1 → 3, x = 2 → 6.",
-      "Plot and connect: a steeper line through the origin (slope 3)."],
+     [f"{f}({x}) = {x} means \"the output equals the input\". {f}(3{x}) means: put <b>3{x}</b> into {f} instead of {x}.",
+      f"So {g}({x}) = {f}(3{x}) = 3{x}. This is a line with <b>slope 3</b> and <b>y-intercept 0</b>.",
+      "Make a table. For each x, first multiply by 3, then that is the output:" + T6,
+      "Plot the five points from the last column: (−2, −6), (−1, −3), (0, 0), (1, 3), (2, 6).",
+      "Connect them with a straight line and put arrows on both ends. Label it g(x).",
+      "Compare with f: f rises 1 for every 1 across; g rises <b>3</b> for every 1 across, so g is 3 times as steep. Both pass through (0, 0)."],
      "g should be 3 times as steep as f and still pass through (0, 0). At x = 2 it reaches 6, f only reaches 2.",
      [("Line with slope ⅓", "Thought f(3x) makes the graph wider by 3; for f(x) = x the graph gets steeper."),
       ("y = x + 3 (shifted up 3)", "Treated 3x as + 3."),
@@ -143,8 +148,9 @@ SIMPLE = {
                                      "+ 1 → left 1 → <b>D</b>."], "Inside lies: + goes left, − goes right."),
     5: ("right = add to x", ["Right 1: add 1 to every x. The y-values stay.", "(−1, 5) moves to (0, 5).", "The new y-intercept is <b>5</b>."],
         "The y-intercept is the point where x = 0."),
-    6: ("table, then graph", ["f(3x) = 3x.", "Table: x = −1 → −3, 0 → 0, 1 → 3, 2 → 6.", "Plot the points and connect: a steeper line."],
-        "It still goes through (0, 0)."),
+    6: ("table, then graph", ["f(3x) means: multiply x by 3. So g(x) = 3x.", "Fill in the table: x times 3 = g(x)." + T6,
+                              "Plot the 5 points.", "Connect them with a straight line. Add arrows.", "Check: up 3, over 1 each step."],
+        "It still goes through (0, 0), and it is steeper than f."),
     7: ("perpendicular = flip and switch", ["Given slope: −2/3.", "Flip and switch the sign: <b>3/2</b>.", "x-axis at 4 → point (4, 0).",
                                            "0 = 3/2 · 4 + b → 0 = 6 + b → b = −6.", "y = 3/2 x − 6."], "Check: −2/3 × 3/2 = −1."),
     8: ("parallel = same slope", ["Same slope: <b>3.2</b>.", "Use the point (−3, 0): 0 = 3.2(−3) + b.", "0 = −9.6 + b → b = 9.6.",
