@@ -179,6 +179,30 @@ MOVES1 = [
    ("Sentence frame: The equation has ___ solution(s) because both sides simplify to ___.", 24, False)]),
 ]
 
+# Lesson 2 test moves: Q7 and Q10 after Activity 2.1 (slide 26, end of Day 1), Q8 after Activity 2.3 (slide 49).
+MOVES2A = [
+ ("Test Move 1 · Standard form → slope-intercept", "Test move · like End of Topic Q7", [
+   ("Rewrite the equation in slope-intercept form:  4x + 3y = 12", 30, False),
+   ("Subtract 4x from both sides:  3y = −4x + 12", 28, True),
+   ("Divide EVERY term by 3:  y = −(4/3)x + 4", 28, True),
+   ("Check: x = 0 gives y = 4, and 4(0) + 3(4) = 12", 28, True),
+   ("Watch out: y = −4x + 4 is wrong. It divides only the 12 by 3.", 24, True)]),
+ ("Test Move 2 · Point-slope → slope-intercept", "Test move · like End of Topic Q10", [
+   ("Rewrite the equation in slope-intercept form:  y + 4 = 3(x − 2)", 30, False),
+   ("Distribute the 3:  y + 4 = 3x − 6", 28, True),
+   ("Subtract 4 from both sides:  y = 3x − 10", 28, True),
+   ("Check with the point (2, −4):  3(2) − 10 = −4", 28, True),
+   ("Watch out: y + 4 = y − (−4), so the point is (2, −4), not (2, 4).", 24, True)]),
+]
+MOVES2B = [
+ ("Test Move 3 · Solve a formula for one letter", "Test move · like End of Topic Q8", [
+   ("a.  The volume of a box is V = ℓwh. Solve for w.", 30, False),
+   ("w is multiplied by ℓ and h, so divide both sides by ℓh:  w = V/(ℓh)", 28, True),
+   ("Check: V = 60, ℓ = 5, h = 3 → w = 60/15 = 4, and 5 · 4 · 3 = 60", 24, True),
+   ("b.  The area of a triangle is A = ½bh. Solve for h.", 30, False),
+   ("Multiply both sides by 2:  2A = bh.   Divide by b:  h = 2A/b", 28, True)]),
+]
+
 LESSONS = {
  1: dict(spec=L1, notes=NOTES1, corr=CORR1, after=52,
          se=pages((2, 6, 345), (8, 15, 346), (16, 19, 347), (20, 22, 348), (23, 28, 349), (29, 34, 350), (36, 36, 345), (37, 42, 351),
@@ -190,7 +214,7 @@ LESSONS = {
  2: dict(spec=L2, notes=NOTES2, corr=CORR2, after=56,
          se=pages((2, 4, 357), (6, 12, 358), (13, 17, 359), (18, 21, 360), (22, 26, 361), (28, 28, 357), (29, 33, 362), (34, 36, 363),
                   (37, 40, 364), (41, 45, 365), (46, 49, 366), (50, 54, 367), (55, 56, 370)),
-         stars=((6, 12), (13, 26), (29, 40), (41, 49), (50, 54)), skips=()),
+         stars=((6, 12), (13, 26), (29, 40), (41, 49), (50, 54)), skips=(), extra={26: MOVES2A, 49: MOVES2B}),
  3: dict(spec=L3, notes=NOTES3, corr=CORR3, after=69,
          se=pages((2, 5, 371), (7, 13, 372), (14, 17, 373), (18, 23, 374), (24, 28, 375), (30, 30, 371), (31, 34, 376), (35, 39, 377),
                   (40, 43, 378), (44, 49, 379), (51, 51, 371), (52, 56, 380), (57, 61, 381), (62, 67, 382), (68, 69, 385)),

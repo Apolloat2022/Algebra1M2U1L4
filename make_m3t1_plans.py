@@ -78,7 +78,9 @@ DAYS = [
     ". Q3 3x − 2y = 8: " + A("slope 3/2, (0, −4), (8/3, 0)") + ".<br>Explicit teach the three forms (Q4). Q5 Ax + By = C: " +
     A("slope −A/B, x-int (C/A, 0), y-int (0, C/B)") + ". Q6: slope → slope-intercept or point-slope; a point → point-slope; y-int → slope-intercept.<br>"
     "Pairs Q8: y − 2 = 5(x − 7) " + A("y = 5x − 33") + "; 8x − 2y = 12 " + A("y = 4x − 6") +
-    ". Q9: y + 7 = 0.5(x − 1) " + A("x − 2y = 15") + "; y = −4x + 3 " + A("4x + y = 3") + ". Q10 if time."),
+    ". Q9: y + 7 = 0.5(x − 1) " + A("x − 2y = 15") + "; y = −4x + 3 " + A("4x + y = 3") + ". Q10 if time.<br>"
+    "<b>Test moves</b> (publisher slides 27–28, like test Q7, Q10): 4x + 3y = 12 " + A("y = −(4/3)x + 4") + " (divide <i>every</i> term); "
+    "y + 4 = 3(x − 2) " + A("y = 3x − 10") + "."),
    ("50–58", "Exit ticket", "1. Write 6x − 3y = 9 in slope-intercept form; give slope and both intercepts. " +
     A("y = 2x − 3; slope 2; (0, −3); (3/2, 0)") + "<br>2. Write y − 1 = 3(x + 2) in slope-intercept form. " + A("y = 3x + 7") + "<br>" + IEP),
    ("58–60", "Wrap up", "Homework: Lesson 2 Assignment Practice 1a–d (SE p. 369). Tomorrow: literal equations (formulas).")],
@@ -104,7 +106,8 @@ DAYS = [
    ("25–45", "✪ Activity 2.3: Solving Literal Equations for Specific Variables · SE pp. 365–366",
     "Q1 V = Bh → " + A("h = V/B") + "; V = 450, B = 75 → " + A("6 in.") + " Q2 cone V = ⅓πr²h → " + A("h = 3V/(πr²)") +
     ".<br>Q3 trapezoid A = ½h(b₁ + b₂) → " + A("h = 2A/(b₁ + b₂)") + "; A = 24, bases 9 and 7 → " + A("3 cm") +
-    ".<br>Q4 Z = A/B + C/D for A: " + A("A = BZ − BC/D") + " (part b, solve for D, is the challenge)."),
+    ".<br>Q4 Z = A/B + C/D for A: " + A("A = BZ − BC/D") + " (part b, solve for D, is the challenge).<br>"
+    "<b>Test move</b> (publisher slide 52, like test Q8): V = ℓwh for w " + A("w = V/(ℓh)") + "; A = ½bh for h " + A("h = 2A/b") + "."),
    ("45–57", "✪ Talk the Talk: Rearrange It · SE p. 367 (exit ticket)",
     "Independent. 1. S = 2πrh for h " + A("h = S/(2πr)") + " 2. S = 37.68, r = 1.5 " + A("h = 4 in.") +
     "<br>3. S = 2πr² + 2πrh for h " + A("h = (S − 2πr²)/(2πr)") + " 4. S = 51.81, r = 1.5 " + A("h = 4 in.") + "<br>" + IEP),
