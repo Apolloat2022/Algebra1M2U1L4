@@ -67,7 +67,7 @@ L1 = {
 NOTES1 = {12: "Slide typo: the second part is labeled c.; it is part d.",
           21: "Check: 24(−¼) + 7 = 1 and −4(−¼) = 1.",
           37: "Not essential on the 150-day calendar (one day for this lesson). Save Tic-Tac-Bingo for the Nov 19 retake day.",
-          43: "Optional: not starred, but it matches End of Topic question 11 (equal areas)."}
+          43: "Not starred, but taught today as a test move: it matches End of Topic question 11 (equal areas)."}
 CORR1 = [("Notes for this deck", None), ("Slide 12: two parts are labeled c.; the second is d.", None),
          ("Every Teacher Edition answer was re-solved and is correct, including Prepare (C = 2πr).", "16171D")]
 
@@ -161,14 +161,32 @@ CORR3 = [("Slide corrections for this deck", None),
          ("Slide 27: the summary is for Activity 3.1, not 3.2.", None),
          ("Every Teacher Edition answer was re-solved and is correct.", "16171D")]
 
+# Test moves for the 11/18 End of Topic test, inserted after Activity 1.2 (slide 34). Black = prompt, red = answer on click.
+MOVES1 = [
+ ("Test Move 1 · Distribute a negative", "Test move · like End of Topic Q2", [
+   ("What value of m makes 6 − 4(m + 2) = 3 − 2(2m + 1) true?", 30, False),
+   ("A.  1          B.  −1          C.  2          D.  No solution", 28, False),
+   ("Left: 6 − 4m − 8 = −4m − 2     (−4 multiplies BOTH terms)", 28, True),
+   ("Right: 3 − 4m − 2 = −4m + 1", 28, True),
+   ("Add 4m to both sides: −2 = 1, which is false  →  D. No solution", 28, True),
+   ("Watch out: 6 − 4(m + 2) is NOT 2(m + 2). Multiply first, then subtract.", 24, True)]),
+ ("Test Move 2 · Explain your reasoning", "Test move · like End of Topic Q5", [
+   ("Does the equation have one solution, no solution, or infinite solutions? Explain your reasoning.", 30, False),
+   ("¼(8x + 12) = 2(x + 2) − 1", 34, False),
+   ("Left: ¼ · 8x = 2x and ¼ · 12 = 3  →  2x + 3", 28, True),
+   ("Right: 2x + 4 − 1  →  2x + 3", 28, True),
+   ("Infinite solutions, because both sides simplify to 2x + 3.", 28, True),
+   ("Sentence frame: The equation has ___ solution(s) because both sides simplify to ___.", 24, False)]),
+]
+
 LESSONS = {
  1: dict(spec=L1, notes=NOTES1, corr=CORR1, after=52,
          se=pages((2, 6, 345), (8, 15, 346), (16, 19, 347), (20, 22, 348), (23, 28, 349), (29, 34, 350), (36, 36, 345), (37, 42, 351),
                   (43, 45, 352), (47, 48, 353), (51, 52, 356)),
          stars=((8, 15), (16, 25), (26, 34)),
          skips=((37, 42, "Skip today: not essential (save Tic-Tac-Bingo for the retake day)", "Skip"),
-                (43, 46, "Optional: like End of Topic question 11", "Optional"),
-                (47, 50, "Skip today: Tic-Tac-Bingo materials", "Skip"))),
+                (43, 46, "Do today: test move (like test Q11)", "Test move"),
+                (47, 50, "Skip today: Tic-Tac-Bingo materials", "Skip")), extra={34: MOVES1}),
  2: dict(spec=L2, notes=NOTES2, corr=CORR2, after=56,
          se=pages((2, 4, 357), (6, 12, 358), (13, 17, 359), (18, 21, 360), (22, 26, 361), (28, 28, 357), (29, 33, 362), (34, 36, 363),
                   (37, 40, 364), (41, 45, 365), (46, 49, 366), (50, 54, 367), (55, 56, 370)),
@@ -185,4 +203,4 @@ if __name__ == "__main__":
         ans, inline = split(c["spec"])
         src = SRC / f"BLMathematics_AlgI_M3_T1_L{n}_LessonSlides_ENG_2025.pptx"
         K.annotate(src, HERE / src.name.replace("2025", "with_answers"), ans, c["notes"], c["corr"], c["after"],
-                   se=c["se"], stars=c["stars"], inline=inline, skips=c["skips"])
+                   se=c["se"], stars=c["stars"], inline=inline, skips=c["skips"], extra=c.get("extra"))

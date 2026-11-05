@@ -629,11 +629,12 @@ def build_list(x, spids):  # paragraph reveals need a build entry per text box
     return x.replace("</p:tnLst>", "</p:tnLst><p:bldLst>" + entries + "</p:bldLst>", 1)
 
 
-def annotate(src, out, ans, notes, corrections, after, se=None, stars=(), gaps=None, inline=None, skips=()):
+def annotate(src, out, ans, notes, corrections, after, se=None, stars=(), gaps=None, inline=None, skips=(), extra=None):
     """se: {slide: Student Edition page}; stars: (first, last) slide ranges of the activities the 150-day pacing guide
     stars as essential. Each labeled slide gets "SE p. N" (and "★ Essential") left of the page number; the first
     slide of a starred range (the activity divider) also gets a large badge in its empty top band.
-    skips: (first, last, badge, label) ranges the class skips or treats as optional: label before "SE p. N", badge on the first slide."""
+    skips: (first, last, badge, label) ranges the class skips or treats as optional: label before "SE p. N", badge on the first slide.
+    extra: {slide k: [(title, label, [(text, size, red)])]} new slides inserted after slide k; red lines appear one per click."""
     files = {}
     with zipfile.ZipFile(src) as z:
         for n in z.namelist():
@@ -647,13 +648,15 @@ def annotate(src, out, ans, notes, corrections, after, se=None, stars=(), gaps=N
     assert len(order) >= max(ans), f"{src.name} has {len(order)} slides; answers expect {max(ans)}"
 
     after = after if corrections else len(order)  # no corrections slide: nothing shifts the page numbers
+    extra = extra or {}
+    shift = lambda k: (k > after if corrections else 0) + sum(len(v) for a, v in extra.items() if a < k)  # inserted slides before k
     page = lambda sid, k: mp.num_xml(sid, k, 1790 * PX, 1040 * PX, 110 * PX, 32 * PX)  # bottom-right page number
     for k, path in enumerate(order, 1):
         x, boxes = text(path), ans.get(k, [])
         if gaps and k in gaps:
             x = space_after(x, gaps[k])
         top = max(map(int, re.findall(r'<p:cNvPr id="(\d+)"', x)))
-        x = x.replace("</p:spTree>", page(top + 1000, k + (k > after)) + "</p:spTree>", 1)
+        x = x.replace("</p:spTree>", page(top + 1000, k + shift(k)) + "</p:spTree>", 1)
         star = any(lo <= k <= hi for lo, hi in stars)
         words = " ".join(re.findall(r"<a:t>([^<]*)</a:t>", x)).strip()
         divider = re.fullmatch(r"(Activity \d\.\d|Getting Started|Talk the Talk|Prepare)[\s\d.–-]*", words)
@@ -698,30 +701,48 @@ def annotate(src, out, ans, notes, corrections, after, se=None, stars=(), gaps=N
             para = f'<a:p><a:r><a:rPr lang="en-US" b="1" dirty="0"/><a:t>{mp.esc(notes[k])}</a:t></a:r></a:p>'
             files[npath] = (nx[:close] + para + nx[close:]).encode("utf-8")
 
-    if corrections:  # corrections slide, on the layout of the slide it follows
+    def insert(k, prev_rid, body):  # new slide after the slide with r:id prev_rid, on slide k's layout; returns its r:id
         n = max(int(m) for m in re.findall(r"ppt/slides/slide(\d+)\.xml", " ".join(files))) + 1
-        ref = order[after - 1]
-        layout = next(t for t in rel_map(ref.replace("slides/", "slides/_rels/") + ".rels").values() if "slideLayout" in t)
-        files[f"ppt/slides/slide{n}.xml"] = (mp.HDR + f'<p:sld {mp.NS}><p:cSld><p:spTree>{mp.GRP}'
-                                             f'{corrections_shapes(corrections, 2, font=None)}{page(999, after + 1)}'
-                                             '</p:spTree></p:cSld>'
-                                             '<p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>').encode("utf-8")
+        layout = next(t for t in rel_map(order[k - 1].replace("slides/", "slides/_rels/") + ".rels").values() if "slideLayout" in t)
+        files[f"ppt/slides/slide{n}.xml"] = body.encode("utf-8")
         files[f"ppt/slides/_rels/slide{n}.xml.rels"] = mp.rels([("rId1", "slideLayout", layout)]).encode("utf-8")
-        ct = text("[Content_Types].xml")
-        files["[Content_Types].xml"] = ct.replace(
+        files["[Content_Types].xml"] = text("[Content_Types].xml").replace(
             "</Types>", f'<Override PartName="/ppt/slides/slide{n}.xml" ContentType="{mp.CT}slide+xml"/></Types>').encode()
-        rid = f"rId{max(int(r[3:]) for r in prels) + 1}"
         pr = text("ppt/_rels/presentation.xml.rels")
+        rid = "rId%d" % (max(map(int, re.findall(r'Id="rId(\d+)"', pr))) + 1)
         files["ppt/_rels/presentation.xml.rels"] = pr.replace("</Relationships>", (
             f'<Relationship Id="{rid}" Type="{mp.REL}slide" Target="slides/slide{n}.xml"/></Relationships>')).encode()
-        sid = max(map(int, re.findall(r'<p:sldId id="(\d+)"', pres))) + 1
-        anchor = re.search(rf'<p:sldId [^>]*r:id="{ids[after - 1]}"/>', pres).group(0)
-        files["ppt/presentation.xml"] = pres.replace(anchor, anchor + f'<p:sldId id="{sid}" r:id="{rid}"/>').encode()
+        px = text("ppt/presentation.xml")
+        sid = max(map(int, re.findall(r'<p:sldId id="(\d+)"', px))) + 1
+        anchor = re.search(rf'<p:sldId [^>]*r:id="{prev_rid}"/>', px).group(0)
+        files["ppt/presentation.xml"] = px.replace(anchor, anchor + f'<p:sldId id="{sid}" r:id="{rid}"/>').encode()
+        return rid
+
+    for k, slides in sorted(extra.items()):
+        prev = ids[k - 1]
+        for j, (title, label, lines) in enumerate(slides, 1):
+            shapes = text_box(2, 137, 70, 1650, 90, 36, title, color=SE_GREEN, bold=True, font=None)
+            y, steps = 190, []
+            for m, (t, size, red) in enumerate(lines):
+                # 1 px = 0.5 pt, so a line is about 2.4·size px tall and holds about 1650/size characters (Calibri)
+                h = round(size * 2.4 * sum(-(-max(len(r), 1) * size // 1500) for r in t.split("\n")))
+                shapes += text_box(10 + m, 137, y, 1650, h, size, t, color=RED if red else "16171D", bold=red, font=None)
+                if red:
+                    steps.append(("fade", [10 + m]))
+                y += h + 8
+            shapes += text_box(8, 1180, 1030, 600, 44, 16, label, color=SE_GREEN, bold=True, font=None, right=True)
+            shapes += page(9, k + shift(k) + j)
+            prev = insert(k, prev, slide_xml(shapes, steps))
+
+    if corrections:  # corrections slide, on the layout of the slide it follows
+        insert(after, ids[after - 1], mp.HDR + f'<p:sld {mp.NS}><p:cSld><p:spTree>{mp.GRP}'
+               f'{corrections_shapes(corrections, 2, font=None)}{page(999, after + shift(after) + 1)}'
+               '</p:spTree></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>')
 
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
         for name, data in files.items():
             z.writestr(name, data)
-    print(f"wrote {out.name}: {len(order) + bool(corrections)} slides, {sum(map(len, ans.values()))} answers")
+    print(f"wrote {out.name}: {len(order) + bool(corrections) + sum(map(len, extra.values()))} slides, {sum(map(len, ans.values()))} answers")
 
 
 EQ6 = ("General form f(x) = ax + b: a (the leading coefficient) is the slope, its steepness and direction; "

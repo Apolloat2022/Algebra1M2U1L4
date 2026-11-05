@@ -44,7 +44,7 @@ DAYS = [
    ("32–42", "✪ Activity 1.2: Solutions to Linear Equations · SE pp. 349–350",
     "2 = 2 stays true (" + A("infinite") + "); 2 = 3 stays false (" + A("no solution") + "). Q4 table: 2x = 3x " + A("one solution, x = 0") + ".<br>"
     "Board rule, <b>simplify each side first</b>: same x-term + same number → infinite · same x-term + different number → none · different x-terms → one."),
-   ("42–50", "Test moves (deck: Test Practice + Talk the Talk)",
+   ("42–50", "Test moves (publisher slides 35–36 + Talk the Talk 45–48)",
     "<b>Negative outside ( ):</b> 6 − 4(m + 2) = 3 − 2(2m + 1) → −4m − 2 = −4m + 1 " + A("no solution") + " (like Q2).<br>"
     "<b>Explain your reasoning</b> (Q5): ¼(8x + 12) = 2(x + 2) − 1 → 2x + 3 = 2x + 3 " + A("infinite") + ". Sentence frame on the board: " + FRAME + "<br>"
     "<b>Equal areas</b> (Q11, Talk the Talk SE p. 352): 6(5 + 2x) = 8(x + 5) " + A("x = 2.5") + ". Write the area formula first; triangle = ½·b·h."),
