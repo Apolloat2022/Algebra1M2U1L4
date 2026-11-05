@@ -279,7 +279,8 @@ def deck1():
                  row(p("1. What value of " + mt("m") + " makes " + mt("6 − 4(m + 2) = 3 − 2(2m + 1)") + " true?", "")
                      + st(mt("−4m − 2 = −4m + 1")) + ans("No solution (−2 ≠ 1)", True),
                      p("2. One solution, no solution, or infinite? " + mt("¼(8x + 12) = 2(x + 2) − 1"), "")
-                     + st(mt("2x + 3 = 2x + 3")) + ans("Infinite solutions: the two sides are equivalent", True)),
+                     + st(mt("2x + 3 = 2x + 3")) + ans("Infinite solutions: the two sides are equivalent", True)
+                     + st("Explain it: \"The equation has ___ solution(s) because both sides simplify to ___.\"", "small muted")),
                  "Added for this deck; not from the textbook. On the test, 'No solution' is a real answer choice: simplify both sides before guessing."))
     s.append(sec("Talk the Talk · One Step at a Time · SE p. 352", "Equal areas (like test question 11)",
                  row(p("Rectangle A: width " + mt("(5 + 2x)") + " in., length 6 in. Rectangle B: width 8 in., length " + mt("(x + 5)") + " in. Same area. Find " + mt("x") + ".", "")
@@ -780,10 +781,18 @@ SCENES = {
      ("Decimals on both sides", [
        ("Here is one like the test: 0.2 times the quantity 5x plus 5 equals negative 3x plus 9.", "0.2(5x + 5) = −3x + 9", None), ("Distribute.", "x + 1 = −3x + 9", "distributive"),
        ("Add 3x to both sides.", "4x + 1 = 9", "addition"), ("Subtract 1.", "4x = 8", "subtraction"), ("Divide by 4. x equals 2. PAUSE 1", "x = 2", "division")]),
+     ("Distribute a negative", [
+       ("Watch the sign. Solve 5 minus 3 times the quantity x plus 2 equals 4 minus 3 times the quantity x plus 1.", "5 − 3(x + 2) = 4 − 3(x + 1)", None),
+       ("The negative 3 multiplies both terms inside the parentheses.", "5 − 3x − 6 = 4 − 3x − 3", "distributive"),
+       ("Combine the numbers on each side.", "−3x − 1 = −3x + 1", "combine"),
+       ("Add 3x to both sides. The x terms disappear.", "−1 = 1", "addition"),
+       ("Negative 1 never equals 1, so there is no solution. On a multiple-choice test, no solution is a real answer. PAUSE 1", None, None)]),
      ("One, none, or infinite?", [
        ("Simplify each side first, then compare.", None, None),
-       ("One half times the quantity 4x plus 10 equals 2 times the quantity x plus 1, plus 3.", "½(4x + 10) = 2(x + 1) + 3", None),
+       ("One third times the quantity 6x plus 15 equals 2 times the quantity x plus 1, plus 3.", "⅓(6x + 15) = 2(x + 1) + 3", None),
        ("Both sides become 2x plus 5. They are the same expression, so every value works: infinite solutions.", "2x + 5 = 2x + 5", "infinite"),
+       ("When the test says explain your reasoning, write: the equation has infinite solutions because both sides simplify to 2x plus 5.",
+        "both sides simplify to 2x + 5", "explain"),
        ("3 times the quantity x minus 2, plus 1, equals 3x plus 4.", "3(x − 2) + 1 = 3x + 4", None),
        ("3x minus 5 equals 3x plus 4. Same x term, different constants: that is never true. No solution.", "3x − 5 = 3x + 4", "no solution"),
        ("2x plus 7 equals 5x plus 7. Different x terms, so there is one solution: x equals 0. PAUSE 1", "2x + 7 = 5x + 7 → x = 0", "one solution")]),
@@ -791,7 +800,13 @@ SCENES = {
        ("A triangle has base 10 and height x plus 2. A rectangle is 4 by x plus 8. The areas are equal.", None, None),
        ("Triangle area is one half base times height. Set it equal to the rectangle's area.", "½(10)(x + 2) = 4(x + 8)", None),
        ("Simplify both sides.", "5x + 10 = 4x + 32", "distributive"), ("Subtract 4x and subtract 10.", "x = 22", "subtraction"),
-       ("Remember: properties of equality keep both sides balanced, and simplifying first tells you how many solutions to expect. PAUSE 2", None, None)])],
+       ("Check: the triangle is one half times 10 times 24, which is 120. The rectangle is 4 times 30, also 120. PAUSE 1", "120 = 120", "check")]),
+     ("Test-day checklist", [
+       ("Distribute to every term inside the parentheses, and carry the negative sign.", "1. distribute to EVERY term", None),
+       ("Simplify each side before you move anything across the equal sign.", "2. simplify each side first", None),
+       ("If the x terms match, compare the numbers. Same numbers: infinite. Different numbers: no solution.", "3. same x-terms → compare numbers", None),
+       ("Explain with a sentence: both sides simplify to the same thing, or to different things.", "4. explain in a sentence", None),
+       ("Check your answer by putting it back into the original equation. PAUSE 2", "5. substitute to check", None)])],
  2: [("Literal Equations", [
        ("A line can be written three ways: slope-intercept, point-slope, and standard form.", "y = mx + b", "slope-intercept"),
        ("Point-slope form shows the slope and a point.", "y − y₁ = m(x − x₁)", "point-slope"),

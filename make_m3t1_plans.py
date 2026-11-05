@@ -21,7 +21,42 @@ IEP = "IEP/504: read aloud on request, properties/notes card, extra time."
 
 L2 = "Lesson 2: Literal Equations"
 L3 = "Lesson 3: Modeling Linear Inequalities"
+FRAME = "\"The equation has ___ solution(s) because both sides simplify to ___.\""
 DAYS = [
+ dict(file="Thu-11-05", date="Thursday, November 5", lesson="Lesson 1: Solving Linear Equations (1 day) · aimed at the Wed 11/18 test",
+  obj=["Solve linear equations: distribute (incl. a <b>negative</b>), decimals, fractions, variables on both sides.",
+       "Name the property for each step; check by substituting.",
+       "Classify one / no / infinite solutions and <b>explain why</b> in a sentence."],
+  teks=["<b>A.5A</b> (readiness) solve linear equations in one variable · Process: A.1D, A.1F, A.1G",
+        "<b>Test link:</b> End of Topic Q2 (no solution, MC), Q4 (decimals), Q5 (explain one/none/infinite), Q11 (equal areas) = 4 of 11 items"],
+  terms="solution · no solution · infinite solutions · properties of equality",
+  mat=["SE pp. 345–352 · properties anchor chart (SE pp. 347–348) · whiteboards · algebra tiles"],
+  bell=[],  # filled from make_m3t1_lessons.BELL by materials()
+  rows=[("0–5", "Bell work", "4 test-style items (A–D / F–J). Go over Q2 (distribute first) and Q3 (substitution checks a solution). "
+                             "Tell students: <b>4 of the 11 questions on the 11/18 test come from today.</b>"),
+   ("5–15", "✪ Getting Started: Equation Creation · SE p. 346",
+    "Definition of <i>solution</i>. Pairs build from x = 2: x + 3 = 5 → 4x + 12 = 20 → 2x + 12 = −2x + 20 → x + 6 = 10 − x; swap and check x = 2.<br>"
+    "<b>Look for:</b> multiplying only the x-term instead of <i>every</i> term (the same error that sinks test Q2 and Q5)."),
+   ("15–32", "✪ Activity 1.1: Using Properties to Justify Solutions · SE pp. 347–348",
+    "Explicit teach: properties of equality table. Q1 Harper and Sofia both give x = 2 (" + A("8 = 8, 4 = 4") + ").<br>"
+    "Q2 pairs, name each property: (b) 0.6(2x + 1) = 4x + 6.2 " + A("x = −2") + " <b>(decimal, like test Q4)</b>; (c) ½x − 6 = 2 + (2x + 1) " + A("x = −6") + ".<br>"
+    "Q3 Daniel vs. Chloe, 4(3x + 2) = 8x + 4 " + A("x = −1") + ": distribute first or divide by 4 first, both correct."),
+   ("32–42", "✪ Activity 1.2: Solutions to Linear Equations · SE pp. 349–350",
+    "2 = 2 stays true (" + A("infinite") + "); 2 = 3 stays false (" + A("no solution") + "). Q4 table: 2x = 3x " + A("one solution, x = 0") + ".<br>"
+    "Board rule, <b>simplify each side first</b>: same x-term + same number → infinite · same x-term + different number → none · different x-terms → one."),
+   ("42–50", "Test moves (deck: Test Practice + Talk the Talk)",
+    "<b>Negative outside ( ):</b> 6 − 4(m + 2) = 3 − 2(2m + 1) → −4m − 2 = −4m + 1 " + A("no solution") + " (like Q2).<br>"
+    "<b>Explain your reasoning</b> (Q5): ¼(8x + 12) = 2(x + 2) − 1 → 2x + 3 = 2x + 3 " + A("infinite") + ". Sentence frame on the board: " + FRAME + "<br>"
+    "<b>Equal areas</b> (Q11, Talk the Talk SE p. 352): 6(5 + 2x) = 8(x + 5) " + A("x = 2.5") + ". Write the area formula first; triangle = ½·b·h."),
+   ("50–58", "Exit ticket (independent, like test Q2, Q4, Q5, Q11)", ""),  # filled by materials()
+   ("58–60", "Wrap up", "Essential Question (SE p. 345). Homework: SE pp. 355–356 (Practice 1a–e, 2a–f). "
+                        "Absent or stuck: Lesson 1 video. Next class Mon 11/9: Lesson 2, Literal Equations.")],
+  cfu=["Whiteboards: \"−4(m + 2) = ?\" " + A("−4m − 8") + " (sign check before the test moves)",
+       "Thumbs: \"x + 5 = x + 5 has no solution.\" " + A("Down: infinite")],
+  after=["Exit Q1–2 missed → Skills Practice Set A; Q3 → Set B (list names: first small group on 11/17); Q4 → Set C + video."],
+  note="Two weeks to the test (Wed 11/18). Lesson 1 skills come back as Q2, Q4, Q5 and Q11 of the 11/17 review. Skipped: Activity 1.3 Tic-Tac-Bingo "
+       "(not starred; used 11/19). TE plans 2 days, district gives 1."),
+
  dict(file="Mon-11-09", date="Monday, November 9", lesson=L2 + " (Day 1 of 2)",
   obj=["Find the slope, x-intercept, and y-intercept from slope-intercept, point-slope, and standard form.",
        "Pick the most efficient form for each feature.",
@@ -268,7 +303,7 @@ if __name__ == "__main__":
         d = materials(d)
         src = OUT / f"T1-Lesson-Plan-{d['file']}.html"
         pdf = src.with_suffix(".pdf")
-        for size in ("9.3pt", "8.8pt", "8.3pt"):  # shrink until the plan fits on one page
+        for size in ("9.3pt", "8.8pt", "8.3pt", "7.9pt"):  # shrink until the plan fits on one page
             src.write_text(page(d).replace("font-size:9.3pt", f"font-size:{size}"), encoding="utf-8")
             subprocess.run([EDGE, "--headless", "--disable-gpu", "--no-pdf-header-footer", f"--print-to-pdf={pdf}", src.as_uri()],
                            check=True, capture_output=True)
