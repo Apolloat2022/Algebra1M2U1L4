@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Algebra I · Mr. Pandey</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="mc.css">
+<style>
+  .top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+  h1{margin:6px 0 4px}
+  .sub{color:var(--muted);margin:0}
+  .test{display:inline-block;margin-top:14px;padding:6px 14px;border-radius:999px;background:var(--soft);color:var(--point);font-weight:700}
+  .ver{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--muted)}
+  .ver select{font:inherit;font-size:14px;padding:4px 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
+  h2{font-size:20px;margin:36px 0 12px}
+  .week{display:flex;gap:6px;flex-wrap:wrap}
+  .day{font:inherit;color:inherit;cursor:pointer;flex:1 1 76px;padding:8px 6px;border:1px solid var(--line);border-radius:10px;background:var(--card);text-align:center;font-size:14px;line-height:1.3}
+  .day b{display:block;font-size:15px}
+  .day:hover{border-color:var(--point)}
+  .day.now{border:2px solid var(--point);background:var(--soft)}
+  .day.done{opacity:.55}
+  .day.big b{color:var(--bad)}
+  .agenda ol{font-size:17px;line-height:1.6;margin:6px 0 10px;padding-left:24px}
+  .agenda .hi{font-size:20px;font-weight:700;margin:4px 0}
+  .agenda .ag{font-size:19px;font-weight:700;color:var(--point);margin:8px 0 4px}
+  .agenda .first{font-size:18px;font-weight:600;margin:4px 0 2px;padding:6px 10px;border-radius:8px;background:var(--soft)}
+  .today{border:2px solid var(--point);margin-top:12px}
+  .today .eyebrow{margin-bottom:4px}
+  .today h3{margin:0 0 6px;font-size:24px;line-height:1.2}
+  .btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:10px;border:1px solid var(--line);background:var(--card);
+       color:var(--point);font-weight:700;text-decoration:none;min-height:44px}
+  .btn:hover{background:var(--soft)}
+  .btn.go{background:var(--point);border-color:var(--point);color:#fff}
+  .btn.go:hover{opacity:.9;background:var(--point)}
+  .lessons{display:flex;flex-direction:column;gap:12px}
+  .lesson{display:grid;grid-template-columns:48px 1fr;gap:4px 14px;align-items:start}
+  .num{grid-row:span 3;width:48px;height:48px;border-radius:12px;background:var(--soft);color:var(--point);font-weight:800;font-size:22px;
+       display:flex;align-items:center;justify-content:center}
+  .lesson h3{margin:2px 0 0;font-size:19px;line-height:1.25}
+  .lesson p{color:var(--muted);font-size:16px}
+  .lesson .btns{margin-top:6px}
+  .lesson .btn{padding:8px 14px;min-height:40px;font-size:16px}
+  .tip{color:var(--muted);font-size:16px;margin-top:10px}
+  footer{margin-top:40px;font-size:13px;color:var(--muted)}
+  footer a{color:var(--muted)}
+  @media (max-width:520px){.lesson{grid-template-columns:1fr}.num{grid-row:auto;width:40px;height:40px;font-size:18px}}
+</style>
+<div class="wrap">
+  <div class="top">
+    <div>
+      <p class="eyebrow">Algebra I · Mr. Pandey · <a href="index.html">← Current home page (Module 3)</a> · <a href="archive.html">Materials archive →</a> · archived Topic 2 home page</p>
+      <h1>Topic 2: Moving and Comparing Lines</h1>
+      <p class="sub">Transforming and Comparing Linear Functions</p>
+    </div>
+    <label class="ver">My version
+      <select id="ver"><option value="gen">General</option><option value="iep">IEP</option><option value="504">504</option></select>
+    </label>
+  </div>
+  <span class="test" id="countdown">Test: Tue Nov 3</span>
+
+  <h2>This week</h2>
+  <div class="week" id="week"></div>
+  <section class="card today" id="today"></section>
+
+  <h2>Lessons</h2>
+  <div class="lessons" id="lessons"></div>
+  <p class="tip">Stuck? Watch the video first, then try the homework. You can retry homework as many times as you want.</p>
+
+  <h2>Get ready for the test</h2>
+  <section class="card">
+    <p>The Topic 2 test is <b>Tuesday, November 3</b>. Retakes are Wednesday, November 4.</p>
+    <div class="btns" id="prep"></div>
+  </section>
+
+  <footer>Based on Bluebonnet Learning Secondary Mathematics, Algebra I (©2024–2025 Texas Education Agency, portions ©2021 Carnegie Learning, Inc.),
+    <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a>. · <a href="teacher.html">Teacher page</a> · <a href="archive.html">Materials archive</a></footer>
+</div>
+<script>
+  // Every practice page comes in three versions: Module 2 topic 2/<name>.html, IEP/<name>-IEP.html, Section 504/<name>-504.html
+  const DIR = { gen: ["Module%202%20topic%202/", ""], iep: ["IEP/", "-IEP"], "504": ["Section%20504/", "-504"] };
+  const VID = "Module%202%20topic%202/videos/";
+  // the Student Edition slide decks (with answers), one per lesson for every version
+  const BOOK = n => `Module%202%20topic%202/BLMathematics_AlgI_M2_T2_L${n}_LessonSlides_ENG_with_answers.pptx`;
+  const LESSONS = [
+    { n: 1, title: "Slide and stretch a line", learn: "What f(x) + d and a · f(x) do to a graph.",
+      slides: "t2-lesson1-transforming-linear-functions", video: "T2-Lesson1-Transformations.mp4", min: 4 },
+    { n: 2, title: "Inside vs. outside", learn: "Moving a line left and right: f(x − h) and f(bx).",
+      slides: "t2-lesson2-vertical-horizontal-transformations", video: "T2-Lesson2-Horizontal-Transformations.mp4", min: 4 },
+    { n: 3, title: "Perpendicular lines", learn: "Turn a line 90° and the slope flips: negative reciprocals.",
+      slides: "t2-lesson3-perpendicular-slopes", video: "T2-Lesson3-Perpendicular-Lines.mp4", min: 3 },
+  ];
+  // class days (Monday–Thursday); "lessons" are the lessons that day covers
+  const DAYS = [
+    { d: "2026-10-26", short: "Mon 10/26", what: "Catch-up day: Lessons 1 and 2", lessons: [1, 2], slides: "t2-catchup-day-lessons1-2" },
+    { d: "2026-10-27", short: "Tue 10/27", what: "Lessons 1 and 2: Slide, stretch and move lines", lessons: [1, 2], slides: "t2-catchup-day-lessons1-2" },
+    { d: "2026-10-28", short: "Wed 10/28", what: "Lesson 3: Perpendicular lines, day 1", lessons: [3] },
+    { d: "2026-10-29", short: "Thu 10/29", what: "Lesson 3: Perpendicular lines, day 2", lessons: [3] },
+    { d: "2026-11-02", short: "Mon 11/2", what: "Review day: Topic 2 Test Review", agenda: true },
+    { d: "2026-11-03", short: "Tue 11/3", what: "Topic 2 test", test: true },
+    { d: "2026-11-04", short: "Wed 11/4", what: "Retake day", retake: true },
+    { d: "2026-11-05", short: "Thu 11/5", what: "Module 3 starts: Lesson 1, Solving Linear Equations", m3: true },
+  ];
+
+  const sel = document.getElementById("ver");
+  try { const v = localStorage.getItem("myVersion"); if (DIR[v]) sel.value = v; } catch {}
+  const page = (name, ext = ".html") => DIR[sel.value][0] + name + DIR[sel.value][1] + ext;
+  const btn = (href, text, go) => `<a class="btn${go ? " go" : ""}" href="${href}">${text}</a>`;
+  const lessonBtns = L => [
+    btn(VID + L.video, `▶ Watch (${L.min} min)`, true),
+    btn(page(L.slides), "Slides"),
+    btn(page(L.slides, ".pptx"), "PowerPoint"),
+    btn(BOOK(L.n), `Lesson ${L.n} with answers`),
+    btn(page(`t2-lesson${L.n}-homework`), "Homework"),
+    btn(page(`t2-lesson${L.n}-quiz`), "Quiz"),
+  ].join("");
+
+  let pick = null;  // a day chip the student clicked; null = today or the next class
+  function render() {
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const date = s => new Date(s + "T00:00:00");
+    let i = DAYS.findIndex(x => date(x.d) >= today);
+    if (i < 0) i = DAYS.length - 1;
+    if (pick !== null) i = pick;
+    const when = +date(DAYS[i].d) === +today ? "Today" : date(DAYS[i].d) < today ? "Earlier class" : "Coming up";
+
+    document.getElementById("week").innerHTML = DAYS.map((x, j) =>
+      `<button type="button" class="day${j === i ? " now" : ""}${date(x.d) < today ? " done" : ""}${x.test ? " big" : ""}" data-j="${j}" aria-pressed="${j === i}"><b>${x.short}</b>${
+        x.test ? "Test" : x.lessons ? "Lesson " + x.lessons.join(" & ") : x.what.split(":")[0]}</button>`).join("");
+
+    const D = DAYS[i];
+    const longDate = date(D.d).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+    let body = "";
+    if (D.lessons) {
+      const Ls = D.lessons.map(n => LESSONS[n - 1]);
+      body = `<div class="btns">${Ls.map(L => btn(VID + L.video, `▶ Watch Lesson ${L.n} (${L.min} min)`, true)).join("")}
+        ${btn(page(D.slides || Ls[0].slides), "Today's slides")}
+        ${btn(page(D.slides || Ls[0].slides, ".pptx"), "PowerPoint")}
+        ${Ls.map(L => btn(BOOK(L.n), `Lesson ${L.n} with answers`)).join("")}
+        ${Ls.map(L => btn(page(`t2-lesson${L.n}-homework`), Ls.length > 1 ? `Homework ${L.n}` : "Homework")).join("")}</div>`;
+    } else if (D.test) {
+      body = `<div class="agenda"><p class="hi">📝 Test Day: Topic 2 Test</p>
+        <p class="ag">📅 Today's Agenda · ${longDate}</p>
+        <p class="first">🪑 Walk in and take your seat quickly.</p>
+        <ol><li><b>Clear your desk</b> · only a pencil stays out.</li>
+          <li><b>Chromebook ready</b> · you will enter your answers on it.</li>
+          <li><b>Get your calculator and formula sheet.</b></li>
+          <li><b>Take the test</b> · 10 questions. Read each one carefully and check your work.</li></ol>
+        <p class="hi">Good luck! You've got this! 🍀</p></div>`;
+    } else if (D.m3) {
+      const M3 = { gen: ["Module%203%20topic%201/", ""], iep: ["IEP/", "-IEP"], "504": ["Section%20504/", "-504"] }[sel.value];
+      const m3 = (n, ext = ".html") => M3[0] + n + M3[1] + ext;
+      body = `<div class="agenda"><p class="hi">🚀 Welcome to Module 3!</p>
+        <p class="ag">📅 Today's Agenda · ${longDate}</p>
+        <p class="first">📚 Walk in, grab your book, take your seat!</p>
+        <ol><li><b>Bell Work</b> · four warm-ups. Start as soon as you sit down.</li>
+          <li><b>Lesson 1: Solving Linear Equations</b> · Getting Started, then Activities 1.1 and 1.2.</li>
+          <li><b>Finished early?</b> · show your work to <b>Mr. Pandey</b>, then help other students.</li>
+          <li><b>Exit Ticket</b> · four questions to show what you learned.</li></ol>
+        <p class="hi">New module, fresh start. Let's go! 🚀</p></div>
+        <div class="btns">${btn("Module%203%20topic%201/videos/M3T1-Lesson1-Solving-Linear-Equations.mp4", "▶ Watch Lesson 1", true)}
+        ${btn(m3("m3t1-lesson1-solving-linear-equations"), "Lesson 1 slides")}
+        ${btn(m3("m3t1-lesson1-solving-linear-equations", ".pptx"), "PowerPoint")}
+        ${btn("Module%203%20topic%201/BLMathematics_AlgI_M3_T1_L1_LessonSlides_ENG_with_answers.pptx", "Lesson 1 with answers")}
+        ${btn(m3("m3t1-lesson1-bellwork-day1"), "Bell work")}</div>`;
+    } else if (D.retake) {
+      body = `<div class="agenda"><p class="hi">🔁 Retake Day</p>
+        <p class="ag">📅 Today's Agenda · ${longDate}</p>
+        <p class="first">📚 Walk in, grab your book, take your seat!</p>
+        <ol><li><b>Retaking?</b> · clear your desk, Chromebook ready, calculator and formula sheet out.</li>
+          <li><b>Not retaking?</b> · Lesson 4: Comparing Linear Functions. Go through the slides, then do the homework.</li>
+          <li><b>Quiet room</b> · work silently so retakers can focus. Raise your hand for help.</li>
+          <li><b>Done early?</b> · take the Lesson 4 quiz.</li></ol>
+        <p class="hi">Second chance, best effort! 💪</p></div>
+        <div class="btns">${btn(page("t2-lesson4-comparing-linear-functions"), "Lesson 4 slides", true)}
+        ${btn(page("t2-lesson4-homework"), "Lesson 4 homework", true)}
+        ${btn(page("t2-lesson4-quiz"), "Lesson 4 quiz")}</div>`;
+    } else if (D.agenda) {
+      const bw = { gen: "", iep: "-IEP", "504": "-504" }[sel.value];
+      body = `<div class="agenda"><p class="hi">👋 Welcome back! Happy Monday!</p>
+        <p class="ag">📅 Today's Agenda · ${longDate}</p>
+        <p class="first">📚 Walk in, grab your book, take your seat!</p>
+        <ol><li><b>Bell Work</b> · four test warm-ups. Start as soon as you sit down.</li>
+          <li><b>Test Review</b> · work through Review 1.</li>
+          <li><b>Finished?</b> · show your work to <b>Mr. Pandey</b>, then help other students. Done helping? Do <b>Test Review 2</b>.</li>
+          <li><b>Get ready for tomorrow!</b> · the Topic 2 Test is <b>Tuesday, Nov 3</b>.</li></ol>
+        <p class="hi">Let's get busy! 💪</p></div>
+        <div class="btns">${btn(page("t2-test-review"), "1 · Test Review", true)}
+        ${btn(page("t2-test-review-2"), "2 · Test Review 2", true)}
+        ${btn("Module%202%20topic%202/t2-test-review-slides.html", "Review slides")}
+        ${btn(`Module%202%20topic%202/BELL%20WORK/T2-Bell-Work-Mon-11-02${bw}.pdf`, "Bell work")}</div>`;
+    } else {
+      body = `<div class="btns">${btn(page("t2-review"), "Practice test", true)}</div>
+        <p class="tip">Watch any lesson video below to review.</p>`;
+    }
+    document.getElementById("today").innerHTML =
+      `<p class="eyebrow">${when} · ${D.short}</p><h3>${D.what}</h3>${body}`;
+
+    document.getElementById("lessons").innerHTML = LESSONS.map(L =>
+      `<section class="card lesson"><div class="num">${L.n}</div><h3>${L.title}</h3><p>${L.learn}</p><div class="btns">${lessonBtns(L)}</div></section>`).join("");
+
+    document.getElementById("prep").innerHTML = btn(page("t2-test-review"), "Test Review", true) + btn(page("t2-test-review-2"), "Test Review 2", true) + btn(page("t2-review"), "Older practice test") +
+      LESSONS.map(L => btn(VID + L.video, `▶ Lesson ${L.n} video`)).join("");
+
+    const left = Math.round((date("2026-11-03") - today) / 864e5);
+    document.getElementById("countdown").textContent =
+      left > 1 ? `Test: Tue Nov 3 · ${left} days to go` : left === 1 ? "Test is tomorrow!" : left === 0 ? "Test day: you've got this!" : "Topic 2 test: Tue Nov 3";
+  }
+  document.getElementById("week").addEventListener("click", e => {
+    const b = e.target.closest(".day"); if (!b) return;
+    pick = +b.dataset.j; render();
+  });
+  sel.addEventListener("change", () => { try { localStorage.setItem("myVersion", sel.value); } catch {} render(); });
+  render();
+</script>
