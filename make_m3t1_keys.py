@@ -203,6 +203,42 @@ MOVES2B = [
    ("Multiply both sides by 2:  2A = bh.   Divide by b:  h = 2A/b", 28, True)]),
 ]
 
+# Lesson 3 test moves: Q1 and Q6 after Activity 3.1 (slide 28, end of Day 1), Q3 after Activity 3.3 (slide 49, end of Day 2),
+# Q9 after Activity 3.4 (slide 61).
+MOVES3A = [
+ ("Test Move 1 · Start amount and rate", "Test move · like End of Topic Q1", [
+   ("Diego has $40 in his account and deposits $15 every week. Which equation gives the amount, y, after x weeks?", 30, False),
+   ("A.  y = 40x + 15        B.  y = 15x + 40        C.  y = 55x        D.  y = 15x − 40", 28, False),
+   ("Start amount $40 is there from day one: the y-intercept, + 40", 28, True),
+   ("Rate $15 per week is the slope: 15x", 28, True),
+   ("y = 15x + 40  →  B", 28, True),
+   ("Watch out: A swaps them. The number next to x repeats every week.", 24, True)]),
+ ("Test Move 2 · Fixed cost + changing cost", "Test move · like End of Topic Q6", [
+   ("Maya buys 4 notebooks at $1.75 each and x pens at $0.90 each. Write an equation for the total cost, y.", 30, False),
+   ("Notebooks never change: 4 × 1.75 = 7.00  (fixed, the y-intercept)", 28, True),
+   ("Pens change: 0.90x  (the slope)", 28, True),
+   ("y = 0.90x + 7", 30, True),
+   ("Check: 2 pens → 0.90(2) + 7 = 8.80, and 7.00 + 0.90 + 0.90 = 8.80", 24, True)]),
+]
+MOVES3B = [
+ ("Test Move 3 · Distribute, then flip", "Test move · like End of Topic Q3", [
+   ("Which is the solution set for 3(4 − k) > −k + 16?", 30, False),
+   ("A.  k > −2          B.  k < −2          C.  k > 2          D.  k < 2", 28, False),
+   ("Distribute: 12 − 3k > −k + 16", 28, True),
+   ("Add k: 12 − 2k > 16.   Subtract 12: −2k > 4", 28, True),
+   ("Divide by −2 and FLIP the sign: k < −2  →  B", 28, True),
+   ("Check k = −3: 3(7) = 21 and 3 + 16 = 19, and 21 > 19 is true.", 24, True)]),
+]
+MOVES3C = [
+ ("Test Move 4 · Solve and graph", "Test move · like End of Topic Q9", [
+   ("Solve 2.5p − 4 > −1.5(p + 8). Graph the solution on a number line.", 30, False),
+   ("Distribute −1.5: 2.5p − 4 > −1.5p − 12", 28, True),
+   ("Add 1.5p: 4p − 4 > −12.   Add 4: 4p > −8", 28, True),
+   ("Divide by 4 (positive, so no flip): p > −2", 28, True),
+   ("Graph: OPEN circle at −2 (> is not included), shade to the RIGHT", 28, True),
+   ("Check p = 0: −4 > −12 is true, and 0 is to the right of −2.", 24, True)]),
+]
+
 LESSONS = {
  1: dict(spec=L1, notes=NOTES1, corr=CORR1, after=52,
          se=pages((2, 6, 345), (8, 15, 346), (16, 19, 347), (20, 22, 348), (23, 28, 349), (29, 34, 350), (36, 36, 345), (37, 42, 351),
@@ -218,7 +254,7 @@ LESSONS = {
  3: dict(spec=L3, notes=NOTES3, corr=CORR3, after=69,
          se=pages((2, 5, 371), (7, 13, 372), (14, 17, 373), (18, 23, 374), (24, 28, 375), (30, 30, 371), (31, 34, 376), (35, 39, 377),
                   (40, 43, 378), (44, 49, 379), (51, 51, 371), (52, 56, 380), (57, 61, 381), (62, 67, 382), (68, 69, 385)),
-         stars=((7, 13), (14, 28), (31, 39), (40, 49), (52, 61), (62, 67)), skips=()),
+         stars=((7, 13), (14, 28), (31, 39), (40, 49), (52, 61), (62, 67)), skips=(), extra={28: MOVES3A, 49: MOVES3B, 61: MOVES3C}),
 }
 
 if __name__ == "__main__":

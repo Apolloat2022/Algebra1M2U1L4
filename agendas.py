@@ -35,7 +35,7 @@ WED = dict(eyebrow="🔁 Retake Day", h="📅 Today’s Agenda · Wednesday, Nov
 THU = dict(eyebrow="🚀 Welcome to Module 3!", h="📅 Today’s Agenda · Thursday, Nov 5",
            items=[("Bell Work", "Four warm-ups. Start as soon as you sit down."),
                   ("Lesson 1: Solving Linear Equations", "Getting Started, then Activities 1.1 and 1.2 (SE pp. 345–350)."),
-                  ("Finished early?", "Show your work to <b>Mr. Pandey</b>, then help other students."),
+                  ("Finished early?", "Show your work to your teacher, then help other students."),
                   ("Exit Ticket", "Four questions to show what you learned.")],
            end="New module, fresh start. Let’s go! 🚀", color="#0b6b3a", notes="Leave this up as students walk in. Same for all 6 periods.")
 

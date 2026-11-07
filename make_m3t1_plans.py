@@ -134,7 +134,7 @@ DAYS = [
    ("20–45", "✪ Activity 3.1: Modeling Linear Inequalities · SE pp. 373–375",
     "Q1 goal $1600: horizontal line → " + A("420 boxes") + ". Define <i>linear inequality</i>.<br>Q2 below the line: " + A("f(b) ≤ 1600, b ≤ 420, closed circle") +
     "; only whole numbers of boxes make sense. Q3 above: " + A("b > 420, open circle") + ". Q4 open = not included, closed = included.<br>Q5 at least $925 " +
-    A("b ≥ 240") + "; less than $2050 " + A("b < 540") + "; exactly $700 " + A("b = 180") + "."),
+    A("b ≥ 240") + "; less than $2050 " + A("b < 540") + "; exactly $700 " + A("b = 180") + ".<br><b>Test moves</b> (publisher slides 29–30, like test Q1, Q6): $40 + $15/week " + A("y = 15x + 40") + "; 4 notebooks at $1.75 + x pens at $0.90 " + A("y = 0.90x + 7") + "."),
    ("45–55", "Exit ticket", "f(b) = 3.75b + 25. Write an inequality and graph it on a number line.<br>1. sales of at most $1150 " +
     A("b ≤ 300, closed circle, shade left") + " 2. sales of more than $475 " + A("b > 120, open circle, shade right") + "<br>" + IEP),
    ("55–60", "Wrap up", "Homework: Lesson 3 Assignment Practice 1a–d (SE p. 383). Tomorrow: solve inequalities with algebra.")],
@@ -160,7 +160,7 @@ DAYS = [
    ("25–50", "✪ Activity 3.3: Reversing Inequality Signs · SE pp. 378–379",
     "Hike from 4800 ft down 20 ft/min: Q1 " + A("h(m) = −20m + 4800") + ". Q2 slope " + A("−20") + ", y-int " + A("4800") + ", x-int " + A("240 min") +
     ", domain " + A("0 ≤ m ≤ 240") + ".<br>Q3 graph: below 3200 ft → " + A("m > 80") + ". Q4 algebra: −20m + 4800 < 3200 → −20m < −1600 → " +
-    A("m > 80 (flip!)") + ".<br>Q6 table: every row's sign reverses. <b>Board rule:</b> multiply or divide by a negative → flip the sign."),
+    A("m > 80 (flip!)") + ".<br>Q6 table: every row's sign reverses. <b>Board rule:</b> multiply or divide by a negative → flip the sign.<br><b>Test move</b> (publisher slide 52, like test Q3): 3(4 − k) > −k + 16 " + A("k < −2, flip") + "."),
    ("50–58", "Exit ticket", "1. −3x + 4 ≥ 19 " + A("x ≤ −5") + " 2. 5 − 2x < 11 " + A("x > −3") +
     "<br>3. Tire at 26 psi loses 0.1 psi/min; stay at or above 22 psi: " + A("26 − 0.1t ≥ 22 → t ≤ 40 min") + "<br>" + IEP),
    ("58–60", "Wrap up", "Homework: Lesson 3 Assignment Practice 1e–g and 2a–b (SE pp. 384–385).")],
@@ -181,7 +181,7 @@ DAYS = [
    ("5–30", "✪ Activity 3.4: Solving Other Linear Inequalities · SE pp. 380–381",
     "5x + 2 ≥ 3x − 10: Victoria moves x left → " + A("x ≥ −6") + "; Kai moves x right, divides by −2 → " + A("−6 ≤ x, same answer") +
     ". Q2: same as equations, but watch the sign.<br>−4(x − 6) < 22: Aaliyah distributes first, Ava divides by −4 first → both " +
-    A("x > ½") + ". Q4: distributing works the same way."),
+    A("x > ½") + ". Q4: distributing works the same way.<br><b>Test move</b> (publisher slide 65, like test Q9): 2.5p − 4 > −1.5(p + 8) " + A("p > −2, open circle, shade right") + "."),
    ("30–50", "✪ Talk the Talk: It's About Solutions, More or Less · SE p. 382",
     "Solve and graph: a −⅔x ≥ 7 " + A("x ≤ −21/2") + " b 32 > 23 − x " + A("x > −9") + " c 15 − 4x ≤ 3x − 6 " + A("x ≥ 3") +
     " d 2(x + 6) < 14 + 4x " + A("x > −1") + "<br>Q2 if A < B: A + C < B + C " + A("always") + "; AC > BC " + A("only when C < 0") +
