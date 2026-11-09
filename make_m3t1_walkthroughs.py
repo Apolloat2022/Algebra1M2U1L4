@@ -9,6 +9,8 @@ import fitz
 import make_m3t1_review as RV
 import make_m3t1_test_keys as TK
 
+RV.KEY = True  # numline() only draws the circle and shading in key mode
+
 ROOT = Path(__file__).parent
 EDGE = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
 
