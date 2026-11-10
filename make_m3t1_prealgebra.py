@@ -200,6 +200,37 @@ section{break-after:page}h1{font-size:22pt;margin:0 0 4px;color:#1d3557}.sk{font
 ol{margin:0;padding-left:26px}li{margin:6px 0}"""
 
 
+def deck():
+    """Projector deck: per day an agenda slide, a whiteboard-work slide, a pre-algebra rule slide (.html + .pptx)."""
+    import re, subprocess
+    import agendas, make_t2_decks as D
+    root = Path(__file__).parent
+    out = root / "Module 3 topic 1" / "m3t1-daily-plan-nov10-17.html"
+    s = ""
+    for d, (rule, levels) in zip(DAYS, IEP):
+        items = [("Bell Work", "<b>Schoology</b> → <b>Bell Work</b> folder."),
+                 ("Whiteboard Work", "See your teacher for your problems."),
+                 ("Pre-Algebra", d["skill"] + "."),
+                 ("Lesson", d["tier"] + "."),
+                 ("Exit Ticket", "On <b>EDIA</b>: check the <b>Schoology CLASSROOM</b> folder.")]
+        s += agendas.slide(eyebrow="Algebra I · Module 3 Topic 1", h=f"📅 Today’s Plan · {d['date']}", items=items,
+                           end="Let’s get busy! 💪", color="#2f6fdd", first="📚 Bell Work · go to Schoology and check the Bell Work folder. Start as soon as you sit down. Bell work done? Go see your teacher for Whiteboard work.",
+                           notes="Leave this up as students walk in. Same for all periods.")
+        cols = [D.card(t, '<ol type="a" style="font-size:26px;margin:0;padding-left:30px">' + "".join(f"<li>{q}</li>" for q, _ in qs) + "</ol>")
+                for t, qs in d["boards"]]
+        keys = " · ".join(f"{t}: " + ", ".join(re.sub("<[^>]+>", "", a) for _, a in qs) for t, qs in d["boards"])
+        s += D.sec(f"Whiteboard Work · {d['date']}", "✏️ Start at Level 1. Show every step.", D.row(*cols, gap=24), "Answers. " + keys)
+        ex = "".join(f'<p style="margin:0">{e}</p>' for e, _ in levels)
+        s += D.sec(f"Pre-Algebra · {d['date']}", d["skill"],
+                   f'<p style="font-size:32px;font-weight:600;padding:10px 16px;border:4px solid #e76f51;border-radius:12px">{rule}</p>'
+                   f'<div class="col" style="gap:12px;font-size:26px;margin-top:14px"><b>Examples</b>{ex}</div>', "5 minutes: I do, we do, then link to the lesson.")
+    s = s.replace('<section data-agenda class="slide', '<section class="slide')
+    head = re.sub(r"<title>.*?</title>", "<title>Daily Plan Nov 10–17</title>", D.HEAD, count=1)
+    out.write_text(head + '<div id="stage">\n\n' + s + D.TAIL, encoding="utf-8")
+    r = subprocess.run([sys.executable, str(root / "make_pptx.py"), out.relative_to(root).as_posix()], capture_output=True, text=True)
+    print(out.name, (r.stdout.strip().splitlines() or ["?"])[-1])
+
+
 def teacher_day(d):
     bell = board(*[f"Bell {i}. {q} → <b>{a}</b>" for i, (q, a) in enumerate(d["bell"], 1)])
     levels = "".join(prob(t, board(*[f"{chr(97 + i)}. {q} → <b>{a}</b>" for i, (q, a) in enumerate(qs)])) for t, qs in d["boards"])
@@ -261,3 +292,4 @@ if __name__ == "__main__":
     for key, name, pw in ((False, "M3T1-PreAlgebra-Board-Work-IEP.pdf", None), (True, "M3T1-PreAlgebra-Board-Work-IEP-ANSWER-KEY.pdf", sys.argv[1])):
         H = f'<!doctype html><html><head><meta charset="utf-8"><style>{IEP_CSS}</style></head><body>{"".join(iep_day(d, i, key) for d, i in zip(DAYS, IEP))}</body></html>'
         W.pdf(H, DIR / name, pw)
+    deck()
