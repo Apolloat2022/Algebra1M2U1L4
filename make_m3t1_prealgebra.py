@@ -231,6 +231,78 @@ def deck():
     print(out.name, (r.stdout.strip().splitlines() or ["?"])[-1])
 
 
+LESSON_NOTES = [  # Tier 1 content the tutor may explain (no test or exit-ticket items)
+    ("Lesson 1 · Solving linear equations", [
+        "Properties of equality: you may add, subtract, multiply or divide both sides by the same number (not dividing by 0). The equation stays true.",
+        "Steps: distribute, combine like terms on each side, move the x-terms to one side, move the numbers to the other side, then divide.",
+        "Example: 2(x + 3) = x − 4 → 2x + 6 = x − 4 → x + 6 = −4 → x = −10. Check: 2(−7) = −14 and −10 − 4 = −14.",
+        "One solution: you end with x = a number. No solution: the x-terms cancel and you get something false, like 1 = −5. Infinitely many solutions: you get something always true, like 6 = 6.",
+        "Example: 3x + 1 = 3x − 5 → 1 = −5 is false → no solution."]),
+    ("Lesson 2 · Forms of a line", [
+        "Slope-intercept form: y = mx + b. m is the slope, b is the y-intercept.",
+        "Point-slope form: y − y₁ = m(x − x₁). It shows the slope m and a point (x₁, y₁).",
+        "Standard form: Ax + By = C, where A, B and C are integers (no fractions or decimals).",
+        "To get slope-intercept form: distribute, then get y alone. Example: y − 2 = 5(x − 7) → y − 2 = 5x − 35 → y = 5x − 33.",
+        "From standard form: subtract the x-term, then divide EVERY term by the number in front of y. Example: 8x − 2y = 12 → −2y = −8x + 12 → y = 4x − 6.",
+        "x-intercept: put 0 in for y. y-intercept: put 0 in for x."]),
+    ("Lesson 2 · Literal equations (formulas)", [
+        "A literal equation is a formula you can solve for any one letter. The other letters act like numbers.",
+        "Undo the operations in reverse order, doing the same thing to both sides.",
+        "Example: C = 5/9(F − 32). Multiply both sides by 9/5: (9/5)C = F − 32. Add 32: F = (9/5)C + 32.",
+        "Example: V = Bh. Divide both sides by B: h = V/B.",
+        "Example: A = ½h(b₁ + b₂). Multiply by 2: 2A = h(b₁ + b₂). Divide by (b₁ + b₂): h = 2A/(b₁ + b₂)."]),
+    ("Lesson 3 · Linear inequalities", [
+        "Word chart: at least, minimum → ≥ · at most, no more than, maximum → ≤ · more than → &gt; · less than, under → &lt;.",
+        "Number line: open circle for &lt; or &gt; (the number is not included); closed circle for ≤ or ≥ (it is included).",
+        "Solve an inequality like an equation. ONE new rule: when you multiply or divide both sides by a negative number, flip the sign.",
+        "Example: −2x &lt; 10 → divide by −2 and flip → x &gt; −5. Open circle at −5, shade right.",
+        "Variables on both sides: move the smaller x-term so x stays positive. 5x + 2 ≥ 3x − 10 → 2x + 2 ≥ −10 → 2x ≥ −12 → x ≥ −6.",
+        "Rounding in word problems: “at least” rounds up, “at most” rounds down. Check by plugging the number back in.",
+        "−3 ≤ x means the same as x ≥ −3. Read it starting from x."]),
+]
+
+
+def tutor():
+    """Knowledge file to upload to the MagicSchool AI Tutor (IEP): how to tutor + every rule, example and answer this week."""
+    rules = """<h2>Instructions for the AI Tutor</h2><ul>
+<li>You are tutoring Algebra I students who have an IEP. Use short sentences and simple words. Give <b>one step at a time</b>, then wait for the student.</li>
+<li><b>Never give the final answer first.</b> Give a hint, ask the student to try, then check their work. If they are stuck after two hints, show a worked example with <b>different numbers</b>, then let them try again.</li>
+<li>Use the rule cards and worked examples in this file. Use the same words the teacher uses (for example “divide EVERY term”, “undo backwards”, “flip the sign”).</li>
+<li>Always praise effort and point out the step that went right before fixing the step that went wrong.</li>
+<li>Most common mistakes this week: subtracting a negative, forgetting to distribute to every term, dividing only one term, forgetting to flip the inequality sign, and rounding the wrong way.</li>
+<li>Do not help with a test, quiz, or exit ticket. If a student says it is a test or exit ticket, tell them to ask the teacher.</li>
+<li>Students may type: “Explain it in shorter steps.” · “Use simpler words.” · “Give me a hint, not the answer.” · “Check my work.” · “Show me an example first.”</li></ul>"""
+    days = ""
+    for d, (rule, levels) in list(zip(DAYS, IEP))[:4]:  # Nov 17 is a Module 2 slope skill: left out (Module 3 Topic 1 only)
+        lv = "".join(f'<h4>{t}</h4><p><b>Worked example:</b> {ex}<br><b>Tip:</b> {tp}</p><ol type="a">'
+                     + "".join(f"<li>{q} <span class=a>Answer: {a}</span></li>" for q, a in qs) + "</ol>"
+                     for (t, qs), (ex, tp) in zip(d["boards"], levels))
+        days += (f'<h3>{d["date"]} · Skill: {d["skill"]}</h3><p class=rule>Rule card: {rule}</p>'
+                 f'<p><b>Lesson that day:</b> {d["tier"]}</p>{lv}')
+    notes = "".join(f"<h3>{t}</h3><ul>{''.join(f'<li>{x}</li>' for x in xs)}</ul>" for t, xs in LESSON_NOTES)
+    asks = ["How do I subtract a negative number? Show me with −7 − (−3).", "Why does −3 times −4 make a positive number?",
+            "How do I distribute −2(x + 5)? Go one step at a time.", "What does “divide every term” mean? Show me with (6x + 12) ÷ 3.",
+            "How do I get y alone in 8x − 2y = 12?", "What does “undo backwards” mean when I solve 3x − 7 = 14?",
+            "How do I solve (2/3)x = 8 using the flip?", "How do I solve V = Bh for h?", "How do I find b if y = 2x + b goes through (3, 10)?",
+            "Which is bigger, −8 or −5? How do I know?", "What do “at least” and “at most” mean as symbols?",
+            "When do I use an open circle or a closed circle?", "Why do I flip the sign when I divide by a negative?",
+            "Give me a hint for −3x ≥ 12, not the answer.", "How do I know if an equation has no solution or infinitely many solutions?"]
+    sheet = ('<h2 class=pb>Student page · Questions to ask the AI Tutor (IEP)</h2><p>Name ______________________ Period ____ Date ________</p>'
+             '<p>1. Open the MagicSchool link in Schoology. 2. Pick a question and type it in. 3. Try a problem yourself, then type “Check my work.” '
+             '4. Check the box ☐ when you finish.</p><ol>' + "".join(f"<li>☐ {q}</li>" for q in asks) + "</ol>"
+             '<p><b>Helper phrases:</b> “Explain it in shorter steps.” · “Use simpler words.” · “Give me a hint, not the answer.” · “Show me an example first.”</p>')
+    css = """@page{size:letter;margin:.6in}body{font:12pt/1.45 'Segoe UI',Arial,sans-serif;color:#111}h1{font-size:18pt;margin:0;color:#1d3557}
+h2{font-size:15pt;color:#1d3557;border-bottom:2px solid #457b9d}h3{font-size:13pt;color:#fff;background:#457b9d;padding:3px 8px;break-after:avoid}
+h4{margin:8px 0 2px;color:#1d3557}.rule{border:2px solid #e76f51;padding:4px 8px;font-weight:600}.a{color:#2a6f3a}li{margin:3px 0}
+.pb{break-before:page}.sub{color:#444}"""
+    body = ('<h1>AI Tutor Knowledge File · Algebra I · Module 3 Topic 1 · IEP</h1>'
+            '<p class=sub>Week of Nov 10–17 · Mr. Pandey · Upload this file to the MagicSchool AI Tutor (Student Room). '
+            'Module 3 Topic 1 only: Lessons 1–3 and the pre-algebra skills they need, with whiteboard problems and answers. It has no test or exit-ticket questions.</p>'
+            + rules + "<h2>Daily skills, worked examples and practice (with answers)</h2>" + days
+            + "<h2>Lesson ideas the tutor may explain</h2>" + notes + sheet)
+    W.pdf(f'<!doctype html><html><head><meta charset="utf-8"><style>{css}</style></head><body>{body}</body></html>', DIR / "M3T1-AI-Tutor-IEP.pdf")
+
+
 def teacher_day(d):
     bell = board(*[f"Bell {i}. {q} → <b>{a}</b>" for i, (q, a) in enumerate(d["bell"], 1)])
     levels = "".join(prob(t, board(*[f"{chr(97 + i)}. {q} → <b>{a}</b>" for i, (q, a) in enumerate(qs)])) for t, qs in d["boards"])
@@ -293,3 +365,4 @@ if __name__ == "__main__":
         H = f'<!doctype html><html><head><meta charset="utf-8"><style>{IEP_CSS}</style></head><body>{"".join(iep_day(d, i, key) for d, i in zip(DAYS, IEP))}</body></html>'
         W.pdf(H, DIR / name, pw)
     deck()
+    tutor()
