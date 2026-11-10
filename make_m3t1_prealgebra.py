@@ -152,7 +152,49 @@ DAYS = [
                     tip("students who stop when they divide by a negative. Point at Monday's rule box."))]),
 ]
 
-STUDENT_CSS = """@page{size:letter landscape;margin:.45in}body{font:17pt/1.35 'Segoe UI',Arial,sans-serif;color:#111}
+# IEP: per day a rule card, and per level a worked example + tip; students do the first 3 problems of each level.
+IEP = [
+    ("Negative × negative = positive. When you divide, divide EVERY term.",
+     [("−9 − (−4) → −9 + 4 = −5", "Minus a negative = plus."),
+      ("−3(x − 2) → −3·x and −3·(−2) → −3x + 6", "Draw an arrow from the outside number to EACH term."),
+      ("(−12x + 6) ÷ (−6) → −12x ÷ −6 = 2x and 6 ÷ −6 = −1 → 2x − 1", "Split it: one division for each term.")]),
+    ("Undo backwards: + or − first, then × or ÷. Fraction in front of x → multiply by its flip.",
+     [("4x + 3 = 19 → subtract 3: 4x = 16 → divide by 4: x = 4", "Undo + or − first, then × or ÷."),
+      ("(3/5)x = 6 → x = 6 · 5/3 = 10", "Flip the fraction and multiply."),
+      ("y = 4x + b through (1, 9) → 9 = 4(1) + b → 9 = 4 + b → b = 5", "Put in x and y, then solve for b.")]),
+    ("On a number line, left is less. Open ○ for &lt; and &gt;. Closed ● for ≤ and ≥.",
+     [("−6 __ −2 → −6 is farther left → −6 &lt; −2", "Farther left = smaller."),
+      ("at most 8 → x ≤ 8", "at least ≥ · at most ≤ · more than &gt; · less than &lt;"),
+      ("x − 2 &gt; 3 · try x = 6 → 6 − 2 = 4, and 4 &gt; 3 → Yes", "Put the number in. True → Yes. False → No.")]),
+    ("Same signs → positive. Different signs → negative. Multiply or divide by a negative → flip the sign.",
+     [("(−6)(−2) → same signs → 12", "Same signs +, different signs −."),
+      ("−4x = 20 → divide by −4 → x = −5", "Divide by the number in front of x, sign and all."),
+      ("1 &lt; 4 · multiply by −3 → −3 and −12 → −3 &gt; −12 → flips", "Do the math, then picture both on a number line.")]),
+    ("slope = (y₂ − y₁) ÷ (x₂ − x₁). Parallel: same slope. Perpendicular: flip it and change the sign.",
+     [("(1, 3) and (4, 9) → (9 − 3) ÷ (4 − 1) = 6 ÷ 3 = 2", "Label x₁, y₁, x₂, y₂ first."),
+      ("perpendicular to y = 3x → −1/3", "Flip 3/1 to 1/3, then change the sign."),
+      ("g(x) = 3x at x = 2 → 3 · 2 = 6 → point (2, 6)", "Replace x with the number.")]),
+]
+
+IEP_CSS = """@page{size:letter;margin:.45in}body{font:16pt/1.4 'Segoe UI',Arial,sans-serif;color:#111}
+section{break-after:page}h1{font-size:20pt;margin:0 0 6px;color:#1d3557}.rule{border:3px solid #e76f51;border-radius:8px;padding:6px 12px;margin:0 0 10px;font-weight:600}
+.box{border:2px solid #457b9d;border-radius:8px;padding:6px 12px;margin:0 0 10px;break-inside:avoid}h2{font-size:16pt;margin:0 0 4px;color:#457b9d}
+.ex{background:#eef3f7;padding:4px 8px;border-radius:4px}.tip{font-size:13pt;color:#444;margin:4px 0}ol{margin:4px 0;padding-left:28px}
+li{margin:4px 0 26px}.k{color:#c00;font-weight:600}"""
+
+
+def iep_day(d, iep, key):
+    rule, levels = iep
+    a = (lambda x: f' <span class="k">→ {x}</span>') if key else (lambda x: "")
+    bell = "".join(f"<li>{q}{a(ans)}</li>" for q, ans in d["bell"])
+    boxes = "".join(f'<div class="box"><h2>{t}</h2><div class="ex"><b>Example:</b> {ex}</div><p class="tip">💡 {tp}</p>'
+                    f'<ol type="a">{"".join(f"<li>{q}{a(ans)}</li>" for q, ans in qs[:3])}</ol></div>'
+                    for (t, qs), (ex, tp) in zip(d["boards"], levels))
+    return (f'<section><h1>{d["date"]} · Bell work and side boards · IEP{" · ANSWER KEY" if key else ""}</h1>'
+            f'<div class="rule">Rule card: {rule}</div><div class="box"><h2>Bell work</h2><ol>{bell}</ol></div>{boxes}</section>')
+
+
+STUDENT_CSS ="""@page{size:letter landscape;margin:.45in}body{font:17pt/1.35 'Segoe UI',Arial,sans-serif;color:#111}
 section{break-after:page}h1{font-size:22pt;margin:0 0 4px;color:#1d3557}.sk{font-size:14pt;color:#444;margin:0 0 10px}
 .cols{display:flex;gap:16px}.box{flex:1;border:2px solid #457b9d;border-radius:8px;padding:6px 12px}h2{font-size:16pt;margin:2px 0 6px;color:#457b9d}
 ol{margin:0;padding-left:26px}li{margin:6px 0}"""
@@ -215,3 +257,7 @@ if __name__ == "__main__":
     S = f'<!doctype html><html><head><meta charset="utf-8"><style>{STUDENT_CSS}</style></head><body>{"".join(student_day(d) for d in DAYS)}</body></html>'
     W.pdf(T, DIR / "M3T1-PreAlgebra-Teacher-Plan.pdf", sys.argv[1])
     W.pdf(S, DIR / "M3T1-PreAlgebra-Board-Work.pdf")
+    assert -9 + 4 == -5 and 4 * 4 + 3 == 19 and 3 / 5 * 10 == 6 and 9 - 4 == 5 and -4 * -5 == 20 and (9 - 3) / (4 - 1) == 2
+    for key, name, pw in ((False, "M3T1-PreAlgebra-Board-Work-IEP.pdf", None), (True, "M3T1-PreAlgebra-Board-Work-IEP-ANSWER-KEY.pdf", sys.argv[1])):
+        H = f'<!doctype html><html><head><meta charset="utf-8"><style>{IEP_CSS}</style></head><body>{"".join(iep_day(d, i, key) for d, i in zip(DAYS, IEP))}</body></html>'
+        W.pdf(H, DIR / name, pw)
