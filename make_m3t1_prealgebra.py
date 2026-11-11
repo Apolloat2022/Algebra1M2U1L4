@@ -54,7 +54,7 @@ DAYS = [
         skill="Undo in reverse order (shoes off before socks) and multiply by the reciprocal",
         why="M2T2 items 7, 8 and 9 (find b with a point) and Lesson 2: C = 5/9(F − 32) is solved by undoing in reverse.",
         bell=[("8x − 4y = 20. Get y alone.", "−4y = −8x + 20 → y = 2x − 5"), ("5 − (−2)", "7")],
-        boards=[("Level 1 · Two-step equations", [("2x + 5 = 17", "x = 6"), ("3x − 7 = 14", "x = 7"), ("x/4 + 2 = 5", "x = 12"), ("−2x + 3 = 11", "x = −4")]),
+        boards=[("Level 1 · Two-step equations", [("2x + 5 = 17", "−5: 2x = 12 → ÷2: x = 6"), ("3x − 7 = 14", "+7: 3x = 21 → ÷3: x = 7"), ("x/4 + 2 = 5", "−2: x/4 = 3 → ×4: x = 12"), ("−2x + 3 = 11", "−3: −2x = 8 → ÷(−2): x = −4")]),
                 ("Level 2 · Fractions: multiply by the flip", [("(2/3)x = 8", "x = 8 · 3/2 = 12"), ("(3/4)x = −9", "x = −9 · 4/3 = −12"),
                                                               ("−(1/2)x = 6", "x = 6 · (−2) = −12"), ("(5/9)x = 10", "x = 10 · 9/5 = 18")]),
                 ("Level 3 · Find b", [("y = 2x + b goes through (3, 10)", "10 = 6 + b → b = 4"), ("y = −3x + b goes through (2, 1)", "1 = −6 + b → b = 7"),
@@ -84,7 +84,7 @@ DAYS = [
         skill="Number lines: compare negatives, read the four symbols, open vs closed",
         why="Lesson 3 is all number lines. Students who can't put −8 and −5 in order can't shade an inequality.",
         bell=[("V = ℓwh. Solve for h.", "h = V/(ℓw)"), ("Which is greater, −7 or −2?", "−2 (it is farther right)")],
-        boards=[("Level 1 · &lt; or &gt;", [("−3 __ 2", "&lt;"), ("−8 __ −5", "&lt;"), ("−1 __ −10", "&gt;"), ("0 __ −4", "&gt;")]),
+        boards=[("Level 1 · &lt; or &gt;", [("−3 __ 2", "−3 &lt; 2 (every negative is left of every positive)"), ("−8 __ −5", "−8 &lt; −5 (−8 is farther left)"), ("−1 __ −10", "−1 &gt; −10 (−1 is closer to 0, so farther right)"), ("0 __ −4", "0 &gt; −4 (0 is right of every negative)")]),
                 ("Level 2 · Words to symbols", [("at least 5", "x ≥ 5"), ("no more than 12", "x ≤ 12"), ("more than −2", "x &gt; −2"), ("under 30", "x &lt; 30")]),
                 ("Level 3 · Is it a solution?", [("x + 4 &gt; 1 · try x = −3", "1 &gt; 1 is false → No"), ("x + 4 &gt; 1 · try x = 0", "4 &gt; 1 → Yes"),
                                                 ("2x − 1 ≤ 5 · try x = 3", "5 ≤ 5 → Yes (≤ includes =)"), ("2x − 1 ≤ 5 · try x = 4", "7 ≤ 5 is false → No")])],
@@ -303,6 +303,18 @@ h4{margin:8px 0 2px;color:#1d3557}.rule{border:2px solid #e76f51;padding:4px 8px
     W.pdf(f'<!doctype html><html><head><meta charset="utf-8"><style>{css}</style></head><body>{body}</body></html>', DIR / "M3T1-AI-Tutor-IEP.pdf")
 
 
+KEY_CSS = """@page{size:letter;margin:.5in}body{font:14pt/1.4 'Segoe UI',Arial,sans-serif;color:#111}section{break-after:page}
+h1{font-size:19pt;margin:0 0 2px;color:#1d3557}.sk{color:#444;margin:0 0 10px}.box{border:2px solid #457b9d;border-radius:8px;padding:6px 12px;margin:0 0 10px;break-inside:avoid}
+h2{font-size:15pt;margin:0 0 4px;color:#457b9d}li{margin:5px 0}.k{color:#c00;font-weight:600}"""
+
+
+def key_day(d):
+    li = lambda qs: "".join(f'<li>{q}<br><span class="k">{a}</span></li>' for q, a in qs)
+    return (f'<section><h1>{d["date"]} · Bell Work and Whiteboard Work · ANSWER KEY</h1><p class="sk">Skill: {d["skill"]}</p>'
+            f'<div class="box"><h2>Bell work</h2><ol>{li(d["bell"])}</ol></div>'
+            + "".join(f'<div class="box"><h2>{t}</h2><ol type="a">{li(qs)}</ol></div>' for t, qs in d["boards"]) + "</section>")
+
+
 def teacher_day(d):
     bell = board(*[f"Bell {i}. {q} → <b>{a}</b>" for i, (q, a) in enumerate(d["bell"], 1)])
     levels = "".join(prob(t, board(*[f"{chr(97 + i)}. {q} → <b>{a}</b>" for i, (q, a) in enumerate(qs)])) for t, qs in d["boards"])
@@ -366,3 +378,5 @@ if __name__ == "__main__":
         W.pdf(H, DIR / name, pw)
     deck()
     tutor()
+    W.pdf(f'<!doctype html><html><head><meta charset="utf-8"><style>{KEY_CSS}</style></head><body>{key_day(DAYS[1])}{key_day(DAYS[2])}</body></html>',
+          DIR / "M3T1-Bell-Whiteboard-ANSWER-KEY-Nov-11-12.pdf", sys.argv[1])
