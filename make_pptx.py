@@ -213,6 +213,20 @@ def sp_xml(sid, x, y, w, h, runs=None, size=26, align="l", fill=None, line=None,
             f'<a:noAutofit/></a:bodyPr><a:lstStyle/>{txt}</p:txBody></p:sp>')
 
 
+def poly_xml(sid, pts, color, alpha=22000):
+    """Filled freeform polygon (inches), no outline: the shaded half-plane of an inequality graph."""
+    x0, y0 = min(p[0] for p in pts), min(p[1] for p in pts)
+    w, h = max(max(p[0] for p in pts) - x0, 0.01), max(max(p[1] for p in pts) - y0, 0.01)
+    path = "".join(f'<a:{"moveTo" if k == 0 else "lnTo"}><a:pt x="{emu(px - x0)}" y="{emu(py - y0)}"/></a:{"moveTo" if k == 0 else "lnTo"}>'
+                   for k, (px, py) in enumerate(pts))
+    return (f'<p:sp><p:nvSpPr><p:cNvPr id="{sid}" name="Shade {sid}"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr>'
+            f'<p:spPr><a:xfrm><a:off x="{emu(x0)}" y="{emu(y0)}"/><a:ext cx="{emu(w)}" cy="{emu(h)}"/></a:xfrm>'
+            '<a:custGeom><a:avLst/><a:gdLst/><a:ahLst/><a:cxnLst/><a:rect l="0" t="0" r="r" b="b"/>'
+            f'<a:pathLst><a:path w="{emu(w)}" h="{emu(h)}">{path}<a:close/></a:path></a:pathLst></a:custGeom>'
+            f'<a:solidFill><a:srgbClr val="{color}"><a:alpha val="{alpha}"/></a:srgbClr></a:solidFill><a:ln><a:noFill/></a:ln></p:spPr>'
+            '<p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang="en-US"/></a:p></p:txBody></p:sp>')
+
+
 def num_xml(sid, n, x, y, cx, cy):
     """Page number (EMU box, right-aligned): a slidenum field, so PowerPoint renumbers it if slides move."""
     return (f'<p:sp><p:nvSpPr><p:cNvPr id="{sid}" name="Slide Number {sid}"/><p:cNvSpPr txBox="1"/><p:nvPr/></p:nvSpPr>'
@@ -301,6 +315,10 @@ def draw_graph(sl, g, ox, oy):
     for v in ticks(y0, y1, g["gy"][1]):
         sl.add(lambda sid, v=v: sp_xml(sid, left - 0.62, Y(v) - 0.1, 0.56, 0.2, [[num(v), tick_st]], 13, "r",
                                        ins=(0, 0), anchor="ctr"))
+    for sh in g.get("shade", []):  # shaded regions (inequalities): polygon in graph units, already clipped to the window
+        pts = [(X(a), Y(b)) for a, b in sh["p"]]
+        sl.add(lambda sid, pts=pts, color=C["g" + sh.get("c", "a")]: poly_xml(sid, pts, color))
+
     def draw_points(own_steps=False):
         r = 5.5 * P
         for px_, py_, lab in g.get("pts", []):
