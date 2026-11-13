@@ -54,6 +54,10 @@
   .tag.ex{background:var(--point);border-color:var(--point);color:#fff}
   .note{margin:14px 0 0;font-size:13px;color:var(--muted)}
   @media (max-width:520px){.sched td{padding:8px 6px}.sched td:first-child{white-space:normal;width:34%}}
+  .bookcard{display:grid;grid-template-columns:150px 1fr;gap:20px;align-items:center}
+  .bookcard .cover img{display:block;width:150px;height:auto;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+  .bookcard p{margin:0 0 4px;font-size:17px}
+  @media (max-width:520px){.bookcard{grid-template-columns:1fr;justify-items:center;text-align:center}.bookcard .btns{justify-content:center}}
   footer{margin-top:40px;font-size:13px;color:var(--muted)}
   footer a{color:var(--muted)}
   @media (max-width:520px){.lesson{grid-template-columns:1fr}.num{grid-row:auto;width:40px;height:40px;font-size:18px}}
@@ -86,9 +90,12 @@
   </section>
 
   <h2>📘 Algebra I Game Plan</h2>
-  <section class="card">
+  <section class="card bookcard">
+    <a id="bookcover" class="cover" href="Game%20Plan/Algebra-I-Game-Plan.pdf"><img src="Game%20Plan/cover.jpg" width="359" height="460" alt="Cover of Algebra I Game Plan: Topic Tests and STAAR, Student Edition, by Robin Pandey"></a>
+    <div>
     <p>Mr. Pandey's practice book for every topic test and STAAR: key ideas, worked examples, Skill Checks and two STAAR practice tests.</p>
     <div class="btns" id="book"></div>
+    </div>
   </section>
 
   <h2>Upcoming calendar</h2>
@@ -241,6 +248,7 @@
     document.getElementById("lessons").innerHTML = LESSONS.map(L =>
       `<section class="card lesson"><div class="num">${L.n}</div><h3>${L.title}</h3><p>${L.learn}</p><div class="btns">${lessonBtns(L)}</div></section>`).join("");
 
+    document.getElementById("bookcover").href = `Game%20Plan/Algebra-I-Game-Plan${sel.value === "iep" ? "-IEP" : ""}.pdf`;
     document.getElementById("book").innerHTML = btn(`Game%20Plan/Algebra-I-Game-Plan${sel.value === "iep" ? "-IEP" : ""}.pdf`,
       `Open the book${sel.value === "iep" ? " (IEP Edition)" : ""}`, true);
 
