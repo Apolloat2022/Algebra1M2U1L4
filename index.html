@@ -85,6 +85,13 @@
     <div class="btns" id="prep"></div>
   </section>
 
+  <h2>📘 Algebra I Game Plan</h2>
+  <section class="card">
+    <p>Mr. Pandey's practice book for every topic test and STAAR: key ideas, worked examples, Skill Checks and two STAAR practice tests.</p>
+    <div class="btns" id="book"></div>
+    <p class="tip">🔒 The book is password protected. Ask Mr. Pandey for the password.</p>
+  </section>
+
   <h2>Upcoming calendar</h2>
   <section class="card" id="calendar">
       <table class="sched">
@@ -234,6 +241,9 @@
 
     document.getElementById("lessons").innerHTML = LESSONS.map(L =>
       `<section class="card lesson"><div class="num">${L.n}</div><h3>${L.title}</h3><p>${L.learn}</p><div class="btns">${lessonBtns(L)}</div></section>`).join("");
+
+    document.getElementById("book").innerHTML = btn(`Game%20Plan/Algebra-I-Game-Plan${sel.value === "iep" ? "-IEP" : ""}.pdf`,
+      `Open the book${sel.value === "iep" ? " (IEP Edition)" : ""}`, true);
 
     document.getElementById("prep").innerHTML = review() +
       LESSONS.map(L => btn(VID + L.video, `▶ Lesson ${L.n} video`)).join("");
