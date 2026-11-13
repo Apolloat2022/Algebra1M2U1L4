@@ -2835,8 +2835,8 @@ COVER = ROOT / "Algebra I Game Plan Topic" / "Book Cover.png"
 
 
 def finish(pdf):
-    """Cover art as page 1 (the printed title page stays as page 2), then lock the ANSWER KEYS only.
-    Student and IEP editions stay open. Password comes from GAME_PLAN_PW so it never lands in the repo."""
+    """Cover art as page 1 (the printed title page stays as page 2), then lock it (all four PDFs:
+    Anna High School only until publishing permission). Password comes from GAME_PLAN_PW so it never lands in the repo."""
     import os, fitz
     d = fitz.open(pdf)
     if d[0].get_text().strip():  # first page not yet the image-only cover
@@ -2844,7 +2844,7 @@ def finish(pdf):
         page = d.new_page(0, width=r.width, height=r.height)
         page.draw_rect(r, color=None, fill=(0.07, 0.42, 0.25))  # green bleed behind the 800x1024 art
         page.insert_image(r, filename=str(COVER), keep_proportion=True)
-    pw = os.environ.get("GAME_PLAN_PW") if "ANSWER-KEY" in pdf.name else None
+    pw = os.environ.get("GAME_PLAN_PW")
     tmp = pdf.with_suffix(".tmp.pdf")
     d.save(tmp, garbage=3, deflate=True,
            **({"encryption": fitz.PDF_ENCRYPT_AES_256, "user_pw": pw, "owner_pw": pw} if pw else {}))
