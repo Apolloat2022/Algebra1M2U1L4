@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Topic 2 Lesson 3 Day 2 Bell Work · Using Linear Combinations · IEP</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<link rel="stylesheet" href="../mc.css">
+<div class="wrap big">
+  <p class="eyebrow">Module 3 · Topic 2 · Lesson 3 · Day 2 Bell Work · IEP Version</p>
+  <h1>Bell Work: Review</h1>
+  <p class="muted">Warm up while attendance is taken. Answer all 4 questions, then submit to see which ones you got right.</p>
+  <div class="card ref"><p>Each question has 3 choices. Use the reminders below, and press <b>Read aloud</b> to hear a question.</p><p><b>Linear combinations:</b> make one variable's coefficients opposites, then add the equations.</p><p><b>Multiply every term</b>, including the number on the right side.</p><p><b>Fractions:</b> multiply by the LCD first. Variable alone? Substitution is faster.</p></div>
+  <label class="name">Your name <input id="name" autocomplete="name"></label>
+  <ol id="questions"></ol>
+  <div class="bar">
+    <button id="submit" disabled>Submit</button>
+    <button id="reset" class="ghost">Start over</button>
+  </div>
+  <p id="result" class="card" style="margin-top:16px" hidden></p>
+</div>
+<script>
+window.MC = { mode: "quiz", questions: [
+  {"q": "Solve: [[x + y = 12]] and [[x − y = 4]].", "choices": ["[[(8, 4)]]", "[[(4, 8)]]", "[[(16, −4)]]", "[[(6, 6)]]"], "why": "Add: [[2x = 16]], [[x = 8]], [[y = 4]]."},
+  {"q": "To eliminate [[y]] in [[3x + y = 7]] and [[2x + 2y = 6]], multiply the first equation by…", "choices": ["[[−2]]", "[[2]]", "[[3]]", "[[−3]]"], "why": "[[−2y]] and [[2y]] are opposites.", "letters": "FGHJ"},
+  {"q": "Multiply [[4x + y = 15]] by [[−2]].", "choices": ["[[−8x − 2y = −30]]", "[[−8x + 2y = −30]]", "[[−8x − 2y = 15]]", "[[8x + 2y = 30]]"], "why": "Every term times [[−2]]."},
+  {"q": "Is [[(6, −9)]] a solution of [[4x + y = 15]]?", "choices": ["Yes, because [[15 = 15]]", "No, because [[33 ≠ 15]]", "No, because [[6 ≠ −9]]", "Yes, because [[−9 < 15]]"], "why": "[[4(6) + (−9) = 24 − 9 = 15]].", "letters": "FGHJ"},
+] };
+window.MC.accom = {"readAloud": true, "choices": 3, "add": [{"extra": "<p class=\"formula\" style=\"margin:8px 0 2px;padding:6px 12px;border-left:4px solid #2f6fdd;background:rgba(47,111,221,.08);border-radius:4px\"><b>Formula:</b> add the equations</p>", "why": "Here is how:<br><b>1.</b> Add: [[2x = 16]].<br><b>2.</b> [[x = 8]].<br><b>3.</b> [[8 + y = 12]], [[y = 4]]."}, {"extra": "<p class=\"formula\" style=\"margin:8px 0 2px;padding:6px 12px;border-left:4px solid #2f6fdd;background:rgba(47,111,221,.08);border-radius:4px\"><b>Formula:</b> make the <span class=\"mt\"><i>y</i></span>-terms opposites</p>", "why": "Here is how:<br><b>1.</b> The second has [[2y]].<br><b>2.</b> You need [[−2y]] in the first.<br><b>3.</b> Multiply by [[−2]]."}, {"extra": "<p class=\"formula\" style=\"margin:8px 0 2px;padding:6px 12px;border-left:4px solid #2f6fdd;background:rgba(47,111,221,.08);border-radius:4px\"><b>Formula:</b> multiply EVERY term</p>", "why": "Here is how:<br><b>1.</b> [[−2(4x) = −8x]].<br><b>2.</b> [[−2(y) = −2y]].<br><b>3.</b> [[−2(15) = −30]]."}, {"extra": "<p class=\"formula\" style=\"margin:8px 0 2px;padding:6px 12px;border-left:4px solid #2f6fdd;background:rgba(47,111,221,.08);border-radius:4px\"><b>Formula:</b> substitute both values</p>", "why": "Here is how:<br><b>1.</b> [[4(6) = 24]].<br><b>2.</b> [[24 + (−9) = 15]].<br><b>3.</b> True: yes."}]};
+</script>
+<script src="../mc.js"></script>

@@ -10,6 +10,7 @@ from pathlib import Path
 import make_t2_decks as D
 import make_accom_lessons as A
 from make_m3t1_lessons import doc, pptx
+import make_m3t2_daily as DY
 
 ROOT = Path(__file__).parent
 OUT = ROOT / "Module 3 topic 2"
@@ -71,8 +72,11 @@ def line(m, b, xr, label=None, c=None, dash=False, step=False):
 
 # ================================================================ shared slides
 def title_slide(n, pages, name, sub, notes):
+    days = sum(1 for k in DY.DATES if k[0] == n)
+    bw = " · ".join(f'<b><a class="go" href="{DY.bell_href(n, d)}" {D.GO}>Day {d} →</a></b>' for d in range(1, days + 1))
     return (f'<section class="slide">\n  <p class="eyebrow">Bluebonnet Algebra I · Module 3 · Topic 2 · Lesson {n} · Student Edition pp. {pages}</p>\n'
             f'  <h1 style="margin-top:6px;font-size:56px">{name}</h1>\n  <div class="eq" style="margin-top:8px;font-size:40px">{sub}</div>\n'
+            f'  <p style="font-size:24px;margin-top:6px">Bell work: {bw}</p>\n'
             f'  <p class="muted small">Click, or press → / Space, to reveal each step. ← goes back. F = full screen.</p>\n  {D.FOOT}\n'
             f'  <aside class="notes">{notes}</aside>\n</section>\n')
 
@@ -599,15 +603,19 @@ def deck_iep(n):
     out = [f'<section class="slide">\n  <p class="eyebrow">Bluebonnet Algebra I · Module 3 · Topic 2 · Lesson {n} · IEP Version</p>\n'
            f'  <h1 style="margin-top:10px;font-size:60px">{info["name"]}</h1>\n  <h3 style="margin-top:8px">I can…</h3>'
            + "".join(f"<p>✓ &nbsp;{c}</p>" for c in a["cans"]) + "\n"
+           + '  <p style="font-size:24px;margin-top:6px">Bell work: ' + " · ".join(
+               f'<b><a class="go" href="{DY.bell_href(n, d, "IEP")}" {D.GO}>Day {d} →</a></b>' for d in sorted(a["skills"])) + "</p>\n"
            '  <p class="foot">Based on Bluebonnet Learning Secondary Mathematics, Algebra I (©2024–2025 Texas Education Agency, portions ©2021 Carnegie Learning, Inc.), licensed CC BY-NC 4.0. A private site for Algebra I teachers.</p>\n'
            f'  <aside class="notes">IEP version of Lesson {n}: a modified lesson that keeps the core skills (the starred activities) and cuts the number of items. '
            "Each skill follows I do, We do (sentence frames), You do. Apply each student's IEP accommodations too: extended time, read-aloud, breaks, calculator, small group.</aside>\n</section>\n"]
     out.append(sec(f"Lesson {n} · Key Vocabulary", "Key vocabulary", a["vocab"], "Preview the key terms. Leave up or print as a reference card."))
     chart = sec(f"Lesson {n} · Steps Chart", "Steps to follow", A.steps(*a["steps"]), "Anchor chart: students keep this out for every problem.")
     for d in sorted(a["skills"]):
+        out.append(DY.iep_bell(n, d))
         out.append(chart)
         for skill in a["skills"][d]:
             out += iep_skill(d, *skill)
+        out.append(DY.iep_exit(n, d))
         out.append(sec(f"Day {d} · Notes to Keep", f"Notes to keep: Day {d}", A.notes_cards(*a["notes"][d]), "Give a printed copy of the notes."))
     return out
 
@@ -663,9 +671,21 @@ def check():
 
 
 # ================================================================ main
+def with_daily(n, days):
+    """Bell work first thing each day; the exit ticket before the closing Essential Question slide."""
+    out = []
+    for d, day in enumerate(days, 1):
+        day = list(day)
+        day.insert(3 if d == 1 else 1, DY.bell_slide(n, d))
+        end = next((i for i, s in enumerate(day) if "Essential Question · Answered" in s), len(day))
+        day.insert(end, DY.exit_slide(n, d))
+        out.append(day)
+    return out
+
+
 def build(n):
     info = LESSONS[n]
-    days = info["deck"]()
+    days = with_daily(n, info["deck"]())
     key = f"m3t2l{n}"
     starred = [[D.star_eyebrows(key, s) for s in day] for day in days]
     general = [s for day in starred for s in day]
@@ -675,13 +695,20 @@ def build(n):
     print(path.name, len(general), "slides"); pptx(path)
     for kind, slides in (("504", deck_504(n, starred)), ("IEP", deck_iep(n))):
         p_ = FOLDER[kind] / f"{info['stem']}-{kind}.html"
-        p_.write_text(deck_doc(f"{info['name']} · Bluebonnet Algebra I · {LABEL[kind]}", slides), encoding="utf-8")
+        html = deck_doc(f"{info['name']} · Bluebonnet Algebra I · {LABEL[kind]}", slides)
+        if kind == "504":  # the 504 deck opens the 504 bell work pages
+            html = re.sub(r'href="(m3t2-lesson\d-bellwork-day\d)\.html"', r'href="\1-504.html"', html)
+        p_.write_text(html, encoding="utf-8")
         print(p_.name, len(slides), "slides"); pptx(p_)
+    for d in range(1, len(days) + 1):
+        DY.bell_pages(n, d, info["name"])
+        DY.write_sheets(n, d)
 
 
 if __name__ == "__main__":
     import sys
     check()
+    DY.check()
     assert all(set(ACC[n]["plans"]) == set(range(1, len(LESSONS[n]["deck"]()) + 1)) == set(ACC[n]["notes"]) == set(ACC[n]["skills"]) for n in LESSONS)
     for n in [int(a) for a in sys.argv[1:] if a.isdigit()] or LESSONS:
         build(n)

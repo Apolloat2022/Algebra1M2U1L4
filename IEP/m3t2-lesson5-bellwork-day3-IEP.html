@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Topic 2 Lesson 5 Day 3 Bell Work · Systems of Linear Inequalities · IEP</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<link rel="stylesheet" href="../mc.css">
+<div class="wrap big">
+  <p class="eyebrow">Module 3 · Topic 2 · Lesson 5 · Day 3 Bell Work · IEP Version</p>
+  <h1>Bell Work: Review</h1>
+  <p class="muted">Warm up while attendance is taken. Answer all 4 questions, then submit to see which ones you got right.</p>
+  <div class="card ref"><p>Each question has 3 choices. Use the reminders below, and press <b>Read aloud</b> to hear a question.</p><p><b>System of inequalities:</b> graph and shade each one; the overlap is the solution set.</p><p><b>A solution</b> makes EVERY inequality true. Points on a dashed line are not solutions.</p><p><b>In a story:</b> no negative amounts, so stay in the first quadrant.</p></div>
+  <label class="name">Your name <input id="name" autocomplete="name"></label>
+  <ol id="questions"></ol>
+  <div class="bar">
+    <button id="submit" disabled>Submit</button>
+    <button id="reset" class="ghost">Start over</button>
+  </div>
+  <p id="result" class="card" style="margin-top:16px" hidden></p>
+</div>
+<script>
+window.MC = { mode: "quiz", questions: [
+  {"q": "Where is the solution set of [[y < x + 1]] and [[y < x + 4]]?", "choices": ["below [[y = x + 1]]", "below [[y = x + 4]] only", "between the lines", "no solution"], "why": "Below both lines means below the lower one, [[y = x + 1]]."},
+  {"q": "Is [[(3, 0)]] a solution of [[y ≥ −x + 2]] and [[y ≤ x − 1]]?", "choices": ["Yes, both are true", "Only the first is true", "Only the second is true", "Neither is true"], "why": "[[0 ≥ −1]] and [[0 ≤ 2]].", "letters": "FGHJ"},
+  {"q": "A dashed line [[y = ½x − 1]] has the half-plane below it shaded. Which inequality is it?", "choices": ["[[y < ½x − 1]]", "[[y ≤ ½x − 1]]", "[[y > ½x − 1]]", "[[y ≥ ½x − 1]]"], "why": "Dashed: &lt; or &gt;. Below: [[y <]]."},
+  {"q": "Together, [[x ≥ 0]] and [[y ≥ 0]] keep the solutions in which quadrant?", "choices": ["Quadrant I", "Quadrant II", "Quadrant III", "Quadrant IV"], "why": "[[x]] and [[y]] both 0 or positive: Quadrant I.", "letters": "FGHJ"},
+] };
+window.MC.accom = {"readAloud": true, "choices": 3, "add": [{"extra": "<p class=\"formula\" style=\"margin:8px 0 2px;padding:6px 12px;border-left:4px solid #2f6fdd;background:rgba(47,111,221,.08);border-radius:4px\"><b>Formula:</b> both &lt; → below both</p>", "why": "Here is how:<br><b>1.</b> Both say below.<br><b>2.</b> Below the lower line."}, {"extra": "<p class=\"formula\" style=\"margin:8px 0 2px;padding:6px 12px;border-left:4px solid #2f6fdd;background:rgba(47,111,221,.08);border-radius:4px\"><b>Formula:</b> check every inequality</p>", "why": "Here is how:<br><b>1.</b> [[0 ≥ −3 + 2 = −1]] ✓.<br><b>2.</b> [[0 ≤ 3 − 1 = 2]] ✓."}, {"extra": "<p class=\"formula\" style=\"margin:8px 0 2px;padding:6px 12px;border-left:4px solid #2f6fdd;background:rgba(47,111,221,.08);border-radius:4px\"><b>Formula:</b> dashed + below → &lt;</p>", "why": "Here is how:<br><b>1.</b> Dashed: &lt; or &gt;.<br><b>2.</b> Below: [[y < …]]."}, {"extra": "<p class=\"formula\" style=\"margin:8px 0 2px;padding:6px 12px;border-left:4px solid #2f6fdd;background:rgba(47,111,221,.08);border-radius:4px\"><b>Formula:</b> both positive → Quadrant I</p>", "why": "Here is how:<br><b>1.</b> [[x ≥ 0]]: right side.<br><b>2.</b> [[y ≥ 0]]: top.<br><b>3.</b> Quadrant I."}]};
+</script>
+<script src="../mc.js"></script>

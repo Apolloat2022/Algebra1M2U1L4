@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Topic 2 Lesson 3 Day 1 Bell Work · Using Linear Combinations · IEP</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<link rel="stylesheet" href="../mc.css">
+<div class="wrap big">
+  <p class="eyebrow">Module 3 · Topic 2 · Lesson 3 · Day 1 Bell Work · IEP Version</p>
+  <h1>Bell Work: Review</h1>
+  <p class="muted">Warm up while attendance is taken. Answer all 4 questions, then submit to see which ones you got right.</p>
+  <div class="card ref"><p>Each question has 3 choices. Use the reminders below, and press <b>Read aloud</b> to hear a question.</p><p><b>Linear combinations:</b> make one variable's coefficients opposites, then add the equations.</p><p><b>Multiply every term</b>, including the number on the right side.</p><p><b>Fractions:</b> multiply by the LCD first. Variable alone? Substitution is faster.</p></div>
+  <label class="name">Your name <input id="name" autocomplete="name"></label>
+  <ol id="questions"></ol>
+  <div class="bar">
+    <button id="submit" disabled>Submit</button>
+    <button id="reset" class="ghost">Start over</button>
+  </div>
+  <p id="result" class="card" style="margin-top:16px" hidden></p>
+</div>
+<script>
+window.MC = { mode: "quiz", questions: [
+  {"q": "Solve: [[x = y + 2]] and [[x + y = 12]].", "choices": ["[[(7, 5)]]", "[[(5, 7)]]", "[[(6, 6)]]", "[[(10, 2)]]"], "why": "[[(y + 2) + y = 12]], [[y = 5]], [[x = 7]]."},
+  {"q": "What is the additive inverse of [[5y]]?", "choices": ["[[−5y]]", "[[5y]]", "[[⅕y]]", "[[0]]"], "why": "Additive inverses add to zero: [[5y + (−5y) = 0]].", "letters": "FGHJ"},
+  {"q": "Add the equations [[3x + 2y = 7]] and [[x − 2y = 5]]. What do you get?", "choices": ["[[4x = 12]]", "[[4x − 4y = 12]]", "[[2x = 2]]", "[[4x + 4y = 12]]"], "why": "[[2y]] and [[−2y]] add to 0: [[4x = 12]]."},
+  {"q": "Multiply every term of [[2x − y = 3]] by 3.", "choices": ["[[6x − 3y = 9]]", "[[6x − y = 3]]", "[[6x − 3y = 3]]", "[[2x − 3y = 9]]"], "why": "Every term, including the 3 on the right: [[6x − 3y = 9]].", "letters": "FGHJ"},
+] };
+window.MC.accom = {"readAloud": true, "choices": 3, "add": [{"extra": "<p class=\"formula\" style=\"margin:8px 0 2px;padding:6px 12px;border-left:4px solid #2f6fdd;background:rgba(47,111,221,.08);border-radius:4px\"><b>Formula:</b> substitute <span class=\"mt\"><i>y</i> + 2</span> for <span class=\"mt\"><i>x</i></span></p>", "why": "Here is how:<br><b>1.</b> [[2y + 2 = 12]].<br><b>2.</b> [[y = 5]].<br><b>3.</b> [[x = 5 + 2 = 7]]."}, {"extra": "<p class=\"formula\" style=\"margin:8px 0 2px;padding:6px 12px;border-left:4px solid #2f6fdd;background:rgba(47,111,221,.08);border-radius:4px\"><b>Formula:</b> opposite sign, same term</p>", "why": "Here is how:<br><b>1.</b> Change the sign.<br><b>2.</b> [[−5y]]."}, {"extra": "<p class=\"formula\" style=\"margin:8px 0 2px;padding:6px 12px;border-left:4px solid #2f6fdd;background:rgba(47,111,221,.08);border-radius:4px\"><b>Formula:</b> add like terms down the columns</p>", "why": "Here is how:<br><b>1.</b> [[3x + x = 4x]].<br><b>2.</b> [[2y − 2y = 0]].<br><b>3.</b> [[7 + 5 = 12]]."}, {"extra": "<p class=\"formula\" style=\"margin:8px 0 2px;padding:6px 12px;border-left:4px solid #2f6fdd;background:rgba(47,111,221,.08);border-radius:4px\"><b>Formula:</b> multiply EVERY term</p>", "why": "Here is how:<br><b>1.</b> [[3(2x) = 6x]].<br><b>2.</b> [[3(−y) = −3y]].<br><b>3.</b> [[3(3) = 9]]."}]};
+</script>
+<script src="../mc.js"></script>

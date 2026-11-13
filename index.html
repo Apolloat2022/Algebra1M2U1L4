@@ -91,19 +91,19 @@
   <section class="card">
     <p>Module 3 Topic 2, Systems of Linear Equations and Inequalities, starts Monday, November 30. Get a head start.</p>
     <h3 style="margin:16px 0 4px;font-size:17px">Lesson 1 · Using Graphing to Solve Systems</h3>
-    <div class="btns t2" data-stem="m3t2-lesson1-graphing-systems"></div>
+    <div class="btns t2" data-stem="m3t2-lesson1-graphing-systems" data-n="1" data-dates="Mon-11-30,Tue-12-01"></div>
     <div class="anchors"><a href="Module%203%20topic%202/ANCHOR%20CHARTS/M3T2-L1-Anchor-1.jpg"><img src="Module%203%20topic%202/ANCHOR%20CHARTS/M3T2-L1-Anchor-1.jpg" width="150" height="194" loading="lazy" alt="Anchor chart: Solve a System by Graphing">📌 Solve a System by Graphing</a><a href="Module%203%20topic%202/ANCHOR%20CHARTS/M3T2-L1-Anchor-2.jpg"><img src="Module%203%20topic%202/ANCHOR%20CHARTS/M3T2-L1-Anchor-2.jpg" width="150" height="194" loading="lazy" alt="Anchor chart: How Many Solutions?">📌 How Many Solutions?</a></div>
     <h3 style="margin:16px 0 4px;font-size:17px">Lesson 2 · Using Substitution</h3>
-    <div class="btns t2" data-stem="m3t2-lesson2-substitution"></div>
+    <div class="btns t2" data-stem="m3t2-lesson2-substitution" data-n="2" data-dates="Wed-12-02,Thu-12-03"></div>
     <div class="anchors"><a href="Module%203%20topic%202/ANCHOR%20CHARTS/M3T2-L2-Anchor-1.jpg"><img src="Module%203%20topic%202/ANCHOR%20CHARTS/M3T2-L2-Anchor-1.jpg" width="150" height="194" loading="lazy" alt="Anchor chart: Substitution Method">📌 Substitution Method</a><a href="Module%203%20topic%202/ANCHOR%20CHARTS/M3T2-L2-Anchor-2.jpg"><img src="Module%203%20topic%202/ANCHOR%20CHARTS/M3T2-L2-Anchor-2.jpg" width="150" height="194" loading="lazy" alt="Anchor chart: Substitution: Read the Result">📌 Substitution: Read the Result</a></div>
     <h3 style="margin:16px 0 4px;font-size:17px">Lesson 3 · Using Linear Combinations</h3>
-    <div class="btns t2" data-stem="m3t2-lesson3-linear-combinations"></div>
+    <div class="btns t2" data-stem="m3t2-lesson3-linear-combinations" data-n="3" data-dates="Mon-12-07,Tue-12-08,Wed-12-09"></div>
     <div class="anchors"><a href="Module%203%20topic%202/ANCHOR%20CHARTS/M3T2-L3-Anchor-1.jpg"><img src="Module%203%20topic%202/ANCHOR%20CHARTS/M3T2-L3-Anchor-1.jpg" width="150" height="194" loading="lazy" alt="Anchor chart: Linear Combinations">📌 Linear Combinations</a><a href="Module%203%20topic%202/ANCHOR%20CHARTS/M3T2-L3-Anchor-2.jpg"><img src="Module%203%20topic%202/ANCHOR%20CHARTS/M3T2-L3-Anchor-2.jpg" width="150" height="194" loading="lazy" alt="Anchor chart: Multiply First, Then Add">📌 Multiply First, Then Add</a></div>
     <h3 style="margin:16px 0 4px;font-size:17px">Lesson 4 · Graphing Inequalities in Two Variables</h3>
-    <div class="btns t2" data-stem="m3t2-lesson4-graphing-inequalities"></div>
+    <div class="btns t2" data-stem="m3t2-lesson4-graphing-inequalities" data-n="4" data-dates="Mon-01-04,Tue-01-05"></div>
     <div class="anchors"><a href="Module%203%20topic%202/ANCHOR%20CHARTS/M3T2-L4-Anchor-1.jpg"><img src="Module%203%20topic%202/ANCHOR%20CHARTS/M3T2-L4-Anchor-1.jpg" width="150" height="194" loading="lazy" alt="Anchor chart: Graph a Linear Inequality">📌 Graph a Linear Inequality</a><a href="Module%203%20topic%202/ANCHOR%20CHARTS/M3T2-L4-Anchor-2.jpg"><img src="Module%203%20topic%202/ANCHOR%20CHARTS/M3T2-L4-Anchor-2.jpg" width="150" height="194" loading="lazy" alt="Anchor chart: Solid or Dashed? Which Side?">📌 Solid or Dashed? Which Side?</a></div>
     <h3 style="margin:16px 0 4px;font-size:17px">Lesson 5 · Systems of Linear Inequalities</h3>
-    <div class="btns t2" data-stem="m3t2-lesson5-systems-of-inequalities"></div>
+    <div class="btns t2" data-stem="m3t2-lesson5-systems-of-inequalities" data-n="5" data-dates="Wed-01-06,Thu-01-07,Mon-01-11"></div>
     <div class="anchors"><a href="Module%203%20topic%202/ANCHOR%20CHARTS/M3T2-L5-Anchor-1.jpg"><img src="Module%203%20topic%202/ANCHOR%20CHARTS/M3T2-L5-Anchor-1.jpg" width="150" height="194" loading="lazy" alt="Anchor chart: Systems of Linear Inequalities">📌 Systems of Linear Inequalities</a><a href="Module%203%20topic%202/ANCHOR%20CHARTS/M3T2-L5-Anchor-2.jpg"><img src="Module%203%20topic%202/ANCHOR%20CHARTS/M3T2-L5-Anchor-2.jpg" width="150" height="194" loading="lazy" alt="Anchor chart: Is It a Solution?">📌 Is It a Solution?</a></div>
   </section>
 
@@ -279,7 +279,12 @@
     document.getElementById("bookcover").href = `Game%20Plan/Algebra-I-Game-Plan${sel.value === "iep" ? "-IEP" : ""}.pdf`;
     const T2 = { gen: ["Module%203%20topic%202/", ""], iep: ["IEP/", "-IEP"], "504": ["Section%20504/", "-504"] }[sel.value];
     document.querySelectorAll(".t2").forEach(el => { const f = T2[0] + el.dataset.stem + T2[1];
-      el.innerHTML = btn(f + ".html", "Slides") + btn(f + ".pptx", "PowerPoint"); });
+      const sx = { gen: "", iep: "-IEP", "504": "-504" }[sel.value];
+      const days = el.dataset.dates.split(",").map((dt, k) => {
+        const lab = `${dt.slice(0, 3)} ${+dt.slice(4, 6)}/${+dt.slice(7, 9)}`;
+        return btn(`${T2[0]}m3t2-lesson${el.dataset.n}-bellwork-day${k + 1}${sx}.html`, `Bell work ${lab}`)
+          + btn(`Module%203%20topic%202/EXIT%20TICKET/M3T2-Exit-Ticket-${dt}${sx}.pdf`, `Exit ticket ${lab}`); }).join("");
+      el.innerHTML = btn(f + ".html", "Slides") + btn(f + ".pptx", "PowerPoint") + days; });
     document.getElementById("book").innerHTML = btn(`Game%20Plan/Algebra-I-Game-Plan${sel.value === "iep" ? "-IEP" : ""}.pdf`,
       `Open the book${sel.value === "iep" ? " (IEP Edition)" : ""}`, true);
 

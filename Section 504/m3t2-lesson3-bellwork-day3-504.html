@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Topic 2 Lesson 3 Day 3 Bell Work · Using Linear Combinations · Section 504</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<link rel="stylesheet" href="../mc.css">
+<div class="wrap big">
+  <p class="eyebrow">Module 3 · Topic 2 · Lesson 3 · Day 3 Bell Work · Section 504 Version</p>
+  <h1>Bell Work: Review</h1>
+  <p class="muted">Warm up while attendance is taken. Answer all 4 questions, then submit to see which ones you got right.</p>
+  <div class="card ref"><p>Use the reminders below, and press <b>Read aloud</b> to hear a question. Take the time you need.</p><p><b>Linear combinations:</b> make one variable's coefficients opposites, then add the equations.</p><p><b>Multiply every term</b>, including the number on the right side.</p><p><b>Fractions:</b> multiply by the LCD first. Variable alone? Substitution is faster.</p></div>
+  <label class="name">Your name <input id="name" autocomplete="name"></label>
+  <ol id="questions"></ol>
+  <div class="bar">
+    <button id="submit" disabled>Submit</button>
+    <button id="reset" class="ghost">Start over</button>
+  </div>
+  <p id="result" class="card" style="margin-top:16px" hidden></p>
+</div>
+<script>
+window.MC = { mode: "quiz", questions: [
+  {"q": "Solve: [[2x + y = 11]] and [[x − y = 1]].", "choices": ["[[(4, 3)]]", "[[(3, 4)]]", "[[(5, 1)]]", "[[(4, −3)]]"], "why": "Add: [[3x = 12]], [[x = 4]], [[y = 3]]."},
+  {"q": "Multiply [[½x + ¾y = 10]] by 4.", "choices": ["[[2x + 3y = 40]]", "[[2x + 3y = 10]]", "[[½x + 3y = 40]]", "[[4x + 3y = 40]]"], "why": "The LCD 4 clears both fractions: [[2x + 3y = 40]].", "letters": "FGHJ"},
+  {"q": "Which method is fastest for [[y = 3x − 1]] and [[5x − 2y = 4]]?", "choices": ["substitution", "linear combinations", "graphing", "none of them works"], "why": "[[y]] is already alone, so substitute [[3x − 1]] for [[y]]."},
+  {"q": "Is [[(3, 2)]] a solution of [[x + 2y = 7]] and [[3x − y = 7]]?", "choices": ["Yes, both are true", "Only the first is true", "Only the second is true", "Neither is true"], "why": "[[3 + 4 = 7]] and [[9 − 2 = 7]].", "letters": "FGHJ"},
+] };
+window.MC.accom = {"readAloud": true};
+</script>
+<script src="../mc.js"></script>

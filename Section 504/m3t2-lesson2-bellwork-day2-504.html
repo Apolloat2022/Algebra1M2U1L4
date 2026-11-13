@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Topic 2 Lesson 2 Day 2 Bell Work · Using Substitution to Solve Linear Systems · Section 504</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<link rel="stylesheet" href="../mc.css">
+<div class="wrap big">
+  <p class="eyebrow">Module 3 · Topic 2 · Lesson 2 · Day 2 Bell Work · Section 504 Version</p>
+  <h1>Bell Work: Review</h1>
+  <p class="muted">Warm up while attendance is taken. Answer all 4 questions, then submit to see which ones you got right.</p>
+  <div class="card ref"><p>Use the reminders below, and press <b>Read aloud</b> to hear a question. Take the time you need.</p><p><b>Substitution:</b> get a variable alone, put its expression into the other equation, solve, substitute back.</p><p><b>Variable drops out?</b> False statement (like 0 = 7): no solution. True statement (like 5 = 5): infinite.</p><p><b>Check:</b> put both values into both equations.</p></div>
+  <label class="name">Your name <input id="name" autocomplete="name"></label>
+  <ol id="questions"></ol>
+  <div class="bar">
+    <button id="submit" disabled>Submit</button>
+    <button id="reset" class="ghost">Start over</button>
+  </div>
+  <p id="result" class="card" style="margin-top:16px" hidden></p>
+</div>
+<script>
+window.MC = { mode: "quiz", questions: [
+  {"q": "Solve by substitution: [[y = 4x]] and [[2x + y = 18]].", "choices": ["[[(3, 12)]]", "[[(12, 3)]]", "[[(2, 8)]]", "[[(3, 4)]]"], "why": "[[2x + 4x = 18]], [[x = 3]], [[y = 12]]."},
+  {"q": "You substitute and get [[0 = 7]]. How many solutions does the system have?", "choices": ["No solution", "One solution", "Infinitely many", "[[x = 7]]"], "why": "A false statement means no ordered pair works.", "letters": "FGHJ"},
+  {"q": "Write [[6x + 2y = 10]] in slope-intercept form.", "choices": ["[[y = −3x + 5]]", "[[y = 3x + 5]]", "[[y = −6x + 10]]", "[[y = −3x + 10]]"], "why": "[[2y = −6x + 10]], then divide every term by 2."},
+  {"q": "Which point is a solution of both [[x + y = 10]] and [[x − y = 2]]?", "choices": ["[[(6, 4)]]", "[[(4, 6)]]", "[[(5, 5)]]", "[[(8, 2)]]"], "why": "[[6 + 4 = 10]] and [[6 − 4 = 2]].", "letters": "FGHJ"},
+] };
+window.MC.accom = {"readAloud": true};
+</script>
+<script src="../mc.js"></script>
