@@ -1,5 +1,5 @@
 """Password-lock every deployed answer key (and other answer-bearing teacher PDFs) that is still open.
-Run before committing new keys:   $env:KEYS_PW = '...'; python lock_keys.py
+Run before committing new keys:   $env:KEYS_PW = '<teacher password>'; python lock_keys.py
 The password comes from KEYS_PW so it never lands in the repo. Already-locked PDFs are skipped."""
 import os, re, subprocess, sys
 from pathlib import Path
