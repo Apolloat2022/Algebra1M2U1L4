@@ -72,7 +72,6 @@
     <p>The Topic 1 test is <b>Wednesday, November 18</b>. Review day is Tuesday, November 17. Retakes are Thursday, November 19.</p>
     <div class="btns" id="prep"></div>
   </section>
-  <p class="tip">Topic 2 pages (Oct 26 – Nov 4) are in the <a href="archive-topic2-home.html">Topic 2 archive</a>.</p>
 
   <footer>Based on Bluebonnet Learning Secondary Mathematics, Algebra I (©2024–2025 Texas Education Agency, portions ©2021 Carnegie Learning, Inc.),
     <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a>. · <a href="teacher.html">Teacher page</a> · <a href="archive.html">Materials archive</a></footer>
@@ -93,23 +92,15 @@
     { n: 3, title: "Linear inequalities", learn: "Model, solve and graph inequalities. Flip the sign when you × or ÷ by a negative.",
       slides: "m3t1-lesson3-modeling-linear-inequalities", video: "M3T1-Lesson3-Linear-Inequalities.mp4", min: 2 },
   ];
-  // class days (Monday–Thursday); L = lesson, day = day of that lesson, f = date in the bell work and exit ticket PDF names
+  // class days (Monday–Thursday) from Nov 16; earlier days are in the materials archive; L = lesson, day = day of that lesson, f = date in the bell work and exit ticket PDF names
   const DAYS = [
-    { d: "2026-11-05", short: "Thu 11/5", L: 1, day: 1, f: "Thu-11-05", what: "Lesson 1: Solving Linear Equations",
-      todo: "Getting Started, Activities 1.1 and 1.2, then the test moves." },
-    { d: "2026-11-09", short: "Mon 11/9", L: 2, day: 1, f: "Mon-11-09", what: "Lesson 2: Literal Equations, day 1",
-      todo: "Getting Started (Perimeter Perspectives) and Activity 2.1: Equations in Different Forms." },
-    { d: "2026-11-10", short: "Tue 11/10", L: 2, day: 2, f: "Tue-11-10", what: "Lesson 2: Literal Equations", s: 1,
-      pre: "Distribute (watch the negative) and divide EVERY term.", todo: "Finish Activity 2.1: rewrite equations in different forms." },
-    { d: "2026-11-11", short: "Wed 11/11", L: 2, et: 3, day: 2, f: "Wed-11-11", what: "Lesson 2: Literal Equations", s: 4,
-      pre: "Undo in reverse order, and multiply by the flip (reciprocal).", todo: "Activities 2.2 and 2.3: solve formulas for one letter, then Talk the Talk." },
-    { d: "2026-11-12", short: "Thu 11/12", L: 3, day: 1, f: "Thu-11-12", what: "Lesson 3: Linear Inequalities", s: 7,
-      pre: "Number lines: compare negatives, the four symbols, open vs closed circles.", todo: "Getting Started, Activity 3.1, and start Activity 3.2." },
     { d: "2026-11-16", short: "Mon 11/16", L: 3, day: 2, f: "Mon-11-16", what: "Lesson 3: Linear Inequalities", s: 10,
       pre: "Multiplying and dividing by a negative: why the sign flips.", todo: "Activities 3.3 and 3.4: flip the sign, variables on both sides, distributing." },
     { d: "2026-11-17", short: "Tue 11/17", what: "Review day: Topic 1 Review", review: true, s: 13 },
     { d: "2026-11-18", short: "Wed 11/18", what: "Topic 1 test", test: true },
     { d: "2026-11-19", short: "Thu 11/19", what: "Retake day", retake: true },
+    { d: "2026-11-23", end: "2026-11-26", short: "Nov 23–26", what: "Thanksgiving break", brk: true },
+    { d: "2026-11-30", short: "Mon 11/30", what: "Module 3 Topic 2: Systems of Linear Equations and Inequalities", next: true },
   ];
 
   const sel = document.getElementById("ver");
@@ -134,19 +125,19 @@
   function render() {
     const today = new Date(); today.setHours(0, 0, 0, 0);
     const date = s => new Date(s + "T00:00:00");
-    let i = DAYS.findIndex(x => date(x.d) >= today);
+    let i = DAYS.findIndex(x => date(x.end || x.d) >= today);
     if (i < 0) i = DAYS.length - 1;
     if (pick !== null) i = pick;
-    const when = +date(DAYS[i].d) === +today ? "Today" : date(DAYS[i].d) < today ? "Earlier class" : "Coming up";
+    const D0 = DAYS[i], when = date(D0.d) <= today && today <= date(D0.end || D0.d) ? (D0.brk ? "Now" : "Today") : date(D0.d) < today ? "Earlier class" : "Coming up";
 
     document.getElementById("week").innerHTML = DAYS.map((x, j) =>
-      `<button type="button" class="day${j === i ? " now" : ""}${date(x.d) < today ? " done" : ""}${x.test ? " big" : ""}" data-j="${j}" aria-pressed="${j === i}"><b>${x.short}</b>${
-        x.test ? "Test" : x.L ? `Lesson ${x.L}` : x.what.split(":")[0]}</button>`).join("");
+      `<button type="button" class="day${j === i ? " now" : ""}${date(x.end || x.d) < today ? " done" : ""}${x.test ? " big" : ""}" data-j="${j}" aria-pressed="${j === i}"><b>${x.short}</b>${
+        x.test ? "Test" : x.brk ? "Break 🦃" : x.next ? "Topic 2 starts" : x.L ? `Lesson ${x.L}` : x.what.split(":")[0]}</button>`).join("");
 
     const D = DAYS[i];
     const longDate = date(D.d).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
     let body = "";
-    const NEW = D.s !== undefined;  // Nov 10-17: bell work in Schoology, whiteboard work, pre-algebra, exit ticket on EDIA
+    const NEW = D.s !== undefined;  // Nov 16-17 daily plan slides: bell work in Schoology, whiteboard work, pre-algebra, exit ticket on EDIA
     const startItems = `<li><b>Bell Work</b> · go to <b>Schoology</b> and check the <b>Bell Work</b> folder. Start as soon as you sit down.</li>
           <li><b>Whiteboard Work</b> · bell work done? Go see your teacher for Whiteboard work.</li>`;
     const exitItem = `<li><b>Exit Ticket</b> · it is on <b>EDIA</b>: check the <b>Schoology CLASSROOM</b> folder.</li>`;
@@ -166,20 +157,6 @@
         ${btn(page(L.slides), "Lesson slides")}
         ${btn(page(L.slides, ".pptx"), "PowerPoint")}
         ${btn(BOOK(L.n), `Lesson ${L.n} with answers`)}</div>`;
-    } else if (D.L) {
-      const L = LESSONS[D.L - 1];
-      body = `<div class="agenda"><p class="ag">📅 Today's Agenda · ${longDate}</p>
-        <p class="first">📚 Walk in, grab your book, take your seat!</p>
-        <ol><li><b>Bell Work</b> · go to <b>Schoology</b> and check the <b>Bell Work</b> folder. Start as soon as you sit down.</li>
-          <li><b>${D.what}</b> · ${D.todo}</li>
-          <li><b>Finished early?</b> · check your book work with the lesson with answers, show your teacher, then help other students.</li>
-          <li><b>Exit Ticket</b> · show what you learned today.</li></ol></div>
-        <div class="btns">${btn(VID + L.video, `▶ Watch Lesson ${L.n} (${L.min} min)`, true)}
-        ${btn(page(L.slides), "Lesson slides")}
-        ${btn(page(L.slides, ".pptx"), "PowerPoint")}
-        ${btn(BOOK(L.n), `Lesson ${L.n} with answers`)}
-        ${btn(page(`m3t1-lesson${L.n}-bellwork-day${D.day}`), "Bell work")}
-        ${exitBtn(D)}</div>`;
     } else if (D.review) {
       body = `<div class="agenda"><p class="hi">📝 Review Day: the test is tomorrow!</p>
         <p class="ag">📅 Today's Agenda · ${longDate}</p>
@@ -208,6 +185,15 @@
           <li><b>Quiet room</b> · work silently so retakers can focus. Raise your hand for help.</li></ol>
         <p class="hi">Second chance, best effort! 💪</p></div>
         <div class="btns">${review()}</div>`;
+    } else if (D.brk) {
+      body = `<div class="agenda"><p class="hi">🦃 Happy Thanksgiving! No school Mon Nov 23 – Thu Nov 26.</p>
+        <p>Rest up. Class starts again <b>Monday, November 30</b> with Module 3 Topic 2.</p></div>`;
+    } else if (D.next) {
+      body = `<div class="agenda"><p class="ag">📅 Back from break · ${longDate}</p>
+        <p class="first">📚 Walk in, grab your book, take your seat!</p>
+        <ol><li><b>Bell Work</b> · go to <b>Schoology</b> and check the <b>Bell Work</b> folder.</li>
+          <li><b>New topic</b> · Lesson 1 of Systems of Linear Equations and Inequalities.</li></ol>
+        <p class="hi">Welcome back! 💪</p></div>`;
     }
     document.getElementById("today").innerHTML =
       `<p class="eyebrow">${when} · ${D.short}</p><h3>${D.what}</h3>${body}`;
@@ -220,7 +206,7 @@
 
     const left = Math.round((date("2026-11-18") - today) / 864e5);
     document.getElementById("countdown").textContent =
-      left > 1 ? `Test: Wed Nov 18 · ${left} days to go` : left === 1 ? "Test is tomorrow!" : left === 0 ? "Test day: you've got this!" : "Topic 1 test: Wed Nov 18";
+      left > 1 ? `Test: Wed Nov 18 · ${left} days to go` : left === 1 ? "Test is tomorrow!" : left === 0 ? "Test day: you've got this!" : today < date("2026-11-30") ? "Thanksgiving break Nov 23–26 · back Mon Nov 30" : "Module 3 Topic 2: Systems of Linear Equations and Inequalities";
   }
   document.getElementById("week").addEventListener("click", e => {
     const b = e.target.closest(".day"); if (!b) return;
