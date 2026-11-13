@@ -35,12 +35,16 @@
   .btn.go:hover{opacity:.9;background:var(--point)}
   .lessons{display:flex;flex-direction:column;gap:12px}
   .lesson{display:grid;grid-template-columns:48px 1fr;gap:4px 14px;align-items:start}
-  .num{grid-row:span 3;width:48px;height:48px;border-radius:12px;background:var(--soft);color:var(--point);font-weight:800;font-size:22px;
+  .num{grid-row:span 4;width:48px;height:48px;border-radius:12px;background:var(--soft);color:var(--point);font-weight:800;font-size:22px;
        display:flex;align-items:center;justify-content:center}
   .lesson h3{margin:2px 0 0;font-size:19px;line-height:1.25}
   .lesson p{color:var(--muted);font-size:16px}
   .lesson .btns{margin-top:6px}
   .lesson .btn{padding:8px 14px;min-height:40px;font-size:16px}
+  .anchors{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+  .anchors a{display:flex;flex-direction:column;gap:4px;width:150px;color:var(--point);font-weight:600;font-size:14px;text-decoration:none}
+  .anchors img{width:150px;height:auto;border:1px solid var(--line);border-radius:6px;background:#fff}
+  .anchors a:hover img{border-color:var(--point)}
   .tip{color:var(--muted);font-size:16px;margin-top:10px}
   /* calendar card: grouped date rows */
   .sched{border-collapse:collapse;width:100%;font-size:16px;margin-top:4px}
@@ -131,13 +135,16 @@
   const SFX = { gen: "", iep: "-IEP", "504": "-504" };
   // the Student Edition slide decks with answers (same file for every version)
   const BOOK = n => `${M3}BLMathematics_AlgI_M3_T1_L${n}_LessonSlides_ENG_with_answers.pptx`;
+  const ANCHOR = "Module%203%20topic%201/ANCHOR%20CHARTS/";
+  const anchors = L => `<div class="anchors">${L.anchors.map((t, k) =>
+    `<a href="${ANCHOR}M3T1-L${L.n}-Anchor-${k + 1}.jpg"><img src="${ANCHOR}M3T1-L${L.n}-Anchor-${k + 1}.jpg" width="150" height="194" loading="lazy" alt="Anchor chart: ${t}">📌 ${t}</a>`).join("")}</div>`;
   const LESSONS = [
     { n: 1, title: "Solving linear equations", learn: "One solution, no solution, or infinite solutions, and how to tell.",
-      slides: "m3t1-lesson1-solving-linear-equations", video: "M3T1-Lesson1-Solving-Linear-Equations.mp4", min: 4 },
+      slides: "m3t1-lesson1-solving-linear-equations", video: "M3T1-Lesson1-Solving-Linear-Equations.mp4", min: 4, anchors: ["Solving Linear Equations", "One, None, or Infinite?"] },
     { n: 2, title: "Literal equations", learn: "Rewrite formulas and equations to solve for any letter.",
-      slides: "m3t1-lesson2-literal-equations", video: "M3T1-Lesson2-Literal-Equations.mp4", min: 2 },
+      slides: "m3t1-lesson2-literal-equations", video: "M3T1-Lesson2-Literal-Equations.mp4", min: 2, anchors: ["Literal Equations", "Rewrite Equations"] },
     { n: 3, title: "Linear inequalities", learn: "Model, solve and graph inequalities. Flip the sign when you × or ÷ by a negative.",
-      slides: "m3t1-lesson3-modeling-linear-inequalities", video: "M3T1-Lesson3-Linear-Inequalities.mp4", min: 2 },
+      slides: "m3t1-lesson3-modeling-linear-inequalities", video: "M3T1-Lesson3-Linear-Inequalities.mp4", min: 2, anchors: ["Inequality Symbols", "Solving Inequalities"] },
   ];
   // class days (Monday–Thursday) from Nov 16; earlier days are in the materials archive; L = lesson, day = day of that lesson, f = date in the bell work and exit ticket PDF names
   const DAYS = [
@@ -246,7 +253,7 @@
       `<p class="eyebrow">${when} · ${D.short}</p><h3>${D.what}</h3>${body}`;
 
     document.getElementById("lessons").innerHTML = LESSONS.map(L =>
-      `<section class="card lesson"><div class="num">${L.n}</div><h3>${L.title}</h3><p>${L.learn}</p><div class="btns">${lessonBtns(L)}</div></section>`).join("");
+      `<section class="card lesson"><div class="num">${L.n}</div><h3>${L.title}</h3><p>${L.learn}</p><div class="btns">${lessonBtns(L)}</div>${anchors(L)}</section>`).join("");
 
     document.getElementById("bookcover").href = `Game%20Plan/Algebra-I-Game-Plan${sel.value === "iep" ? "-IEP" : ""}.pdf`;
     document.getElementById("book").innerHTML = btn(`Game%20Plan/Algebra-I-Game-Plan${sel.value === "iep" ? "-IEP" : ""}.pdf`,
