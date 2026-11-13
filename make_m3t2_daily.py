@@ -399,3 +399,60 @@ def write_sheets(n, d):
             k2 = "-ANSWER-KEY" if key else ""
             sheet(f"M3T2-Bell-Work-{date}{sfx}{k2}", "BELL WORK", n, bell, key, kind)
             sheet(f"M3T2-Exit-Ticket-{date}{sfx}{k2}", "EXIT TICKET", n, ex, key, kind)
+
+
+# ================================================================ Today's Agenda slides (district pacing calendar, AHS)
+import agendas as AG
+
+BELL_ITEM = ("Bell Work", "Four warm-ups. Start as soon as you sit down.")
+EXIT_ITEM = ("Exit Ticket", "Three questions to show what you learned.")
+# (date key, weekday + date, eyebrow, middle items, closing line, color, lesson day or None)
+AGENDA = [
+ ("Mon-11-30", "Monday, Nov 30", "🦃 Welcome back! Topic 2 starts today", [("Lesson 1: Using Graphing to Solve Systems", "Getting Started, Activities 1.1 and 1.2 (SE pp. 394–399).")], "New topic, fresh start. Let’s go! 🚀", "#0b6b3a", (1, 1)),
+ ("Tue-12-01", "Tuesday, Dec 1", "Lesson 1 · Day 2", [("Lesson 1: Using Graphing to Solve Systems", "Activity 1.3 and Talk the Talk (SE pp. 400–405).")], "Let’s get busy! 💪", "#3050b8", (1, 2)),
+ ("Wed-12-02", "Wednesday, Dec 2", "Lesson 2 · Day 1", [("Lesson 2: Using Substitution", "Getting Started and Activity 2.1 (SE pp. 412–416).")], "Let’s get busy! 💪", "#3050b8", (2, 1)),
+ ("Thu-12-03", "Thursday, Dec 3", "Lesson 2 · Day 2", [("Lesson 2: Using Substitution", "Activities 2.2, 2.3 and Talk the Talk (SE pp. 417–425).")], "Let’s get busy! 💪", "#3050b8", (2, 2)),
+ ("Mon-12-07", "Monday, Dec 7", "Lesson 3 · Day 1", [("Lesson 3: Using Linear Combinations", "Getting Started and Activity 3.1 (SE pp. 434–436).")], "Let’s get busy! 💪", "#3050b8", (3, 1)),
+ ("Tue-12-08", "Tuesday, Dec 8", "Lesson 3 · Day 2", [("Lesson 3: Using Linear Combinations", "Activities 3.2 and 3.3 (SE pp. 437–441).")], "Let’s get busy! 💪", "#3050b8", (3, 2)),
+ ("Wed-12-09", "Wednesday, Dec 9", "Lesson 3 · Day 3", [("Lesson 3: Using Linear Combinations", "Activity 3.4 and Talk the Talk (SE pp. 442–444).")], "Let’s get busy! 💪", "#3050b8", (3, 3)),
+ ("Thu-12-10", "Thursday, Dec 10", "Skills Practice Day", [("Warm-up", "Solve one system three ways: graphing, substitution, linear combinations."),
+   ("Skills Practice", "Your assigned problem set on systems of equations."), ("Check your work", "Use the anchor charts and the lessons with answers."),
+   ("Finished?", "Show your teacher, then help other students.")], "Practice makes progress! 💪", "#7a4fc4", None),
+ ("Mon-01-04", "Monday, Jan 4", "❄️ Welcome back! Happy New Year", [("Lesson 4: Graphing Inequalities in Two Variables", "Getting Started, Activities 4.1 and 4.2 (SE pp. 450–457).")], "New year, fresh start! 🚀", "#0b6b3a", (4, 1)),
+ ("Tue-01-05", "Tuesday, Jan 5", "Lesson 4 · Day 2", [("Lesson 4: Graphing Inequalities in Two Variables", "Activity 4.3 and Talk the Talk (SE pp. 459–462).")], "Let’s get busy! 💪", "#3050b8", (4, 2)),
+ ("Wed-01-06", "Wednesday, Jan 6", "Lesson 5 · Day 1", [("Lesson 5: Systems of Linear Inequalities", "Getting Started and Activity 5.1 (SE pp. 468–470).")], "Let’s get busy! 💪", "#3050b8", (5, 1)),
+ ("Thu-01-07", "Thursday, Jan 7", "Lesson 5 · Day 2", [("Lesson 5: Systems of Linear Inequalities", "Activities 5.2 and 5.3 (SE pp. 471–475).")], "Let’s get busy! 💪", "#3050b8", (5, 2)),
+ ("Mon-01-11", "Monday, Jan 11", "Lesson 5 · Day 3", [("Lesson 5: Systems of Linear Inequalities", "Activity 5.4 and Talk the Talk (SE pp. 476–478).")], "Test is Wednesday. You’ve got this! 💪", "#3050b8", (5, 3)),
+ ("Tue-01-12", "Tuesday, Jan 12", "📝 Review Day: the test is tomorrow!", [("Warm-up", "One system and one inequality to graph."),
+   ("Topic 2 Review", "Graphing, substitution, linear combinations, inequalities and systems of inequalities."),
+   ("Missed one?", "Use the anchor charts and rewatch that lesson’s slides."), ("Get ready for tomorrow!", "The Topic 2 Test is Wednesday, Jan 13.")],
+  "Let’s get busy! 💪", "#c9561f", None),
+ ("Wed-01-13", "Wednesday, Jan 13", "📝 Test Day · Topic 2 Test", [("Clear your desk", "Only a pencil stays out."), ("Chromebook ready", "You will enter your answers on it."),
+   ("Calculator + formula sheet", "Get them now."), ("Take the test", "Read each question carefully and check your work.")],
+  "Good luck! You’ve got this! 🍀", "#b00020", None),
+ ("Thu-01-14", "Thursday, Jan 14", "🔁 Retake Day", [("Retaking? Get set up", "Clear desk, Chromebook ready, calculator + formula sheet."),
+   ("Not retaking?", "Redo the questions you missed using the anchor charts and lesson slides."),
+   ("Quiet room", "Work silently so retakers can focus. Raise your hand for help.")], "Second chance, best effort! 💪", "#1f8a4c", None),
+]
+TEST_DAY = {"Wed-01-13": "🪑 Walk in and take your seat quickly."}
+
+
+def agenda_slide(i):
+    key, long, eyebrow, mid, end, color, lesson = AGENDA[i]
+    items = [BELL_ITEM] + mid + [EXIT_ITEM] if lesson else mid
+    return AG.slide(eyebrow, f"📅 Today’s Agenda · {long}", items, end, color,
+                    "Leave this up as students walk in. Same for all periods." + (" Bell work and exit ticket are in this deck." if lesson else ""),
+                    TEST_DAY.get(key, AG.FIRST))
+
+
+def agenda_for(n, d):
+    return agenda_slide(next(i for i, a in enumerate(AGENDA) if a[6] == (n, d)))
+
+
+def agenda_deck():
+    """All Topic 2 agendas in one deck: slide k + 1 is day k (link with #s{k+1})."""
+    first = (f'<section class="slide">\n  <p class="eyebrow">Bluebonnet Algebra I · Module 3 · Topic 2</p>\n'
+             f'  <h1 style="margin-top:6px;font-size:56px">Today’s Agenda</h1>\n  <div class="eq" style="margin-top:8px;font-size:36px">Systems of Linear Equations and Inequalities · Nov 30 – Jan 14</div>\n'
+             '  <p class="muted small">Press → for the next day. Each class day has its own slide.</p>\n'
+             '  <aside class="notes">One agenda slide per class day on the district pacing calendar. Thanksgiving is over; winter break is Dec 21–31; the semester exam week (Dec 14–17) is not in this deck.</aside>\n</section>\n')
+    return [first] + [agenda_slide(i) for i in range(len(AGENDA))]

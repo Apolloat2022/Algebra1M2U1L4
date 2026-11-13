@@ -2,7 +2,8 @@
 Section 504 versions, each with a .pptx copy. Same engine and helpers as make_m3t1_lessons.py. Slides only: no bell work,
 exit tickets or dated agendas yet. Lesson 6 is 0 days on the 150-day pacing guide, so it is not built.
 Days and stars (essential activities) come from the 150-day pacing guide, Module 3 Topic 2 p. 4.
-Run:  python make_m3t2_lessons.py [1 2 ...]"""
+Run:  python make_m3t2_lessons.py [1 2 ...] [--no-sheets] [agenda]   (agenda = only the Today's Agenda deck)
+A full run rebuilds the bell work / exit ticket PDFs unlocked: git add them, then run lock_keys.py."""
 import re
 from fractions import Fraction as Fr
 from pathlib import Path
@@ -611,6 +612,7 @@ def deck_iep(n):
     out.append(sec(f"Lesson {n} · Key Vocabulary", "Key vocabulary", a["vocab"], "Preview the key terms. Leave up or print as a reference card."))
     chart = sec(f"Lesson {n} · Steps Chart", "Steps to follow", A.steps(*a["steps"]), "Anchor chart: students keep this out for every problem.")
     for d in sorted(a["skills"]):
+        out.append(DY.agenda_for(n, d))
         out.append(DY.iep_bell(n, d))
         out.append(chart)
         for skill in a["skills"][d]:
@@ -677,6 +679,7 @@ def with_daily(n, days):
     for d, day in enumerate(days, 1):
         day = list(day)
         day.insert(3 if d == 1 else 1, DY.bell_slide(n, d))
+        day.insert(1, DY.agenda_for(n, d))  # dated Today's Agenda first thing each day
         end = next((i for i, s in enumerate(day) if "Essential Question · Answered" in s), len(day))
         day.insert(end, DY.exit_slide(n, d))
         out.append(day)
@@ -702,7 +705,8 @@ def build(n):
         print(p_.name, len(slides), "slides"); pptx(p_)
     for d in range(1, len(days) + 1):
         DY.bell_pages(n, d, info["name"])
-        DY.write_sheets(n, d)
+        if "--no-sheets" not in sys.argv:  # sheets rebuild unlocked: rerun lock_keys.py after
+            DY.write_sheets(n, d)
 
 
 if __name__ == "__main__":
@@ -710,5 +714,8 @@ if __name__ == "__main__":
     check()
     DY.check()
     assert all(set(ACC[n]["plans"]) == set(range(1, len(LESSONS[n]["deck"]()) + 1)) == set(ACC[n]["notes"]) == set(ACC[n]["skills"]) for n in LESSONS)
-    for n in [int(a) for a in sys.argv[1:] if a.isdigit()] or LESSONS:
+    for n in [int(a) for a in sys.argv[1:] if a.isdigit()] or ([] if "agenda" in sys.argv else LESSONS):
         build(n)
+    ag = OUT / "m3t2-agendas.html"
+    ag.write_text(deck_doc("Topic 2 Agendas · Bluebonnet Algebra I", DY.agenda_deck()), encoding="utf-8")
+    print(ag.name, len(DY.AGENDA) + 1, "slides"); pptx(ag)
