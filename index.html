@@ -176,7 +176,8 @@
     { d: "2026-11-18", short: "Wed 11/18", what: "Topic 1 test", test: true },
     { d: "2026-11-19", short: "Thu 11/19", what: "Retake day", retake: true },
     { d: "2026-11-23", end: "2026-11-26", short: "Nov 23–26", what: "Thanksgiving break", brk: true },
-    { d: "2026-11-30", short: "Mon 11/30", what: "Module 3 Topic 2: Systems of Linear Equations and Inequalities", next: true },
+    { d: "2026-11-30", end: "2026-12-10", short: "Mon 11/30", what: "Module 3 Topic 2: Systems of Linear Equations and Inequalities", next: true },
+    { d: "2026-12-14", short: "Mon 12/14", what: "Semester Review", review: true, sem: true },
   ];
 
   const sel = document.getElementById("ver");
@@ -234,16 +235,16 @@
         ${btn(page(L.slides, ".pptx"), "PowerPoint")}
         ${btn(BOOK(L.n), `Lesson ${L.n} with answers`)}</div>`;
     } else if (D.review) {
-      body = `<div class="agenda"><p class="hi">📝 Review Day: the test is tomorrow!</p>
+      body = `<div class="agenda"><p class="hi">📝 ${D.sem ? "Semester Review: the exam is tomorrow!" : "Review Day: the test is tomorrow!"}</p>
         <p class="ag">📅 Today's Agenda · ${longDate}</p>
         <p class="first">📚 Walk in, grab your book, take your seat!</p>
-        <ol>${startItems}<li><b>Test Review on EDIA</b> · go to your seat and open your Chromebook. Show your work on paper.</li>
+        <ol>${D.sem ? "<li><b>Warm-up</b> · one problem from each topic this semester.</li>" : startItems}<li><b>Test Review on EDIA</b> · go to your seat and open your Chromebook. Show your work on paper.</li>
           <li><b>Missed one? Look → Watch → Ask</b> · reread it and check your work, watch that lesson's video, ask a partner, then your teacher.</li>
           <li><b>Fix it</b> · write the number, what went wrong and the right answer. Try it again. Goal: <b>80% or higher!</b></li>
           <li><b>At home tonight</b> · redo only the questions you missed on EDIA. Bring your fix-it list.</li>
-          <li><b>Get ready for tomorrow!</b> · the Topic 1 Test is <b>Wednesday, Nov 18</b>.</li></ol>
+          <li><b>Get ready for tomorrow!</b> · ${D.sem ? "the Semester Exam is <b>Tuesday, Dec 15</b>" : "the Topic 1 Test is <b>Wednesday, Nov 18</b>"}.</li></ol>
         <p class="hi">Let's get busy! 💪</p></div>
-        <div class="btns">${planBtns}${review()}</div>`;
+        <div class="btns">${D.sem ? btn("Module%203%20topic%202/m3t2-agendas.html#s10", "📅 Today's agenda (slide)", true) : planBtns + review()}</div>`;
     } else if (D.test) {
       body = `<div class="agenda"><p class="hi">📝 Test Day: Topic 1 Test</p>
         <p class="ag">📅 Today's Agenda · ${longDate}</p>
@@ -266,11 +267,12 @@
       body = `<div class="agenda"><p class="hi">🦃 Happy Thanksgiving! No school Mon Nov 23 – Thu Nov 26.</p>
         <p>Rest up. Class starts again <b>Monday, November 30</b> with Module 3 Topic 2.</p></div>`;
     } else if (D.next) {
-      body = `<div class="agenda"><p class="ag">📅 Back from break · ${longDate}</p>
+      body = `<div class="agenda"><p class="ag">📅 Topic 2 · Mon Nov 30 – Thu Dec 10</p>
         <p class="first">📚 Walk in, grab your book, take your seat!</p>
         <ol><li><b>Bell Work</b> · go to <b>Schoology</b> and check the <b>Bell Work</b> folder.</li>
           <li><b>New topic</b> · Lesson 1 of Systems of Linear Equations and Inequalities.</li></ol>
-        <p class="hi">Welcome back! 💪</p></div>`;
+        <p class="hi">Welcome back! 💪</p></div>
+        <div class="btns">${btn("Module%203%20topic%202/m3t2-agendas.html", "📅 Daily agendas (Nov 30 – Jan 14)", true)}</div>`;
     }
     document.getElementById("today").innerHTML =
       `<p class="eyebrow">${when} · ${D.short}</p><h3>${D.what}</h3>${body}`;
