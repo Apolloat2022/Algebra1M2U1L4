@@ -218,6 +218,8 @@ def deck():
         s += agendas.slide(eyebrow="Algebra I · Module 3 Topic 1", h=f"📅 Today’s Plan · {d['date']}", items=items,
                            end="Let’s get busy! 💪", color="#2f6fdd", first=agendas.FIRST if "review" in d["tier"] else "📚 Bell Work · go to Schoology and check the Bell Work folder. Start as soon as you sit down. Bell work done? Go see your teacher for Whiteboard work.",
                            notes="Leave this up as students walk in. Same for all periods.")
+        if "review" in d["tier"]:  # review day: agenda slide only, no whiteboard or pre-algebra slides
+            continue
         cols = [D.card(t, '<ol type="a" style="font-size:26px;margin:0;padding-left:30px">' + "".join(f"<li>{q}</li>" for q, _ in qs) + "</ol>")
                 for t, qs in d["boards"]]
         keys = " · ".join(f"{t}: " + ", ".join(re.sub("<[^>]+>", "", a) for _, a in qs) for t, qs in d["boards"])
