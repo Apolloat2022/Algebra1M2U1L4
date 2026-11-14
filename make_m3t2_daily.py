@@ -418,15 +418,15 @@ AGENDA = [
  ("Thu-12-10", "Thursday, Dec 10", "Skills Practice Day", [("Warm-up", "Solve one system three ways: graphing, substitution, linear combinations."),
    ("Skills Practice", "Your assigned problem set on systems of equations."), ("Check your work", "Use the anchor charts and the lessons with answers."),
    ("Finished?", "Show your teacher, then help other students.")], "Practice makes progress! 💪", "#7a4fc4", None),
+ ("Mon-12-14", "Monday, Dec 14", "📝 Semester Review: the exam is tomorrow!", [("Warm-up", "One problem from each topic this semester.")] + AG.REVIEW_ITEMS,
+  "Semester Exam is tomorrow, Tue Dec 15. You’ve got this! 💪", "#c9561f", None),
  ("Mon-01-04", "Monday, Jan 4", "❄️ Welcome back! Happy New Year", [("Lesson 4: Graphing Inequalities in Two Variables", "Getting Started, Activities 4.1 and 4.2 (SE pp. 450–457).")], "New year, fresh start! 🚀", "#0b6b3a", (4, 1)),
  ("Tue-01-05", "Tuesday, Jan 5", "Lesson 4 · Day 2", [("Lesson 4: Graphing Inequalities in Two Variables", "Activity 4.3 and Talk the Talk (SE pp. 459–462).")], "Let’s get busy! 💪", "#3050b8", (4, 2)),
  ("Wed-01-06", "Wednesday, Jan 6", "Lesson 5 · Day 1", [("Lesson 5: Systems of Linear Inequalities", "Getting Started and Activity 5.1 (SE pp. 468–470).")], "Let’s get busy! 💪", "#3050b8", (5, 1)),
  ("Thu-01-07", "Thursday, Jan 7", "Lesson 5 · Day 2", [("Lesson 5: Systems of Linear Inequalities", "Activities 5.2 and 5.3 (SE pp. 471–475).")], "Let’s get busy! 💪", "#3050b8", (5, 2)),
  ("Mon-01-11", "Monday, Jan 11", "Lesson 5 · Day 3", [("Lesson 5: Systems of Linear Inequalities", "Activity 5.4 and Talk the Talk (SE pp. 476–478).")], "Test is Wednesday. You’ve got this! 💪", "#3050b8", (5, 3)),
- ("Tue-01-12", "Tuesday, Jan 12", "📝 Review Day: the test is tomorrow!", [("Warm-up", "One system and one inequality to graph."),
-   ("Topic 2 Review", "Graphing, substitution, linear combinations, inequalities and systems of inequalities."),
-   ("Missed one?", "Use the anchor charts and rewatch that lesson’s slides."), ("Get ready for tomorrow!", "The Topic 2 Test is Wednesday, Jan 13.")],
-  "Let’s get busy! 💪", "#c9561f", None),
+ ("Tue-01-12", "Tuesday, Jan 12", "📝 Review Day: the test is tomorrow!", [("Warm-up", "One system and one inequality to graph.")] + AG.REVIEW_ITEMS,
+  "Topic 2 Test is tomorrow, Wed Jan 13. You’ve got this! 💪", "#c9561f", None),
  ("Wed-01-13", "Wednesday, Jan 13", "📝 Test Day · Topic 2 Test", [("Clear your desk", "Only a pencil stays out."), ("Chromebook ready", "You will enter your answers on it."),
    ("Calculator + formula sheet", "Get them now."), ("Take the test", "Read each question carefully and check your work.")],
   "Good luck! You’ve got this! 🍀", "#b00020", None),
@@ -454,5 +454,5 @@ def agenda_deck():
     first = (f'<section class="slide">\n  <p class="eyebrow">Bluebonnet Algebra I · Module 3 · Topic 2</p>\n'
              f'  <h1 style="margin-top:6px;font-size:56px">Today’s Agenda</h1>\n  <div class="eq" style="margin-top:8px;font-size:36px">Systems of Linear Equations and Inequalities · Nov 30 – Jan 14</div>\n'
              '  <p class="muted small">Press → for the next day. Each class day has its own slide.</p>\n'
-             '  <aside class="notes">One agenda slide per class day on the district pacing calendar. Thanksgiving is over; winter break is Dec 21–31; the semester exam week (Dec 14–17) is not in this deck.</aside>\n</section>\n')
+             '  <aside class="notes">One agenda slide per class day on the district pacing calendar. Thanksgiving is over; winter break is Dec 21–31; semester exam week (Dec 14–17) has only its Mon Dec 14 review day here.</aside>\n</section>\n')
     return [first] + [agenda_slide(i) for i in range(len(AGENDA))]
