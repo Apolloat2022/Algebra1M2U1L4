@@ -1,5 +1,5 @@
 """Publisher lesson slides with answers, in the style of
-materials/BLMathematics_Geom_M1_T4_L2_LessonSlides_ENG_2026_with_answers.pptx:
+materials/Examples/BLMathematics_Geom_M1_T4_L2_LessonSlides_ENG_2026_with_answers.pptx:
 each slide is the publisher slide, and red answer boxes appear on click.
 
 Lesson 4 exists only as a PDF, so its slides are rendered by pdf.js in headless Chrome (needs
@@ -629,12 +629,13 @@ def build_list(x, spids):  # paragraph reveals need a build entry per text box
     return x.replace("</p:tnLst>", "</p:tnLst><p:bldLst>" + entries + "</p:bldLst>", 1)
 
 
-def annotate(src, out, ans, notes, corrections, after, se=None, stars=(), gaps=None, inline=None, skips=(), extra=None):
+def annotate(src, out, ans, notes, corrections, after, se=None, stars=(), gaps=None, inline=None, skips=(), extra=None, fix=None):
     """se: {slide: Student Edition page}; stars: (first, last) slide ranges of the activities the 150-day pacing guide
     stars as essential. Each labeled slide gets "SE p. N" (and "★ Essential") left of the page number; the first
     slide of a starred range (the activity divider) also gets a large badge in its empty top band.
     skips: (first, last, badge, label) ranges the class skips or treats as optional: label before "SE p. N", badge on the first slide.
-    extra: {slide k: [(title, label, [(text, size, red)])]} new slides inserted after slide k; red lines appear one per click."""
+    extra: {slide k: [(title, label, [(text, size, red)])]} new slides inserted after slide k; red lines appear one per click.
+    fix: {slide k: [(old, new)]} corrects a publisher typo in the slide XML (old must appear exactly once)."""
     files = {}
     with zipfile.ZipFile(src) as z:
         for n in z.namelist():
@@ -653,6 +654,9 @@ def annotate(src, out, ans, notes, corrections, after, se=None, stars=(), gaps=N
     page = lambda sid, k: mp.num_xml(sid, k, 1790 * PX, 1040 * PX, 110 * PX, 32 * PX)  # bottom-right page number
     for k, path in enumerate(order, 1):
         x, boxes = text(path), ans.get(k, [])
+        for old, new in (fix or {}).get(k, []):
+            assert x.count(old) == 1, (k, old)
+            x = x.replace(old, new)
         if gaps and k in gaps:
             x = space_after(x, gaps[k])
         top = max(map(int, re.findall(r'<p:cNvPr id="(\d+)"', x)))
@@ -1293,7 +1297,7 @@ SE_T2 = {1: pages((2, 2, 269), (3, 3, 272), (4, 4, 269), (6, 9, 270), (10, 14, 2
                   (27, 30, 311), (31, 33, 312), (34, 36, 313), (37, 41, 314), (42, 43, 317)),
          4: pages((2, 3, 319), (5, 9, 320), (10, 15, 321), (16, 21, 322), (23, 23, 319), (24, 29, 323), (30, 34, 324),
                   (35, 39, 325), (40, 41, 330))}
-# Activities starred in the 150-day pacing guide (materials/Algebra I Math 150-day Topic Pacing Guides.pdf, p. 3 of
+# Activities starred in the 150-day pacing guide (materials/Pacing Guides/Algebra I Math 150-day Topic Pacing Guides.pdf, p. 3 of
 # Module 2 Topic 2): divider slide through the activity's last slide. Lesson 4 is "omit" there, so it has none.
 STARS_T2 = {1: ((6, 14), (15, 25), (28, 36), (37, 46), (49, 55)),  # Getting Started, 1.1-1.4 (not 1.5 or Talk the Talk)
             2: ((5, 9), (10, 27), (30, 43), (44, 52)),  # Getting Started, 2.1-2.3

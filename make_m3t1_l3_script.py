@@ -1,6 +1,7 @@
 """Teacher script for M3T1 Lesson 3 (Modeling Linear Inequalities): Day 1 (Wed Nov 11), Day 2 (Thu Nov 12), Day 3 (Mon Nov 16).
 What to say, what to ask, and every essential (✪) problem worked step by step. SE pp. 371-386. Same layout as make_m3t1_l2_script.py.
-Run:  python make_m3t1_l3_script.py <password>   ->  Module 3 topic 1/LESSON PLANS/M3T1-Lesson3-Teaching-Script.pdf (password-protected)"""
+Run:  python make_m3t1_l3_script.py [password]   ->  Module 3 topic 1/LESSON PLANS/M3T1-Lesson3-Teaching-Script.pdf
+      and M3T1-Mon-11-16-Teaching-Script.pdf (Day 3 only, with answer-deck slide numbers). No password: lock with lock_keys.py."""
 import sys
 from pathlib import Path
 
@@ -10,7 +11,12 @@ import make_m3t1_review as RV
 
 RV.KEY = True
 OUT = Path(__file__).parent / "Module 3 topic 1" / "LESSON PLANS" / "M3T1-Lesson3-Teaching-Script.pdf"
-nl = RV.numline  # (lo, hi, mark, shade left?, open circle?)
+nl = RV.numline
+PG = ".pg{float:right;font:600 11px sans-serif;color:#7a2e00;background:#ffe9c2;border-radius:9px;padding:1px 8px;margin-left:6px}"
+
+
+def pg(n, what=""):  # page number printed bottom-right on the shared answer deck
+    return f'<span class="pg">Slide{"s" if "–" in n else ""} {n}{" · " + what if what else ""}</span>'  # (lo, hi, mark, shade left?, open circle?)
 
 DAY1 = [
     part("0–5", "Bell work · build the words chart",
@@ -112,41 +118,42 @@ DAY2 = [
 ]
 
 DAY3 = [
-    part("0–5", "Bell work",
+    part("0–5", "Bell work " + pg("53–54", "Day 3 + Essential Question"),
          board("1. −4x &gt; 12 → <b>x &lt; −3</b> (flip)", "2. 2x + 3 ≤ x − 1 → <b>x ≤ −4</b>", "3. −6 ≤ x is the same as <b>x ≥ −6</b>",
                "4. 3(x − 2) = 9 → x − 2 = 3 → <b>x = 5</b>"),
          say("Number 3 matters today: −6 ≤ x and x ≥ −6 say the same thing. Read it from the x: “x is at least −6.”")),
     part("5–8", "Homework check (Practice 1e–g, 2)", board("f 55 gallons · g more than 16 gallons · 2b 40 minutes")),
-    part("8–20", "✪ Activity 3.4: Variables on both sides (SE p. 380)",
+    part("8–20", "✪ Activity 3.4: Variables on both sides (SE p. 380) " + pg("55–59"),
          say("Victoria and Kai both solved 5x + 2 ≥ 3x − 10. They did it differently. Who is right?"),
-         prob("Q1a · Victoria: x-terms on the left",
+         prob("Q1a · Victoria: x-terms on the left " + pg("56–58"),
               board("5x − 3x + 2 ≥ −10 → 2x + 2 ≥ −10", "2x ≥ −12", "<b>x ≥ −6</b> &nbsp;(divided by +2, no flip)")),
-         prob("Q1b · Kai: x-terms on the right",
+         prob("Q1b · Kai: x-terms on the right " + pg("58"),
               board("2 ≥ 3x − 5x − 10 → 2 ≥ −2x − 10", "12 ≥ −2x", "<b>−6 ≤ x</b> &nbsp;(divided by −2, flipped)", "−6 ≤ x is the same as x ≥ −6")),
-         prob("Q2 · Compare with equations", board("Same steps as an equation with variables on both sides, but if you divide by a negative, flip.")),
+         prob("Q2 · Compare with equations " + pg("59"), board("Same steps as an equation with variables on both sides, but if you divide by a negative, flip.")),
          say("Both are right. Victoria's way is faster: <b>move the smaller x-term</b>, so the x stays positive and you never have to flip."),
          ask("5x vs 3x: which one do you move?", "The 3x, the smaller one. Then the x-term is +2x.")),
-    part("20–30", "✪ Activity 3.4: The distributive property (SE p. 381)",
-         prob("Q3a · Aaliyah: distribute first",
+    part("20–30", "✪ Activity 3.4: The distributive property (SE p. 381) " + pg("60–64"),
+         tip("the Student Edition p. 381 prints −4(x − 6) &lt; 2. It is <b>&lt; 22</b> (slide 60 is fixed). Tell students who work from the book."),
+         prob("Q3a · Aaliyah: distribute first " + pg("60–61"),
               board("−4(x − 6) &lt; 22", "−4x + 24 &lt; 22", "−4x &lt; −2", "<b>x &gt; ½</b> &nbsp;(divided by −4, flipped)")),
-         prob("Q3b · Ava: divide first",
+         prob("Q3b · Ava: divide first " + pg("61"),
               board("−4(x − 6) &lt; 22", "x − 6 &gt; −5½ &nbsp;(divided both sides by −4, flipped)", "<b>x &gt; ½</b> &nbsp;(added 6)")),
-         prob("Q4 · Compare with equations", board("Distributing works the same way. The only new thing is the flip when you divide by −4.")),
-         prob("Test move (like End of Topic Q9)",
+         prob("Q4 · Compare with equations " + pg("62–64"), board("Distributing works the same way. The only new thing is the flip when you divide by −4.")),
+         prob("Test move (like End of Topic Q9) " + pg("65"),
               board("2.5p − 4 &gt; −1.5(p + 8)", "2.5p − 4 &gt; −1.5p − 12 &nbsp;(distribute)", "4p − 4 &gt; −12 &nbsp;(add 1.5p, the smaller x-term)",
                     "4p &gt; −8 → <b>p &gt; −2</b>: open circle at −2, shade right"),
               nl(-6, 4, -2, False, True))),
-    part("30–50", "✪ Talk the Talk: It's About Solutions, More or Less (SE p. 382)",
-         prob("Q1a · −⅔x ≥ 7",
+    part("30–50", "✪ Talk the Talk: It's About Solutions, More or Less (SE p. 382) " + pg("66–71"),
+         prob("Q1a · −⅔x ≥ 7 " + pg("67"),
               board("Multiply by −3/2 and flip: x ≤ 7 · (−3/2)", "<b>x ≤ −10½</b>: closed circle at −10½, shade left"), nl(-14, 0, -10.5, True, False)),
-         prob("Q1b · 32 &gt; 23 − x",
+         prob("Q1b · 32 &gt; 23 − x " + pg("67"),
               board("Add x (keeps x positive): 32 + x &gt; 23", "Subtract 23: <b>x &gt; −9</b>: open circle at −9, shade right"), nl(-12, 0, -9, False, True)),
-         prob("Q1c · 15 − 4x ≤ 3x − 6",
+         prob("Q1c · 15 − 4x ≤ 3x − 6 " + pg("68"),
               board("Add 4x (the smaller x-term): 15 ≤ 7x − 6", "21 ≤ 7x → 3 ≤ x → <b>x ≥ 3</b>: closed circle at 3, shade right"), nl(-2, 8, 3, False, False)),
-         prob("Q1d · 2(x + 6) &lt; 14 + 4x",
+         prob("Q1d · 2(x + 6) &lt; 14 + 4x " + pg("68"),
               board("2x + 12 &lt; 14 + 4x", "Subtract 2x (the smaller x-term): 12 &lt; 14 + 2x", "−2 &lt; 2x → <b>x &gt; −1</b>: open circle at −1, shade right"),
               nl(-6, 4, -1, False, True)),
-         prob("Q2 · If A &lt; B, when is each true?",
+         prob("Q2 · If A &lt; B, when is each true? " + pg("69"),
               board("a. A + C &lt; B + C → <b>always</b> (adding never flips)", "b. AC &gt; BC → <b>only when C &lt; 0</b> (multiplying by a negative flips)",
                     "c. −A &lt; −B → <b>never</b> (multiplying by −1 always flips, so −A &gt; −B)"),
               say("Try numbers: A = 2, B = 5, C = −1. Then AC = −2 and BC = −5, and −2 &gt; −5 ✓."))),
@@ -154,7 +161,7 @@ DAY3 = [
          board("1. 3(4 − x) &gt; −2x + 10 → 12 − 3x &gt; −2x + 10 → add 3x: 12 &gt; x + 10 → <b>x &lt; 2</b>",
                "2. 1.5m + 4 ≥ −2(m − 9) → 1.5m + 4 ≥ −2m + 18 → 3.5m ≥ 14 → <b>m ≥ 4</b>: closed circle at 4, shade right",
                "3. −2(x + 1) ≥ 8 → −2x − 2 ≥ 8 → −2x ≥ 10 → <b>x ≤ −5</b> (flip)")),
-    part("58–60", "Essential Question and homework",
+    part("58–60", "Essential Question and homework " + pg("70"),
          ask("Can you use the same methods to solve inequalities?",
              "Yes: graphs with a horizontal line and inverse operations both work. The one change: multiply or divide by a negative → flip the sign."),
          say("Tonight: Practice 3a–d, SE p. 385, and the Topic 1 Self-Reflection. Review tomorrow, test Wednesday."),
@@ -163,15 +170,23 @@ DAY3 = [
 ]
 
 
-def html():
-    head = ('<h1>Module 3 Topic 1 · Lesson 3: Modeling Linear Inequalities · Teaching Script</h1>'
+def html(days=None, title="Lesson 3: Modeling Linear Inequalities · Teaching Script", note=""):
+    head = (f'<h1>Module 3 Topic 1 · {title}</h1>'
             '<p class="sub">Algebra I · Mr. Pandey · SE pp. 371–386 · Every activity is essential (✪) on the 150-day pacing guide. '
-            '<b>SAY</b> = read to class · <b>ASK</b> = question with the answer to listen for · blue boxes = what to write on the board, fully solved.</p>')
-    days = [("Day 1 · Wednesday, Nov 11 · Reading inequalities from a graph", DAY1),
-            ("Day 2 · Thursday, Nov 12 · Solving inequalities and the flip", DAY2),
-            ("Day 3 · Monday, Nov 16 · Variables on both sides and distributing", DAY3)]
+            '<b>SAY</b> = read to class · <b>ASK</b> = question with the answer to listen for · blue boxes = what to write on the board, fully solved.'
+            f'{note}</p>')
+    days = days or [("Day 1 · Wednesday, Nov 11 · Reading inequalities from a graph", DAY1),
+                    ("Day 2 · Thursday, Nov 12 · Solving inequalities and the flip", DAY2),
+                    ("Day 3 · Monday, Nov 16 · Variables on both sides and distributing", DAY3)]
     body = "".join(f'<h2{" class=first" if i == 0 else ""}>{t}</h2>{"".join(d)}' for i, (t, d) in enumerate(days))
-    return f'<!doctype html><html><head><meta charset="utf-8"><title>M3T1 Lesson 3 Script</title><style>{CSS}</style></head><body>{head}{body}</body></html>'
+    return f'<!doctype html><html><head><meta charset="utf-8"><title>M3T1 Lesson 3 Script</title><style>{CSS}{PG}</style></head><body>{head}{body}</body></html>'
+
+
+NOV16 = dict(days=[("Monday, Nov 16 · Lesson 3 Day 3 · Variables on both sides and distributing", DAY3)],
+             title="Mon Nov 16 Teaching Script · last lesson before the test",
+             note='<br><b>Slide N</b> = the page number in the bottom-right corner of the shared deck '
+                  '<i>BLMathematics_AlgI_M3_T1_L3_LessonSlides_ENG_with_answers.pptx</i>, so you can say “we are on slide 58.” '
+                  'Tue Nov 17: Test Review · Wed Nov 18: Topic 1 Test.')
 
 
 if __name__ == "__main__":
@@ -183,4 +198,6 @@ if __name__ == "__main__":
     assert -2 / 3 * -10.5 == 7 and 32 == 23 + 9 and 15 - 12 == 9 - 6 and 2 * (-1 + 6) == 14 - 4
     assert 13 + 4 * -1 == 9 and 3 * (4 - 35) == 8 * 7 - 149 and 99 - 55 == 44 and 3 * -24 - 9 == -6 * -24 - 225
     assert 3.25 * 55 + 40 <= 220 < 3.25 * 56 + 40 and 3.25 * 16 + 40 == 92
-    W.pdf(html(), OUT, sys.argv[1])
+    pw = sys.argv[1] if len(sys.argv) > 1 else None  # no password: lock later with lock_keys.py (DAILY_PW)
+    W.pdf(html(), OUT, pw)
+    W.pdf(html(**NOV16), OUT.with_name("M3T1-Mon-11-16-Teaching-Script.pdf"), pw)

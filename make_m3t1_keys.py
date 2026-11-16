@@ -103,11 +103,11 @@ L2 = {
 }
 NOTES2 = {24: "TE correction: the TE gives x − 2y = −7 and 4x + y = 7. With slope 1/2 through (−3, 5): y − 5 = ½(x + 3), so x − 2y = −13. "
               "With slope −4 through (2, 1): y − 1 = −4(x − 2), so y = −4x + 9 and 4x + y = 9.",
-          30: "Slide typo: the formula shows C = −5/9(F − 32). It is C = 5/9(F − 32), as on slide 38 and in the Student Edition."}
+          30: "Slide typo: the formula shows C = −5/9(F − 32). It is C = 5/9(F − 32), as on slide 40 and in the Student Edition."}
 CORR2 = [("Teacher Edition and slide corrections for this deck", None),
          ("Activity 2.1 Q10a (slope 1/2 through (−3, 5)): x − 2y = −13, not −7 as the TE says.", None),
          ("Activity 2.1 Q10b (slope −4 through (2, 1)): 4x + y = 9, not 7 as the TE says.", None),
-         ("Slide 30: the formula has a stray minus sign; it is C = 5/9(F − 32).", None),
+         ("Slide 32: the formula has a stray minus sign; it is C = 5/9(F − 32).", None),
          ("Every other TE answer was re-solved and is correct.", "16171D")]
 
 L3 = {
@@ -154,10 +154,11 @@ NOTES3 = {26: "Slide typo: both parts are labeled b.; the second is c.",
           27: "Slide typo: the summary says Activity 3.2; it is Activity 3.1.",
           45: "Slide typo: both questions are numbered 4; the second is 5.",
           47: "Slide typo: both parts are labeled b.; the second is c.",
-          57: "Slide typo: the inequality is −4(x − 6) < 22, as in both students' work (the slide text says < 2). With 22: x > ½."}
+          57: "Fixed publisher typo: the book slide said −4(x − 6) < 2; both students' work uses 22. With 22: x > ½."}
+FIX3 = {57: [("– 6) &lt; 2.", "– 6) &lt; 22.")]}
 CORR3 = [("Slide corrections for this deck", None),
-         ("Slide 57: the inequality is −4(x − 6) < 22, not < 2 (the student work uses 22).", None),
-         ("Slides 26 and 47: the second part labeled b. is c. Slide 45: the second question 4 is 5.", None),
+         ("Slide 60: fixed to −4(x − 6) < 22; the book slide said < 2 (the student work uses 22).", None),
+         ("Slides 26 and 49: the second part labeled b. is c. Slide 47: the second question 4 is 5.", None),
          ("Slide 27: the summary is for Activity 3.1, not 3.2.", None),
          ("Every Teacher Edition answer was re-solved and is correct.", "16171D")]
 
@@ -254,7 +255,7 @@ LESSONS = {
  3: dict(spec=L3, notes=NOTES3, corr=CORR3, after=69,
          se=pages((2, 5, 371), (7, 13, 372), (14, 17, 373), (18, 23, 374), (24, 28, 375), (30, 30, 371), (31, 34, 376), (35, 39, 377),
                   (40, 43, 378), (44, 49, 379), (51, 51, 371), (52, 56, 380), (57, 61, 381), (62, 67, 382), (68, 69, 385)),
-         stars=((7, 13), (14, 28), (31, 39), (40, 49), (52, 61), (62, 67)), skips=(), extra={28: MOVES3A, 49: MOVES3B, 61: MOVES3C}),
+         stars=((7, 13), (14, 28), (31, 39), (40, 49), (52, 61), (62, 67)), skips=(), extra={28: MOVES3A, 49: MOVES3B, 61: MOVES3C}, fix=FIX3),
 }
 
 if __name__ == "__main__":
@@ -263,4 +264,4 @@ if __name__ == "__main__":
         ans, inline = split(c["spec"])
         src = SRC / f"BLMathematics_AlgI_M3_T1_L{n}_LessonSlides_ENG_2025.pptx"
         K.annotate(src, HERE / src.name.replace("2025", "with_answers"), ans, c["notes"], c["corr"], c["after"],
-                   se=c["se"], stars=c["stars"], inline=inline, skips=c["skips"], extra=c.get("extra"))
+                   se=c["se"], stars=c["stars"], inline=inline, skips=c["skips"], extra=c.get("extra"), fix=c.get("fix"))
