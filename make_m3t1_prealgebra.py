@@ -214,9 +214,9 @@ def deck():
                  ("Lesson", d["tier"] + "."),
                  ("Exit Ticket", "On <b>EDIA</b>: check the <b>Schoology CLASSROOM</b> folder.")]
         if "review" in d["tier"]:  # review day: the test review routine replaces the pre-algebra / lesson / exit lines
-            items = agendas.REVIEW_ITEMS  # no bell work or whiteboard work on review days
+            items = agendas.NOV17_ITEMS[1:]  # no bell work or whiteboard work; the walk-in step is the banner
         s += agendas.slide(eyebrow="Algebra I · Module 3 Topic 1", h=f"📅 Today’s Plan · {d['date']}", items=items,
-                           end="Let’s get busy! 💪", color="#2f6fdd", first=agendas.FIRST if "review" in d["tier"] else "📚 Bell Work · go to Schoology and check the Bell Work folder. Start as soon as you sit down. Bell work done? Go see your teacher for Whiteboard work.",
+                           end="Let’s get busy! 💪", color="#2f6fdd", first="📚 0–3 · Walk in: take your seat and open your Chromebook. Review today, test tomorrow!" if "review" in d["tier"] else "📚 Bell Work · go to Schoology and check the Bell Work folder. Start as soon as you sit down. Bell work done? Go see your teacher for Whiteboard work.",
                            notes="Leave this up as students walk in. Same for all periods.")
         if "review" in d["tier"]:  # review day: agenda slide only, no whiteboard or pre-algebra slides
             continue

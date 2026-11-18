@@ -20,6 +20,13 @@ def slide(eyebrow, h, items, end, color, notes, first=FIRST):
     return D.sec(eyebrow, h, body, notes).replace('<section class="slide', '<section data-agenda class="slide', 1)
 
 
+# Tue Nov 17 Topic 1 review day (matches T1-Lesson-Plan-Tue-11-17): the online review, then the most-missed questions
+NOV17_ITEMS = [('0–3 · Walk in', 'Take your seat and open your Chromebook. Review today, test tomorrow!'),
+               ('3–30 · Topic 1 Review online', 'Student page → <b>Review online</b>. Work alone. Show your work on paper.'),
+               ('30–50 · Go over the most missed', 'We solve the hardest questions together. Whiteboards up!'),
+               ('50–58 · Fix it', 'Number, what went wrong, right answer, try again. Look → Watch → Ask. Goal: <b>80%+</b>'),
+               ('58–60 · Wrap up', 'Tonight: <b>Start over</b> and redo the review. Test tomorrow: charged Chromebook + pencil.')]
+
 # Test review day routine (every review day from Nov 17 on): one copy, used by every review-day agenda
 REVIEW_ITEMS = [("Test Review on EDIA", "Go to your seat and open your Chromebook. Show your work on paper."),
                 ("Missed one? Look → Watch → Ask", "Reread it and check your work, watch that lesson’s video, ask a partner, then your teacher."),
