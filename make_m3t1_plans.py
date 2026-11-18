@@ -227,18 +227,26 @@ DAYS = [
   after=["Score by question; group by lesson (1, 2, 3) for Thursday re-teach.", "Make a retake list."],
   note="Test date is fixed by the district. The test is in materials/Assessments/ (Module 3 Topic 1 Assessment Student Edition): 11 items."),
 
- dict(file="Thu-11-19", date="Thursday, November 19", lesson="Topic 1 Retakes + Re-teach",
-  obj=["Fix the errors from the Topic 1 test.", "Retake for students below the cut; enrichment for everyone else."],
-  teks=["<b>A.5A</b>, <b>A.5B</b>, <b>A.2C</b>, <b>A.3A</b>, A.2B, A.12E"], terms="(review)",
-  mat=["Graded tests", "Retake form + key", "Activity 1.3 Tic-Tac-Bingo expression cards and boards (TE pp. 345M, 353)"],
-  bell=[("Find your most-missed question and write the correct step", "error analysis")],
-  rows=[("0–10", "Return tests", "Students correct one missed item per lesson in a different color."),
-   ("10–30", "Re-teach in 3 small groups", "Group 1: no/infinite solutions. Group 2: rewriting forms + literal equations. Group 3: flip rule + context inequalities. Rotate while others correct."),
-   ("30–55", "Retake / enrichment", "Below the cut: retake (" + IEP + ")<br>Everyone else: Activity 1.3 Tic-Tac-Bingo (skipped on 11/5)."),
-   ("55–60", "Wrap up", "Collect retakes. Thanksgiving break 11/23–11/26. Next: Module 3 Topic 2, Lesson 1 (Mon 11/30).")],
-  cfu=["Each student shows one corrected item per lesson before starting the retake."],
-  after=["Record the higher score.", "Students still below → Skills Practice in Module 3 Topic 2 warm-ups."],
-  note="Tic-Tac-Bingo gives the skipped Lesson 1 activity a home as enrichment."),
+ dict(file="Thu-11-19", date="Thursday, November 19", lesson="Topic 1 Review Day (retakes in the test room)",
+  obj=["See your Topic 1 test results and find the skills you missed.",
+       "Re-learn and fix the most-missed skills (focus set from the test data).",
+       "Students still retaking: be ready for the retake with an 80% goal."],
+  teks=["<b>A.5A</b>, <b>A.5B</b>, <b>A.2C</b>, <b>A.3A</b>, A.2B, A.12E"],
+  terms="solution · no solution · infinite solutions · literal equation · linear inequality",
+  mat=["Topic 1 test data by question (focus skills: <b>fill in from the data</b>)",
+       "Review online: m3t1-review.html (IEP/504 versions) · press “Start over” · 🔒 review key + How-To-Solve",
+       "Whiteboards · printed review for anyone without a device · Activity 1.3 Tic-Tac-Bingo cards (TE pp. 345M, 353) for early finishers"],
+  bell=[("No bell work: retakers go straight to the test room; everyone else opens the student page", "agenda up")],
+  rows=[("0–3", "Walk in", "Retakers scheduled now → test room. Everyone else: seat, Chromebook open."),
+   ("3–10", "My results", "Each student lists the test questions they missed and circles their top 2 skills to fix."),
+   ("10–35", "Re-teach the most missed", "Focus skills from the test data (about 8 min each): put one up, first step on whiteboards, "
+    "solve on the board, name the trap, then one try-it on their own. " + IEP),
+   ("35–55", "Practice + fix it", "Review online → “Start over”: redo only the questions on their skills. Fix-it list: number, what went wrong, "
+    "right answer. Students retaking later: aim for 80%. Passed and done: Tic-Tac-Bingo."),
+   ("55–60", "Wrap up", "Exit check: one question on today's top skill. Retakers later: confirm when. Thanksgiving break 11/23–11/26; Topic 2 starts Mon 11/30.")],
+  cfu=["Whiteboards on the first step of each re-taught question.", "Exit check on the top focus skill."],
+  after=["Note who is ready for a later retake (80%+ on their redo).", "Record retake scores (higher score counts)."],
+  note="Some students retake in the test room during class; some retake later. The re-teach focus comes from the Topic 1 test data."),
 ]
 
 
