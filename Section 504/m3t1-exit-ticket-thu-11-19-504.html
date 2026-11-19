@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Topic 1 Exit Ticket · Thu 11/19 · Section 504</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233050b8'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='16' cy='7.5' r='2.3'/%3E%3Ccircle cx='12.8' cy='11.8' r='2.5'/%3E%3Ccircle cx='19.2' cy='11.8' r='2.5'/%3E%3Ccircle cx='16' cy='14.6' r='2.6'/%3E%3Ccircle cx='11.8' cy='17.6' r='2.7'/%3E%3Ccircle cx='20.2' cy='17.6' r='2.7'/%3E%3C/g%3E%3Crect x='15.2' y='20.5' width='1.6' height='6.5' rx='.8' fill='%239fd18b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<link rel="stylesheet" href="../mc.css">
+<div class="wrap big">
+  <p class="eyebrow">Module 3 · Topic 1 · Thursday 11/19 · Exit Ticket · Section 504 Version</p>
+  <h1>Exit Ticket: Show What You Know</h1>
+  <p class="muted">Work each question on paper first. Answer all 4, then submit and show your teacher your score.</p>
+  <div class="card ref"><p>Use the reminders below, and press <b>Read aloud</b> to hear a question. Take the time you need.</p><p><b>Distribute</b> first: multiply the outside number by every term inside.</p><p><b>How many solutions?</b> Same x-term and same number: infinite. Same x-term, different number: none. Otherwise: one.</p><p><b>Solve a formula for a letter:</b> undo everything around that letter, doing the same to both sides.</p><p><b>Flip the sign</b> when you multiply or divide both sides by a negative number.</p></div>
+  <label class="name">Your name <input id="name" autocomplete="name"></label>
+  <ol id="questions"></ol>
+  <div class="bar">
+    <button id="submit" disabled>Submit</button>
+    <button id="reset" class="ghost">Start over</button>
+  </div>
+  <p id="result" class="card" style="margin-top:16px" hidden></p>
+</div>
+<script>
+window.MC = { mode: "quiz", questions: [
+  {"q": "What value of [[x]] makes [[4x + 3 = 2(x − 5) + 1]] true?", "choices": ["[[−6]]", "[[−3.5]]", "[[6]]", "[[−2]]"], "why": "Distribute: [[4x + 3 = 2x − 9]]. Subtract [[2x]]: [[2x + 3 = −9]]. Subtract 3: [[2x = −12]], [[x = −6]]."},
+  {"q": "What is the [[x]]-intercept of [[y = 3x − 12]]?", "choices": ["[[(4, 0)]]", "[[(−4, 0)]]", "[[(0, −12)]]", "[[(12, 0)]]"], "why": "Put 0 in for [[y]]: [[0 = 3x − 12]], [[3x = 12]], [[x = 4]].", "letters": "FGHJ"},
+  {"q": "Sam has 56 points and earns 6 points per quiz, [[q]]. He needs at least 80 points. Which inequality shows this?", "choices": ["[[56 + 6q ≥ 80]]", "[[56 + 6q ≤ 80]]", "[[6 + 56q ≥ 80]]", "[[56 + 6q > 80]]"], "why": "Start 56, add 6 per quiz. At least 80 means 80 or more: [[≥]]."},
+  {"q": "What is the solution set of [[−2(x + 1) ≥ 10]]?", "choices": ["[[x ≤ −6]]", "[[x ≥ −6]]", "[[x ≤ −4]]", "[[x ≥ −4]]"], "why": "Distribute: [[−2x − 2 ≥ 10]]. Add 2: [[−2x ≥ 12]]. Divide by [[−2]] and flip: [[x ≤ −6]].", "letters": "FGHJ"},
+] };
+window.MC.accom = {"readAloud": true};
+</script>
+<script src="../mc.js"></script>

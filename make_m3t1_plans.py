@@ -227,26 +227,29 @@ DAYS = [
   after=["Score by question; group by lesson (1, 2, 3) for Thursday re-teach.", "Make a retake list."],
   note="Test date is fixed by the district. The test is in materials/Assessments/ (Module 3 Topic 1 Assessment Student Edition): 11 items."),
 
- dict(file="Thu-11-19", date="Thursday, November 19", lesson="Topic 1 Review Day (retakes in the test room)",
-  obj=["See your Topic 1 test results and find the skills you missed.",
-       "Re-learn and fix the most-missed skills (focus set from the test data).",
-       "Students still retaking: be ready for the retake with an 80% goal."],
+ dict(file="Thu-11-19", date="Thursday, November 19", lesson="Finish the Topic 1 Test · Bell Work + EDIA",
+  obj=["Students who did not finish: complete the End of Topic 1 Assessment.",
+       "Students who finished: review Topic 1 skills on the bell work.",
+       "Practice on the prepared EDIA assignment: I do (teacher models), We do (solve together)."],
   teks=["<b>A.5A</b>, <b>A.5B</b>, <b>A.2C</b>, <b>A.3A</b>, A.2B, A.12E"],
   terms="solution · no solution · infinite solutions · literal equation · linear inequality",
-  mat=["Topic 1 test data by question (focus skills: <b>fill in from the data</b>)",
-       "Review online: m3t1-review.html (IEP/504 versions) · press “Start over” · 🔒 review key + How-To-Solve",
-       "Whiteboards · printed review for anyone without a device · Activity 1.3 Tic-Tac-Bingo cards (TE pp. 345M, 353) for early finishers"],
-  bell=[("No bell work: retakers go straight to the test room; everyone else opens the student page", "agenda up")],
-  rows=[("0–3", "Walk in", "Retakers scheduled now → test room. Everyone else: seat, Chromebook open."),
-   ("3–10", "My results", "Each student lists the test questions they missed and circles their top 2 skills to fix."),
-   ("10–35", "Re-teach the most missed", "Focus skills from the test data (about 8 min each): put one up, first step on whiteboards, "
-    "solve on the board, name the trap, then one try-it on their own. " + IEP),
-   ("35–55", "Practice + fix it", "Review online → “Start over”: redo only the questions on their skills. Fix-it list: number, what went wrong, "
-    "right answer. Students retaking later: aim for 80%. Passed and done: Tic-Tac-Bingo."),
-   ("55–60", "Wrap up", "Exit check: one question on today's top skill. Retakers later: confirm when. Thanksgiving break 11/23–11/26; Topic 2 starts Mon 11/30.")],
-  cfu=["Whiteboards on the first step of each re-taught question.", "Exit check on the top focus skill."],
-  after=["Note who is ready for a later retake (80%+ on their redo).", "Record retake scores (higher score counts)."],
-  note="Some students retake in the test room during class; some retake later. The re-teach focus comes from the Topic 1 test data."),
+  mat=["Unfinished tests + scratch paper (Edia test, same settings as Wednesday) · IEP/504 accommodations",
+       "Bell work: BELL WORK/T1-Bell-Work-Thu-11-19.pdf + 🔒 key (IEP and 504 versions: -IEP / -504 PDFs)",
+       "EDIA assignment already prepared (Schoology CLASSROOM folder) · whiteboards",
+       "Exit ticket online: m3t1-exit-ticket-thu-11-19.html (IEP/ and Section 504/ versions)"],
+  bell=[("1. Solve 5(x − 1) = 2x + 7.", "x = 4"), ("2. How many solutions: 2(3x − 4) = 6x − 8?", "infinite"),
+        ("3. A = ½bh: solve for h.", "h = 2A/b"), ("4. Solve 9 − 3x < 15.", "x > −2 (flip)")],
+  rows=[("0–3", "Walk in", "Did not finish the test: seat apart, open the test, keep working (quiet zone). Finished: seat, take a bell work sheet."),
+   ("3–10", "Bell work (finished group)", "4 questions on paper, then go over them: answers on the key. Test group keeps testing."),
+   ("10–30", "EDIA: I do", "Model the first problems from the prepared EDIA assignment on the board: think aloud each step, students copy into notes. Keep voices low for testers."),
+   ("30–48", "EDIA: We do", "Solve the next problems together: students try the first step on whiteboards, check, then finish as a class. " + IEP),
+   ("48–56", "Exit ticket (online)", "Student page → Exit ticket online (m3t1-exit-ticket-thu-11-19; IEP/504 versions). Work on paper, submit, show score. "
+    "1. 4x + 3 = 2(x − 5) + 1 " + A("x = −6") + " 2. x-intercept of y = 3x − 12 " + A("(4, 0)") + " 3. 56 + 6q, at least 80 " + A("56 + 6q ≥ 80")
+    + " 4. −2(x + 1) ≥ 10 " + A("x ≤ −6")),
+   ("56–60", "Wrap up", "Collect finished tests and scratch paper. Anyone still not done: note who and when they finish. Thanksgiving break 11/23–11/26; Topic 2 starts Mon 11/30.")],
+  cfu=["Bell work: how many got all 4 (hands up).", "Whiteboards on the first step of each We do problem.", "Exit ticket score (students show “__ of 4”)."],
+  after=["Score the finished tests; list anyone still not done.", "Retake list for scores below the district cut."],
+  note="Two groups in one room: testers stay quiet and independent; the rest do bell work, then the EDIA assignment as I do / We do with the teacher."),
 ]
 
 
