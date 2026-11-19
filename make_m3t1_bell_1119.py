@@ -39,15 +39,52 @@ EXIT = [
 ]
 
 
-def exit_pages(tag):
-    """Online exit ticket (general / 504 / IEP), same accommodations as the lesson bell work pages."""
+# Detailed key notes, aligned with EXIT: (standard, check, {wrong choice: likely mistake})
+KEY = [
+ ("A1.2.C · write a linear equation from a table", "[[x = 4]]: [[2(4) + 3 = 11]] ✓",
+  {"[[y = 3x + 2]]": "swapped the slope and the starting value",
+   "[[y = 4x + 3]]": "used the change in [[y]] (4) as the slope without dividing by the change in [[x]] (2)",
+   "[[y = 2x + 7]]": "used the [[y]]-value at [[x = 2]] as the start instead of the value at [[x = 0]]"}),
+ ("A1.5.A · solve with variables on both sides", "[[7(5) − 4 = 31]] and [[3(5) + 16 = 31]] ✓",
+  {"[[20]]": "stopped at [[4x = 20]] and never divided by 4",
+   "[[−5]]": "sign error moving the numbers: [[4x = −20]]",
+   "[[1.2]]": "added [[3x]] to the left instead of subtracting ([[10x = 12]])"}),
+ ("A1.5.A · distributive property + combining like terms", "[[3(2·3 − 1) − 3 = 15 − 3 = 12]] ✓",
+  {"[[2.6]]": "multiplied only the [[2x]] by 3: [[6x − 1 − x = 12]], so [[5x = 13]]",
+   "[[−3]]": "sign error: [[5x = −15]]",
+   "[[1.8]]": "subtracted 3 instead of adding it: [[5x = 9]]"}),
+ ("A1.5.B · solve a linear inequality", "Test [[x = 0]] (in the set): [[4 ≤ 19]] true ✓. Test [[x = −4]] (not in the set): [[12 ≤ 7]] false ✓",
+  {"[[x ≤ −3]]": "forgot to flip the sign when dividing by [[−5]]",
+   "[[x ≥ 3]]": "sign error: [[15 ÷ −5]] is [[−3]], not 3",
+   "[[x ≤ 3]]": "did not flip the sign and made the sign error"}),
+ ("A1.12.E · solve a formula for a variable (literal equation)", "[[P = 20, l = 6]]: [[w = (20 − 12)/2 = 4]], and [[2(6) + 2(4) = 20]] ✓",
+  {"[[w = P/2 − 2l]]": "divided only [[P]] by 2. Divide the whole side",
+   "[[w = (P + 2l)/2]]": "added [[2l]] instead of subtracting it",
+   "[[w = 2P − 2l]]": "multiplied by 2 instead of dividing"}),
+]
+
+
+def exit_key():
+    """Detailed teacher key for the online exit ticket (all versions: IEP shows 3 of these choices). Lock with lock_keys.py (DAILY_PW)."""
+    assert len(KEY) == len(EXIT) and all(set(m) == set(q["choices"][1:]) for (_, _, m), q in zip(KEY, EXIT))
+    items = []
+    for k, (q, (std, check, miss)) in enumerate(zip(EXIT, KEY), 1):
+        why = (f"<b>{std}</b><br><b>Steps:</b>" + "".join(f"<br>{j}. {t}" for j, t in enumerate(q["steps"], 1))
+               + f"<br><b>Check:</b> {check}<br><b>Wrong answers:</b>" + "".join(f"<br>• {c}: {t}." for c, t in miss.items()))
+        items.append(dict(num=k, q=q["q"], choices=None, letters="", answer="Answer: " + q["choices"][0], why=why, tip=None, frames=None))
+    L.sheet("T1-Exit-Ticket-Thu-11-19-ANSWER-KEY", "EXIT TICKET", "1–3", items, True)
+    print("T1-Exit-Ticket-Thu-11-19-ANSWER-KEY (choices shuffle online: grade by value, not letter)")
+
+
+def exit_pages(tag, items=EXIT, name="m3t1-exit-ticket-thu-11-19.html", title="Topic 1 Exit Ticket · Thu 11/19",
+               eyebrow="Module 3 · Topic 1 · Thursday 11/19 · Exit Ticket", h1="Exit Ticket: Show What You Know",
+               intro="Work each question on paper first. Answer all 5, then submit and show your teacher your score.", mode="quiz"):
+    """Online MC page (general / 504 / IEP), same accommodations as the lesson bell work pages."""
     import json, re
     A, MP = L.A, L.MP
-    name = "m3t1-exit-ticket-thu-11-19.html"
-    qs = [{k: q[k] for k in ("q", "choices", "why")} | ({"letters": "FGHJ"} if i % 2 else {}) for i, q in enumerate(EXIT)]
+    qs = [{k: q[k] for k in ("q", "choices", "why")} | ({"letters": "FGHJ"} if i % 2 else {}) for i, q in enumerate(items)]
     MP.OUT = L.OUT
-    MP.page(name, "Topic 1 Exit Ticket · Thu 11/19", "Module 3 · Topic 1 · Thursday 11/19 · Exit Ticket", "Exit Ticket: Show What You Know",
-            "Work each question on paper first. Answer all 5, then submit and show your teacher your score.", "quiz", qs)
+    MP.page(name, title, eyebrow, h1, intro, mode, qs)
     s = (L.OUT / name).read_text(encoding="utf-8")
     for kind in ("504", "IEP"):
         accom = {"readAloud": True}
@@ -55,7 +92,7 @@ def exit_pages(tag):
             accom["choices"] = 3
             accom["add"] = [{"extra": f'<p class="formula" style="margin:8px 0 2px;padding:6px 12px;border-left:4px solid #2f6fdd;background:rgba(47,111,221,.08);'
                                       f'border-radius:4px"><b>Formula:</b> {A.mt(q["formula"])}</p>',
-                             "why": "Here is how:" + "".join(f"<br><b>{j}.</b> {t}" for j, t in enumerate(q["steps"], 1))} for q in EXIT]
+                             "why": "Here is how:" + "".join(f"<br><b>{j}.</b> {t}" for j, t in enumerate(q["steps"], 1))} for q in items]
         ref = f'<div class="card ref"><p>{A.HELP[kind]}</p>' + "".join(f"<p>{r}</p>" for r in L.ACC[tag]["ref"]) + "</div>"
         t = s.replace("</title>", f" · {L.LABEL[kind]}</title>", 1).replace('<div class="wrap">', '<div class="wrap big">', 1)
         t = re.sub(r'(<p class="eyebrow">.*?)</p>', lambda m: f"{m.group(1)} · {L.LABEL[kind]} Version</p>", t, count=1)
@@ -78,3 +115,4 @@ if __name__ == "__main__":
             L.sheet(name, "BELL WORK", tag, items, key, kind)
             print(name)
     exit_pages(tag)
+    exit_key()
