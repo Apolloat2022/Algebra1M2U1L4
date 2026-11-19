@@ -174,7 +174,7 @@
       pre: "Multiplying and dividing by a negative: why the sign flips.", todo: "Activities 3.3 and 3.4: flip the sign, variables on both sides, distributing." },
     { d: "2026-11-17", short: "Tue 11/17", what: "Review day: Topic 1 Review", review: true, s: 13 },
     { d: "2026-11-18", short: "Wed 11/18", what: "Topic 1 test", test: true },
-    { d: "2026-11-19", short: "Thu 11/19", what: "Finish the test · Bell work + EDIA", retake: true },
+    { d: "2026-11-19", short: "Thu 11/19", what: "Finish the test · Bell work + Skills gap", retake: true },
     { d: "2026-11-23", end: "2026-11-26", short: "Nov 23–26", what: "Thanksgiving break", brk: true },
     { d: "2026-11-30", end: "2026-12-10", short: "Mon 11/30", what: "Module 3 Topic 2: Systems of Linear Equations and Inequalities", next: true },
     { d: "2026-12-14", short: "Mon 12/14", what: "Semester Review", review: true, sem: true },
@@ -256,16 +256,16 @@
           <li><b>Show your work on the worksheet</b> · every question, then enter your answer on the Chromebook.</li></ol>
         <p class="hi">Good luck! You've got this! 🍀</p></div>`;
     } else if (D.retake) {
-      body = `<div class="agenda"><p class="hi">📝 Finish the Topic 1 Test · Bell Work + EDIA</p>
+      body = `<div class="agenda"><p class="hi">📝 Finish the Topic 1 Test · Bell Work + Skills Gap Practice</p>
         <p class="ag">📅 Today's Agenda · ${longDate}</p>
         <p class="first">🪑 Did not finish the test? Sit apart, open your test and keep working quietly. Finished? Take your seat and grab a bell work sheet.</p>
         <ol><li><b>Bell Work</b> · 4 questions on paper. Show your work.</li>
-          <li><b>EDIA: I do</b> · watch the teacher solve the first problems. Copy the steps in your notes.</li>
-          <li><b>EDIA: We do</b> · solve the next problems together. Whiteboards up!</li>
+          <li><b>Skills Gap: I do</b> · watch the teacher solve one of each type. Copy the steps in your notes.</li>
+          <li><b>Skills Gap: We do</b> · tap <b>Skills gap practice</b> below and solve together. Whiteboards up!</li>
           <li><b>Exit Ticket</b> · tap <b>Exit ticket online</b> below. Work on paper, submit, show your score.</li>
           <li><b>Wrap up</b> · testers turn in the test and scratch paper.</li></ol>
         <p class="hi">Finish strong! 💪</p></div>
-        <div class="btns">${btn(page("m3t1-exit-ticket-thu-11-19"), "Exit ticket online", true)} ${btn(page("m3t1-gap-practice"), "Done early? Skills gap practice")}</div>`;
+        <div class="btns">${btn(page("m3t1-exit-ticket-thu-11-19"), "Exit ticket online", true)} ${btn(page("m3t1-gap-practice"), "Skills gap practice")}</div>`;
     } else if (D.brk) {
       body = `<div class="agenda"><p class="hi">🦃 Happy Thanksgiving! No school Mon Nov 23 – Thu Nov 26.</p>
         <p>Rest up. Class starts again <b>Monday, November 30</b> with Module 3 Topic 2.</p></div>`;

@@ -227,22 +227,24 @@ DAYS = [
   after=["Score by question; group by lesson (1, 2, 3) for Thursday re-teach.", "Make a retake list."],
   note="Test date is fixed by the district. The test is in materials/Assessments/ (Module 3 Topic 1 Assessment Student Edition): 11 items."),
 
- dict(file="Thu-11-19", date="Thursday, November 19", lesson="Finish the Topic 1 Test · Bell Work + EDIA",
+ dict(file="Thu-11-19", date="Thursday, November 19", lesson="Finish the Topic 1 Test · Bell Work + Skills Gap Practice",
   obj=["Students who did not finish: complete the End of Topic 1 Assessment.",
        "Students who finished: review Topic 1 skills on the bell work.",
-       "Practice on the prepared EDIA assignment: I do (teacher models), We do (solve together)."],
+       "Close the skills gap: one-step equations and rewriting equations in slope-intercept form (I do, We do)."],
   teks=["<b>A.5A</b>, <b>A.5B</b>, <b>A.2C</b>, <b>A.3A</b>, A.2B, A.12E"],
   terms="solution · no solution · infinite solutions · literal equation · linear inequality",
-  mat=["Unfinished tests + scratch paper (Edia test, same settings as Wednesday) · IEP/504 accommodations",
+  mat=["Unfinished tests + scratch paper (same test settings as Wednesday) · IEP/504 accommodations",
        "Bell work: BELL WORK/T1-Bell-Work-Thu-11-19.pdf + 🔒 key (IEP and 504 versions: -IEP / -504 PDFs)",
-       "EDIA assignment already prepared (Schoology CLASSROOM folder) · whiteboards",
+       "Skills gap practice: m3t1-gap-practice.html online (IEP/504 versions) + GAP PRACTICE/T1-Gap-Practice.pdf; 🔒 T1-Gap-Practice-Steps-ANSWER-KEY.pdf (steps for all 20) · whiteboards",
        "Exit ticket online: m3t1-exit-ticket-thu-11-19.html (IEP/ and Section 504/ versions)"],
   bell=[("1. Solve 5(x − 1) = 2x + 7.", "x = 4"), ("2. How many solutions: 2(3x − 4) = 6x − 8?", "infinite"),
         ("3. A = ½bh: solve for h.", "h = 2A/b"), ("4. Solve 9 − 3x < 15.", "x > −2 (flip)")],
   rows=[("0–3", "Walk in", "Did not finish the test: seat apart, open the test, keep working (quiet zone). Finished: seat, take a bell work sheet."),
    ("3–10", "Bell work (finished group)", "4 questions on paper, then go over them: answers on the key. Test group keeps testing."),
-   ("10–30", "EDIA: I do", "Model the first problems from the prepared EDIA assignment on the board: think aloud each step, students copy into notes. Keep voices low for testers."),
-   ("30–48", "EDIA: We do", "Solve the next problems together: students try the first step on whiteboards, check, then finish as a class. " + IEP),
+   ("10–30", "Skills Gap: I do", "Project the skills gap practice. Model one of each type, think aloud, students copy the steps. Keep voices low for testers. "
+    "Q1 x + 14 = 31 " + A("17") + " · Q8 x + 1/4 = 5/6 " + A("7/12") + " · Q11 6x + 3y = 12 " + A("y = −2x + 4")
+    + " · Q13 2x − 3y = 7 " + A("y = (2/3)x − 7/3") + " · Q16 y − 3 = 2(x + 1) " + A("y = 2x + 5")),
+   ("30–48", "Skills Gap: We do", "Students open Skills gap practice online (instant feedback) or the printed sheet. Solve together: first step on whiteboards, check, finish as a class. Done early: finish all 20. Steps for every question in the 🔒 steps key. " + IEP),
    ("48–56", "Exit ticket (online)", "Student page → Exit ticket online (m3t1-exit-ticket-thu-11-19; IEP/504 versions). Work on paper, submit, show score. "
     "Built on the test standards report: 1. table x 0,2,4 / y 3,7,11 (A1.2.C) " + A("y = 2x + 3") + " 2. 7x − 4 = 3x + 16 (A1.5.A) " + A("x = 5")
     + " 3. 3(2x − 1) − x = 12 (A1.5.A) " + A("x = 3") + " 4. 4 − 2x ≤ 3x + 19 (A1.5.B) " + A("x ≥ −3")
@@ -250,7 +252,7 @@ DAYS = [
    ("56–60", "Wrap up", "Collect finished tests and scratch paper. Anyone still not done: note who and when they finish. Thanksgiving break 11/23–11/26; Topic 2 starts Mon 11/30.")],
   cfu=["Bell work: how many got all 4 (hands up).", "Whiteboards on the first step of each We do problem.", "Exit ticket score (students show “__ of 5”)."],
   after=["Score the finished tests; list anyone still not done.", "Retake list for scores below the district cut."],
-  note="Two groups in one room: testers stay quiet and independent; the rest do bell work, then the EDIA assignment as I do / We do with the teacher."),
+  note="Two groups in one room: testers stay quiet and independent; the rest do bell work, then skills gap practice as I do / We do with the teacher."),
 ]
 
 

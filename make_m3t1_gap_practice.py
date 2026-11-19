@@ -68,6 +68,25 @@ GAP = [
 ]
 
 
+SKILL = ["One-step: natural numbers (x + a = b)", "One-step: integers (x + a = b)", "One-step: positive decimals (a · x = b)",
+         "One-step: natural numbers (x / a = b)", "One-step: positive decimals (x + a = b)", "One-step: positive decimals (x − a = b)",
+         "One-step: positive decimals (a · x = b)", "One-step: positive fractions (x + a = b)", "One-step: positive decimals (x + a = b)",
+         "One-step: natural numbers (x + a = b)", "Standard → slope-intercept (b divides a and c)", "Standard → slope-intercept (b divides c)",
+         "Standard → slope-intercept (b doesn't divide a or c)", "Standard → slope-intercept (fraction coefficients)",
+         "Standard → slope-intercept (b divides a and c)", "Point-slope → slope-intercept (integers)", "Point-slope → slope-intercept (integers)",
+         "Point-slope → slope-intercept (integers)", "Point-slope → slope-intercept (fraction slope)", "Point-slope → slope-intercept (fraction slope)"]
+
+
+def steps_key():
+    """Teacher answer copy: every question with the skill, numbered steps to solve, and the common mistake. One copy for all versions (lock with lock_keys.py)."""
+    items = [dict(num=k, q=q["q"], choices=None, letters="", answer="Answer: " + q["choices"][0], tip=None, frames=None,
+                  why=f"<b>{s}</b><br><b>Steps to solve:</b>" + "".join(f"<br>{j}. {t}" for j, t in enumerate(q["steps"], 1))
+                      + f"<br><b>Tip:</b> {q['formula']}<br><b>Why:</b> {q['why']}")
+             for k, (q, s) in enumerate(zip(GAP, SKILL), 1)]
+    L.sheet("T1-Gap-Practice-Steps-ANSWER-KEY", "GAP PRACTICE", "1–2", items, True)
+    print("T1-Gap-Practice-Steps-ANSWER-KEY")
+
+
 def check():
     """The correct choice really solves each item (one-step: plug in; forms: test two x-values)."""
     x = [F(17), F(-13), F(4), F(42), F("5.6"), F("7.25"), F(15), F(7, 12), F("2.25"), F(57)]
@@ -99,3 +118,4 @@ if __name__ == "__main__":
             name = f"T1-Gap-Practice{f'-{kind}' if kind else ''}{'-ANSWER-KEY' if key else ''}"
             L.sheet(name, "GAP PRACTICE", tag, items, key, kind)
             print(name)
+    steps_key()
