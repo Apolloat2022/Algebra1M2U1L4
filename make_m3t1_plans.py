@@ -244,10 +244,11 @@ DAYS = [
    ("10–30", "EDIA: I do", "Model the first problems from the prepared EDIA assignment on the board: think aloud each step, students copy into notes. Keep voices low for testers."),
    ("30–48", "EDIA: We do", "Solve the next problems together: students try the first step on whiteboards, check, then finish as a class. " + IEP),
    ("48–56", "Exit ticket (online)", "Student page → Exit ticket online (m3t1-exit-ticket-thu-11-19; IEP/504 versions). Work on paper, submit, show score. "
-    "1. 4x + 3 = 2(x − 5) + 1 " + A("x = −6") + " 2. x-intercept of y = 3x − 12 " + A("(4, 0)") + " 3. 56 + 6q, at least 80 " + A("56 + 6q ≥ 80")
-    + " 4. −2(x + 1) ≥ 10 " + A("x ≤ −6")),
+    "Built on the test standards report: 1. table x 0,2,4 / y 3,7,11 (A1.2.C) " + A("y = 2x + 3") + " 2. 7x − 4 = 3x + 16 (A1.5.A) " + A("x = 5")
+    + " 3. 3(2x − 1) − x = 12 (A1.5.A) " + A("x = 3") + " 4. 4 − 2x ≤ 3x + 19 (A1.5.B) " + A("x ≥ −3")
+    + " 5. P = 2l + 2w for w (A1.12.E) " + A("w = (P − 2l)/2")),
    ("56–60", "Wrap up", "Collect finished tests and scratch paper. Anyone still not done: note who and when they finish. Thanksgiving break 11/23–11/26; Topic 2 starts Mon 11/30.")],
-  cfu=["Bell work: how many got all 4 (hands up).", "Whiteboards on the first step of each We do problem.", "Exit ticket score (students show “__ of 4”)."],
+  cfu=["Bell work: how many got all 4 (hands up).", "Whiteboards on the first step of each We do problem.", "Exit ticket score (students show “__ of 5”)."],
   after=["Score the finished tests; list anyone still not done.", "Retake list for scores below the district cut."],
   note="Two groups in one room: testers stay quiet and independent; the rest do bell work, then the EDIA assignment as I do / We do with the teacher."),
 ]

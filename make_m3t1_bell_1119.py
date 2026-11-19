@@ -19,20 +19,23 @@ BELL = [
     ["Subtract 9: [[−3x < 6]].", "Divide by [[−3]]: [[6 ÷ −3 = −2]].", "Negative divisor: flip [[<]] to [[>]]: [[x > −2]]."]),
 ]
 
+# Exit ticket from the Topic 1 test standards report: A1.5.A (4 test items) x2, A1.12.E (3), A1.2.C (2), A1.5.B (2). Skill-based, not test twins.
 EXIT = [
- bq("What value of [[x]] makes [[4x + 3 = 2(x − 5) + 1]] true?", ["[[−6]]", "[[−3.5]]", "[[6]]", "[[−2]]"],
-    "Distribute: [[4x + 3 = 2x − 9]]. Subtract [[2x]]: [[2x + 3 = −9]]. Subtract 3: [[2x = −12]], [[x = −6]].",
-    "distribute, then get [[x]] on one side", ["Distribute: [[2x − 10 + 1 = 2x − 9]].", "Subtract [[2x]]: [[2x + 3 = −9]].", "Subtract 3: [[2x = −12]].", "Divide by 2: [[x = −6]]."]),
- bq("What is the [[x]]-intercept of [[y = 3x − 12]]?", ["[[(4, 0)]]", "[[(−4, 0)]]", "[[(0, −12)]]", "[[(12, 0)]]"],
-    "Put 0 in for [[y]]: [[0 = 3x − 12]], [[3x = 12]], [[x = 4]].", "[[x]]-intercept: put 0 in for [[y]]",
-    ["[[0 = 3x − 12]].", "Add 12: [[12 = 3x]].", "Divide by 3: [[x = 4]], so [[(4, 0)]]."]),
- bq("Sam has 56 points and earns 6 points per quiz, [[q]]. He needs at least 80 points. Which inequality shows this?",
-    ["[[56 + 6q ≥ 80]]", "[[56 + 6q ≤ 80]]", "[[6 + 56q ≥ 80]]", "[[56 + 6q > 80]]"],
-    "Start 56, add 6 per quiz. At least 80 means 80 or more: [[≥]].", "at least = this much or more ([[≥]])",
-    ["Start: 56.", "Rate: 6 per quiz: [[6q]].", "At least 80: [[≥ 80]]."]),
- bq("What is the solution set of [[−2(x + 1) ≥ 10]]?", ["[[x ≤ −6]]", "[[x ≥ −6]]", "[[x ≤ −4]]", "[[x ≥ −4]]"],
-    "Distribute: [[−2x − 2 ≥ 10]]. Add 2: [[−2x ≥ 12]]. Divide by [[−2]] and flip: [[x ≤ −6]].", "÷ by a negative → flip the sign",
-    ["Distribute: [[−2x − 2 ≥ 10]].", "Add 2: [[−2x ≥ 12]].", "Divide by [[−2]] and flip: [[x ≤ −6]]."]),
+ bq("[[x]]: 0, 2, 4 and [[y]]: 3, 7, 11. Which equation fits this table?", ["[[y = 2x + 3]]", "[[y = 3x + 2]]", "[[y = 4x + 3]]", "[[y = 2x + 7]]"],  # A1.2.C
+    "[[y]] goes up 4 when [[x]] goes up 2: slope [[4/2 = 2]]. At [[x = 0]], [[y = 3]]: [[y = 2x + 3]].", "slope = change in [[y]] ÷ change in [[x]]; start = [[y]] when [[x = 0]]",
+    ["Change in [[y]]: [[7 − 3 = 4]]. Change in [[x]]: [[2 − 0 = 2]].", "Slope: [[4 ÷ 2 = 2]].", "When [[x = 0]], [[y = 3]].", "[[y = 2x + 3]]."]),
+ bq("What value of [[x]] makes [[7x − 4 = 3x + 16]] true?", ["[[5]]", "[[20]]", "[[−5]]", "[[1.2]]"],  # A1.5.A
+    "Subtract [[3x]]: [[4x − 4 = 16]]. Add 4: [[4x = 20]]. Divide by 4: [[x = 5]].", "get [[x]] on one side, then undo + and ×",
+    ["Subtract [[3x]]: [[4x − 4 = 16]].", "Add 4: [[4x = 20]].", "Divide by 4: [[x = 5]]."]),
+ bq("What value of [[x]] makes [[3(2x − 1) − x = 12]] true?", ["[[3]]", "[[2.6]]", "[[−3]]", "[[1.8]]"],  # A1.5.A
+    "Distribute: [[6x − 3 − x = 12]]. Combine: [[5x − 3 = 12]]. Add 3: [[5x = 15]], [[x = 3]]. 2.6 forgets to multiply the 1.",
+    "distribute, combine like terms, then solve", ["Distribute: [[6x − 3 − x = 12]].", "Combine: [[5x − 3 = 12]].", "Add 3: [[5x = 15]].", "Divide by 5: [[x = 3]]."]),
+ bq("What is the solution set of [[4 − 2x ≤ 3x + 19]]?", ["[[x ≥ −3]]", "[[x ≤ −3]]", "[[x ≥ 3]]", "[[x ≤ 3]]"],  # A1.5.B
+    "Subtract [[3x]]: [[4 − 5x ≤ 19]]. Subtract 4: [[−5x ≤ 15]]. Divide by [[−5]] and flip: [[x ≥ −3]].", "÷ by a negative → flip the sign",
+    ["Subtract [[3x]]: [[4 − 5x ≤ 19]].", "Subtract 4: [[−5x ≤ 15]].", "Divide by [[−5]] and flip: [[x ≥ −3]]."]),
+ bq("[[P = 2l + 2w]]. Which equation is solved for [[w]]?", ["[[w = (P − 2l)/2]]", "[[w = P/2 − 2l]]", "[[w = (P + 2l)/2]]", "[[w = 2P − 2l]]"],  # A1.12.E
+    "Subtract [[2l]]: [[P − 2l = 2w]]. Divide everything by 2: [[w = (P − 2l)/2]].", "undo everything around [[w]]; ÷ the whole side",
+    ["Subtract [[2l]]: [[P − 2l = 2w]].", "Divide the whole side by 2: [[w = (P − 2l)/2]]."]),
 ]
 
 
@@ -44,7 +47,7 @@ def exit_pages(tag):
     qs = [{k: q[k] for k in ("q", "choices", "why")} | ({"letters": "FGHJ"} if i % 2 else {}) for i, q in enumerate(EXIT)]
     MP.OUT = L.OUT
     MP.page(name, "Topic 1 Exit Ticket · Thu 11/19", "Module 3 · Topic 1 · Thursday 11/19 · Exit Ticket", "Exit Ticket: Show What You Know",
-            "Work each question on paper first. Answer all 4, then submit and show your teacher your score.", "quiz", qs)
+            "Work each question on paper first. Answer all 5, then submit and show your teacher your score.", "quiz", qs)
     s = (L.OUT / name).read_text(encoding="utf-8")
     for kind in ("504", "IEP"):
         accom = {"readAloud": True}
